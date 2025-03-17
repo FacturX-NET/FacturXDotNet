@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Parser", "FacturXDotNet.Parser\FacturXDotNet.Parser.csproj", "{7E024451-B262-4A29-990D-476468A0EA77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Models", "FacturXDotNet.Models\FacturXDotNet.Models.csproj", "{AD1D6EAB-B191-4B09-AEE7-3FBB35A0D2EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Exporter.FacturX", "FacturXDotNet.Exporter.FacturX\FacturXDotNet.Exporter.FacturX.csproj", "{6E4F1C3C-3661-4C53-AB99-015AC62FBE61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Exporter.CII", "FacturXDotNet.Exporter.CII\FacturXDotNet.Exporter.CII.csproj", "{FB97C229-B293-402A-8A6B-68465D32739D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Exporter.UblEn16931", "FacturXDotNet.Exporter.UblEn16931\FacturXDotNet.Exporter.UblEn16931.csproj", "{DD9AE663-AEEB-4EA3-A21C-D3359A5A0914}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E024451-B262-4A29-990D-476468A0EA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E024451-B262-4A29-990D-476468A0EA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E024451-B262-4A29-990D-476468A0EA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E024451-B262-4A29-990D-476468A0EA77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD1D6EAB-B191-4B09-AEE7-3FBB35A0D2EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD1D6EAB-B191-4B09-AEE7-3FBB35A0D2EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD1D6EAB-B191-4B09-AEE7-3FBB35A0D2EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD1D6EAB-B191-4B09-AEE7-3FBB35A0D2EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E4F1C3C-3661-4C53-AB99-015AC62FBE61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E4F1C3C-3661-4C53-AB99-015AC62FBE61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E4F1C3C-3661-4C53-AB99-015AC62FBE61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E4F1C3C-3661-4C53-AB99-015AC62FBE61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB97C229-B293-402A-8A6B-68465D32739D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB97C229-B293-402A-8A6B-68465D32739D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB97C229-B293-402A-8A6B-68465D32739D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB97C229-B293-402A-8A6B-68465D32739D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD9AE663-AEEB-4EA3-A21C-D3359A5A0914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD9AE663-AEEB-4EA3-A21C-D3359A5A0914}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD9AE663-AEEB-4EA3-A21C-D3359A5A0914}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD9AE663-AEEB-4EA3-A21C-D3359A5A0914}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
