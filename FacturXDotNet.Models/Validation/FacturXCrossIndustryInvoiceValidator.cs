@@ -10,8 +10,10 @@ namespace FacturXDotNet.Models.Validation;
 ///     This validator applies the business rules specified for the Factur-X format, ensuring compliance with the selected profile.
 ///     It can perform either a quick validation that stops at the first failure or a full validation that reports all rule outcomes.
 /// </remarks>
-public class FacturXCrossIndustryInvoiceValidator(FacturXCrossIndustryInvoiceValidatorOptions options)
+public class FacturXCrossIndustryInvoiceValidator(FacturXCrossIndustryInvoiceValidatorOptions? options = null)
 {
+    readonly FacturXCrossIndustryInvoiceValidatorOptions _options = options ?? new FacturXCrossIndustryInvoiceValidatorOptions();
+
     /// <summary>
     ///     Determines whether the given invoice satisfies all applicable business rules.
     /// </summary>
@@ -26,7 +28,7 @@ public class FacturXCrossIndustryInvoiceValidator(FacturXCrossIndustryInvoiceVal
     /// <returns><c>true</c> if the invoice meets all required business rules; otherwise, <c>false</c>.</returns>
     public bool IsValid(FacturXCrossIndustryInvoice invoice)
     {
-        FacturXGuidelineSpecifiedDocumentContextParameterId profile = options.ProfileOverride ?? invoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId;
+        FacturXGuidelineSpecifiedDocumentContextParameterId profile = _options.ProfileOverride ?? invoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId;
         return Rules.Where(rule => !SkipRule(rule, profile)).All(rule => rule.Check(invoice));
     }
 
@@ -54,7 +56,7 @@ public class FacturXCrossIndustryInvoiceValidator(FacturXCrossIndustryInvoiceVal
     /// </returns>
     public FacturXValidationResult GetValidationResult(FacturXCrossIndustryInvoice invoice)
     {
-        FacturXGuidelineSpecifiedDocumentContextParameterId profile = options.ProfileOverride ?? invoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId;
+        FacturXGuidelineSpecifiedDocumentContextParameterId profile = _options.ProfileOverride ?? invoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId;
 
         List<FacturXBusinessRule> passed = [];
         List<FacturXBusinessRule> failed = [];
@@ -65,6 +67,7 @@ public class FacturXCrossIndustryInvoiceValidator(FacturXCrossIndustryInvoiceVal
             if (SkipRule(rule, profile))
             {
                 skipped.Add(rule);
+                continue;
             }
 
             if (rule.Check(invoice))

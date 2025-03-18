@@ -17,7 +17,7 @@ public enum FacturXProfileFlags
     All = Minimum | BasicWl | Basic | En16931 | Extended
 }
 
-static class ProfileFlagsExtensions
+public static class ProfileFlagsExtensions
 {
     public static bool Match(this FacturXProfileFlags flags, FacturXGuidelineSpecifiedDocumentContextParameterId profile) =>
         profile switch
@@ -55,4 +55,34 @@ static class ProfileFlagsExtensions
             FacturXProfileFlags.All => FacturXProfileFlags.All,
             _ => throw new ArgumentOutOfRangeException(nameof(flags), flags, null)
         };
+
+    public static FacturXProfileFlags GetMinProfile(this FacturXProfileFlags flags)
+    {
+        if (flags.HasFlag(FacturXProfileFlags.Minimum))
+        {
+            return FacturXProfileFlags.Minimum;
+        }
+
+        if (flags.HasFlag(FacturXProfileFlags.BasicWl))
+        {
+            return FacturXProfileFlags.BasicWl;
+        }
+
+        if (flags.HasFlag(FacturXProfileFlags.Basic))
+        {
+            return FacturXProfileFlags.Basic;
+        }
+
+        if (flags.HasFlag(FacturXProfileFlags.En16931))
+        {
+            return FacturXProfileFlags.En16931;
+        }
+
+        if (flags.HasFlag(FacturXProfileFlags.Extended))
+        {
+            return FacturXProfileFlags.Extended;
+        }
+
+        return FacturXProfileFlags.None;
+    }
 }
