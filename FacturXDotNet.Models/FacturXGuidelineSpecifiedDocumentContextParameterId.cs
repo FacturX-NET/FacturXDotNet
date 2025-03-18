@@ -17,30 +17,30 @@ public enum FacturXGuidelineSpecifiedDocumentContextParameterId
     /// <summary>
     ///     urn:factur-x.eu:1p0:minimum
     /// </summary>
-    Minimum,
+    Minimum = 1,
 
     /// <summary>
     ///     urn:factur-x.eu:1p0:basicwl
     /// </summary>
-    BasicWl,
+    BasicWl = 2,
 
     /// <summary>
     ///     urn:cen.eu:en16931:2017#compliant#urn:factur-x.eu:1p0:basic
     /// </summary>
-    Basic,
+    Basic = 3,
 
     /// <summary>
     ///     urn:cen.eu:en16931:2017
     /// </summary>
-    En16931,
+    En16931 = 4,
 
     /// <summary>
     ///     urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended
     /// </summary>
-    Extended
+    Extended = 5
 }
 
-public static class FacturXSpecificationIdentifierMappingExtensions
+public static class FacturXGuidelineSpecifiedDocumentContextParameterIdMappingExtensions
 {
     public static string ToSpecificationIdentifierString(this FacturXGuidelineSpecifiedDocumentContextParameterId value) =>
         value switch

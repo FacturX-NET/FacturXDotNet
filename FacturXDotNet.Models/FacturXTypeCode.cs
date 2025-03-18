@@ -30,7 +30,7 @@ public enum FacturXTypeCode
     InvoiceInformationForAccountingPurpose = 751
 }
 
-public static class FacturXInvoiceTypeCodeMappingExtensions
+public static class FacturXTypeCodeMappingExtensions
 {
     public static int ToSpecificationIdentifierString(this FacturXTypeCode value) =>
         value switch
