@@ -4,17 +4,10 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\FacturXDotNet.Models\FacturXDotNet.Models.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="itext" Version="9.1.0" />
-      <PackageReference Include="itext.bouncy-castle-adapter" Version="9.1.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
     </ItemGroup>
 
 </Project>

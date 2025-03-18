@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FacturXDotNet.Parser\FacturXDotNet.Parser.csproj" />
+      <ProjectReference Include="..\FacturXDotNet.Validation\FacturXDotNet.Validation.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -2,8 +2,8 @@
 
 using System.Text.Json;
 using FacturXDotNet.Models;
-using FacturXDotNet.Models.Validation;
 using FacturXDotNet.Parser;
+using FacturXDotNet.Validation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -26,15 +26,23 @@ try
     IConfigurationRoot configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
     string environment = configuration.GetValue<string>("ENVIRONMENT") ?? string.Empty;
 
+    await using FileStream example = File.OpenRead(@"D:\source\repos\FacturXDotNet\FacturXDotNet.CLI\Examples\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.pdf");
+
+    FacturXExtractor extractor = new();
+    if (!extractor.TryExtractFacturXAttachment(example, out Stream? ciiStream))
+    {
+        throw new InvalidOperationException("Could not extract the file factur-x.xml from the attachments.");
+    }
+
+    await using Stream _ = ciiStream;
+
     FacturXCrossIndustryInvoiceParser parser = new(
         new FacturXCrossIndustryInvoiceParserOptions
         {
             Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? factory.CreateLogger<FacturXCrossIndustryInvoiceParser>() : null
         }
     );
-
-    await using FileStream example = File.OpenRead(@"D:\source\repos\FacturXDotNet\FacturXDotNet.CLI\Examples\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.xml");
-    FacturXCrossIndustryInvoice result = await parser.ParseAsync(example);
+    FacturXCrossIndustryInvoice result = await parser.ParseAsync(ciiStream);
 
     logger.LogInformation("-------------");
     logger.LogInformation("   RESULT");
@@ -48,7 +56,14 @@ try
     logger.LogInformation(" VALIDATION");
     logger.LogInformation("-------------");
 
-    logger.LogError("- Failed: ({0})", validationResult.Failed.Count);
+    if (validationResult.Failed.Count > 0)
+    {
+        logger.LogError("- Failed: ({0})", validationResult.Failed.Count);
+    }
+    else
+    {
+        logger.LogInformation("- Failed: ({0})", validationResult.Failed.Count);
+    }
     foreach (FacturXBusinessRule rule in validationResult.Failed)
     {
         logger.LogError("  - KO [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
