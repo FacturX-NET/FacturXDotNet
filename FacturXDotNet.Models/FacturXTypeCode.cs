@@ -45,7 +45,7 @@ public static class FacturXTypeCodeMappingExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };
 
-    public static FacturXTypeCode? ToSpecificationIdentifier(this int value) =>
+    public static FacturXTypeCode? ToSpecificationIdentifierOrNull(this int value) =>
         value switch
         {
             380 => FacturXTypeCode.CommercialInvoice,
@@ -57,4 +57,7 @@ public static class FacturXTypeCodeMappingExtensions
             751 => FacturXTypeCode.InvoiceInformationForAccountingPurpose,
             _ => null
         };
+
+    public static FacturXTypeCode ToSpecificationIdentifier(this int value) =>
+        value.ToSpecificationIdentifierOrNull() ?? throw new ArgumentOutOfRangeException(nameof(FacturXTypeCode), value, null);
 }

@@ -31,7 +31,7 @@ public class FacturXSellerTradePartySpecifiedLegalOrganization
     ///     field is "0002".
     /// </remarks>
     /// <ID>BT-30-1</ID>
-    /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:ID/@schemeID</CiiXPath>
+    /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:ID@schemeID</CiiXPath>
     /// <Profile>MINIMUM</Profile>
     public string? IdSchemeId { get; set; }
 }

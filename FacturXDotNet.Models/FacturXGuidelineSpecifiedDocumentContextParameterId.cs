@@ -42,7 +42,7 @@ public enum FacturXGuidelineSpecifiedDocumentContextParameterId
 
 public static class FacturXGuidelineSpecifiedDocumentContextParameterIdMappingExtensions
 {
-    public static string ToSpecificationIdentifierString(this FacturXGuidelineSpecifiedDocumentContextParameterId value) =>
+    public static string ToGuidelineSpecifiedDocumentContextParameterIdString(this FacturXGuidelineSpecifiedDocumentContextParameterId value) =>
         value switch
         {
             FacturXGuidelineSpecifiedDocumentContextParameterId.Minimum => "urn:factur-x.eu:1p0:minimum",
@@ -53,7 +53,7 @@ public static class FacturXGuidelineSpecifiedDocumentContextParameterIdMappingEx
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };
 
-    public static FacturXGuidelineSpecifiedDocumentContextParameterId? ToSpecificationIdentifier(this string value) =>
+    public static FacturXGuidelineSpecifiedDocumentContextParameterId? ToGuidelineSpecifiedDocumentContextParameterIdOrNull(this string value) =>
         value switch
         {
             "urn:factur-x.eu:1p0:minimum" => FacturXGuidelineSpecifiedDocumentContextParameterId.Minimum,
@@ -63,4 +63,8 @@ public static class FacturXGuidelineSpecifiedDocumentContextParameterIdMappingEx
             "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended" => FacturXGuidelineSpecifiedDocumentContextParameterId.Extended,
             _ => null
         };
+
+    public static FacturXGuidelineSpecifiedDocumentContextParameterId ToGuidelineSpecifiedDocumentContextParameterId(this string value) =>
+        value.ToGuidelineSpecifiedDocumentContextParameterIdOrNull()
+        ?? throw new ArgumentOutOfRangeException(nameof(FacturXGuidelineSpecifiedDocumentContextParameterId), value, null);
 }
