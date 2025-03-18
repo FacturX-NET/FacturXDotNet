@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Exporter.CII"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Exporter.UblEn16931", "FacturXDotNet.Exporter.UblEn16931\FacturXDotNet.Exporter.UblEn16931.csproj", "{DD9AE663-AEEB-4EA3-A21C-D3359A5A0914}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.CLI", "FacturXDotNet.CLI\FacturXDotNet.CLI.csproj", "{0C810A7D-6919-43FB-A6A8-7F23E67B3AD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{DD9AE663-AEEB-4EA3-A21C-D3359A5A0914}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD9AE663-AEEB-4EA3-A21C-D3359A5A0914}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD9AE663-AEEB-4EA3-A21C-D3359A5A0914}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C810A7D-6919-43FB-A6A8-7F23E67B3AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C810A7D-6919-43FB-A6A8-7F23E67B3AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C810A7D-6919-43FB-A6A8-7F23E67B3AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C810A7D-6919-43FB-A6A8-7F23E67B3AD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
