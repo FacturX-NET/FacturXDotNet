@@ -21,7 +21,7 @@ public class FacturXParser
     public async Task<CrossIndustryInvoice> ParseCiiXmlInFacturXPdfAsync(Stream stream)
     {
         await using Stream ciiXmlStream = _extractor.ExtractFacturXAttachment(stream);
-        return await _parser.ParseCiiXmlAsync(ciiXmlStream);
+        return _parser.ParseCiiXml(ciiXmlStream);
     }
 }
 

@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
+      <PackageReference Include="TurboXml" Version="2.0.2" />
     </ItemGroup>
 
 </Project>
