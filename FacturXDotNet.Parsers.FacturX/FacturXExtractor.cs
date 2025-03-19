@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using iText.Kernel.Pdf;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.Advanced;
+using PdfSharp.Pdf.Filters;
+using PdfSharp.Pdf.IO;
 
 namespace FacturXDotNet.Parsers.FacturX;
 
@@ -23,80 +25,82 @@ public class FacturXExtractor(FacturXExtractorOptions? options = null)
     /// <param name="facturXAttachment">The Cross-Industry Invoice document.</param>
     public bool TryExtractFacturXAttachment(Stream facturXStream, [NotNullWhen(true)] out Stream? facturXAttachment)
     {
-        // See https://kb.itextpdf.com/itext/embedded-files#Embeddedfiles-removeembeddedfile
+        PdfDocument document;
 
-        ReaderProperties properties = CreateITextPdfReaderProperties();
-        using PdfReader reader = new(facturXStream, properties);
-        using PdfDocument document = new(reader);
-
-        PdfDictionary? catalog = document.GetCatalog()?.GetPdfObject();
-        PdfDictionary? names = catalog?.GetAsDictionary(PdfName.Names);
-        PdfDictionary? embeddedFiles = names?.GetAsDictionary(PdfName.EmbeddedFiles);
-        PdfArray? fileNames = embeddedFiles?.GetAsArray(PdfName.Names);
-
-        if (fileNames != null)
+        if (_options.Password != null)
         {
-            for (int i = 0; i < fileNames.Size() - 1; i += 2)
+            document = PdfReader.Open(facturXStream, PdfDocumentOpenMode.Import, args => args.Password = _options.Password);
+        }
+        else
+        {
+            document = PdfReader.Open(facturXStream, PdfDocumentOpenMode.Import);
+        }
+
+        using PdfDocument _ = document;
+
+        PdfCatalog catalog = document.Internals.Catalog;
+        PdfArray? attachedFiles = catalog.Elements.GetArray("/AF");
+
+        if (attachedFiles == null)
+        {
+            facturXAttachment = null;
+            return false;
+        }
+
+        foreach (PdfItem? attachedFile in attachedFiles.Elements)
+        {
+            if (attachedFile is not PdfReference { Value: PdfDictionary fileSpec })
             {
-                PdfString? name = fileNames.GetAsString(i);
-                if (name.ToString() != _options.CiiXmlAttachmentName)
-                {
-                    continue;
-                }
-
-                PdfDictionary? fileSpec = fileNames.GetAsDictionary(i + 1);
-                PdfDictionary? stream = fileSpec?.GetAsDictionary(PdfName.EF);
-                if (stream == null)
-                {
-                    facturXAttachment = null;
-                    return false;
-                }
-
-                PdfStream? pdfStream = stream.GetAsStream(PdfName.F);
-                byte[]? bytes = pdfStream?.GetBytes(true);
-
-                if (bytes == null)
-                {
-                    facturXAttachment = null;
-                    return false;
-                }
-
-                facturXAttachment = new MemoryStream(bytes);
-                return true;
+                continue;
             }
+
+            string attachedFileName = fileSpec.Elements.GetString("/F");
+            if (attachedFileName != _options.CiiXmlAttachmentName)
+            {
+                continue;
+            }
+
+            if (fileSpec.Elements.GetDictionary("/EF") is not { } embeddedFile)
+            {
+                facturXAttachment = null;
+                return false;
+            }
+
+            if (embeddedFile.Elements.GetReference("/F") is not { } pdfStreamReference)
+            {
+                facturXAttachment = null;
+                return false;
+            }
+
+            if (pdfStreamReference.Value is not PdfDictionary pdfStreamDictionary)
+            {
+                facturXAttachment = null;
+                return false;
+            }
+
+            PdfDictionary.PdfStream pdfStream = pdfStreamDictionary.Stream;
+            if (pdfStream.Length == 0)
+            {
+                facturXAttachment = null;
+                return false;
+            }
+
+            byte[] bytes;
+            if (pdfStream.TryUnfilter())
+            {
+                bytes = pdfStream.Value;
+            }
+            else
+            {
+                FlateDecode flate = new();
+                bytes = flate.Decode(pdfStream.Value, new PdfDictionary());
+            }
+
+            facturXAttachment = new MemoryStream(bytes);
+            return true;
         }
 
         facturXAttachment = null;
         return false;
-    }
-
-    ReaderProperties CreateITextPdfReaderProperties()
-    {
-        ReaderProperties result = new();
-
-        if (_options.Password != null)
-        {
-            result.SetPassword(Encoding.UTF8.GetBytes(_options.Password));
-        }
-
-        return result;
-    }
-
-    static bool StartsWith(byte[] buffer, params ReadOnlySpan<char> match)
-    {
-        if (match.Length > buffer.Length)
-        {
-            return false;
-        }
-
-        for (int i = 0; i < match.Length; i++)
-        {
-            if (buffer[i] != match[i])
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
