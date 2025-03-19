@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models;
+﻿namespace FacturXDotNet;
 
 /// <summary>
 ///     An invoice in the Factur-X format.
@@ -6,12 +6,12 @@
 /// </summary>
 public sealed class CrossIndustryInvoice
 {
-    /// <inheritdoc cref="Models.ExchangedDocumentContext" />
+    /// <inheritdoc cref="FacturXDotNet.ExchangedDocumentContext" />
     public required ExchangedDocumentContext ExchangedDocumentContext { get; set; }
 
-    /// <inheritdoc cref="Models.ExchangedDocument" />
+    /// <inheritdoc cref="FacturXDotNet.ExchangedDocument" />
     public required ExchangedDocument ExchangedDocument { get; set; }
 
-    /// <inheritdoc cref="Models.SupplyChainTradeTransaction" />
+    /// <inheritdoc cref="FacturXDotNet.SupplyChainTradeTransaction" />
     public required SupplyChainTradeTransaction SupplyChainTradeTransaction { get; set; }
 }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     
     <ItemGroup>
-      <ProjectReference Include="..\FacturXDotNet.Models\FacturXDotNet.Models.csproj" />
+      <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj" />
     </ItemGroup>
 
     <ItemGroup>

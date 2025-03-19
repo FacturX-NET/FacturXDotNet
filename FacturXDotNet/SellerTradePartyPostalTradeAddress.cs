@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models;
+﻿namespace FacturXDotNet;
 
 /// <summary>
 ///     <b>SELLER POSTAL ADDRESS</b> - A group of business terms providing information about the address of the Seller.

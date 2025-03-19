@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models;
+﻿namespace FacturXDotNet;
 
 /// <summary>
 ///     <b>DELIVERY INFORMATION</b> - A group of business terms providing information about where and when the goods and services invoiced are delivered.

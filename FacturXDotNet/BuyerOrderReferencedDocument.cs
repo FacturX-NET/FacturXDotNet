@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models;
+﻿namespace FacturXDotNet;
 
 /// <summary>
 ///     <b>PURCHASE ORDER REFERENCE</b>

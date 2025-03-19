@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models;
+﻿namespace FacturXDotNet;
 
 /// <summary>
 ///     <b>HEADER TRADE AGREEMENT</b>
@@ -20,12 +20,12 @@ public class ApplicableHeaderTradeAgreement
     /// <ChorusPro>For the public sector, it is the "Service Exécutant". It is mandatory for some buyers. It must belong to the Chorus Pro repository. It is limited to 100 characters.</ChorusPro>
     public string? BuyerReference { get; set; }
 
-    /// <inheritdoc cref="Models.SellerTradeParty" />
+    /// <inheritdoc cref="FacturXDotNet.SellerTradeParty" />
     public required SellerTradeParty SellerTradeParty { get; set; }
 
-    /// <inheritdoc cref="Models.BuyerTradeParty" />
+    /// <inheritdoc cref="FacturXDotNet.BuyerTradeParty" />
     public required BuyerTradeParty BuyerTradeParty { get; set; }
 
-    /// <inheritdoc cref="Models.BuyerOrderReferencedDocument" />
+    /// <inheritdoc cref="FacturXDotNet.BuyerOrderReferencedDocument" />
     public BuyerOrderReferencedDocument? BuyerOrderReferencedDocument { get; set; }
 }

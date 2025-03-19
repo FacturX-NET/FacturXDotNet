@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models;
+﻿namespace FacturXDotNet;
 
 /// <summary>
 ///     <b>SUPPLY CHAIN TRADE TRANSACTION</b>
@@ -8,12 +8,12 @@
 /// <Profile>MINIMUM</Profile>
 public sealed class SupplyChainTradeTransaction
 {
-    /// <inheritdoc cref="Models.ApplicableHeaderTradeAgreement" />
+    /// <inheritdoc cref="FacturXDotNet.ApplicableHeaderTradeAgreement" />
     public required ApplicableHeaderTradeAgreement ApplicableHeaderTradeAgreement { get; set; }
 
-    /// <inheritdoc cref="Models.ApplicableHeaderTradeDelivery" />
+    /// <inheritdoc cref="FacturXDotNet.ApplicableHeaderTradeDelivery" />
     public required ApplicableHeaderTradeDelivery ApplicableHeaderTradeDelivery { get; set; }
 
-    /// <inheritdoc cref="Models.ApplicableHeaderTradeSettlement" />
+    /// <inheritdoc cref="FacturXDotNet.ApplicableHeaderTradeSettlement" />
     public ApplicableHeaderTradeSettlement? ApplicableHeaderTradeSettlement { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models;
+﻿namespace FacturXDotNet;
 
 /// <summary>
 ///     <b>EXCHANGE DOCUMENT CONTEXT</b> - A group of business terms providing information on the business process and rules applicable to the Invoice document.
@@ -16,6 +16,6 @@ public sealed class ExchangedDocumentContext
     /// <Profile>MINIMUM</Profile>
     public string? BusinessProcessSpecifiedDocumentContextParameterId { get; set; }
 
-    /// <inheritdoc cref="Models.GuidelineSpecifiedDocumentContextParameterId" />
+    /// <inheritdoc cref="FacturXDotNet.GuidelineSpecifiedDocumentContextParameterId" />
     public required GuidelineSpecifiedDocumentContextParameterId GuidelineSpecifiedDocumentContextParameterId { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models;
+﻿namespace FacturXDotNet;
 
 /// <summary>
 ///     <b>BUYER LEGAL REGISTRATION IDENTIFIER</b> - Details about the organization

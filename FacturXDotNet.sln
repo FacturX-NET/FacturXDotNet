@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Parser.CII", "FacturXDotNet.Parser.CII\FacturXDotNet.Parser.CII.csproj", "{7E024451-B262-4A29-990D-476468A0EA77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Models", "FacturXDotNet.Models\FacturXDotNet.Models.csproj", "{AD1D6EAB-B191-4B09-AEE7-3FBB35A0D2EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet", "FacturXDotNet\FacturXDotNet.csproj", "{AD1D6EAB-B191-4B09-AEE7-3FBB35A0D2EE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Exporter.FacturX", "FacturXDotNet.Exporter.FacturX\FacturXDotNet.Exporter.FacturX.csproj", "{6E4F1C3C-3661-4C53-AB99-015AC62FBE61}"
 EndProject

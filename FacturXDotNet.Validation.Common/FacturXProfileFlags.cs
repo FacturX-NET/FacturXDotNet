@@ -1,6 +1,4 @@
-﻿using FacturXDotNet.Models;
-
-namespace FacturXDotNet.Validation.Common;
+﻿namespace FacturXDotNet.Validation.Common;
 
 /// <summary>
 ///     Represents the different Factur-X profiles as a set of flags.

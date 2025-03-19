@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using FacturXDotNet.Models;
 using FacturXDotNet.Parser.CII.Exceptions;
 using Microsoft.Extensions.Logging;
 

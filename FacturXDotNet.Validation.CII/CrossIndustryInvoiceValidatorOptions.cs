@@ -1,6 +1,4 @@
-﻿using FacturXDotNet.Models;
-
-namespace FacturXDotNet.Validation.CII;
+﻿namespace FacturXDotNet.Validation.CII;
 
 /// <summary>
 ///     Provides configuration options for the <see cref="CrossIndustryInvoiceValidator" />.

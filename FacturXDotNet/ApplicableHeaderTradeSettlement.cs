@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models;
+﻿namespace FacturXDotNet;
 
 /// <summary>
 ///     <b>HEADER TRADE SETTLEMENT DIRECT DEBIT</b> - A group of business terms to specify a direct debit.
@@ -27,6 +27,6 @@ public class ApplicableHeaderTradeSettlement
     /// <ChorusPro>Invoices and credit notes or Chorus Pro are mono-currencies only.</ChorusPro>
     public required string InvoiceCurrencyCode { get; set; }
 
-    /// <inheritdoc cref="Models.SpecifiedTradeSettlementHeaderMonetarySummation" />
+    /// <inheritdoc cref="FacturXDotNet.SpecifiedTradeSettlementHeaderMonetarySummation" />
     public required SpecifiedTradeSettlementHeaderMonetarySummation SpecifiedTradeSettlementHeaderMonetarySummation { get; set; }
 }

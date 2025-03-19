@@ -1,5 +1,4 @@
-﻿using FacturXDotNet.Models;
-using FacturXDotNet.Validation.Common;
+﻿using FacturXDotNet.Validation.Common;
 
 namespace FacturXDotNet.Validation.CII.BusinessRules.VatRelated.StandardAndReducedRate;
 

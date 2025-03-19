@@ -1,5 +1,4 @@
-﻿using FacturXDotNet.Models;
-using FacturXDotNet.Parser.CII;
+﻿using FacturXDotNet.Parser.CII;
 
 namespace FacturXDotNet.Parser.FacturX;
 
