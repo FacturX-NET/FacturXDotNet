@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Parser.CII.Exceptions;
+﻿namespace FacturXDotNet.Parsers.CII.Exceptions;
 
 /// <summary>
 ///     The result that was built by the parser is invalid.

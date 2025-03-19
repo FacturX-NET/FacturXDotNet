@@ -1,6 +1,4 @@
-﻿using FacturXDotNet.Validation.Common;
-
-namespace FacturXDotNet.Validation.CII.BusinessRules;
+﻿namespace FacturXDotNet.Validation.CII.BusinessRules;
 
 class Br02InvoiceShallHaveInvoiceNumber() : FacturXBusinessRule("BR-02", "An Invoice shall have an Invoice number (BT-1).", FacturXProfileFlags.Minimum.AndHigher())
 {

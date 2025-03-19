@@ -1,6 +1,6 @@
-﻿using FacturXDotNet.Parser.CII;
+﻿using FacturXDotNet.Parsers.CII;
 
-namespace FacturXDotNet.Parser.FacturX;
+namespace FacturXDotNet.Parsers.FacturX;
 
 public class FacturXParser
 {

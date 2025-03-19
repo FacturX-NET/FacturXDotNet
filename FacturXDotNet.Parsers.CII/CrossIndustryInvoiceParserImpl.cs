@@ -1,7 +1,7 @@
 ﻿using System.Xml;
-using FacturXDotNet.Parser.CII.Exceptions;
+using FacturXDotNet.Parsers.CII.Exceptions;
 
-namespace FacturXDotNet.Parser.CII;
+namespace FacturXDotNet.Parsers.CII;
 
 class CrossIndustryInvoiceParserImpl<T>
 {

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace FacturXDotNet.Parser.CII;
+namespace FacturXDotNet.Parsers.CII;
 
 public class CrossIndustryInvoiceParserOptions
 {

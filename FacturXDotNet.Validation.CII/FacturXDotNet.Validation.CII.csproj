@@ -2,7 +2,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj" />
-      <ProjectReference Include="..\FacturXDotNet.Validation.Common\FacturXDotNet.Validation.Common.csproj" />
+      <ProjectReference Include="..\FacturXDotNet.Validation\FacturXDotNet.Validation.csproj" />
     </ItemGroup>
 
 </Project>

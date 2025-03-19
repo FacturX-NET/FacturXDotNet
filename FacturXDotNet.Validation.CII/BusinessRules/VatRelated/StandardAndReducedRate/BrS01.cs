@@ -1,6 +1,4 @@
-﻿using FacturXDotNet.Validation.Common;
-
-namespace FacturXDotNet.Validation.CII.BusinessRules.VatRelated.StandardAndReducedRate;
+﻿namespace FacturXDotNet.Validation.CII.BusinessRules.VatRelated.StandardAndReducedRate;
 
 class BrS01() : FacturXBusinessRule(
     "BR-S-01",

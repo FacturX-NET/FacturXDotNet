@@ -1,6 +1,4 @@
-﻿using FacturXDotNet.Validation.Common;
-
-namespace FacturXDotNet.Validation.CII.BusinessRules;
+﻿namespace FacturXDotNet.Validation.CII.BusinessRules;
 
 class Br13InvoiceShallHaveTotalAmountWithoutVat() : FacturXBusinessRule(
     "BR-13",

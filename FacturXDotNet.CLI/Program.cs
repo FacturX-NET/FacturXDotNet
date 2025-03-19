@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using FacturXDotNet.Models;
-using FacturXDotNet.Parser.CII;
-using FacturXDotNet.Parser.FacturX;
+using FacturXDotNet;
+using FacturXDotNet.Parsers.CII;
+using FacturXDotNet.Parsers.FacturX;
+using FacturXDotNet.Validation;
 using FacturXDotNet.Validation.CII;
-using FacturXDotNet.Validation.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;

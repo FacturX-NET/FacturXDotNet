@@ -46,3 +46,7 @@ This separation ensures that each property is mapped to a unique business term f
 To ensure that a single object can support all Factur-X profiles, the model follows the constraints of the least restrictive profile, which is **MINIMUM**. This means that properties that are optional in MINIMUM remain nullable in all profiles, even if they are required in higher-level profiles such as BASIC or EN16931.
 
 When working with higher profiles, users can assume that properties required by those profiles are set, even though they are technically nullable.
+
+## Specifications
+
+The specification of the Cross-Industry Invoice (CII) syntax and the associated business rules can be found in the [Factur-X specification](https://fnfe-mpe.org/factur-x/).

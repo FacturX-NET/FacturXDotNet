@@ -2,7 +2,7 @@
 using System.Text;
 using iText.Kernel.Pdf;
 
-namespace FacturXDotNet.Parser.FacturX;
+namespace FacturXDotNet.Parsers.FacturX;
 
 /// <summary>
 ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.

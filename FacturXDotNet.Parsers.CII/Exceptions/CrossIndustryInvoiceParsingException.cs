@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Parser.CII.Exceptions;
+﻿namespace FacturXDotNet.Parsers.CII.Exceptions;
 
 /// <summary>
 ///     Represent an exception that occurs while parsing a <see cref="CrossIndustryInvoice" />.

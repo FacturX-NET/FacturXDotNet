@@ -1,5 +1,4 @@
 ﻿using FacturXDotNet.Validation.CII.Utils;
-using FacturXDotNet.Validation.Common;
 
 namespace FacturXDotNet.Validation.CII.BusinessRules;
 

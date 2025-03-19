@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Validation.Common;
+﻿namespace FacturXDotNet.Validation;
 
 /// <summary>
 ///     Represents the different Factur-X profiles as a set of flags.

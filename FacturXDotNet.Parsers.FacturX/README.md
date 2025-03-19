@@ -2,7 +2,7 @@
 
 The main goal of this library is to provide a parser for Factur-X files, based on the [Factur-X standard](https://fnfe-mpe.org/factur-x/) version.
 
-### Why is this library separated from [FacturX.NET - CII Parser](../FacturXDotNet.Parser.Cii/README.md)?
+### Why is this library separated from [FacturX.NET - CII Parser](../FacturXDotNet.Parser.CII)?
 
 Handling PDF files is notoriously difficult. The most used libraries in the .NET ecosystem all come with drawbacks:
 - PdfSharp does not allow easy manipulation of attachments

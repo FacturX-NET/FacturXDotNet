@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Validation.Common;
+﻿namespace FacturXDotNet.Validation;
 
 /// <summary>
 ///     Represents the result of validating a Factur-X Cross-Industry Invoice against business rules.

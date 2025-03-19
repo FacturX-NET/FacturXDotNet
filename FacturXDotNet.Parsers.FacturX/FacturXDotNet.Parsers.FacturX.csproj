@@ -7,7 +7,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj" />
-      <ProjectReference Include="..\FacturXDotNet.Parser.CII\FacturXDotNet.Parser.CII.csproj" />
+      <ProjectReference Include="..\FacturXDotNet.Parsers.CII\FacturXDotNet.Parsers.CII.csproj" />
     </ItemGroup>
 
 </Project>

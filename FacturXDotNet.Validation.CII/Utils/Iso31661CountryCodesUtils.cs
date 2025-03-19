@@ -25,3 +25,4 @@ static partial class Iso31661CountryCodesUtils
     )]
     private static partial Regex StartWithCountryCodeRegex();
 }
+ 

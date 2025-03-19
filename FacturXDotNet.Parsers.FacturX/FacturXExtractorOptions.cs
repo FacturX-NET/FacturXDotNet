@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Parser.FacturX;
+﻿namespace FacturXDotNet.Parsers.FacturX;
 
 public class FacturXExtractorOptions
 {
