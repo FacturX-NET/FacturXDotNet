@@ -7,4 +7,9 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\FacturXDotNet.Models\FacturXDotNet.Models.csproj" />
+      <ProjectReference Include="..\FacturXDotNet.Validation.Common\FacturXDotNet.Validation.Common.csproj" />
+    </ItemGroup>
+
 </Project>

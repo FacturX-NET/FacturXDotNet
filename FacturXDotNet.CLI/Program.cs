@@ -4,7 +4,8 @@ using System.Text.Json;
 using FacturXDotNet.Models;
 using FacturXDotNet.Parser.CII;
 using FacturXDotNet.Parser.FacturX;
-using FacturXDotNet.Validation;
+using FacturXDotNet.Validation.CII;
+using FacturXDotNet.Validation.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -30,19 +31,19 @@ try
         {
             Cii =
             {
-                Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? loggerFactory.CreateLogger<FacturXCrossIndustryInvoiceParser>() : null
+                Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? loggerFactory.CreateLogger<CrossIndustryInvoiceParser>() : null
             }
         }
     );
-    
-    FacturXCrossIndustryInvoice result = await parser.ParseCiiXmlInFacturXPdfAsync(example);
+
+    CrossIndustryInvoice result = await parser.ParseCiiXmlInFacturXPdfAsync(example);
 
     logger.LogInformation("-------------");
     logger.LogInformation("   RESULT");
     logger.LogInformation("-------------");
     logger.LogInformation("{Result}", JsonSerializer.Serialize(result, jsonSerializerOptions));
 
-    FacturXCrossIndustryInvoiceValidator validator = new();
+    CrossIndustryInvoiceValidator validator = new();
     FacturXValidationResult validationResult = validator.GetValidationResult(result);
 
     logger.LogInformation("-------------");

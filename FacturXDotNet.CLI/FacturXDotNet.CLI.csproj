@@ -11,7 +11,7 @@
     <ItemGroup>
       <ProjectReference Include="..\FacturXDotNet.Parser.CII\FacturXDotNet.Parser.CII.csproj" />
       <ProjectReference Include="..\FacturXDotNet.Parser.FacturX\FacturXDotNet.Parser.FacturX.csproj" />
-      <ProjectReference Include="..\FacturXDotNet.Validation\FacturXDotNet.Validation.csproj" />
+      <ProjectReference Include="..\FacturXDotNet.Validation.CII\FacturXDotNet.Validation.CII.csproj" />
     </ItemGroup>
 
     <ItemGroup>
