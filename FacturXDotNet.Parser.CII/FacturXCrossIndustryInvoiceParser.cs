@@ -1,18 +1,9 @@
 ﻿using System.Globalization;
 using FacturXDotNet.Models;
-using FacturXDotNet.Parser.Exceptions;
+using FacturXDotNet.Parser.CII.Exceptions;
 using Microsoft.Extensions.Logging;
 
-namespace FacturXDotNet.Parser;
-
-public class FacturXCrossIndustryInvoiceParserOptions
-{
-    /// <summary>
-    ///     The logger that should be used by the parser.
-    ///     The parser logs the unknown paths it encounters at the WARN level.
-    /// </summary>
-    public ILogger? Logger { get; set; }
-}
+namespace FacturXDotNet.Parser.CII;
 
 public class FacturXCrossIndustryInvoiceParser
 {
@@ -25,10 +16,10 @@ public class FacturXCrossIndustryInvoiceParser
         _parser = InitializeParser();
     }
 
-    public async Task<FacturXCrossIndustryInvoice> ParseAsync(Stream stream)
+    public async Task<FacturXCrossIndustryInvoice> ParseCiiXmlAsync(Stream stream)
     {
         FacturXCrossIndustryInvoice result = InitializeResult();
-        await _parser.ParseAsync(stream, result);
+        await _parser.ParseXmlAsync(stream, result);
 
         List<string> errors = ValidateResult(result);
         if (errors.Count > 0)

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Parser", "FacturXDotNet.Parser\FacturXDotNet.Parser.csproj", "{7E024451-B262-4A29-990D-476468A0EA77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Parser.CII", "FacturXDotNet.Parser.CII\FacturXDotNet.Parser.CII.csproj", "{7E024451-B262-4A29-990D-476468A0EA77}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Models", "FacturXDotNet.Models\FacturXDotNet.Models.csproj", "{AD1D6EAB-B191-4B09-AEE7-3FBB35A0D2EE}"
 EndProject
@@ -13,6 +13,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.CLI", "FacturXDotNet.CLI\FacturXDotNet.CLI.csproj", "{0C810A7D-6919-43FB-A6A8-7F23E67B3AD8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Validation", "FacturXDotNet.Validation\FacturXDotNet.Validation.csproj", "{C016D084-6441-4B0A-A752-3393A4F9FC9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.Parser.FacturX", "FacturXDotNet.Parser.FacturX\FacturXDotNet.Parser.FacturX.csproj", "{454D880F-818E-4957-A064-3339958C491D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,5 +50,9 @@ Global
 		{C016D084-6441-4B0A-A752-3393A4F9FC9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C016D084-6441-4B0A-A752-3393A4F9FC9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C016D084-6441-4B0A-A752-3393A4F9FC9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{454D880F-818E-4957-A064-3339958C491D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{454D880F-818E-4957-A064-3339958C491D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{454D880F-818E-4957-A064-3339958C491D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{454D880F-818E-4957-A064-3339958C491D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -12,8 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="itext" Version="9.1.0" />
-      <PackageReference Include="itext.bouncy-castle-adapter" Version="9.1.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
     </ItemGroup>
 

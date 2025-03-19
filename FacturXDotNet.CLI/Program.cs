@@ -2,7 +2,8 @@
 
 using System.Text.Json;
 using FacturXDotNet.Models;
-using FacturXDotNet.Parser;
+using FacturXDotNet.Parser.CII;
+using FacturXDotNet.Parser.FacturX;
 using FacturXDotNet.Validation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -24,21 +25,17 @@ try
 
     await using FileStream example = File.OpenRead(@"D:\source\repos\FacturXDotNet\FacturXDotNet.CLI\Examples\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.pdf");
 
-    FacturXExtractor extractor = new();
-    if (!extractor.TryExtractFacturXAttachment(example, out Stream? ciiStream))
-    {
-        throw new InvalidOperationException("Could not extract the file factur-x.xml from the attachments.");
-    }
-
-    await using Stream _ = ciiStream;
-
-    FacturXCrossIndustryInvoiceParser parser = new(
-        new FacturXCrossIndustryInvoiceParserOptions
+    FacturXParser parser = new(
+        new FacturXParserOptions
         {
-            Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? loggerFactory.CreateLogger<FacturXCrossIndustryInvoiceParser>() : null
+            Cii =
+            {
+                Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? loggerFactory.CreateLogger<FacturXCrossIndustryInvoiceParser>() : null
+            }
         }
     );
-    FacturXCrossIndustryInvoice result = await parser.ParseAsync(ciiStream);
+    
+    FacturXCrossIndustryInvoice result = await parser.ParseCiiXmlInFacturXPdfAsync(example);
 
     logger.LogInformation("-------------");
     logger.LogInformation("   RESULT");

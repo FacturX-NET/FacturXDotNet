@@ -1,6 +1,6 @@
 ﻿using FacturXDotNet.Models;
 
-namespace FacturXDotNet.Parser.Exceptions;
+namespace FacturXDotNet.Parser.CII.Exceptions;
 
 /// <summary>
 ///     Represent an exception that occurs while parsing a <see cref="FacturXCrossIndustryInvoice" />.

@@ -8,7 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="itext" Version="9.1.0" />
+      <PackageReference Include="itext.bouncy-castle-adapter" Version="9.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\FacturXDotNet.Models\FacturXDotNet.Models.csproj" />
+      <ProjectReference Include="..\FacturXDotNet.Parser.CII\FacturXDotNet.Parser.CII.csproj" />
     </ItemGroup>
 
 </Project>

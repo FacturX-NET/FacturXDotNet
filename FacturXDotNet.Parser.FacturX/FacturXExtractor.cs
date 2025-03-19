@@ -2,7 +2,7 @@
 using System.Text;
 using iText.Kernel.Pdf;
 
-namespace FacturXDotNet.Parser;
+namespace FacturXDotNet.Parser.FacturX;
 
 /// <summary>
 ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.
@@ -10,6 +10,11 @@ namespace FacturXDotNet.Parser;
 public class FacturXExtractor(FacturXExtractorOptions? options = null)
 {
     readonly FacturXExtractorOptions _options = options ?? new FacturXExtractorOptions();
+
+    public Stream ExtractFacturXAttachment(Stream facturXStream) =>
+        TryExtractFacturXAttachment(facturXStream, out Stream? result)
+            ? result
+            : throw new InvalidOperationException($"The Cross-Industry Invoice XML attachment with name '{_options.CiiXmlAttachmentName}' could not be found.");
 
     /// <summary>
     ///     Return the Cross-Industry Invoice XML attachment named <c>factur-x.xml</c> from the Factur-X PDF document.
@@ -34,7 +39,7 @@ public class FacturXExtractor(FacturXExtractorOptions? options = null)
             for (int i = 0; i < fileNames.Size() - 1; i += 2)
             {
                 PdfString? name = fileNames.GetAsString(i);
-                if (name.ToString() != "factur-x.xml")
+                if (name.ToString() != _options.CiiXmlAttachmentName)
                 {
                     continue;
                 }

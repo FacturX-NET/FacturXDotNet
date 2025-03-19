@@ -1,7 +1,7 @@
 ﻿using System.Xml;
-using FacturXDotNet.Parser.Exceptions;
+using FacturXDotNet.Parser.CII.Exceptions;
 
-namespace FacturXDotNet.Parser;
+namespace FacturXDotNet.Parser.CII;
 
 class FacturXCrossIndustryInvoiceParserImpl<T>
 {
@@ -47,7 +47,7 @@ class FacturXCrossIndustryInvoiceParserImpl<T>
     /// <summary>
     ///     Parse the given stream into the given result.
     /// </summary>
-    public async Task ParseAsync(Stream stream, T result)
+    public async Task ParseXmlAsync(Stream stream, T result)
     {
         using XmlReader reader = XmlReader.Create(stream, new XmlReaderSettings { Async = true, CloseInput = false });
 
