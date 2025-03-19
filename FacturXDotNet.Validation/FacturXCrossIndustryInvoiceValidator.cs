@@ -30,7 +30,7 @@ public class FacturXCrossIndustryInvoiceValidator(FacturXCrossIndustryInvoiceVal
     public bool IsValid(FacturXCrossIndustryInvoice invoice)
     {
         FacturXGuidelineSpecifiedDocumentContextParameterId profile = _options.ProfileOverride ?? invoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId;
-        return Rules.Where(rule => !SkipRule(rule, profile)).All(rule => rule.Check(invoice));
+        return Rules.Where(rule => !ShouldSkipRule(rule) && !IsExpectedToFail(rule, profile)).All(rule => rule.Check(invoice));
     }
 
     /// <summary>
@@ -61,11 +61,12 @@ public class FacturXCrossIndustryInvoiceValidator(FacturXCrossIndustryInvoiceVal
 
         List<FacturXBusinessRule> passed = [];
         List<FacturXBusinessRule> failed = [];
+        List<FacturXBusinessRule> expectedToFail = [];
         List<FacturXBusinessRule> skipped = [];
 
         foreach (FacturXBusinessRule rule in Rules)
         {
-            if (SkipRule(rule, profile))
+            if (ShouldSkipRule(rule))
             {
                 skipped.Add(rule);
                 continue;
@@ -77,14 +78,22 @@ public class FacturXCrossIndustryInvoiceValidator(FacturXCrossIndustryInvoiceVal
             }
             else
             {
-                failed.Add(rule);
+                if (IsExpectedToFail(rule, profile))
+                {
+                    expectedToFail.Add(rule);
+                }
+                else
+                {
+                    failed.Add(rule);
+                }
             }
         }
 
-        return new FacturXValidationResult(passed, failed, skipped);
+        return new FacturXValidationResult(passed, failed, expectedToFail, skipped);
     }
 
-    static bool SkipRule(FacturXBusinessRule rule, FacturXGuidelineSpecifiedDocumentContextParameterId profile) => !rule.Profiles.Match(profile);
+    bool ShouldSkipRule(FacturXBusinessRule rule) => _options.RulesToSkip.Any(r => string.Equals(rule.Name, r, StringComparison.InvariantCultureIgnoreCase));
+    static bool IsExpectedToFail(FacturXBusinessRule rule, FacturXGuidelineSpecifiedDocumentContextParameterId profile) => !rule.Profiles.Match(profile);
 
     static readonly FacturXBusinessRule[] Rules =
     [

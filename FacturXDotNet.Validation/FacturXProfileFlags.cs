@@ -87,4 +87,34 @@ public static class ProfileFlagsExtensions
 
         return FacturXProfileFlags.None;
     }
+
+    public static FacturXProfileFlags GetMaxProfile(this FacturXProfileFlags flags)
+    {
+        if (flags.HasFlag(FacturXProfileFlags.Extended))
+        {
+            return FacturXProfileFlags.Extended;
+        }
+
+        if (flags.HasFlag(FacturXProfileFlags.En16931))
+        {
+            return FacturXProfileFlags.En16931;
+        }
+
+        if (flags.HasFlag(FacturXProfileFlags.Basic))
+        {
+            return FacturXProfileFlags.Basic;
+        }
+
+        if (flags.HasFlag(FacturXProfileFlags.BasicWl))
+        {
+            return FacturXProfileFlags.BasicWl;
+        }
+
+        if (flags.HasFlag(FacturXProfileFlags.Minimum))
+        {
+            return FacturXProfileFlags.Minimum;
+        }
+
+        return FacturXProfileFlags.None;
+    }
 }

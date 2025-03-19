@@ -16,4 +16,9 @@ public class FacturXCrossIndustryInvoiceValidatorOptions
     ///     If <c>null</c>, the validator uses the profile defined in the invoice itself.
     /// </remarks>
     public FacturXGuidelineSpecifiedDocumentContextParameterId? ProfileOverride { get; set; } = null;
+
+    /// <summary>
+    ///     The list of rules to skip during validation.
+    /// </summary>
+    public List<string> RulesToSkip { get; } = new();
 }

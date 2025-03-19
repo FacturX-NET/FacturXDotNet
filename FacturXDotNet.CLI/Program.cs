@@ -56,6 +56,11 @@ try
     logger.LogInformation(" VALIDATION");
     logger.LogInformation("-------------");
 
+    logger.LogInformation("Success: {Success}", validationResult.Success);
+    logger.LogInformation("Actual profile: {Profile}", validationResult.ActualProfile.GetMaxProfile());
+
+    logger.LogInformation("Details:");
+    
     if (validationResult.Failed.Count > 0)
     {
         logger.LogError("- Failed: ({0})", validationResult.Failed.Count);
@@ -73,6 +78,12 @@ try
     foreach (FacturXBusinessRule rule in validationResult.Passed)
     {
         logger.LogInformation("  - OK [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
+    }
+
+    logger.LogInformation("- Expected to fail: ({0})", validationResult.ExpectedToFail.Count);
+    foreach (FacturXBusinessRule rule in validationResult.ExpectedToFail)
+    {
+        logger.LogInformation("  - KO [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
     }
 
     logger.LogInformation("- Skipped: ({0})", validationResult.Skipped.Count);
