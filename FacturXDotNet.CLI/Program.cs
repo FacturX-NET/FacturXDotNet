@@ -49,7 +49,7 @@ try
     logger.LogInformation("-------------");
 
     logger.LogInformation("Success: {Success}", validationResult.Success);
-    logger.LogInformation("Actual profile: {Profile}", validationResult.ActualProfile.GetMaxProfile());
+    logger.LogInformation("Actual profile: {Profile}", validationResult.ValidProfiles.GetMaxProfile());
 
     logger.LogInformation("Details:");
 

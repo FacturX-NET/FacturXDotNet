@@ -22,12 +22,9 @@ public readonly record struct FacturXValidationResult(
 )
 {
     /// <summary>
-    ///     Return the profiles of the document that have not failed the validation.
+    ///     Gets the profiles that are valid for the document.
     /// </summary>
-    /// <example>
-    ///     If the document is compliant with the BASIC WL profile, the ActualProfile will be <c>FacturXProfileFlags.Minimum | FacturXProfileFlags.BasicWl</c>.
-    /// </example>
-    public FacturXProfileFlags ActualProfile { get; } = ComputeActualProfile(Failed, ExpectedToFail);
+    public FacturXProfileFlags ValidProfiles { get; } = ComputeActualProfile(Failed, ExpectedToFail);
 
     /// <summary>
     ///     Gets a value indicating whether the validation was successful.
