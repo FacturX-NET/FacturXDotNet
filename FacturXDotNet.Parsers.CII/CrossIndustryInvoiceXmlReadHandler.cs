@@ -20,7 +20,57 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
         string newPath = $"{parentPath}/{name}";
         _pathStack.Push(newPath.AsMemory());
 
-        switch (newPath)
+        try
+        {
+            HandleTag(newPath);
+        }
+        catch (Exception exception)
+        {
+            throw new CrossIndustryInvoiceParsingException(newPath, line, column, exception);
+        }
+    }
+
+    public void OnEndTagEmpty() => _pathStack.Pop();
+
+    public void OnEndTag(ReadOnlySpan<char> name, int line, int column) => _pathStack.Pop();
+
+    public void OnAttribute(ReadOnlySpan<char> name, ReadOnlySpan<char> value, int nameLine, int nameColumn, int valueLine, int valueColumn)
+    {
+        if (!_pathStack.TryPeek(out ReadOnlyMemory<char> path))
+        {
+            return;
+        }
+
+        try
+        {
+            HandleAttribute(path, name, value);
+        }
+        catch (Exception exception)
+        {
+            throw new CrossIndustryInvoiceParsingException($"{path}@{name}", valueLine, valueColumn, exception);
+        }
+    }
+
+    public void OnText(ReadOnlySpan<char> value, int line, int column)
+    {
+        if (!_pathStack.TryPeek(out ReadOnlyMemory<char> path) || value.IsWhiteSpace())
+        {
+            return;
+        }
+
+        try
+        {
+            HandleValue(path, value);
+        }
+        catch (Exception exception)
+        {
+            throw new CrossIndustryInvoiceParsingException(path.Span, line, column, exception);
+        }
+    }
+
+    void HandleTag(string path)
+    {
+        switch (path)
         {
             case "/rsm:CrossIndustryInvoice/rsm:ExchangedDocumentContext":
                 result.ExchangedDocumentContext = new ExchangedDocumentContext
@@ -122,80 +172,8 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
         }
     }
 
-    public void OnEndTagEmpty() => _pathStack.Pop();
-
-    public void OnEndTag(ReadOnlySpan<char> name, int line, int column) => _pathStack.Pop();
-
-    public void OnAttribute(ReadOnlySpan<char> name, ReadOnlySpan<char> value, int nameLine, int nameColumn, int valueLine, int valueColumn)
+    void HandleValue(ReadOnlyMemory<char> path, ReadOnlySpan<char> value)
     {
-        if (!_pathStack.TryPeek(out ReadOnlyMemory<char> path))
-        {
-            return;
-        }
-
-        switch (path.Span)
-        {
-            // EXCHANGED DOCUMENT
-
-            case "/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString":
-                if (name is "format")
-                {
-                    result.ExchangedDocument.IssueDateTimeFormat = ParseDateOnlyFormat(value);
-                }
-                break;
-
-            // SUPPLY CHAIN TRADE TRANSACTION - APPLICABLE HEADER TRADE AGREEMENT - SELLER TRADE PARTY - SPECIFIED LEGAL ORGANIZATION
-
-            case "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:ID":
-                if (name is "schemeID")
-                {
-                    result.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization!.IdSchemeId = value.ToString();
-                }
-                break;
-
-            // SUPPLY CHAIN TRADE TRANSACTION - APPLICABLE HEADER TRADE AGREEMENT - SELLER TRADE PARTY - SPECIFIED TAX REGISTRATION
-
-            case "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID":
-                if (name is "schemeID")
-                {
-                    result.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration!.IdSchemeId =
-                        ParseVatOnlyTaxSchemeIdentifier(value.ToString());
-                }
-                break;
-
-            // SUPPLY CHAIN TRADE TRANSACTION - APPLICABLE HEADER TRADE AGREEMENT - BUYER TRADE PARTY - SPECIFIED LEGAL ORGANIZATION
-
-            case "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:SpecifiedLegalOrganization/ram:ID":
-                if (name is "schemeID")
-                {
-                    result.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.SpecifiedLegalOrganization!.IdSchemeId = value.ToString();
-                }
-                break;
-
-            // SUPPLY CHAIN TRADE TRANSACTION - APPLICABLE HEADER TRADE SETTLEMENT - SPECIFIED TRADE SETTLEMENT HEADER MONETARY SUMMATION
-
-            case
-                "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount"
-                :
-                if (name is "currencyID")
-                {
-                    result.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement!.SpecifiedTradeSettlementHeaderMonetarySummation.TaxTotalAmountCurrencyId = value.ToString();
-                }
-                break;
-
-            default:
-                logger?.LogWarning("Unknown element '{Path}@{Attribute}' with value '{Value}'.", path.Span.ToString(), name.ToString(), value.ToString());
-                break;
-        }
-    }
-
-    public void OnText(ReadOnlySpan<char> value, int line, int column)
-    {
-        if (!_pathStack.TryPeek(out ReadOnlyMemory<char> path) || value.IsWhiteSpace())
-        {
-            return;
-        }
-
         switch (path.Span)
         {
             // EXCHANGED DOCUMENT CONTEXT
@@ -312,10 +290,68 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
         }
     }
 
+    void HandleAttribute(ReadOnlyMemory<char> path, ReadOnlySpan<char> name, ReadOnlySpan<char> value)
+    {
+        switch (path.Span)
+        {
+            // EXCHANGED DOCUMENT
+
+            case "/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString":
+                if (name is "format")
+                {
+                    result.ExchangedDocument.IssueDateTimeFormat = ParseDateOnlyFormat(value);
+                }
+                break;
+
+            // SUPPLY CHAIN TRADE TRANSACTION - APPLICABLE HEADER TRADE AGREEMENT - SELLER TRADE PARTY - SPECIFIED LEGAL ORGANIZATION
+
+            case "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:ID":
+                if (name is "schemeID")
+                {
+                    result.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization!.IdSchemeId = value.ToString();
+                }
+                break;
+
+            // SUPPLY CHAIN TRADE TRANSACTION - APPLICABLE HEADER TRADE AGREEMENT - SELLER TRADE PARTY - SPECIFIED TAX REGISTRATION
+
+            case "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID":
+                if (name is "schemeID")
+                {
+                    result.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration!.IdSchemeId =
+                        ParseVatOnlyTaxSchemeIdentifier(value.ToString());
+                }
+                break;
+
+            // SUPPLY CHAIN TRADE TRANSACTION - APPLICABLE HEADER TRADE AGREEMENT - BUYER TRADE PARTY - SPECIFIED LEGAL ORGANIZATION
+
+            case "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:SpecifiedLegalOrganization/ram:ID":
+                if (name is "schemeID")
+                {
+                    result.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.SpecifiedLegalOrganization!.IdSchemeId = value.ToString();
+                }
+                break;
+
+            // SUPPLY CHAIN TRADE TRANSACTION - APPLICABLE HEADER TRADE SETTLEMENT - SPECIFIED TRADE SETTLEMENT HEADER MONETARY SUMMATION
+
+            case
+                "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount"
+                :
+                if (name is "currencyID")
+                {
+                    result.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement!.SpecifiedTradeSettlementHeaderMonetarySummation.TaxTotalAmountCurrencyId = value.ToString();
+                }
+                break;
+
+            default:
+                logger?.LogWarning("Unknown element '{Path}@{Attribute}' with value '{Value}'.", path.Span.ToString(), name.ToString(), value.ToString());
+                break;
+        }
+    }
+
     public void OnError(string message, int line, int column)
     {
         string path = _pathStack.TryPeek(out ReadOnlyMemory<char> p) ? p.ToString() : string.Empty;
-        throw new CrossIndustryInvoiceParsingException(path, message, line, column);
+        throw new CrossIndustryInvoiceParsingException(path, line, column, message);
     }
 
     static GuidelineSpecifiedDocumentContextParameterId ParseGuidelineSpecifiedDocumentContextParameterId(ReadOnlySpan<char> value) =>

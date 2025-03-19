@@ -5,22 +5,16 @@
 /// </summary>
 public class CrossIndustryInvoiceParsingException : CrossIndustryInvoiceParserException
 {
-    public CrossIndustryInvoiceParsingException(ReadOnlySpan<char> path, ReadOnlySpan<char> value, Exception innerException) : base(
-        BuildErrorMessage(path, value, innerException),
+    public CrossIndustryInvoiceParsingException(ReadOnlySpan<char> path, int line, int column, string message) : base(BuildErrorMessage(path, line, column, message))
+    {
+    }
+
+    public CrossIndustryInvoiceParsingException(ReadOnlySpan<char> path, int line, int column, Exception innerException) : base(
+        BuildErrorMessage(path, line, column, innerException.Message),
         innerException
     )
     {
     }
 
-    public CrossIndustryInvoiceParsingException(ReadOnlySpan<char> path, Exception innerException) : base(BuildErrorMessage(path, innerException), innerException)
-    {
-    }
-
-    public CrossIndustryInvoiceParsingException(ReadOnlySpan<char> path, string message, int line, int column) : base(BuildErrorMessage(path, message, line, column))
-    {
-    }
-
-    static string BuildErrorMessage(ReadOnlySpan<char> path, string message, int line, int column) => $"At '{path}' (line {line}, column {column}): {message}.";
-    static string BuildErrorMessage(ReadOnlySpan<char> path, Exception innerException) => $"At '{path}': {innerException.Message}.";
-    static string BuildErrorMessage(ReadOnlySpan<char> path, ReadOnlySpan<char> value, Exception innerException) => $"At '{path}': {innerException.Message} (value was '{value}').";
+    static string BuildErrorMessage(ReadOnlySpan<char> path, int line, int column, string message) => $"At '{path}' (line {line}, column {column}): {message}.";
 }
