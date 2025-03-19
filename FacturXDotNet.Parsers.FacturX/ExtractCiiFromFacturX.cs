@@ -9,9 +9,9 @@ namespace FacturXDotNet.Parsers.FacturX;
 /// <summary>
 ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.
 /// </summary>
-public class FacturXExtractor(FacturXExtractorOptions? options = null)
+class ExtractCiiFromFacturX(FacturXParserOptions? options = null)
 {
-    readonly FacturXExtractorOptions _options = options ?? new FacturXExtractorOptions();
+    readonly FacturXParserOptions _options = options ?? new FacturXParserOptions();
 
     public Stream ExtractFacturXAttachment(Stream facturXStream) =>
         TryExtractFacturXAttachment(facturXStream, out Stream? result)

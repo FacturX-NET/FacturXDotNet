@@ -4,12 +4,12 @@ namespace FacturXDotNet.Parsers.FacturX;
 
 public class FacturXParser
 {
-    readonly FacturXExtractor _extractor;
+    readonly ExtractCiiFromFacturX _extractor;
     readonly CrossIndustryInvoiceParser _parser;
 
     public FacturXParser(FacturXParserOptions? options = null)
     {
-        _extractor = new FacturXExtractor(options?.Extraction ?? new FacturXExtractorOptions());
+        _extractor = new ExtractCiiFromFacturX(options);
         _parser = new CrossIndustryInvoiceParser(options?.Cii ?? new CrossIndustryInvoiceParserOptions());
     }
 
@@ -23,17 +23,4 @@ public class FacturXParser
         await using Stream ciiXmlStream = _extractor.ExtractFacturXAttachment(stream);
         return _parser.ParseCiiXml(ciiXmlStream);
     }
-}
-
-public class FacturXParserOptions
-{
-    /// <summary>
-    ///     The options for extracting the Cross-Industry Invoice XML from the PDF.
-    /// </summary>
-    public FacturXExtractorOptions Extraction { get; } = new();
-
-    /// <summary>
-    ///     The options for parsing the Cross-Industry Invoice.
-    /// </summary>
-    public CrossIndustryInvoiceParserOptions Cii { get; } = new();
 }
