@@ -26,4 +26,15 @@ public class SellerTradePartySpecifiedTaxRegistration
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID</CiiXPath>
     /// <Profile>MINIMUM</Profile>
     public string? Id { get; set; }
+
+    /// <summary>
+    ///     <b>Tax Scheme identifier</b> - Scheme identifier for supplier VAT identifier.
+    /// </summary>
+    /// <remarks>
+    ///     Value = VA
+    /// </remarks>
+    /// <ID>BT-31-0</ID>
+    /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID/@schemeID</CiiXPath>
+    /// <Profile>MINIMUM</Profile>
+    public VatOnlyTaxSchemeIdentifier IdSchemeId { get; set; }
 }

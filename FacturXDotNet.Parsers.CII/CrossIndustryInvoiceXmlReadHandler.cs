@@ -30,7 +30,8 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
                 break;
 
             case "/rsm:CrossIndustryInvoice/rsm:ExchangedDocument":
-                result.ExchangedDocument = new ExchangedDocument { Id = string.Empty, TypeCode = (InvoiceTypeCode)(-1), IssueDateTime = default };
+                result.ExchangedDocument = new ExchangedDocument
+                    { Id = string.Empty, TypeCode = (InvoiceTypeCode)(-1), IssueDateTime = default, IssueDateTimeFormat = (DateOnlyFormat)(-1) };
                 break;
 
             case "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction":
@@ -134,12 +135,31 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
 
         switch (path.Span)
         {
+            // EXCHANGED DOCUMENT
+
+            case "/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString":
+                if (name is "format")
+                {
+                    result.ExchangedDocument.IssueDateTimeFormat = ParseDateOnlyFormat(value);
+                }
+                break;
+
             // SUPPLY CHAIN TRADE TRANSACTION - APPLICABLE HEADER TRADE AGREEMENT - SELLER TRADE PARTY - SPECIFIED LEGAL ORGANIZATION
 
             case "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedLegalOrganization/ram:ID":
                 if (name is "schemeID")
                 {
                     result.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization!.IdSchemeId = value.ToString();
+                }
+                break;
+
+            // SUPPLY CHAIN TRADE TRANSACTION - APPLICABLE HEADER TRADE AGREEMENT - SELLER TRADE PARTY - SPECIFIED TAX REGISTRATION
+
+            case "/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID":
+                if (name is "schemeID")
+                {
+                    result.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration!.IdSchemeId =
+                        ParseVatOnlyTaxSchemeIdentifier(value.ToString());
                 }
                 break;
 
@@ -310,6 +330,18 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
 
         return valueInt.ToSpecificationIdentifier();
     }
+
+    static DateOnlyFormat ParseDateOnlyFormat(ReadOnlySpan<char> value)
+    {
+        if (!int.TryParse(value, out int valueInt))
+        {
+            throw new FormatException($"Expected value to be an integer, but found {value}.");
+        }
+
+        return valueInt.ToDateOnlyFormat();
+    }
+
+    static VatOnlyTaxSchemeIdentifier ParseVatOnlyTaxSchemeIdentifier(ReadOnlySpan<char> value) => value.ToString().ToVatOnlyTaxSchemeIdentifier();
 
     static DateOnly ParseDateOnly(ReadOnlySpan<char> value)
     {

@@ -34,4 +34,15 @@ public sealed class ExchangedDocument
     /// <Profile>MINIMUM</Profile>
     /// <ChorusPro>The issue date must be before or equal to the deposit date.</ChorusPro>
     public required DateOnly IssueDateTime { get; set; }
+
+    /// <summary>
+    ///     <b>Date, format</b>
+    /// </summary>
+    /// <remarks>
+    ///     Only value "102"
+    /// </remarks>
+    /// <ID>BT-2-0</ID>
+    /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString/@format</CiiXPath>
+    /// <Profile>MINIMUM</Profile>
+    public required DateOnlyFormat IssueDateTimeFormat { get; set; }
 }

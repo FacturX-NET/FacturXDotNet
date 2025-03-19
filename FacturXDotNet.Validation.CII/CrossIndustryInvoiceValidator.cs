@@ -96,6 +96,7 @@ public class CrossIndustryInvoiceValidator(CrossIndustryInvoiceValidatorOptions?
 
     static readonly FacturXBusinessRule[] Rules =
     [
+        new Br01InvoiceShallHaveSpecificationIdentifier(),
         new Br02InvoiceShallHaveInvoiceNumber(),
         new Br03InvoiceShallHaveIssueDate(),
         new Br04InvoiceShallHaveTypeCode(),
