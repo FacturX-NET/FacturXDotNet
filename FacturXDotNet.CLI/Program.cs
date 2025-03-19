@@ -6,18 +6,14 @@ using FacturXDotNet.Parser;
 using FacturXDotNet.Validation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Extensions.Logging;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
-using ILoggerFactory factory = LoggerFactory.Create(
-    builder => builder.AddSimpleConsole(
-        options =>
-        {
-            options.TimestampFormat = "[yyyy-MM-ddTHH:mm:ss] ";
-            options.UseUtcTimestamp = true;
-            options.SingleLine = true;
-        }
-    )
-);
-ILogger logger = factory.CreateLogger("Program");
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+SerilogLoggerFactory loggerFactory = new(Log.Logger);
+
+ILogger logger = loggerFactory.CreateLogger("Program");
 
 try
 {
@@ -39,7 +35,7 @@ try
     FacturXCrossIndustryInvoiceParser parser = new(
         new FacturXCrossIndustryInvoiceParserOptions
         {
-            Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? factory.CreateLogger<FacturXCrossIndustryInvoiceParser>() : null
+            Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? loggerFactory.CreateLogger<FacturXCrossIndustryInvoiceParser>() : null
         }
     );
     FacturXCrossIndustryInvoice result = await parser.ParseAsync(ciiStream);
@@ -47,7 +43,7 @@ try
     logger.LogInformation("-------------");
     logger.LogInformation("   RESULT");
     logger.LogInformation("-------------");
-    logger.LogInformation("{0}", JsonSerializer.Serialize(result, jsonSerializerOptions));
+    logger.LogInformation("{Result}", JsonSerializer.Serialize(result, jsonSerializerOptions));
 
     FacturXCrossIndustryInvoiceValidator validator = new();
     FacturXValidationResult validationResult = validator.GetValidationResult(result);
@@ -60,33 +56,33 @@ try
     logger.LogInformation("Actual profile: {Profile}", validationResult.ActualProfile.GetMaxProfile());
 
     logger.LogInformation("Details:");
-    
+
     if (validationResult.Failed.Count > 0)
     {
-        logger.LogError("- Failed: ({0})", validationResult.Failed.Count);
+        logger.LogError("- Failed: ({FailedCount})", validationResult.Failed.Count);
     }
     else
     {
-        logger.LogInformation("- Failed: ({0})", validationResult.Failed.Count);
+        logger.LogInformation("- Failed: ({FailedCount})", validationResult.Failed.Count);
     }
     foreach (FacturXBusinessRule rule in validationResult.Failed)
     {
         logger.LogError("  - KO [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
     }
 
-    logger.LogInformation("- Passed: ({0})", validationResult.Passed.Count);
+    logger.LogInformation("- Passed: ({PassedCount})", validationResult.Passed.Count);
     foreach (FacturXBusinessRule rule in validationResult.Passed)
     {
         logger.LogInformation("  - OK [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
     }
 
-    logger.LogInformation("- Expected to fail: ({0})", validationResult.ExpectedToFail.Count);
+    logger.LogInformation("- Expected to fail: ({ExpectedToFailCount})", validationResult.ExpectedToFail.Count);
     foreach (FacturXBusinessRule rule in validationResult.ExpectedToFail)
     {
         logger.LogInformation("  - KO [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
     }
 
-    logger.LogInformation("- Skipped: ({0})", validationResult.Skipped.Count);
+    logger.LogInformation("- Skipped: ({SkippedCount})", validationResult.Skipped.Count);
     foreach (FacturXBusinessRule rule in validationResult.Skipped)
     {
         logger.LogInformation("  - ?? [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
