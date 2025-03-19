@@ -1,6 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using System.Text.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using FacturXDotNet.Models;
 using FacturXDotNet.Parser.CII;
 using FacturXDotNet.Parser.FacturX;
@@ -19,10 +18,9 @@ ILogger logger = loggerFactory.CreateLogger("Program");
 
 try
 {
-    JsonSerializerOptions jsonSerializerOptions = new(JsonSerializerDefaults.Web) { WriteIndented = true };
-
     IConfigurationRoot configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
-    string environment = configuration.GetValue<string>("ENVIRONMENT") ?? string.Empty;
+    Options options = configuration.Get<Options>() ?? new Options();
+    string environment = options.Environment ?? string.Empty;
 
     await using FileStream example = File.OpenRead(@"D:\source\repos\FacturXDotNet\FacturXDotNet.CLI\Examples\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.pdf");
 
@@ -41,7 +39,7 @@ try
     logger.LogInformation("-------------");
     logger.LogInformation("   RESULT");
     logger.LogInformation("-------------");
-    logger.LogInformation("{Result}", JsonSerializer.Serialize(result, jsonSerializerOptions));
+    logger.LogInformation("{Result}", JsonSerializer.Serialize(result, SourceGenerationContext.Default.CrossIndustryInvoice));
 
     CrossIndustryInvoiceValidator validator = new();
     FacturXValidationResult validationResult = validator.GetValidationResult(result);
@@ -91,4 +89,15 @@ try
 catch (Exception exn)
 {
     logger.LogCritical(exn, "Unhandled exception.");
+}
+
+class Options
+{
+    public string? Environment { get; set; }
+}
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(CrossIndustryInvoice))]
+partial class SourceGenerationContext : JsonSerializerContext
+{
 }
