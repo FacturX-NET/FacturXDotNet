@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-      <PackageReference Include="itext" Version="9.1.0" />
-      <PackageReference Include="itext.bouncy-castle-adapter" Version="9.1.0" />
+      <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj" />
+      <ProjectReference Include="..\FacturXDotNet.Parsers.CII\FacturXDotNet.Parsers.CII.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj" />
-      <ProjectReference Include="..\FacturXDotNet.Parsers.CII\FacturXDotNet.Parsers.CII.csproj" />
+      <PackageReference Include="PDFsharp" Version="6.1.1" />
     </ItemGroup>
 
 </Project>
