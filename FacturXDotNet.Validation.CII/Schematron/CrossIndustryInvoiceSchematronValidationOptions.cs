@@ -18,5 +18,5 @@ public class CrossIndustryInvoiceSchematronValidationOptions
     /// <summary>
     ///     The list of rules to skip during validation.
     /// </summary>
-    public List<string> RulesToSkip { get; } = new();
+    public List<string> RulesToSkip { get; } = [];
 }

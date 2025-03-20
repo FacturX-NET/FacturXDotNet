@@ -2,7 +2,7 @@
 
 namespace FacturXDotNet.Validation.CII.BusinessRules;
 
-class BrCo09() : FacturXBusinessRule(
+record BrCo09() : FacturXBusinessRule(
     "BR-CO-09",
     """
     The Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) shall have a prefix in accordance 

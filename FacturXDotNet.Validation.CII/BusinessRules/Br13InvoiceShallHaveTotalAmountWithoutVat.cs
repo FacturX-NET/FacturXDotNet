@@ -1,6 +1,6 @@
 ﻿namespace FacturXDotNet.Validation.CII.BusinessRules;
 
-class Br13InvoiceShallHaveTotalAmountWithoutVat() : FacturXBusinessRule(
+record Br13InvoiceShallHaveTotalAmountWithoutVat() : FacturXBusinessRule(
     "BR-13",
     "An Invoice shall have the Invoice total amount without VAT (BT-109).",
     FacturXProfileFlags.Minimum.AndHigher()

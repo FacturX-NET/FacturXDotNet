@@ -1,6 +1,6 @@
 ﻿namespace FacturXDotNet.Validation.CII.BusinessRules;
 
-class Br15InvoiceShallHaveAmountDueForPayment() : FacturXBusinessRule(
+record Br15InvoiceShallHaveAmountDueForPayment() : FacturXBusinessRule(
     "BR-15",
     "An Invoice shall have the Amount due for payment (BT- 115).",
     FacturXProfileFlags.Minimum.AndHigher()

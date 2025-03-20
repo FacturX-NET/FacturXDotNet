@@ -1,6 +1,6 @@
 ﻿namespace FacturXDotNet.Validation.CII.BusinessRules;
 
-class BrCo26() : FacturXBusinessRule(
+record BrCo26() : FacturXBusinessRule(
     "BR-CO-26",
     """
     In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) 

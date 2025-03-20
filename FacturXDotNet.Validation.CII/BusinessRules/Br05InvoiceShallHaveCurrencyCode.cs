@@ -1,6 +1,6 @@
 ﻿namespace FacturXDotNet.Validation.CII.BusinessRules;
 
-class Br05InvoiceShallHaveCurrencyCode() : FacturXBusinessRule("BR-05", "An Invoice shall have an Invoice currency code (BT-5).", FacturXProfileFlags.Minimum.AndHigher())
+record Br05InvoiceShallHaveCurrencyCode() : FacturXBusinessRule("BR-05", "An Invoice shall have an Invoice currency code (BT-5).", FacturXProfileFlags.Minimum.AndHigher())
 {
     public override bool Check(CrossIndustryInvoice invoice) =>
         invoice.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement != null

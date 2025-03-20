@@ -1,6 +1,6 @@
 ﻿namespace FacturXDotNet.Validation.CII.BusinessRules;
 
-class Br08InvoiceShallHaveSellerPostalAddress() : FacturXBusinessRule(
+record Br08InvoiceShallHaveSellerPostalAddress() : FacturXBusinessRule(
     "BR-08",
     "An Invoice shall contain the Seller postal address (BG-5).",
     FacturXProfileFlags.Minimum.AndHigher()
