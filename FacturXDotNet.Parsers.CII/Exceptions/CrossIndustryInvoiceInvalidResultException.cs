@@ -15,7 +15,7 @@ public class CrossIndustryInvoiceInvalidResultException(params IEnumerable<strin
 
         if (errorsList.Count == 1)
         {
-            return $"The document is not a valid Factur-X document: {errorsList[0]}.";
+            return $"The document is not a valid Factur-X document: {errorsList[0].TrimEnd('.')}.";
         }
 
         return $"The document is not a valid Factur-X document, see details below.{string.Join(string.Empty, errorsList.Select(e => $"{Environment.NewLine}- {e}"))}";

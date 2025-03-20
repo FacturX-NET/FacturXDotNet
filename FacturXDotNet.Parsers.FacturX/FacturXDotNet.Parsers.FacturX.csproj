@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
+      <ProjectReference Include="..\FacturXDotNet.Parsers.XMP\FacturXDotNet.Parsers.XMP.csproj" />
       <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj" />
       <ProjectReference Include="..\FacturXDotNet.Parsers.CII\FacturXDotNet.Parsers.CII.csproj" />
     </ItemGroup>

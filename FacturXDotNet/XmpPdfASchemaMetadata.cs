@@ -52,5 +52,5 @@ public class XmpPdfASchemaMetadata
     ///     custom types are used in the extension schema. If no custom types are used it may be absent or empty.
     /// </remarks>
     /// <XmpTag>pdfaSchema:valueType</XmpTag>
-    public List<XmpPdfAValueTypeMetadata> ValueType { get; set; } = [];
+    public List<XmpPdfATypeMetadata> ValueType { get; set; } = [];
 }

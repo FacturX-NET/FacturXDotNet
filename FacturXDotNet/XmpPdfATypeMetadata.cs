@@ -24,7 +24,7 @@
 /// <remarks>See https://pdfa.org/wp-content/uploads/2011/09/tn0009_xmp_extension_schemas_in_pdfa-1_2008-03-20.pdf</remarks>
 /// <URI>http://www.aiim.org/pdfa/ns/type#</URI>
 /// <Prefix>pdfaType</Prefix>
-public class XmpPdfAValueTypeMetadata
+public class XmpPdfATypeMetadata
 {
     /// <summary>
     ///     Description of the property value type.

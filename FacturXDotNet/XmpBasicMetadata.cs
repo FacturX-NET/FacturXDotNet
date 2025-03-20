@@ -62,7 +62,7 @@ public class XmpBasicMetadata
     ///     Anticipated usage is for a typical “star rating” UI, with the addition of a notion of rejection.
     /// </remarks>
     /// <XmpTag>xmp:Rating</XmpTag>
-    public float Rating { get; set; }
+    public decimal Rating { get; set; }
 
     /// <summary>
     ///     The base URL for relative URLs in the document content. If this document contains Internet links, and those links are relative, they are relative to this base URL. This
@@ -82,5 +82,5 @@ public class XmpBasicMetadata
     ///     An alternative array of thumbnail images for a file, which can differ in characteristics such as size or image encoding.
     /// </summary>
     /// <XmpTag>xmp:Thumbnails</XmpTag>
-    public List<byte[]> Thumbnails { get; set; } = [];
+    public List<XmpThumbnail> Thumbnails { get; set; } = [];
 }

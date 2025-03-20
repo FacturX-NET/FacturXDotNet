@@ -21,7 +21,7 @@ public class XmpDublinCoreMetadata
     ///     </para>
     /// </summary>
     /// <XmpTag>dc:contributor</XmpTag>
-    public List<string> Contributor { get; set; } = [];
+    public HashSet<string> Contributor { get; set; } = [];
 
     /// <summary>
     ///     <para>
@@ -53,7 +53,7 @@ public class XmpDublinCoreMetadata
     ///         <b>DCMI definition</b>: A point or period of time associated with an event in the life cycle of the resource.
     ///     </para>
     /// </summary>
-    /// <XmpTag>dc:data</XmpTag>
+    /// <XmpTag>dc:date</XmpTag>
     public List<DateTime> Date { get; set; } = [];
 
     /// <summary>
@@ -65,7 +65,7 @@ public class XmpDublinCoreMetadata
     ///     </para>
     /// </summary>
     /// <XmpTag>dc:description</XmpTag>
-    public string? Description { get; set; }
+    public List<string> Description { get; set; } = [];
 
     /// <summary>
     ///     <para>
@@ -102,7 +102,7 @@ public class XmpDublinCoreMetadata
     ///     </para>
     /// </summary>
     /// <XmpTag>dc:language</XmpTag>
-    public List<string> Language { get; set; } = [];
+    public HashSet<string> Language { get; set; } = [];
 
     /// <summary>
     ///     <para>
@@ -116,7 +116,7 @@ public class XmpDublinCoreMetadata
     ///     </para>
     /// </summary>
     /// <XmpTag>dc:publisher</XmpTag>
-    public List<string> Publisher { get; set; } = [];
+    public HashSet<string> Publisher { get; set; } = [];
 
     /// <summary>
     ///     <para>
@@ -130,7 +130,7 @@ public class XmpDublinCoreMetadata
     ///     </para>
     /// </summary>
     /// <XmpTag>dc:relation</XmpTag>
-    public List<string> Relation { get; set; } = [];
+    public HashSet<string> Relation { get; set; } = [];
 
     /// <summary>
     ///     <para>
@@ -171,7 +171,7 @@ public class XmpDublinCoreMetadata
     ///     </para>
     /// </summary>
     /// <XmpTag>dc:subject</XmpTag>
-    public List<string> Subject { get; set; } = [];
+    public HashSet<string> Subject { get; set; } = [];
 
     /// <summary>
     ///     <para>
@@ -185,7 +185,7 @@ public class XmpDublinCoreMetadata
     ///     </para>
     /// </summary>
     /// <XmpTag>dc:title</XmpTag>
-    public string? Title { get; set; }
+    public List<string> Title { get; set; } = [];
 
     /// <summary>
     ///     <para>
@@ -200,5 +200,5 @@ public class XmpDublinCoreMetadata
     ///     </para>
     /// </summary>
     /// <XmpTag>dc:type</XmpTag>
-    public string? Type { get; set; }
+    public HashSet<string> Type { get; set; } = [];
 }

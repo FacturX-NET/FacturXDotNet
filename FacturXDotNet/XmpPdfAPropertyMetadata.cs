@@ -14,7 +14,7 @@ public class XmpPdfAPropertyMetadata
     /// <remarks>
     ///     Internal properties are created automatically from document content. External properties are based on user input.
     /// </remarks>
-    /// <XmpTag>pdfaSchema:category</XmpTag>
+    /// <XmpTag>pdfaProperty:category</XmpTag>
     public XmpPdfAPropertyCategory? Category { get; set; }
 
     /// <summary>
@@ -23,7 +23,7 @@ public class XmpPdfAPropertyMetadata
     /// <remarks>
     ///     Human-readable text.
     /// </remarks>
-    /// <XmpTag>pdfaSchema:description</XmpTag>
+    /// <XmpTag>pdfaProperty:description</XmpTag>
     public string? Description { get; set; }
 
     /// <summary>
@@ -32,7 +32,7 @@ public class XmpPdfAPropertyMetadata
     /// <remarks>
     ///     The property names comprise the vocabulary defined by the schema. Property names must be valid XML element names.
     /// </remarks>
-    /// <XmpTag>pdfaSchema:name</XmpTag>
+    /// <XmpTag>pdfaProperty:name</XmpTag>
     public string? Name { get; set; }
 
     /// <summary>
@@ -41,6 +41,6 @@ public class XmpPdfAPropertyMetadata
     /// <remarks>
     ///     Predefined XMP type names or names of custom types according to section 4.5 can be used.
     /// </remarks>
-    /// <XmpTag>pdfaSchema:valueType</XmpTag>
+    /// <XmpTag>pdfaProperty:valueType</XmpTag>
     public string? ValueType { get; set; }
 }

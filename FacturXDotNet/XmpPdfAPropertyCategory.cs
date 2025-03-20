@@ -29,7 +29,7 @@ public static class XmpPdfAPropertyCategoryMappingExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(category), category, null)
         };
 
-    public static XmpPdfAPropertyCategory? ToXmpPdfAPropertyCategoryOrNull(this string value) =>
+    public static XmpPdfAPropertyCategory? ToXmpPdfAPropertyCategoryOrNull(this ReadOnlySpan<char> value) =>
         value switch
         {
             "internal" => XmpPdfAPropertyCategory.Internal,
@@ -37,6 +37,6 @@ public static class XmpPdfAPropertyCategoryMappingExtensions
             _ => null
         };
 
-    public static XmpPdfAPropertyCategory ToXmpPdfAPropertyCategory(this string value) =>
-        ToXmpPdfAPropertyCategoryOrNull(value) ?? throw new ArgumentOutOfRangeException(nameof(value), value, null);
+    public static XmpPdfAPropertyCategory ToXmpPdfAPropertyCategory(this ReadOnlySpan<char> value) =>
+        ToXmpPdfAPropertyCategoryOrNull(value) ?? throw new ArgumentOutOfRangeException(nameof(value), value.ToString(), null);
 }

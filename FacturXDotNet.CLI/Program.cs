@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Xml.Linq;
 using FacturXDotNet;
 using FacturXDotNet.CLI;
 using FacturXDotNet.Parsers.CII;
 using FacturXDotNet.Parsers.FacturX;
+using FacturXDotNet.Parsers.XMP;
 using FacturXDotNet.Validation;
 using FacturXDotNet.Validation.CII.Schematron;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +29,10 @@ try
     FacturXParser parser = new(
         new FacturXParserOptions
         {
+            Xmp =
+            {
+                Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? loggerFactory.CreateLogger<XmpMetadataParser>() : null
+            },
             Cii =
             {
                 Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? loggerFactory.CreateLogger<CrossIndustryInvoiceParser>() : null
@@ -36,11 +40,11 @@ try
         }
     );
 
-    XDocument xmp = await parser.ParseXmpMetadataInFacturXPdfAsync(example);
+    XmpMetadata xmp = await parser.ParseXmpMetadataInFacturXPdfAsync(example);
     logger.LogInformation("-------------");
     logger.LogInformation("     XMP");
     logger.LogInformation("-------------");
-    logger.LogInformation("{XMP}", xmp.ToString());
+    logger.LogInformation("{XMP}", JsonSerializer.Serialize(xmp, SourceGenerationContext.Default.XmpMetadata));
 
     CrossIndustryInvoice cii = await parser.ParseCiiXmlInFacturXPdfAsync(example);
 
@@ -108,6 +112,7 @@ namespace FacturXDotNet.CLI
 
     [JsonSourceGenerationOptions(WriteIndented = true)]
     [JsonSerializable(typeof(CrossIndustryInvoice))]
+    [JsonSerializable(typeof(XmpMetadata))]
     partial class SourceGenerationContext : JsonSerializerContext
     {
     }

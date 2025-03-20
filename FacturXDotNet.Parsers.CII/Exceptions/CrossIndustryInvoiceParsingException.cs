@@ -16,5 +16,5 @@ public class CrossIndustryInvoiceParsingException : CrossIndustryInvoiceParserEx
     {
     }
 
-    static string BuildErrorMessage(ReadOnlySpan<char> path, int line, int column, string message) => $"At '{path}' (line {line}, column {column}): {message}.";
+    static string BuildErrorMessage(ReadOnlySpan<char> path, int line, int column, string message) => $"At '{path}' (line {line}, column {column}): {message.TrimEnd('.')}.";
 }

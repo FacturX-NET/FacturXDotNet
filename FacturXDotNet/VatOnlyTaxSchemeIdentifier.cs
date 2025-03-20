@@ -21,13 +21,13 @@ public static class VatOnlyTaxSchemeIdentifierMappingExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };
 
-    public static VatOnlyTaxSchemeIdentifier? ToVatOnlyTaxSchemeIdentifierOrNull(this string value) =>
+    public static VatOnlyTaxSchemeIdentifier? ToVatOnlyTaxSchemeIdentifierOrNull(this ReadOnlySpan<char> value) =>
         value switch
         {
             "VA" => VatOnlyTaxSchemeIdentifier.Vat,
             _ => null
         };
 
-    public static VatOnlyTaxSchemeIdentifier ToVatOnlyTaxSchemeIdentifier(this string value) =>
-        value.ToVatOnlyTaxSchemeIdentifierOrNull() ?? throw new ArgumentOutOfRangeException(nameof(DateOnlyFormat), value, null);
+    public static VatOnlyTaxSchemeIdentifier ToVatOnlyTaxSchemeIdentifier(this ReadOnlySpan<char> value) =>
+        value.ToVatOnlyTaxSchemeIdentifierOrNull() ?? throw new ArgumentOutOfRangeException(nameof(DateOnlyFormat), value.ToString(), null);
 }

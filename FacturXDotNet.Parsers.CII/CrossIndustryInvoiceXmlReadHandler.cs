@@ -355,7 +355,7 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
     }
 
     static GuidelineSpecifiedDocumentContextParameterId ParseGuidelineSpecifiedDocumentContextParameterId(ReadOnlySpan<char> value) =>
-        value.ToString().ToGuidelineSpecifiedDocumentContextParameterId();
+        value.ToGuidelineSpecifiedDocumentContextParameterId();
 
     static InvoiceTypeCode ParseFacturXTypeCode(ReadOnlySpan<char> value)
     {
@@ -377,7 +377,7 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
         return valueInt.ToDateOnlyFormat();
     }
 
-    static VatOnlyTaxSchemeIdentifier ParseVatOnlyTaxSchemeIdentifier(ReadOnlySpan<char> value) => value.ToString().ToVatOnlyTaxSchemeIdentifier();
+    static VatOnlyTaxSchemeIdentifier ParseVatOnlyTaxSchemeIdentifier(ReadOnlySpan<char> value) => value.ToVatOnlyTaxSchemeIdentifier();
 
     static DateOnly ParseDateOnly(ReadOnlySpan<char> value)
     {

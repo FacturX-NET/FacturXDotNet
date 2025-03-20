@@ -12,11 +12,6 @@ public enum XmpPdfAConformanceLevel
 
 public static class XmpPdfAConformanceMappingExtensions
 {
-    /// <summary>
-    ///     Convert a <see cref="XmpPdfAConformanceLevel" /> to a string.
-    /// </summary>
-    /// <param name="conformanceLevel">The conformance level to convert.</param>
-    /// <returns>The string representation of the conformance level.</returns>
     public static string ToXmpPdfAConformanceString(this XmpPdfAConformanceLevel conformanceLevel) =>
         conformanceLevel switch
         {
@@ -25,7 +20,7 @@ public static class XmpPdfAConformanceMappingExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(conformanceLevel), conformanceLevel, null)
         };
 
-    public static XmpPdfAConformanceLevel? ToXmpPdfAConformanceLevelOrNull(this string value) =>
+    public static XmpPdfAConformanceLevel? ToXmpPdfAConformanceLevelOrNull(this ReadOnlySpan<char> value) =>
         value switch
         {
             "A" => XmpPdfAConformanceLevel.A,
@@ -33,6 +28,6 @@ public static class XmpPdfAConformanceMappingExtensions
             _ => null
         };
 
-    public static XmpPdfAConformanceLevel ToXmpPdfAConformanceLevel(this string value) =>
-        ToXmpPdfAConformanceLevelOrNull(value) ?? throw new ArgumentOutOfRangeException(nameof(value), value, null);
+    public static XmpPdfAConformanceLevel ToXmpPdfAConformanceLevel(this ReadOnlySpan<char> value) =>
+        ToXmpPdfAConformanceLevelOrNull(value) ?? throw new ArgumentOutOfRangeException(nameof(value), value.ToString(), null);
 }

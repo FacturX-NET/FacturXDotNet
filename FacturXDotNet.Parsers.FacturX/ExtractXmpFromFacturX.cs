@@ -13,7 +13,7 @@ class ExtractXmpFromFacturX(FacturXParserOptions? options = null)
 {
     readonly FacturXParserOptions _options = options ?? new FacturXParserOptions();
 
-    public Stream ExtractXmpAttachment(Stream facturXStream) =>
+    public Stream ExtractXmpMetadata(Stream facturXStream) =>
         TryExtractXmpMetadata(facturXStream, out Stream? result) ? result : throw new InvalidOperationException("The XMP metadata could not be found.");
 
     /// <summary>

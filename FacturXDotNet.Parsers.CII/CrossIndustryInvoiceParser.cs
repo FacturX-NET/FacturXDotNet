@@ -6,21 +6,13 @@ namespace FacturXDotNet.Parsers.CII;
 /// <summary>
 ///     Parse a CrossIndustryInvoice from an XML stream.
 /// </summary>
-public class CrossIndustryInvoiceParser
+public class CrossIndustryInvoiceParser(CrossIndustryInvoiceParserOptions? options = null)
 {
-    readonly CrossIndustryInvoiceParserOptions _options;
-
-    public CrossIndustryInvoiceParser(CrossIndustryInvoiceParserOptions? options = null)
-    {
-        _options = options ?? new CrossIndustryInvoiceParserOptions();
-    }
+    readonly CrossIndustryInvoiceParserOptions _options = options ?? new CrossIndustryInvoiceParserOptions();
 
     /// <summary>
     ///     Parse the given stream into a <see cref="CrossIndustryInvoice" />.
     /// </summary>
-    /// <param name="stream"></param>
-    /// <returns></returns>
-    /// <exception cref="CrossIndustryInvoiceInvalidResultException"></exception>
     public CrossIndustryInvoice ParseCiiXml(Stream stream)
     {
         CrossIndustryInvoice result = InitializeResult();

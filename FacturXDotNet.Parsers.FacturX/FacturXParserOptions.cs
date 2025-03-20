@@ -1,4 +1,5 @@
 ﻿using FacturXDotNet.Parsers.CII;
+using FacturXDotNet.Parsers.XMP;
 
 namespace FacturXDotNet.Parsers.FacturX;
 
@@ -13,6 +14,11 @@ public class FacturXParserOptions
     ///     The name of the attachment containing the Cross-Industry Invoice XML file.
     /// </summary>
     public string CiiXmlAttachmentName { get; set; } = "factur-x.xml";
+
+    /// <summary>
+    ///     The options for parsing the XMP metadata.
+    /// </summary>
+    public XmpMetadataParserOptions Xmp { get; set; } = new();
 
     /// <summary>
     ///     The options for parsing the Cross-Industry Invoice.

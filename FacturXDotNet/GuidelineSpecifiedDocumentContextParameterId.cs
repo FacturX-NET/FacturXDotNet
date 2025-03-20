@@ -53,7 +53,7 @@ public static class GuidelineSpecifiedDocumentContextParameterIdMappingExtension
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };
 
-    public static GuidelineSpecifiedDocumentContextParameterId? ToGuidelineSpecifiedDocumentContextParameterIdOrNull(this string value) =>
+    public static GuidelineSpecifiedDocumentContextParameterId? ToGuidelineSpecifiedDocumentContextParameterIdOrNull(this ReadOnlySpan<char> value) =>
         value switch
         {
             "urn:factur-x.eu:1p0:minimum" => GuidelineSpecifiedDocumentContextParameterId.Minimum,
@@ -64,6 +64,7 @@ public static class GuidelineSpecifiedDocumentContextParameterIdMappingExtension
             _ => null
         };
 
-    public static GuidelineSpecifiedDocumentContextParameterId ToGuidelineSpecifiedDocumentContextParameterId(this string value) =>
-        value.ToGuidelineSpecifiedDocumentContextParameterIdOrNull() ?? throw new ArgumentOutOfRangeException(nameof(GuidelineSpecifiedDocumentContextParameterId), value, null);
+    public static GuidelineSpecifiedDocumentContextParameterId ToGuidelineSpecifiedDocumentContextParameterId(this ReadOnlySpan<char> value) =>
+        value.ToGuidelineSpecifiedDocumentContextParameterIdOrNull()
+        ?? throw new ArgumentOutOfRangeException(nameof(GuidelineSpecifiedDocumentContextParameterId), value.ToString(), null);
 }
