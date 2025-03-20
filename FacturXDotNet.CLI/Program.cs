@@ -1,10 +1,12 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 using FacturXDotNet;
+using FacturXDotNet.CLI;
 using FacturXDotNet.Parsers.CII;
 using FacturXDotNet.Parsers.FacturX;
 using FacturXDotNet.Validation;
-using FacturXDotNet.Validation.CII;
+using FacturXDotNet.Validation.CII.Schematron;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -34,15 +36,21 @@ try
         }
     );
 
-    CrossIndustryInvoice result = await parser.ParseCiiXmlInFacturXPdfAsync(example);
+    XDocument xmp = await parser.ParseXmpMetadataInFacturXPdfAsync(example);
+    logger.LogInformation("-------------");
+    logger.LogInformation("     XMP");
+    logger.LogInformation("-------------");
+    logger.LogInformation("{XMP}", xmp.ToString());
+
+    CrossIndustryInvoice cii = await parser.ParseCiiXmlInFacturXPdfAsync(example);
 
     logger.LogInformation("-------------");
-    logger.LogInformation("   RESULT");
+    logger.LogInformation("     CII");
     logger.LogInformation("-------------");
-    logger.LogInformation("{Result}", JsonSerializer.Serialize(result, SourceGenerationContext.Default.CrossIndustryInvoice));
+    logger.LogInformation("{CII}", JsonSerializer.Serialize(cii, SourceGenerationContext.Default.CrossIndustryInvoice));
 
-    CrossIndustryInvoiceValidator validator = new();
-    FacturXValidationResult validationResult = validator.GetValidationResult(result);
+    CrossIndustryInvoiceSchematronValidator validator = new();
+    FacturXValidationResult validationResult = validator.GetValidationResult(cii);
 
     logger.LogInformation("-------------");
     logger.LogInformation(" VALIDATION");
@@ -91,13 +99,16 @@ catch (Exception exn)
     logger.LogCritical(exn, "Unhandled exception.");
 }
 
-class Options
+namespace FacturXDotNet.CLI
 {
-    public string? Environment { get; set; }
-}
+    class Options
+    {
+        public string? Environment { get; set; }
+    }
 
-[JsonSourceGenerationOptions(WriteIndented = true)]
-[JsonSerializable(typeof(CrossIndustryInvoice))]
-partial class SourceGenerationContext : JsonSerializerContext
-{
+    [JsonSourceGenerationOptions(WriteIndented = true)]
+    [JsonSerializable(typeof(CrossIndustryInvoice))]
+    partial class SourceGenerationContext : JsonSerializerContext
+    {
+    }
 }
