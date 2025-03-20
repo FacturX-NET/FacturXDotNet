@@ -8,16 +8,11 @@ public class CrossIndustryInvoiceInvalidResultException(params IEnumerable<strin
     static string BuildErrorMessage(IEnumerable<string> errors)
     {
         List<string> errorsList = errors.ToList();
-        if (errorsList.Count == 0)
+        return errorsList.Count switch
         {
-            return "The document is not a valid Factur-X document.";
-        }
-
-        if (errorsList.Count == 1)
-        {
-            return $"The document is not a valid Factur-X document: {errorsList[0].TrimEnd('.')}.";
-        }
-
-        return $"The document is not a valid Factur-X document, see details below.{string.Join(string.Empty, errorsList.Select(e => $"{Environment.NewLine}- {e}"))}";
+            0 => "The document is not a valid Factur-X document.",
+            1 => $"The document is not a valid Factur-X document: {errorsList[0].TrimEnd('.')}.",
+            _ => $"The document is not a valid Factur-X document, see details below.{string.Join(string.Empty, errorsList.Select(e => $"{Environment.NewLine}- {e}"))}"
+        };
     }
 }
