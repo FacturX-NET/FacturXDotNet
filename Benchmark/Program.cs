@@ -5,7 +5,10 @@ using Benchmark;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
+using FacturXDotNet;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Parsing.FacturX;
+using FacturXDotNet.Validation.CII.Schematron;
 
 BenchmarkRunner.Run<BenchmarkCii>();
 
@@ -14,26 +17,55 @@ namespace Benchmark
 {
     [MemoryDiagnoser]
     [RankColumn]
-    [Orderer(SummaryOrderPolicy.FastestToSlowest)]
+    [Orderer(SummaryOrderPolicy.Method)]
     public class BenchmarkCii
     {
+        readonly Dictionary<GuidelineSpecifiedDocumentContextParameterId, string> _examples = new()
+        {
+            { GuidelineSpecifiedDocumentContextParameterId.Minimum, "FacturX/0.MINIMUM/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.pdf" },
+            { GuidelineSpecifiedDocumentContextParameterId.BasicWl, "FacturX/1.BASIC WL/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_BASIC_WL.pdf" },
+            { GuidelineSpecifiedDocumentContextParameterId.Basic, "FacturX/2.BASIC/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_BASIC.pdf" },
+            { GuidelineSpecifiedDocumentContextParameterId.En16931, "FacturX/3.EN16931/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_EN_16931.pdf" },
+            { GuidelineSpecifiedDocumentContextParameterId.Extended, "FacturX/4.EXTENDED/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_EXTENDED.pdf" }
+        };
+
         [Params(
-            "FacturX/0.MINIMUM/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.pdf",
-            "FacturX/1.BASIC WL/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_BASIC_WL.pdf",
-            "FacturX/2.BASIC/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_BASIC.pdf",
-            "FacturX/3.EN16931/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_EN_16931.pdf",
-            "FacturX/4.EXTENDED/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_EXTENDED.pdf"
+            GuidelineSpecifiedDocumentContextParameterId.Minimum,
+            GuidelineSpecifiedDocumentContextParameterId.BasicWl,
+            GuidelineSpecifiedDocumentContextParameterId.Basic,
+            GuidelineSpecifiedDocumentContextParameterId.En16931,
+            GuidelineSpecifiedDocumentContextParameterId.Extended
         )]
-        public string FilePath { get; set; } = string.Empty;
+        public GuidelineSpecifiedDocumentContextParameterId Profile { get; set; }
 
         [Benchmark]
-        public async Task CII_XML()
+        public async Task ExtractCiiXml()
         {
-            string sourceFileFolder = Path.GetDirectoryName(WhereAmI()) ?? string.Empty;
-            await using FileStream file = File.OpenRead(Path.Join(sourceFileFolder, FilePath));
+            string sourceFilePath = GetSourceFilePath();
+            await using FileStream file = File.OpenRead(sourceFilePath);
 
             FacturXParser parser = new();
             _ = await parser.ParseCiiXmlInFacturXPdfAsync(file);
+        }
+
+        [Benchmark]
+        public async Task ValidateFacturX()
+        {
+            string sourceFilePath = GetSourceFilePath();
+            await using FileStream file = File.OpenRead(sourceFilePath);
+
+            FacturXParser parser = new();
+            CrossIndustryInvoice cii = await parser.ParseCiiXmlInFacturXPdfAsync(file);
+
+            CrossIndustryInvoiceSchematronValidator validator = new();
+            _ = validator.IsValid(cii);
+        }
+
+        string GetSourceFilePath()
+        {
+            string sourceFileFolder = Path.GetDirectoryName(WhereAmI()) ?? string.Empty;
+            string sourceFileName = _examples[Profile];
+            return Path.Join(sourceFileFolder, sourceFileName);
         }
 
         static string WhereAmI([CallerFilePath] string callerFilePath = "") => callerFilePath;
