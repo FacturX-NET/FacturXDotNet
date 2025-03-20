@@ -2,6 +2,9 @@
 
 namespace FacturXDotNet.Parsers.XMP;
 
+/// <summary>
+///     The options that can be passed to the <see cref="XmpMetadataParser" />.
+/// </summary>
 public class XmpMetadataParserOptions
 {
     /// <summary>

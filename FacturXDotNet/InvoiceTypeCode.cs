@@ -301,9 +301,15 @@ public enum InvoiceTypeCode
     CustomsInvoice = 935
 }
 
+/// <summary>
+///     Mapping methods for the <see cref="InvoiceTypeCode" /> enumeration.
+/// </summary>
 public static class FacturXTypeCodeMappingExtensions
 {
-    public static int ToSpecificationIdentifierString(this InvoiceTypeCode value) =>
+    /// <summary>
+    ///     Converts the <see cref="InvoiceTypeCode" /> to its integer representation.
+    /// </summary>
+    public static int ToSpecificationIdentifier(this InvoiceTypeCode value) =>
         value switch
         {
             InvoiceTypeCode.RequestForPayment => 71,
@@ -364,6 +370,10 @@ public static class FacturXTypeCodeMappingExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };
 
+    /// <summary>
+    ///     Converts the integer to its <see cref="InvoiceTypeCode" /> representation.
+    /// </summary>
+    /// <seealso cref="ToSpecificationIdentifier(int)" />
     public static InvoiceTypeCode? ToSpecificationIdentifierOrNull(this int value) =>
         value switch
         {
@@ -425,6 +435,10 @@ public static class FacturXTypeCodeMappingExtensions
             _ => null
         };
 
+    /// <summary>
+    ///     Converts the integer to its <see cref="InvoiceTypeCode" /> representation.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not a valid <see cref="InvoiceTypeCode" />.</exception>
     public static InvoiceTypeCode ToSpecificationIdentifier(this int value) =>
         value.ToSpecificationIdentifierOrNull() ?? throw new ArgumentOutOfRangeException(nameof(InvoiceTypeCode), value, null);
 }

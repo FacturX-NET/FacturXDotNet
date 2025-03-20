@@ -19,8 +19,14 @@ public enum XmpPdfAPropertyCategory
     External
 }
 
+/// <summary>
+///     Mapping methods for the <see cref="XmpPdfAPropertyCategory" /> enumeration.
+/// </summary>
 public static class XmpPdfAPropertyCategoryMappingExtensions
 {
+    /// <summary>
+    ///     Convert the <see cref="XmpPdfAPropertyCategory" /> to its string representation.
+    /// </summary>
     public static string ToXmpPdfAPropertyCategoryString(this XmpPdfAPropertyCategory category) =>
         category switch
         {
@@ -29,6 +35,10 @@ public static class XmpPdfAPropertyCategoryMappingExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(category), category, null)
         };
 
+    /// <summary>
+    ///     Convert the string to its <see cref="XmpPdfAPropertyCategory" /> representation.
+    /// </summary>
+    /// <seealso cref="ToXmpPdfAPropertyCategory(ReadOnlySpan{char})" />
     public static XmpPdfAPropertyCategory? ToXmpPdfAPropertyCategoryOrNull(this ReadOnlySpan<char> value) =>
         value switch
         {
@@ -37,6 +47,10 @@ public static class XmpPdfAPropertyCategoryMappingExtensions
             _ => null
         };
 
+    /// <summary>
+    ///     Convert the string to its <see cref="XmpPdfAPropertyCategory" /> representation.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not a valid <see cref="XmpPdfAPropertyCategory" />.</exception>
     public static XmpPdfAPropertyCategory ToXmpPdfAPropertyCategory(this ReadOnlySpan<char> value) =>
         ToXmpPdfAPropertyCategoryOrNull(value) ?? throw new ArgumentOutOfRangeException(nameof(value), value.ToString(), null);
 }

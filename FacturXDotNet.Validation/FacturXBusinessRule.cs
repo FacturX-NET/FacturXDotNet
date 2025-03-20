@@ -19,5 +19,8 @@ public abstract record FacturXBusinessRule(string Name, string Description, Fact
     /// <returns><c>true</c> if the rule is satisfied by the invoice; otherwise <c>false</c>.</returns>
     public abstract bool Check(CrossIndustryInvoice invoice);
 
+    /// <summary>
+    ///     Returns a string representation of the business rule.
+    /// </summary>
     public override string ToString() => $"[{Profiles.GetMinProfile()}] {Name} - {Description}";
 }

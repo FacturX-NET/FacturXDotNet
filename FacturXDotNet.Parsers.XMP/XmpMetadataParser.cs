@@ -2,6 +2,9 @@
 
 namespace FacturXDotNet.Parsers.XMP;
 
+/// <summary>
+///     Parse a <see cref="XmpMetadata" /> from an XML stream.
+/// </summary>
 public class XmpMetadataParser(XmpMetadataParserOptions? options = null)
 {
     readonly XmpMetadataParserOptions _options = options ?? new XmpMetadataParserOptions();

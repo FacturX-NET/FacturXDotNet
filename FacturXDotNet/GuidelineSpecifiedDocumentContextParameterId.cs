@@ -40,9 +40,18 @@ public enum GuidelineSpecifiedDocumentContextParameterId
     Extended = 5
 }
 
+/// <summary>
+///     Mapping methods for <see cref="GuidelineSpecifiedDocumentContextParameterId" /> enumeration.
+/// </summary>
 public static class GuidelineSpecifiedDocumentContextParameterIdMappingExtensions
 {
-    public static string ToGuidelineSpecifiedDocumentContextParameterIdString(this GuidelineSpecifiedDocumentContextParameterId value) =>
+    /// <summary>
+    ///     Converts the <see cref="GuidelineSpecifiedDocumentContextParameterId" /> enumeration to its string representation.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static string ToGuidelineSpecifiedDocumentContextParameterId(this GuidelineSpecifiedDocumentContextParameterId value) =>
         value switch
         {
             GuidelineSpecifiedDocumentContextParameterId.Minimum => "urn:factur-x.eu:1p0:minimum",
@@ -53,6 +62,10 @@ public static class GuidelineSpecifiedDocumentContextParameterIdMappingExtension
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };
 
+    /// <summary>
+    ///     Converts the string to its <see cref="GuidelineSpecifiedDocumentContextParameterId" /> representation.
+    /// </summary>
+    /// <seealso cref="ToGuidelineSpecifiedDocumentContextParameterId(ReadOnlySpan{char})" />
     public static GuidelineSpecifiedDocumentContextParameterId? ToGuidelineSpecifiedDocumentContextParameterIdOrNull(this ReadOnlySpan<char> value) =>
         value switch
         {
@@ -64,6 +77,10 @@ public static class GuidelineSpecifiedDocumentContextParameterIdMappingExtension
             _ => null
         };
 
+    /// <summary>
+    ///     Converts the string to its <see cref="GuidelineSpecifiedDocumentContextParameterId" /> representation.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not a valid <see cref="GuidelineSpecifiedDocumentContextParameterId" />.</exception>
     public static GuidelineSpecifiedDocumentContextParameterId ToGuidelineSpecifiedDocumentContextParameterId(this ReadOnlySpan<char> value) =>
         value.ToGuidelineSpecifiedDocumentContextParameterIdOrNull()
         ?? throw new ArgumentOutOfRangeException(nameof(GuidelineSpecifiedDocumentContextParameterId), value.ToString(), null);

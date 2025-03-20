@@ -4,7 +4,7 @@ using TurboXml;
 namespace FacturXDotNet.Parsers.CII;
 
 /// <summary>
-///     Parse a CrossIndustryInvoice from an XML stream.
+///     Parse a <see cref="CrossIndustryInvoice" /> from an XML stream.
 /// </summary>
 public class CrossIndustryInvoiceParser(CrossIndustryInvoiceParserOptions? options = null)
 {

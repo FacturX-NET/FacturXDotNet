@@ -9,11 +9,20 @@
 /// </remarks>
 public enum DateOnlyFormat
 {
+    /// <summary>
+    ///     Date that contains the day, month and year.
+    /// </summary>
     DateOnly = 102
 }
 
+/// <summary>
+///     Mapping methods for the <see cref="DateOnlyFormat" /> enumeration.
+/// </summary>
 public static class DateOnlyFormatMappingExtensions
 {
+    /// <summary>
+    ///     Convert the <see cref="DateOnlyFormat" /> enumeration to its integer representation.
+    /// </summary>
     public static int ToDateOnlyFormat(this DateOnlyFormat value) =>
         value switch
         {
@@ -21,6 +30,10 @@ public static class DateOnlyFormatMappingExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         };
 
+    /// <summary>
+    ///     Convert the integer to its <see cref="DateOnlyFormat" /> representation.
+    /// </summary>
+    /// <seealso cref="ToDateOnlyFormat(int)" />
     public static DateOnlyFormat? ToDateOnlyFormatOrNull(this int value) =>
         value switch
         {
@@ -28,5 +41,9 @@ public static class DateOnlyFormatMappingExtensions
             _ => null
         };
 
+    /// <summary>
+    ///     Convert the integer to its <see cref="DateOnlyFormat" /> representation.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the integer does not match any <see cref="DateOnlyFormat" /> value.</exception>
     public static DateOnlyFormat ToDateOnlyFormat(this int value) => value.ToDateOnlyFormatOrNull() ?? throw new ArgumentOutOfRangeException(nameof(DateOnlyFormat), value, null);
 }

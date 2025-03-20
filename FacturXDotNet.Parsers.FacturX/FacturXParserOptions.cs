@@ -3,6 +3,9 @@ using FacturXDotNet.Parsers.XMP;
 
 namespace FacturXDotNet.Parsers.FacturX;
 
+/// <summary>
+///     The options that can be passed to the <see cref="FacturXParser" />.
+/// </summary>
 public class FacturXParserOptions
 {
     /// <summary>

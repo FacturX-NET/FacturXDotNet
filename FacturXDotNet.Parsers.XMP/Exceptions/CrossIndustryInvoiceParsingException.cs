@@ -5,10 +5,16 @@
 /// </summary>
 public class XmpMetadataParsingException : XmpMetadataParserException
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="XmpMetadataParsingException" /> class.
+    /// </summary>
     public XmpMetadataParsingException(int line, int column, string message) : base(BuildErrorMessage(line, column, message))
     {
     }
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="XmpMetadataParsingException" /> class.
+    /// </summary>
     public XmpMetadataParsingException(int line, int column, Exception innerException) : base(BuildErrorMessage(line, column, innerException.Message), innerException)
     {
     }

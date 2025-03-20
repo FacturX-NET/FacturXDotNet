@@ -6,6 +6,9 @@ using PdfSharp.Pdf.IO;
 
 namespace FacturXDotNet.Parsers.FacturX;
 
+/// <summary>
+///     Parse Factur-X from a PDF stream.
+/// </summary>
 public partial class FacturXParser
 {
     readonly FacturXParserOptions _options;
@@ -14,6 +17,9 @@ public partial class FacturXParser
     readonly XmpMetadataParser _xmpParser;
     readonly CrossIndustryInvoiceParser _ciiParser;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="FacturXParser" /> class.
+    /// </summary>
     public FacturXParser(FacturXParserOptions? options = null)
     {
         _options = options ?? new FacturXParserOptions();

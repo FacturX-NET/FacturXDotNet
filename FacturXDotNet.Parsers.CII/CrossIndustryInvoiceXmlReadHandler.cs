@@ -10,6 +10,7 @@ namespace FacturXDotNet.Parsers.CII;
 ///     See https://github.com/xoofx/TurboXml?tab=readme-ov-file for more details.
 /// </summary>
 /// <param name="result">The <see cref="CrossIndustryInvoice" /> to fill.</param>
+/// <param name="logger">The logger that should be used by the handler.</param>
 readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, ILogger? logger) : IXmlReadHandler
 {
     readonly Stack<ReadOnlyMemory<char>> _pathStack = [];

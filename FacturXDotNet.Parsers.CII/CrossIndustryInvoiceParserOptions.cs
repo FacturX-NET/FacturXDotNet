@@ -2,6 +2,9 @@ using Microsoft.Extensions.Logging;
 
 namespace FacturXDotNet.Parsers.CII;
 
+/// <summary>
+///     The options that can be passed to the <see cref="CrossIndustryInvoiceParser" />.
+/// </summary>
 public class CrossIndustryInvoiceParserOptions
 {
     /// <summary>

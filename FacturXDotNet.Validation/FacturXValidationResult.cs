@@ -13,7 +13,7 @@
 ///     The collection of business rules that failed the validation, but were expected to fail because they target a profile that is higher than the one specified
 ///     in the document.
 /// </param>
-/// <param name="Failed">The collection of business rules that were not checked.</param>
+/// <param name="Skipped">The collection of business rules that were not checked.</param>
 public readonly record struct FacturXValidationResult(
     IReadOnlyCollection<FacturXBusinessRule> Passed,
     IReadOnlyCollection<FacturXBusinessRule> Failed,
