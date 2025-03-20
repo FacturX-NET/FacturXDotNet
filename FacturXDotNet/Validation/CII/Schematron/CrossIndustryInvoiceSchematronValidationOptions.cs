@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Models.CII;
+﻿using FacturXDotNet.Models;
 
 namespace FacturXDotNet.Validation.CII.Schematron;
 
@@ -15,7 +15,7 @@ public class CrossIndustryInvoiceSchematronValidationOptions
     ///     This allows enforcing validation against a specific Factur-X profile regardless of the invoice's declared profile.
     ///     If <c>null</c>, the validator uses the profile defined in the invoice itself.
     /// </remarks>
-    public GuidelineSpecifiedDocumentContextParameterId? ProfileOverride { get; set; } = null;
+    public FacturXProfile? ProfileOverride { get; set; } = null;
 
     /// <summary>
     ///     The list of rules to skip during validation.

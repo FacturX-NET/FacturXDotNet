@@ -39,4 +39,9 @@ public class XmpMetadata
     ///     The PDF/A metadata of the invoice.
     /// </summary>
     public XmpPdfAExtensionsMetadata? PdfAExtensions { get; set; }
+
+    /// <summary>
+    ///     The Factur-X metadata of the invoice.
+    /// </summary>
+    public XmpFacturXMetadata? FacturX { get; set; }
 }

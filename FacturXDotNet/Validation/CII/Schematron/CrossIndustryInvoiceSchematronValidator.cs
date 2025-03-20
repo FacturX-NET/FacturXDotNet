@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Models.CII;
+﻿using FacturXDotNet.Models;
 using FacturXDotNet.Validation.CII.BusinessRules;
 using FacturXDotNet.Validation.CII.BusinessRules.VatRelated.StandardAndReducedRate;
 
@@ -29,7 +29,7 @@ public class CrossIndustryInvoiceSchematronValidator(CrossIndustryInvoiceSchemat
     /// <returns><c>true</c> if the invoice meets all required business rules; otherwise, <c>false</c>.</returns>
     public bool IsValid(CrossIndustryInvoice invoice)
     {
-        GuidelineSpecifiedDocumentContextParameterId profile = _options.ProfileOverride ?? invoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId;
+        FacturXProfile profile = _options.ProfileOverride ?? invoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfile();
         return Rules.Where(rule => !ShouldSkipRule(rule) && !IsExpectedToFail(rule, profile)).All(rule => rule.Check(invoice));
     }
 
@@ -57,7 +57,7 @@ public class CrossIndustryInvoiceSchematronValidator(CrossIndustryInvoiceSchemat
     /// </returns>
     public FacturXValidationResult GetValidationResult(CrossIndustryInvoice invoice)
     {
-        GuidelineSpecifiedDocumentContextParameterId profile = _options.ProfileOverride ?? invoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId;
+        FacturXProfile profile = _options.ProfileOverride ?? invoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfile();
 
         List<FacturXBusinessRule> passed = [];
         List<FacturXBusinessRule> failed = [];
@@ -93,7 +93,7 @@ public class CrossIndustryInvoiceSchematronValidator(CrossIndustryInvoiceSchemat
     }
 
     bool ShouldSkipRule(FacturXBusinessRule rule) => _options.RulesToSkip.Any(r => string.Equals(rule.Name, r, StringComparison.InvariantCultureIgnoreCase));
-    static bool IsExpectedToFail(FacturXBusinessRule rule, GuidelineSpecifiedDocumentContextParameterId profile) => !rule.Profiles.Match(profile);
+    static bool IsExpectedToFail(FacturXBusinessRule rule, FacturXProfile profile) => !rule.Profiles.Match(profile);
 
     static readonly FacturXBusinessRule[] Rules =
     [

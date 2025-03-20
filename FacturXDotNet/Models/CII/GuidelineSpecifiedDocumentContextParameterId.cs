@@ -51,7 +51,7 @@ public static class GuidelineSpecifiedDocumentContextParameterIdMappingExtension
     /// <param name="value"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public static string ToGuidelineSpecifiedDocumentContextParameterId(this GuidelineSpecifiedDocumentContextParameterId value) =>
+    public static ReadOnlySpan<char> ToGuidelineSpecifiedDocumentContextParameterId(this GuidelineSpecifiedDocumentContextParameterId value) =>
         value switch
         {
             GuidelineSpecifiedDocumentContextParameterId.Minimum => "urn:factur-x.eu:1p0:minimum",

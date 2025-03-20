@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using FacturXDotNet.Models;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.XMP.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -286,6 +287,21 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 :
                 result.PdfAExtensions!.Schemas[^1].ValueType[^1].Field[^1].ValueType = value.ToString();
                 break;
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/xmlns:fx":
+                CreateFacturXMetadata();
+                break;
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/fx:DocumentFileName":
+                result.FacturX!.DocumentFileName = value.ToString();
+                break;
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/fx:DocumentType":
+                result.FacturX!.DocumentType = value.ToFacturXDocumentType();
+                break;
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/fx:Version":
+                result.FacturX!.Version = value.ToString();
+                break;
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/fx:ConformanceLevel":
+                result.FacturX!.ConformanceLevel = value.ToFacturXProfile();
+                break;
 
             default:
                 logger?.LogWarning("Unknown element '{Path}' with value '{Value}'.", path.ToString(), value.ToString());
@@ -347,4 +363,5 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
     void CreatePdfMetadata() => result.Pdf ??= new XmpPdfMetadata();
     void CreateDublinCoreMetadata() => result.DublinCore ??= new XmpDublinCoreMetadata();
     void CreatePdfAExtensionsMetadata() => result.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
+    void CreateFacturXMetadata() => result.FacturX ??= new XmpFacturXMetadata();
 }

@@ -25,7 +25,7 @@ public static class XmpPdfAConformanceMappingExtensions
     /// <summary>
     ///     Convert the <see cref="XmpPdfAConformanceLevel" /> to its string representation.
     /// </summary>
-    public static string ToXmpPdfAConformanceLevel(this XmpPdfAConformanceLevel conformanceLevel) =>
+    public static ReadOnlySpan<char> ToXmpPdfAConformanceLevel(this XmpPdfAConformanceLevel conformanceLevel) =>
         conformanceLevel switch
         {
             XmpPdfAConformanceLevel.A => "A",

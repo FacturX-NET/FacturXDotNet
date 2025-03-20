@@ -1,11 +1,12 @@
-﻿using FacturXDotNet.Validation.CII.Utils;
+﻿using FacturXDotNet.Models;
+using FacturXDotNet.Validation.CII.Utils;
 
 namespace FacturXDotNet.Validation.CII.BusinessRules;
 
 record BrDec14InvoiceTotalAmountHasTwoDecimals() : FacturXBusinessRule(
     "BR-DEC-14",
     "The allowed maximum number of decimals for the Invoice total amount with VAT (BT-112) is 2.",
-    FacturXProfileFlags.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher()
 )
 {
     public override bool Check(CrossIndustryInvoice invoice) =>

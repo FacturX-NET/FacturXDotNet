@@ -1,4 +1,6 @@
-﻿namespace FacturXDotNet.Validation.CII.BusinessRules;
+﻿using FacturXDotNet.Models;
+
+namespace FacturXDotNet.Validation.CII.BusinessRules;
 
 record BrCo26() : FacturXBusinessRule(
     "BR-CO-26",
@@ -6,7 +8,7 @@ record BrCo26() : FacturXBusinessRule(
     In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) 
     and/or the Seller VAT identifier (BT-31) shall be present.
     """,
-    FacturXProfileFlags.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher()
 )
 {
     public override bool Check(CrossIndustryInvoice invoice) =>

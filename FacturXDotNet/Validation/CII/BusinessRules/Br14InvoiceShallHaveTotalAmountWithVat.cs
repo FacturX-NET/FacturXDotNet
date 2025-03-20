@@ -1,9 +1,11 @@
-﻿namespace FacturXDotNet.Validation.CII.BusinessRules;
+﻿using FacturXDotNet.Models;
+
+namespace FacturXDotNet.Validation.CII.BusinessRules;
 
 record Br14InvoiceShallHaveTotalAmountWithVat() : FacturXBusinessRule(
     "BR-14",
     "An Invoice shall have the Invoice total amount with VAT (BT-112).",
-    FacturXProfileFlags.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher()
 )
 {
     public override bool Check(CrossIndustryInvoice invoice) =>

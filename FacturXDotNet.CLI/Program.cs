@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using FacturXDotNet;
 using FacturXDotNet.CLI;
+using FacturXDotNet.Models;
 using FacturXDotNet.Parsing.CII;
 using FacturXDotNet.Parsing.FacturX;
 using FacturXDotNet.Parsing.XMP;
