@@ -8,7 +8,6 @@ namespace FacturXDotNet.Parsers.XMP;
 struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlReadHandler
 {
     readonly Stack<ReadOnlyMemory<char>> _pathStack = [];
-    ReadOnlyMemory<char> _currentTag;
     bool _nextLanguageAlternativeIsDefault;
 
     public void OnBeginTag(ReadOnlySpan<char> name, int line, int column)
@@ -16,7 +15,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
         ReadOnlyMemory<char> parentPath = _pathStack.TryPeek(out ReadOnlyMemory<char> p) ? p : ReadOnlyMemory<char>.Empty;
         string newPath = $"{parentPath}/{name}";
         _pathStack.Push(newPath.AsMemory());
-        _currentTag = name.ToString().AsMemory();
+        name.ToString().AsMemory();
 
         try
         {

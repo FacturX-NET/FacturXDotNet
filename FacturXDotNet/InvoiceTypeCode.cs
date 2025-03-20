@@ -213,7 +213,7 @@ public enum InvoiceTypeCode
     /// <summary>
     ///     420 - Optical Character Reading (OCR) payment credit note
     /// </summary>
-    OCRPaymentCreditNote = 420,
+    OcrPaymentCreditNote = 420,
 
     /// <summary>
     ///     456 - Debit advice
@@ -343,7 +343,7 @@ public static class FacturXTypeCodeMappingExtensions
             InvoiceTypeCode.LeaseInvoice => 394,
             InvoiceTypeCode.ConsignmentInvoice => 395,
             InvoiceTypeCode.FactoredCreditNote => 396,
-            InvoiceTypeCode.OCRPaymentCreditNote => 420,
+            InvoiceTypeCode.OcrPaymentCreditNote => 420,
             InvoiceTypeCode.DebitAdvice => 456,
             InvoiceTypeCode.ReversalOfDebit => 457,
             InvoiceTypeCode.ReversalOfCredit => 458,
@@ -404,7 +404,7 @@ public static class FacturXTypeCodeMappingExtensions
             394 => InvoiceTypeCode.LeaseInvoice,
             395 => InvoiceTypeCode.ConsignmentInvoice,
             396 => InvoiceTypeCode.FactoredCreditNote,
-            420 => InvoiceTypeCode.OCRPaymentCreditNote,
+            420 => InvoiceTypeCode.OcrPaymentCreditNote,
             456 => InvoiceTypeCode.DebitAdvice,
             457 => InvoiceTypeCode.ReversalOfDebit,
             458 => InvoiceTypeCode.ReversalOfCredit,
