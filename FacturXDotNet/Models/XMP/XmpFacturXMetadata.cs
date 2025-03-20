@@ -8,6 +8,11 @@
 public class XmpFacturXMetadata
 {
     /// <summary>
+    ///     The namespace URI for the Factur-X PDFA Extension Schema.
+    /// </summary>
+    public const string NamespaceUri = "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#";
+
+    /// <summary>
     ///     The name of the embedded XML document.
     /// </summary>
     /// <XmlTag>fx:DocumentFileName</XmlTag>

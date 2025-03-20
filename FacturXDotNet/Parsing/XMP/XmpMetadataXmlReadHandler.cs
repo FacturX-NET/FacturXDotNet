@@ -11,6 +11,17 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
     readonly Stack<ReadOnlyMemory<char>> _pathStack = [];
     bool _nextLanguageAlternativeIsDefault;
 
+    /// <summary>
+    ///     True when the value of <see cref="_schemaPrefix" /> is the prefix that should be used to parse the <see cref="XmpFacturXMetadata" />.
+    /// </summary>
+    bool _schemaPrefixIsFacturXSchemaPrefix;
+
+    /// <summary>
+    ///     A prefix that was found in a PDF/A Schema declaration. When <see cref="_schemaPrefixIsFacturXSchemaPrefix" /> is true, this value should not be edited anymore
+    ///     and should be the one to look for to find the data for <see cref="XmpFacturXMetadata" />.
+    /// </summary>
+    ReadOnlyMemory<char> _pfASchemaPrefix = ReadOnlyMemory<char>.Empty;
+
     public void OnBeginTag(ReadOnlySpan<char> name, int line, int column)
     {
         ReadOnlyMemory<char> parentPath = _pathStack.TryPeek(out ReadOnlyMemory<char> p) ? p : ReadOnlyMemory<char>.Empty;
@@ -84,6 +95,12 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li":
                 CreatePdfAExtensionsMetadata();
                 result.PdfAExtensions!.Schemas.Add(new XmpPdfASchemaMetadata());
+                // if we already found the prefix for the FacturX metadata, we don't reset the prefix
+                if (!_schemaPrefixIsFacturXSchemaPrefix)
+                {
+                    // reset the prefix so that it can be set by the current schema
+                    _pfASchemaPrefix = ReadOnlyMemory<char>.Empty;
+                }
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:property/rdf:Seq/rdf:li":
                 result.PdfAExtensions!.Schemas[^1].Property.Add(new XmpPdfAPropertyMetadata());
@@ -241,9 +258,17 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:namespaceURI":
                 result.PdfAExtensions!.Schemas[^1].NamespaceUri = value.ToString();
+                if (value is XmpFacturXMetadata.NamespaceUri)
+                {
+                    _schemaPrefixIsFacturXSchemaPrefix = true;
+                }
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:prefix":
                 result.PdfAExtensions!.Schemas[^1].Prefix = value.ToString();
+                if (_pfASchemaPrefix.Length == 0)
+                {
+                    _pfASchemaPrefix = value.ToString().AsMemory();
+                }
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:schema":
                 result.PdfAExtensions!.Schemas[^1].Schema = value.ToString();
@@ -286,23 +311,30 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 :
                 result.PdfAExtensions!.Schemas[^1].ValueType[^1].Field[^1].ValueType = value.ToString();
                 break;
-            case "/x:xmpmeta/rdf:RDF/rdf:Description/xmlns:fx":
-                CreateFacturXMetadata();
-                break;
-            case "/x:xmpmeta/rdf:RDF/rdf:Description/fx:DocumentFileName":
-                result.FacturX!.DocumentFileName = value.ToString();
-                break;
-            case "/x:xmpmeta/rdf:RDF/rdf:Description/fx:DocumentType":
-                result.FacturX!.DocumentType = value.ToFacturXDocumentType();
-                break;
-            case "/x:xmpmeta/rdf:RDF/rdf:Description/fx:Version":
-                result.FacturX!.Version = value.ToString();
-                break;
-            case "/x:xmpmeta/rdf:RDF/rdf:Description/fx:ConformanceLevel":
-                result.FacturX!.ConformanceLevel = value.ToXmpFacturXConformanceLevel();
-                break;
 
             default:
+                // dynamic cases
+                if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/xmlns:{_pfASchemaPrefix}"))
+                {
+                    CreateFacturXMetadata();
+                }
+                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pfASchemaPrefix}:DocumentFileName"))
+                {
+                    result.FacturX!.DocumentFileName = value.ToString();
+                }
+                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pfASchemaPrefix}:DocumentType"))
+                {
+                    result.FacturX!.DocumentType = value.ToFacturXDocumentType();
+                }
+                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pfASchemaPrefix}:Version"))
+                {
+                    result.FacturX!.Version = value.ToString();
+                }
+                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pfASchemaPrefix}:ConformanceLevel"))
+                {
+                    result.FacturX!.ConformanceLevel = value.ToXmpFacturXConformanceLevel();
+                }
+
                 logger?.LogWarning("Unknown element '{Path}' with value '{Value}'.", path.ToString(), value.ToString());
                 break;
         }
