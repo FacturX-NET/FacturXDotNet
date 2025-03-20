@@ -1,6 +1,6 @@
 ![FacturX.NET logo](Assets/Logo/logo.png)
 
-The FacturX.NET library is a high-performance .NET library that provides support for the FacturX data formats, as defined by the [FNFE](https://fnfe-mpe.org/factur-x/) (also known as ZUGFeRD in Germany).
+The FacturX.NET library is a high-performance .NET library ([benchmarks](https://github.com/ismailbennani/FacturXDotNet/tree/master/Benchmark)) that provides support for the FacturX data formats, as defined by the [FNFE](https://fnfe-mpe.org/factur-x/) (also known as ZUGFeRD in Germany).
 
 These formats are the main formats used in the french and german electronic invoicing systems.
 
