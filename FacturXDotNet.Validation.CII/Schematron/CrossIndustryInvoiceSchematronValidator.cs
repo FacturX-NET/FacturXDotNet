@@ -1,18 +1,18 @@
 ﻿using FacturXDotNet.Validation.CII.BusinessRules;
 using FacturXDotNet.Validation.CII.BusinessRules.VatRelated.StandardAndReducedRate;
 
-namespace FacturXDotNet.Validation.CII;
+namespace FacturXDotNet.Validation.CII.Schematron;
 
 /// <summary>
 ///     Validates a Factur-X Cross-Industry Invoice against business rules defined in the Factur-X specification.
 /// </summary>
 /// <remarks>
-///     This validator applies the business rules specified for the Factur-X format, ensuring compliance with the selected profile.
-///     It can perform either a quick validation that stops at the first failure or a full validation that reports all rule outcomes.
+///     Even though the class is called <b>Schematron</b> validator, it does not perform Schematron validation for performance reasons. All the rules of the schematron
+///     have been reimplemented in plain C# code.
 /// </remarks>
-public class CrossIndustryInvoiceValidator(CrossIndustryInvoiceValidatorOptions? options = null)
+public class CrossIndustryInvoiceSchematronValidator(CrossIndustryInvoiceSchematronValidationOptions? options = null)
 {
-    readonly CrossIndustryInvoiceValidatorOptions _options = options ?? new CrossIndustryInvoiceValidatorOptions();
+    readonly CrossIndustryInvoiceSchematronValidationOptions _options = options ?? new CrossIndustryInvoiceSchematronValidationOptions();
 
     /// <summary>
     ///     Determines whether the given invoice satisfies all applicable business rules.

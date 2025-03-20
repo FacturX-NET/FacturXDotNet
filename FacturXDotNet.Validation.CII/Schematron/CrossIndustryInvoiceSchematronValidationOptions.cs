@@ -1,9 +1,9 @@
-﻿namespace FacturXDotNet.Validation.CII;
+﻿namespace FacturXDotNet.Validation.CII.Schematron;
 
 /// <summary>
-///     Provides configuration options for the <see cref="CrossIndustryInvoiceValidator" />.
+///     Provides configuration options for the <see cref="CrossIndustryInvoiceSchematronValidator" />.
 /// </summary>
-public class CrossIndustryInvoiceValidatorOptions
+public class CrossIndustryInvoiceSchematronValidationOptions
 {
     /// <summary>
     ///     Gets or sets an optional profile override for validation.

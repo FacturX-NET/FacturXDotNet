@@ -1,7 +1,7 @@
 using FacturXDotNet;
 using FacturXDotNet.Parsers.FacturX;
 using FacturXDotNet.Validation;
-using FacturXDotNet.Validation.CII;
+using FacturXDotNet.Validation.CII.Schematron;
 using Shouldly;
 
 namespace Tests.FacturXDotNet;
@@ -72,7 +72,7 @@ public class ParseAndValidateIntegrationTests
         FacturXParser parser = new();
         CrossIndustryInvoice invoice = await parser.ParseCiiXmlInFacturXPdfAsync(file);
 
-        CrossIndustryInvoiceValidator validator = new();
+        CrossIndustryInvoiceSchematronValidator validator = new();
         FacturXValidationResult validationResult = validator.GetValidationResult(invoice);
 
         validationResult.Failed.ShouldBeEmpty();
