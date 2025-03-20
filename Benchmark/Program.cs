@@ -7,8 +7,8 @@ using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
 using FacturXDotNet;
 using FacturXDotNet.Models.CII;
-using FacturXDotNet.Parsing.FacturX;
-using FacturXDotNet.Validation.CII.Schematron;
+using FacturXDotNet.Parsing;
+using FacturXDotNet.Validation;
 
 BenchmarkRunner.Run<BenchmarkCii>();
 
@@ -45,7 +45,7 @@ namespace Benchmark
             await using FileStream file = File.OpenRead(sourceFilePath);
 
             FacturXParser parser = new();
-            _ = await parser.ParseCiiXmlInFacturXPdfAsync(file);
+            _ = await parser.ParseFacturXPdfAsync(file);
         }
 
         [Benchmark]
@@ -55,10 +55,10 @@ namespace Benchmark
             await using FileStream file = File.OpenRead(sourceFilePath);
 
             FacturXParser parser = new();
-            CrossIndustryInvoice cii = await parser.ParseCiiXmlInFacturXPdfAsync(file);
+            FacturX facturX = await parser.ParseFacturXPdfAsync(file);
 
-            CrossIndustryInvoiceSchematronValidator validator = new();
-            _ = validator.IsValid(cii);
+            FacturXValidator validator = new();
+            _ = validator.IsValid(facturX);
         }
 
         string GetSourceFilePath()

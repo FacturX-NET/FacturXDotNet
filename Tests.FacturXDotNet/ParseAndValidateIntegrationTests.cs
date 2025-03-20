@@ -1,8 +1,7 @@
 using FacturXDotNet;
 using FacturXDotNet.Models;
-using FacturXDotNet.Parsing.FacturX;
+using FacturXDotNet.Parsing;
 using FacturXDotNet.Validation;
-using FacturXDotNet.Validation.CII.Schematron;
 using Shouldly;
 
 namespace Tests.FacturXDotNet;
@@ -71,12 +70,12 @@ public class ParseAndValidateIntegrationTests
         await using FileStream file = File.OpenRead(filePath);
 
         FacturXParser parser = new();
-        CrossIndustryInvoice invoice = await parser.ParseCiiXmlInFacturXPdfAsync(file);
+        FacturX invoice = await parser.ParseFacturXPdfAsync(file);
 
-        CrossIndustryInvoiceSchematronValidator validator = new();
+        FacturXValidator validator = new();
         FacturXValidationResult validationResult = validator.GetValidationResult(invoice);
 
-        validationResult.Failed.ShouldBeEmpty();
+        validationResult.Fatal.ShouldBeEmpty();
         validationResult.ValidProfiles.ShouldBe(profile.AndLower());
     }
 }

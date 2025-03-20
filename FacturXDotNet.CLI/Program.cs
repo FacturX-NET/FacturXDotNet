@@ -3,11 +3,11 @@ using System.Text.Json.Serialization;
 using FacturXDotNet;
 using FacturXDotNet.CLI;
 using FacturXDotNet.Models;
+using FacturXDotNet.Parsing;
 using FacturXDotNet.Parsing.CII;
-using FacturXDotNet.Parsing.FacturX;
 using FacturXDotNet.Parsing.XMP;
 using FacturXDotNet.Validation;
-using FacturXDotNet.Validation.CII.Schematron;
+using FacturXDotNet.Validation.BusinessRules;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -41,21 +41,19 @@ try
         }
     );
 
-    XmpMetadata xmp = await parser.ParseXmpMetadataInFacturXPdfAsync(example);
+    FacturX facturX = await parser.ParseFacturXPdfAsync(example);
     logger.LogInformation("-------------");
     logger.LogInformation("     XMP");
     logger.LogInformation("-------------");
-    logger.LogInformation("{XMP}", JsonSerializer.Serialize(xmp, SourceGenerationContext.Default.XmpMetadata));
-
-    CrossIndustryInvoice cii = await parser.ParseCiiXmlInFacturXPdfAsync(example);
+    logger.LogInformation("{XMP}", JsonSerializer.Serialize(facturX.XmpMetadata, SourceGenerationContext.Default.XmpMetadata));
 
     logger.LogInformation("-------------");
     logger.LogInformation("     CII");
     logger.LogInformation("-------------");
-    logger.LogInformation("{CII}", JsonSerializer.Serialize(cii, SourceGenerationContext.Default.CrossIndustryInvoice));
+    logger.LogInformation("{CII}", JsonSerializer.Serialize(facturX.CrossIndustryInvoice, SourceGenerationContext.Default.CrossIndustryInvoice));
 
-    CrossIndustryInvoiceSchematronValidator validator = new();
-    FacturXValidationResult validationResult = validator.GetValidationResult(cii);
+    FacturXValidator validator = new();
+    FacturXValidationResult validationResult = validator.GetValidationResult(facturX);
 
     logger.LogInformation("-------------");
     logger.LogInformation(" VALIDATION");
@@ -66,35 +64,35 @@ try
 
     logger.LogInformation("Details:");
 
-    if (validationResult.Failed.Count > 0)
+    if (validationResult.Fatal.Count > 0)
     {
-        logger.LogError("- Failed: ({FailedCount})", validationResult.Failed.Count);
+        logger.LogError("- Failed: ({FailedCount})", validationResult.Fatal.Count);
     }
     else
     {
-        logger.LogInformation("- Failed: ({FailedCount})", validationResult.Failed.Count);
+        logger.LogInformation("- Failed: ({FailedCount})", validationResult.Fatal.Count);
     }
-    foreach (FacturXBusinessRule rule in validationResult.Failed)
+    foreach (FacturXBusinessRule rule in validationResult.Fatal)
     {
-        logger.LogError("  - KO [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
+        logger.LogError("  - KO {Rule}", rule.Format());
     }
 
     logger.LogInformation("- Passed: ({PassedCount})", validationResult.Passed.Count);
-    foreach (FacturXBusinessRule rule in validationResult.Passed)
+    foreach (FacturXBusinessRule? rule in validationResult.Passed)
     {
-        logger.LogInformation("  - OK [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
+        logger.LogInformation("  - OK {Rule}", rule.Format());
     }
 
     logger.LogInformation("- Expected to fail: ({ExpectedToFailCount})", validationResult.ExpectedToFail.Count);
-    foreach (FacturXBusinessRule rule in validationResult.ExpectedToFail)
+    foreach (FacturXBusinessRule? rule in validationResult.ExpectedToFail)
     {
-        logger.LogInformation("  - KO [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
+        logger.LogInformation("  - KO {Rule}", rule.Format());
     }
 
     logger.LogInformation("- Skipped: ({SkippedCount})", validationResult.Skipped.Count);
-    foreach (FacturXBusinessRule rule in validationResult.Skipped)
+    foreach (FacturXBusinessRule? rule in validationResult.Skipped)
     {
-        logger.LogInformation("  - ?? [{Profile}] {Code}: {Description}", rule.Profiles.GetMinProfile(), rule.Name, rule.Description);
+        logger.LogInformation("  - ?? {Rule}", rule.Format());
     }
 
 

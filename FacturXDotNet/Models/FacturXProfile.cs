@@ -1,4 +1,5 @@
 ﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
 
 namespace FacturXDotNet.Models;
 
@@ -103,7 +104,8 @@ public static class FacturXProfileMappingExtensions
     /// <summary>
     ///     Convert the <see cref="GuidelineSpecifiedDocumentContextParameterId" /> to its <see cref="FacturXProfile" /> representation.
     /// </summary>
-    public static FacturXProfile ToFacturXProfile(this GuidelineSpecifiedDocumentContextParameterId profile) =>
+    /// <seealso cref="ToFacturXProfileOrNull(GuidelineSpecifiedDocumentContextParameterId)" />
+    public static FacturXProfile? ToFacturXProfileOrNull(this GuidelineSpecifiedDocumentContextParameterId profile) =>
         profile switch
         {
             GuidelineSpecifiedDocumentContextParameterId.Minimum => FacturXProfile.Minimum,
@@ -111,6 +113,49 @@ public static class FacturXProfileMappingExtensions
             GuidelineSpecifiedDocumentContextParameterId.Basic => FacturXProfile.Basic,
             GuidelineSpecifiedDocumentContextParameterId.En16931 => FacturXProfile.En16931,
             GuidelineSpecifiedDocumentContextParameterId.Extended => FacturXProfile.Extended,
+            _ => null
+        };
+
+    /// <summary>
+    ///     Convert the <see cref="GuidelineSpecifiedDocumentContextParameterId" /> to its <see cref="FacturXProfile" /> representation.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not a valid <see cref="FacturXProfile" />.</exception>
+    public static FacturXProfile ToFacturXProfile(this GuidelineSpecifiedDocumentContextParameterId profile) =>
+        ToFacturXProfileOrNull(profile) ?? throw new ArgumentOutOfRangeException(nameof(profile), profile, null);
+
+    /// <summary>
+    ///     Convert the <see cref="FacturXProfile" /> to its <see cref="XmpFacturXConformanceLevel" /> representation.
+    /// </summary>
+    public static XmpFacturXConformanceLevel ToXmpFacturXConformanceLevel(this FacturXProfile profile) =>
+        profile switch
+        {
+            FacturXProfile.Minimum => XmpFacturXConformanceLevel.Minimum,
+            FacturXProfile.BasicWl => XmpFacturXConformanceLevel.BasicWl,
+            FacturXProfile.Basic => XmpFacturXConformanceLevel.Basic,
+            FacturXProfile.En16931 => XmpFacturXConformanceLevel.En16931,
+            FacturXProfile.Extended => XmpFacturXConformanceLevel.Extended,
             _ => throw new ArgumentOutOfRangeException(nameof(profile), profile, null)
         };
+
+    /// <summary>
+    ///     Convert the <see cref="XmpFacturXConformanceLevel" /> to its <see cref="FacturXProfile" /> representation.
+    /// </summary>
+    /// <seealso cref="ToFacturXProfile(XmpFacturXConformanceLevel)" />
+    public static FacturXProfile? ToFacturXProfileOrNull(this XmpFacturXConformanceLevel profile) =>
+        profile switch
+        {
+            XmpFacturXConformanceLevel.Minimum => FacturXProfile.Minimum,
+            XmpFacturXConformanceLevel.BasicWl => FacturXProfile.BasicWl,
+            XmpFacturXConformanceLevel.Basic => FacturXProfile.Basic,
+            XmpFacturXConformanceLevel.En16931 => FacturXProfile.En16931,
+            XmpFacturXConformanceLevel.Extended => FacturXProfile.Extended,
+            _ => null
+        };
+
+    /// <summary>
+    ///     Convert the <see cref="XmpFacturXConformanceLevel" /> to its <see cref="FacturXProfile" /> representation.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not a valid <see cref="FacturXProfile" />.</exception>
+    public static FacturXProfile ToFacturXProfile(this XmpFacturXConformanceLevel profile) =>
+        ToFacturXProfileOrNull(profile) ?? throw new ArgumentOutOfRangeException(nameof(profile), profile, null);
 }

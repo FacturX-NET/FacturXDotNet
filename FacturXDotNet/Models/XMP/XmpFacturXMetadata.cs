@@ -29,5 +29,5 @@ public class XmpFacturXMetadata
     ///     The conformance level of the embedded XML document.
     /// </summary>
     /// <XmlTag>fx:ConformanceLevel</XmlTag>
-    public FacturXProfile? ConformanceLevel { get; set; }
+    public XmpFacturXConformanceLevel? ConformanceLevel { get; set; }
 }

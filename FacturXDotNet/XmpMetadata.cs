@@ -3,7 +3,7 @@
 namespace FacturXDotNet;
 
 /// <summary>
-///     Represents the XMP metadata of a Factur-X invoice.
+///     XMP metadata of a Factur-X invoice.
 /// </summary>
 /// <remarks>
 ///     See

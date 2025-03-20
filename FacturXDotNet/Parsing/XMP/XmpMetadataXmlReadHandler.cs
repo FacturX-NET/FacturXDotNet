@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using FacturXDotNet.Models;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.XMP.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -300,7 +299,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 result.FacturX!.Version = value.ToString();
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/fx:ConformanceLevel":
-                result.FacturX!.ConformanceLevel = value.ToFacturXProfile();
+                result.FacturX!.ConformanceLevel = value.ToXmpFacturXConformanceLevel();
                 break;
 
             default:
