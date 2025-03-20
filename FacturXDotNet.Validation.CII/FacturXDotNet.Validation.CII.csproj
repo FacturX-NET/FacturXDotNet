@@ -1,8 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <ItemGroup>
-      <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj" />
-      <ProjectReference Include="..\FacturXDotNet.Validation\FacturXDotNet.Validation.csproj" />
-    </ItemGroup>
-
-</Project>
