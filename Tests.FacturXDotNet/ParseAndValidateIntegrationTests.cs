@@ -1,5 +1,5 @@
 using FacturXDotNet;
-using FacturXDotNet.Parsers.FacturX;
+using FacturXDotNet.Parsing.FacturX;
 using FacturXDotNet.Validation;
 using FacturXDotNet.Validation.CII.Schematron;
 using Shouldly;

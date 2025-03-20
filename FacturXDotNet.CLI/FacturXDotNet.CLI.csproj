@@ -5,17 +5,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FacturXDotNet.Parsers.CII\FacturXDotNet.Parsers.CII.csproj" />
-      <ProjectReference Include="..\FacturXDotNet.Parsers.FacturX\FacturXDotNet.Parsers.FacturX.csproj" />
-      <ProjectReference Include="..\FacturXDotNet.Validation.CII\FacturXDotNet.Validation.CII.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.3" />
       <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
       <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.3" />
       <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj" />
     </ItemGroup>
 
 </Project>

@@ -193,8 +193,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FacturXDotNet.Parsers.FacturX\FacturXDotNet.Parsers.FacturX.csproj" />
-      <ProjectReference Include="..\FacturXDotNet.Validation.CII\FacturXDotNet.Validation.CII.csproj" />
+      <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj" />
     </ItemGroup>
 
 </Project>

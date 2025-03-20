@@ -2,13 +2,26 @@
 
 The main goal of this library is to provide well-documented data structures to work with Factur-X data, based on the [Factur-X standard](https://fnfe-mpe.org/factur-x/) version 1.0.07.2.
 
-If you spot a mistake or believe something could be improved, feel free to **open an issue** or even **contribute a fix**! Your feedback and contributions help keep the project accurate and reliable.
+The library is distributed as a [nuget package](#) (coming soon).
+```
+dotnet add package FacturXDotNet
+```
 
-This library is used by:
-- [FacturX.NET - Parser](../FacturXDotNet.Parser/README.md) to parse Factur-X files.
-- [FacturX.NET - FacturX Exporter](../FacturXDotNet.Exporter.FacturX/README.md) to create Factur-X files.
-- [FacturX.NET - CII Exporter](../FacturXDotNet.Exporter.CII/README.md) to create CII files.
-- [FacturX.NET - UBL EN16931 Exporter](../FacturXDotNet.Exporter.UblEn16931/README.md) to create UBL EN16931 files.
+## Getting Started
+
+```csharp
+await using FileStream myFileStream = File.OpenRead("path/to/my/file");
+
+FacturXParser parser = new();
+XmpMetadata xmp = await parser.ParseXmpMetadataInFacturXPdfAsync(myFileStream);
+CrossIndustryInvoice cii = await parser.ParseCiiXmlInFacturXPdfAsync(myFileStream);
+
+CrossIndustryInvoiceSchematronValidator validator = new();
+FacturXValidationResult validationResult = validator.GetValidationResult(cii);
+
+Console.WriteLine(validationResult.Success);
+Console.WriteLine(validationResult.ValidProfiles.GetMaxProfile());
+```
 
 ## Design Choices
 
@@ -47,6 +60,6 @@ To ensure that a single object can support all Factur-X profiles, the model foll
 
 When working with higher profiles, users can assume that properties required by those profiles are set, even though they are technically nullable.
 
-## Specifications
+### 5. Reimplementation of Schematron Rules in C#
 
-The specification of the Cross-Industry Invoice (CII) syntax and the associated business rules can be found in the [Factur-X specification](https://fnfe-mpe.org/factur-x/).
+For performance reasons, the validation does not use the schematron file provided by the Factur-X standard. Instead, it implements the same set of rules has been reimplemented in C#.

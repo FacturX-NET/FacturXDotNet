@@ -2,9 +2,9 @@
 using System.Text.Json.Serialization;
 using FacturXDotNet;
 using FacturXDotNet.CLI;
-using FacturXDotNet.Parsers.CII;
-using FacturXDotNet.Parsers.FacturX;
-using FacturXDotNet.Parsers.XMP;
+using FacturXDotNet.Parsing.CII;
+using FacturXDotNet.Parsing.FacturX;
+using FacturXDotNet.Parsing.XMP;
 using FacturXDotNet.Validation;
 using FacturXDotNet.Validation.CII.Schematron;
 using Microsoft.Extensions.Configuration;

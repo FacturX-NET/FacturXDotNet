@@ -5,7 +5,7 @@ using Benchmark;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
-using FacturXDotNet.Parsers.FacturX;
+using FacturXDotNet.Parsing.FacturX;
 
 BenchmarkRunner.Run<BenchmarkCii>();
 
