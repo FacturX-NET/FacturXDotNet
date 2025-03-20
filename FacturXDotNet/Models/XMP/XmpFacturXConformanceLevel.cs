@@ -79,7 +79,7 @@ public static class XmpFacturXConformanceLevelMappingExtensions
         conformanceLevel switch
         {
             XmpFacturXConformanceLevel.Minimum => "MINIMUM",
-            XmpFacturXConformanceLevel.BasicWl => "BASIC-WL",
+            XmpFacturXConformanceLevel.BasicWl => "BASIC WL",
             XmpFacturXConformanceLevel.Basic => "BASIC",
             XmpFacturXConformanceLevel.Comfort => "COMFORT",
             XmpFacturXConformanceLevel.En16931 => "EN 16931",
@@ -96,7 +96,7 @@ public static class XmpFacturXConformanceLevelMappingExtensions
         value switch
         {
             "MINIMUM" => XmpFacturXConformanceLevel.Minimum,
-            "BASIC-WL" => XmpFacturXConformanceLevel.BasicWl,
+            "BASIC WL" => XmpFacturXConformanceLevel.BasicWl,
             "BASIC" => XmpFacturXConformanceLevel.Basic,
             "COMFORT" => XmpFacturXConformanceLevel.Comfort,
             "EN 16931" => XmpFacturXConformanceLevel.En16931,
