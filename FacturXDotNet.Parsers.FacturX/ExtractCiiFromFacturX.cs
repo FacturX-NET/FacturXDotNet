@@ -2,42 +2,32 @@
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 using PdfSharp.Pdf.Filters;
-using PdfSharp.Pdf.IO;
 
 namespace FacturXDotNet.Parsers.FacturX;
 
 /// <summary>
 ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.
 /// </summary>
-class ExtractCiiFromFacturX(FacturXParserOptions? options = null)
+class ExtractCiiFromFacturX(string ciiAttachmentName)
 {
-    readonly FacturXParserOptions _options = options ?? new FacturXParserOptions();
-
-    public Stream ExtractFacturXAttachment(Stream facturXStream) =>
-        TryExtractFacturXAttachment(facturXStream, out Stream? result)
+    /// <summary>
+    ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.
+    /// </summary>
+    /// <param name="document"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public Stream ExtractFacturXAttachment(PdfDocument document) =>
+        TryExtractFacturXAttachment(document, out Stream? result)
             ? result
-            : throw new InvalidOperationException($"The Cross-Industry Invoice XML attachment with name '{_options.CiiXmlAttachmentName}' could not be found.");
+            : throw new InvalidOperationException($"The Cross-Industry Invoice XML attachment with name '{ciiAttachmentName}' could not be found.");
 
     /// <summary>
-    ///     Return the Cross-Industry Invoice XML attachment named <c>factur-x.xml</c> from the Factur-X PDF document.
+    ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.
     /// </summary>
-    /// <param name="facturXStream">The Factur-X PDF document to parse.</param>
+    /// <param name="document">The Factur-X PDF document to parse.</param>
     /// <param name="facturXAttachment">The Cross-Industry Invoice document.</param>
-    public bool TryExtractFacturXAttachment(Stream facturXStream, [NotNullWhen(true)] out Stream? facturXAttachment)
+    public bool TryExtractFacturXAttachment(PdfDocument document, [NotNullWhen(true)] out Stream? facturXAttachment)
     {
-        PdfDocument document;
-
-        if (_options.Password != null)
-        {
-            document = PdfReader.Open(facturXStream, PdfDocumentOpenMode.Import, args => args.Password = _options.Password);
-        }
-        else
-        {
-            document = PdfReader.Open(facturXStream, PdfDocumentOpenMode.Import);
-        }
-
-        using PdfDocument _ = document;
-
         PdfCatalog catalog = document.Internals.Catalog;
         PdfArray? attachedFiles = catalog.Elements.GetArray("/AF");
 
@@ -55,7 +45,7 @@ class ExtractCiiFromFacturX(FacturXParserOptions? options = null)
             }
 
             string attachedFileName = fileSpec.Elements.GetString("/F");
-            if (attachedFileName != _options.CiiXmlAttachmentName)
+            if (attachedFileName != ciiAttachmentName)
             {
                 continue;
             }

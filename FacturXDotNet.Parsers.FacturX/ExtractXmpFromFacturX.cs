@@ -2,38 +2,25 @@
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 using PdfSharp.Pdf.Filters;
-using PdfSharp.Pdf.IO;
 
 namespace FacturXDotNet.Parsers.FacturX;
 
 /// <summary>
 ///     Extracts the XMP metadata from a Factur-X invoice.
 /// </summary>
-class ExtractXmpFromFacturX(FacturXParserOptions? options = null)
+class ExtractXmpFromFacturX
 {
-    readonly FacturXParserOptions _options = options ?? new FacturXParserOptions();
-
-    public Stream ExtractXmpMetadata(Stream facturXStream) =>
-        TryExtractXmpMetadata(facturXStream, out Stream? result) ? result : throw new InvalidOperationException("The XMP metadata could not be found.");
+    /// <summary>
+    ///     Extracts the XMP metadata from a Factur-X PDF document.
+    /// </summary>
+    public Stream ExtractXmpMetadata(PdfDocument document) =>
+        TryExtractXmpMetadata(document, out Stream? result) ? result : throw new InvalidOperationException("The XMP metadata could not be found.");
 
     /// <summary>
-    ///     Extracts the XMP metadata from a Factur-X invoice.
+    ///     Extracts the XMP metadata from a Factur-X PDF document.
     /// </summary>
-    public bool TryExtractXmpMetadata(Stream facturXStream, [NotNullWhen(true)] out Stream? xmpMetadataStream)
+    public bool TryExtractXmpMetadata(PdfDocument document, [NotNullWhen(true)] out Stream? xmpMetadataStream)
     {
-        PdfDocument document;
-
-        if (_options.Password != null)
-        {
-            document = PdfReader.Open(facturXStream, PdfDocumentOpenMode.Import, args => args.Password = _options.Password);
-        }
-        else
-        {
-            document = PdfReader.Open(facturXStream, PdfDocumentOpenMode.Import);
-        }
-
-        using PdfDocument _ = document;
-
         PdfCatalog catalog = document.Internals.Catalog;
         PdfReference? metadataReference = catalog.Elements.GetReference("/Metadata");
         if (metadataReference?.Value is not PdfDictionary metadataDictionary)

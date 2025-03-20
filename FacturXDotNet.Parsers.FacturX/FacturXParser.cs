@@ -1,11 +1,14 @@
 ﻿using System.Text.RegularExpressions;
 using FacturXDotNet.Parsers.CII;
 using FacturXDotNet.Parsers.XMP;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 
 namespace FacturXDotNet.Parsers.FacturX;
 
 public partial class FacturXParser
 {
+    readonly FacturXParserOptions _options;
     readonly ExtractXmpFromFacturX _xmpExtractor;
     readonly ExtractCiiFromFacturX _ciiExtractor;
     readonly XmpMetadataParser _xmpParser;
@@ -13,10 +16,11 @@ public partial class FacturXParser
 
     public FacturXParser(FacturXParserOptions? options = null)
     {
-        _xmpExtractor = new ExtractXmpFromFacturX(options);
-        _ciiExtractor = new ExtractCiiFromFacturX(options);
-        _xmpParser = new XmpMetadataParser(options?.Xmp ?? new XmpMetadataParserOptions());
-        _ciiParser = new CrossIndustryInvoiceParser(options?.Cii ?? new CrossIndustryInvoiceParserOptions());
+        _options = options ?? new FacturXParserOptions();
+        _xmpExtractor = new ExtractXmpFromFacturX();
+        _ciiExtractor = new ExtractCiiFromFacturX(_options.CiiXmlAttachmentName);
+        _xmpParser = new XmpMetadataParser(_options.Xmp);
+        _ciiParser = new CrossIndustryInvoiceParser(_options.Cii);
     }
 
     /// <summary>
@@ -26,7 +30,8 @@ public partial class FacturXParser
     /// <returns>The Factur-X Cross-Industry Invoice.</returns>
     public async Task<XmpMetadata> ParseXmpMetadataInFacturXPdfAsync(Stream stream)
     {
-        await using Stream xmpXmlStream = _xmpExtractor.ExtractXmpMetadata(stream);
+        using PdfDocument document = OpenPdfDocument(stream);
+        await using Stream xmpXmlStream = _xmpExtractor.ExtractXmpMetadata(document);
 
         // TODO: avoid these two extra copies, it is only required because TurboXML doesn't support the <?xpacket...?> processing instructions
         using StreamReader reader = new(xmpXmlStream);
@@ -50,8 +55,24 @@ public partial class FacturXParser
     /// <returns>The Factur-X Cross-Industry Invoice.</returns>
     public async Task<CrossIndustryInvoice> ParseCiiXmlInFacturXPdfAsync(Stream stream)
     {
-        await using Stream ciiXmlStream = _ciiExtractor.ExtractFacturXAttachment(stream);
+        using PdfDocument document = OpenPdfDocument(stream);
+        await using Stream ciiXmlStream = _ciiExtractor.ExtractFacturXAttachment(document);
         return _ciiParser.ParseCiiXml(ciiXmlStream);
+    }
+
+    PdfDocument OpenPdfDocument(Stream stream)
+    {
+        PdfDocument document;
+
+        if (_options.Password != null)
+        {
+            document = PdfReader.Open(stream, PdfDocumentOpenMode.Import, args => args.Password = _options.Password);
+        }
+        else
+        {
+            document = PdfReader.Open(stream, PdfDocumentOpenMode.Import);
+        }
+        return document;
     }
 
     [GeneratedRegex("<\\?xpacket.*?\\?>")]
