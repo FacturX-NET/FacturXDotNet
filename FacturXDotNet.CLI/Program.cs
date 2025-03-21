@@ -21,6 +21,9 @@ ILogger logger = loggerFactory.CreateLogger("Program");
 
 try
 {
+    SourceGenerationContext sourceGenerationContext =
+        new(new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true, Converters = { new JsonStringEnumConverter() } });
+
     IConfigurationRoot configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
     Options options = configuration.Get<Options>() ?? new Options();
     string environment = options.Environment ?? string.Empty;
@@ -45,12 +48,12 @@ try
     logger.LogInformation("-------------");
     logger.LogInformation("     XMP");
     logger.LogInformation("-------------");
-    logger.LogInformation("{XMP}", JsonSerializer.Serialize(facturX.XmpMetadata, SourceGenerationContext.Default.XmpMetadata));
+    logger.LogInformation("{XMP}", JsonSerializer.Serialize(facturX.XmpMetadata, sourceGenerationContext.XmpMetadata));
 
     logger.LogInformation("-------------");
     logger.LogInformation("     CII");
     logger.LogInformation("-------------");
-    logger.LogInformation("{CII}", JsonSerializer.Serialize(facturX.CrossIndustryInvoice, SourceGenerationContext.Default.CrossIndustryInvoice));
+    logger.LogInformation("{CII}", JsonSerializer.Serialize(facturX.CrossIndustryInvoice, sourceGenerationContext.CrossIndustryInvoice));
 
     FacturXValidator validator = new();
     FacturXValidationResult validationResult = validator.GetValidationResult(facturX);
