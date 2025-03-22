@@ -1,27 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <Title>FacturX.NET</Title>
-    <Description>Extract, Validate and Create FacturX documents in .NET</Description>
-    <Authors>ismailbennani</Authors>
-    <PackageProjectUrl>https://github.com/ismailbennani/FacturXDotNet</PackageProjectUrl>
-    <PackageLicenseUrl>MIT</PackageLicenseUrl>
-    <PackageIcon>logo_icon_128.png</PackageIcon>
-    <RepositoryUrl>https://github.com/ismailbennani/FacturXDotNet</RepositoryUrl>
-    <RepositoryType>github</RepositoryType>
-    <PackageTags>facturx, cii, en16931, xmp, invoice</PackageTags>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Title>FacturX.NET</Title>
+        <Description>Extract, Validate and Create FacturX documents in .NET</Description>
+        <Authors>ismailbennani</Authors>
+        <PackageProjectUrl>https://github.com/ismailbennani/FacturXDotNet</PackageProjectUrl>
+        <PackageLicenseUrl>MIT</PackageLicenseUrl>
+        <PackageIcon>logo_icon_128.png</PackageIcon>
+        <RepositoryUrl>https://github.com/ismailbennani/FacturXDotNet</RepositoryUrl>
+        <RepositoryType>github</RepositoryType>
+        <PackageTags>facturx, cii, en16931, xmp, invoice</PackageTags>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\Assets\Logo\logo_icon_128.png" Pack="True" PackagePath="" Link="..\Assets\Logo\logo_icon_128.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="PDFsharp" Version="6.1.1" />
-    <PackageReference Include="TurboXml" Version="2.0.2" />
-  </ItemGroup>
-  
+    <ItemGroup>
+        <None Include="..\Assets\Logo\logo_icon_128.png" Pack="True" PackagePath="" Link="logo_icon_128.png"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="PDFsharp" Version="6.1.1"/>
+        <PackageReference Include="TurboXml" Version="2.0.2"/>
+    </ItemGroup>
+
 </Project>

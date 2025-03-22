@@ -10,7 +10,7 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="MSTest.TestAdapter" Version="3.1.1"/>
         <PackageReference Include="MSTest.TestFramework" Version="3.1.1"/>
-        <PackageReference Include="Shouldly" Version="4.3.0" />
+        <PackageReference Include="Shouldly" Version="4.3.0"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -18,19 +18,19 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="TestFiles\facturx.pdf">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\facturx.expected.xml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\facturx.expected.xmp">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Update="TestFiles\facturx.pdf">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\facturx.expected.xml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="TestFiles\facturx.expected.xmp">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FacturXDotNet.CLI\FacturXDotNet.CLI.csproj" />
+        <ProjectReference Include="..\FacturXDotNet.CLI\FacturXDotNet.CLI.csproj"/>
     </ItemGroup>
 
 </Project>
