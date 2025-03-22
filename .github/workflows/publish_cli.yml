@@ -35,13 +35,13 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --no-restore /p:Version=${{ steps.get_version.outputs.version }}
+        run: dotnet build --no-restore --configuration Release /p:Version=${{ steps.get_version.outputs.version }}
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
 
       - name: Publish
-        run: dotnet pack FacturXDotNet.CLI\FacturXDotNet.CLI.csproj --no-build --output nupkg --framework net10.0 /p:NugetVersion=${{ steps.get_version.outputs.version }}
+        run: dotnet pack FacturXDotNet.CLI\FacturXDotNet.CLI.csproj --no-build --configuration Release --output nupkg --framework net10.0
 
       - name: Publish NuGet tool
         run: dotnet nuget push nupkg\*.nupkg --api-key "${{ secrets.NUGET_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
