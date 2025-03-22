@@ -157,7 +157,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
         _options.ProfileOverride.HasValue && _options.ProfileOverride is not FacturXProfile.None
             ? _options.ProfileOverride.Value
             : xmp?.FacturX?.ConformanceLevel?.ToFacturXProfile()
-              ?? cii?.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfileOrNull() ?? FacturXProfile.Minimum;
+              ?? cii?.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfileOrNull() ?? FacturXProfile.None;
 
     async Task<(XmpMetadata? Xmp, CrossIndustryInvoiceAttachment? Cii)> ExtractXmpAndCiiAsync(
         FacturXDocument invoice,
