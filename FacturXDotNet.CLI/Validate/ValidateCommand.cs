@@ -192,7 +192,11 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         {
             AnsiConsole.MarkupLine("[red]:cross_mark: The Factur-X docuemnt is invalid.[/]");
             AnsiConsole.MarkupLine($"[red]:cross_mark: Document profile: {documentProfile}.[/]");
-            AnsiConsole.MarkupLine($"[red]:cross_mark: Detected profile: {detectedProfile}.[/]");
+
+            if (documentProfile != detectedProfile)
+            {
+                AnsiConsole.MarkupLine($"[red]:cross_mark: Detected profile: {detectedProfile}.[/]");
+            }
         }
     }
 }
