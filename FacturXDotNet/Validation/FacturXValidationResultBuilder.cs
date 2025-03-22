@@ -20,13 +20,13 @@ class FacturXValidationResultBuilder
         return this;
     }
 
-    public FacturXValidationResult Build()
+    public FacturXValidationReport Build()
     {
         if (!_expectedProfile.HasValue)
         {
             throw new InvalidOperationException("Expected profile must be set before building the result.");
         }
 
-        return new FacturXValidationResult(_expectedProfile.Value, _results);
+        return new FacturXValidationReport(_expectedProfile.Value, _results);
     }
 }

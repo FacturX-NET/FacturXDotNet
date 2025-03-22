@@ -25,7 +25,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     ///     This method applies business rules and returns <c>true</c> if all are satisfied; otherwise, <c>false</c>.
     ///     Validation stops at the first failing rule for efficiency.
     ///     <para>
-    ///         Use <see cref="GetValidationResultAsync" /> if you need a detailed report of all rule evaluations.
+    ///         Use <see cref="ValidateAsync" /> if you need a detailed report of all rule evaluations.
     ///     </para>
     /// </remarks>
     /// <param name="invoice">The invoice to validate.</param>
@@ -33,11 +33,17 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     /// <param name="password">The password to open the PDF document.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns><c>true</c> if the invoice meets all required business rules; otherwise, <c>false</c>.</returns>
-    public async Task<bool> IsValidAsync(FacturXDocument invoice, string? ciiAttachmentName = null, string? password = null, CancellationToken cancellationToken = default)
+    public async Task<bool> ValidateFastAsync(FacturXDocument invoice, string? ciiAttachmentName = null, string? password = null, CancellationToken cancellationToken = default)
     {
+        XmpMetadata? xmp = await invoice.GetXmpMetadataAsync(password, new XmpMetadataParserOptions { Logger = options?.Logger }, cancellationToken);
+        if (xmp == null)
+        {
+            return false;
+        }
+
         ciiAttachmentName ??= "factur-x.xml";
-        (XmpMetadata? xmp, CrossIndustryInvoiceAttachment? ciiAttachment) = await ExtractXmpAndCiiAsync(invoice, ciiAttachmentName, password, cancellationToken);
-        if (xmp == null || ciiAttachment == null)
+        CrossIndustryInvoiceAttachment? ciiAttachment = await invoice.GetCrossIndustryInvoiceAttachmentAsync(ciiAttachmentName, password, cancellationToken);
+        if (ciiAttachment == null)
         {
             return false;
         }
@@ -68,7 +74,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     ///     Computes a detailed validation result for the given invoice.
     /// </summary>
     /// <remarks>
-    ///     Unlike <see cref="IsValidAsync" />, this method evaluates all business rules and categorizes them as:
+    ///     Unlike <see cref="ValidateFastAsync" />, this method evaluates all business rules and categorizes them as:
     ///     <list type="bullet">
     ///         <item>
     ///             <description><b>Passed</b> - Rules that were successfully met.</description>
@@ -87,9 +93,9 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     /// <param name="password">The password to open the PDF document.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
-    ///     A <see cref="FacturXValidationResult" /> containing details of passed, failed, and skipped business rules.
+    ///     A <see cref="FacturXValidationReport" /> containing details of passed, failed, and skipped business rules.
     /// </returns>
-    public async Task<FacturXValidationResult> GetValidationResultAsync(
+    public async Task<FacturXValidationReport> ValidateAsync(
         FacturXDocument invoice,
         string? ciiAttachmentName = null,
         string? password = null,

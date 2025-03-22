@@ -70,10 +70,10 @@ public class ParseAndValidateIntegrationTests
         FacturXDocument invoice = await FacturXDocument.FromFileAsync(filePath);
 
         FacturXValidator validator = new();
-        FacturXValidationResult validationResult = await validator.GetValidationResultAsync(invoice);
+        FacturXValidationReport validationReport = await validator.ValidateAsync(invoice);
 
-        validationResult.Rules.Where(r => r.HasFailed).ShouldBeEmpty();
-        validationResult.ExpectedProfile.ShouldBe(profile);
-        validationResult.ValidProfiles.ShouldBe(profile.AndLower());
+        validationReport.Rules.Where(r => r.HasFailed).ShouldBeEmpty();
+        validationReport.ExpectedProfile.ShouldBe(profile);
+        validationReport.ValidProfiles.ShouldBe(profile.AndLower());
     }
 }

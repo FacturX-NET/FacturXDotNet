@@ -11,7 +11,7 @@ namespace FacturXDotNet.Validation;
 /// </remarks>
 /// <param name="ExpectedProfile">The profile that was expected for the document. This is the profile that is specified in the document.</param>
 /// <param name="Rules">The validation status of each business rule.</param>
-public readonly record struct FacturXValidationResult(FacturXProfile ExpectedProfile, IReadOnlyList<BusinessRuleValidationResult> Rules)
+public readonly record struct FacturXValidationReport(FacturXProfile ExpectedProfile, IReadOnlyList<BusinessRuleValidationResult> Rules)
 {
     /// <summary>
     ///     The profiles that are valid for the document.

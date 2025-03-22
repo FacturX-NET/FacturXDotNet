@@ -113,7 +113,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         };
         validationOptions.RulesToSkip.AddRange(options.RulesToSkip);
 
-        FacturXValidationResult result = default;
+        FacturXValidationReport report = default;
         await AnsiConsole.Status()
             .Spinner(Spinner.Known.Default)
             .StartAsync(
@@ -124,7 +124,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
                     sw.Start();
 
                     FacturXValidator validator = new(validationOptions);
-                    result = await validator.GetValidationResultAsync(facturX, options.CiiAttachment, cancellationToken: cancellationToken);
+                    report = await validator.ValidateAsync(facturX, options.CiiAttachment, cancellationToken: cancellationToken);
 
                     sw.Stop();
 
@@ -133,9 +133,9 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
             );
 
         AnsiConsole.WriteLine();
-        ShowFinalResult(facturX, result);
+        ShowFinalResult(facturX, report);
 
-        return result.Success ? 0 : 1;
+        return report.Success ? 0 : 1;
     }
 
     static void ShowOptions(ValidateCommandOptions options)
@@ -174,11 +174,11 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         AnsiConsole.Write(new Panel(panelContent).Header("Options").Border(BoxBorder.Rounded));
     }
 
-    static void ShowFinalResult(FacturXDocument document, FacturXValidationResult result)
+    static void ShowFinalResult(FacturXDocument document, FacturXValidationReport report)
     {
-        FacturXProfile documentProfile = result.ExpectedProfile;
-        FacturXProfile detectedProfile = result.ValidProfiles.GetMaxProfile();
-        if (result.Success)
+        FacturXProfile documentProfile = report.ExpectedProfile;
+        FacturXProfile detectedProfile = report.ValidProfiles.GetMaxProfile();
+        if (report.Success)
         {
             AnsiConsole.MarkupLine("[green]:check_mark: The document is valid.[/]");
             AnsiConsole.MarkupLine($"[green]:check_mark: Document profile: [bold]{documentProfile}[/].[/]");
