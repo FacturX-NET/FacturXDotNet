@@ -24,6 +24,9 @@ jobs:
         id: get_version
         run: echo "{version}={$(minver --tag-prefix v --verbosity debug)}" >> $GITHUB_OUTPUT
 
+      - name: Add System.CommandLine daily builds nuget source
+        run: dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json --name "System.CommandLine - Daily Builds"
+
       - name: Restore dependencies
         run: dotnet restore
 
