@@ -19,6 +19,7 @@
     <None Include="..\Assets\Logo\logo_icon_128.png" Pack="True" PackagePath="" Link="..\Assets\Logo\logo_icon_128.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="PDFsharp" Version="6.1.1" />
     <PackageReference Include="TurboXml" Version="2.0.2" />
   </ItemGroup>
