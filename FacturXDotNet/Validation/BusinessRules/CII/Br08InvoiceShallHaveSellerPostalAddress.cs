@@ -8,8 +8,8 @@ record Br08InvoiceShallHaveSellerPostalAddress() : CrossIndustryInvoiceBusinessR
     FacturXProfile.Minimum.AndHigher()
 )
 {
-    public override bool Check(CrossIndustryInvoice invoice) =>
+    public override bool Check(CrossIndustryInvoice? cii) =>
         // Nullability analysis should guarantee that this is always true, however it is still a BT so we check it anyway
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        invoice.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress != null;
+        cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress != null;
 }

@@ -72,7 +72,8 @@ public class ParseAndValidateIntegrationTests
         FacturXValidator validator = new();
         FacturXValidationResult validationResult = await validator.GetValidationResultAsync(invoice);
 
-        validationResult.Fatal.ShouldBeEmpty();
+        validationResult.Rules.Where(r => r.HasFailed).ShouldBeEmpty();
+        validationResult.ExpectedProfile.ShouldBe(profile);
         validationResult.ValidProfiles.ShouldBe(profile.AndLower());
     }
 }

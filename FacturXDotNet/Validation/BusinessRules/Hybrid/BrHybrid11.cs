@@ -6,7 +6,7 @@ record BrHybrid11() : HybridBusinessRule(
     FacturXBusinessRuleSeverity.Warning
 )
 {
-    public override bool Check(XmpMetadata xmp, string ciiAttachmentName, CrossIndustryInvoice cii) =>
+    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) =>
         // At this point this is necessarily true because we must have found it in order to create the FacturX instance. 
         true;
 }

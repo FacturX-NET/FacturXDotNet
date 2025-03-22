@@ -101,42 +101,25 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
 
         (XmpMetadata? xmp, CrossIndustryInvoiceAttachment? ciiAttachment) = await ExtractXmpAndCiiAsync(invoice, ciiAttachmentName, password, cancellationToken);
 
-        const string ciiNotFoundErrorMessage = "The Cross-Industry Invoice data could not be extracted.";
-        const string xmpNotFoundErrorMessage = "The XMP metadata could not be extracted.";
+        CrossIndustryInvoice? cii = ciiAttachment == null
+            ? null
+            : await ciiAttachment.GetCrossIndustryInvoiceAsync(password, new CrossIndustryInvoiceParserOptions { Logger = options?.Logger }, cancellationToken);
 
-        if (xmp == null || ciiAttachment == null)
-        {
-            if (xmp == null)
-            {
-                builder.AddError(xmpNotFoundErrorMessage);
-            }
+        FacturXProfile expectedProfile = GetExpectedProfile(xmp, cii);
+        builder.SetExpectedProfile(expectedProfile);
 
-            if (ciiAttachment == null)
-            {
-                builder.AddError(ciiNotFoundErrorMessage);
-            }
-
-            return builder.Build();
-        }
-
-        CrossIndustryInvoice cii = await ciiAttachment.GetCrossIndustryInvoiceAsync(
-            password,
-            new CrossIndustryInvoiceParserOptions { Logger = options?.Logger },
-            cancellationToken
-        );
-
-        CheckHybridRules(builder, xmp, ciiAttachmentName, cii);
-        CheckBusinessRules(builder, xmp, cii);
+        CheckHybridRules(builder, xmp, cii == null ? null : ciiAttachmentName, cii);
+        CheckBusinessRules(builder, expectedProfile, cii);
 
         return builder.Build();
     }
 
-    void CheckHybridRules(FacturXValidationResultBuilder builder, XmpMetadata xmp, string ciiAttachmentName, CrossIndustryInvoice cii)
+    void CheckHybridRules(FacturXValidationResultBuilder builder, XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii)
     {
         foreach (HybridBusinessRule rule in HybridBusinessRules.Rules)
         {
             // Hybrid rules are always expected to pass
-            BusinessRuleExpectedValidationStatus expectation = BusinessRuleExpectedValidationStatus.Success;
+            const BusinessRuleExpectedValidationStatus expectation = BusinessRuleExpectedValidationStatus.Success;
 
             if (ShouldSkipRule(rule))
             {
@@ -150,15 +133,13 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
         }
     }
 
-    void CheckBusinessRules(FacturXValidationResultBuilder builder, XmpMetadata xmp, CrossIndustryInvoice cii)
+    void CheckBusinessRules(FacturXValidationResultBuilder builder, FacturXProfile expectedProfile, CrossIndustryInvoice? cii)
     {
-        FacturXProfile profile = GetExpectedProfile(xmp, cii);
-
         foreach (CrossIndustryInvoiceBusinessRule rule in CrossIndustryInvoiceBusinessRules.Rules)
         {
             // Hybrid rules are always expected to pass
             BusinessRuleExpectedValidationStatus expectation =
-                IsRuleExpectedToFail(rule, profile) ? BusinessRuleExpectedValidationStatus.Failure : BusinessRuleExpectedValidationStatus.Success;
+                IsRuleExpectedToFail(rule, expectedProfile) ? BusinessRuleExpectedValidationStatus.Failure : BusinessRuleExpectedValidationStatus.Success;
 
             if (ShouldSkipRule(rule))
             {
@@ -172,11 +153,11 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
         }
     }
 
-    FacturXProfile GetExpectedProfile(XmpMetadata xmp, CrossIndustryInvoice cii) =>
+    FacturXProfile GetExpectedProfile(XmpMetadata? xmp, CrossIndustryInvoice? cii) =>
         _options.ProfileOverride.HasValue && _options.ProfileOverride is not FacturXProfile.None
             ? _options.ProfileOverride.Value
-            : xmp.FacturX?.ConformanceLevel?.ToFacturXProfile()
-              ?? cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfileOrNull() ?? FacturXProfile.Minimum;
+            : xmp?.FacturX?.ConformanceLevel?.ToFacturXProfile()
+              ?? cii?.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfileOrNull() ?? FacturXProfile.Minimum;
 
     async Task<(XmpMetadata? Xmp, CrossIndustryInvoiceAttachment? Cii)> ExtractXmpAndCiiAsync(
         FacturXDocument invoice,

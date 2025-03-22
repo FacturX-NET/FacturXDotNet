@@ -1,18 +1,32 @@
-﻿using FacturXDotNet.Validation.BusinessRules;
+﻿using FacturXDotNet.Models;
+using FacturXDotNet.Validation.BusinessRules;
 
 namespace FacturXDotNet.Validation;
 
 class FacturXValidationResultBuilder
 {
-    public FacturXValidationResultBuilder AddError(string error) =>
-        // TODO: Implement this method
-        this;
+    readonly List<BusinessRuleValidationResult> _results = [];
+    FacturXProfile? _expectedProfile;
 
-    public FacturXValidationResultBuilder AddRuleStatus(BusinessRule rule, BusinessRuleExpectedValidationStatus expectedStatus, BusinessRuleValidationStatus status) =>
-        // TODO: Implement this method
-        this;
+    public FacturXValidationResultBuilder SetExpectedProfile(FacturXProfile profile)
+    {
+        _expectedProfile = profile;
+        return this;
+    }
 
-    public FacturXValidationResult Build() =>
-        // TODO: Implement this method
-        new();
+    public FacturXValidationResultBuilder AddRuleStatus(BusinessRule rule, BusinessRuleExpectedValidationStatus expectedStatus, BusinessRuleValidationStatus status)
+    {
+        _results.Add(new BusinessRuleValidationResult(rule, expectedStatus, status));
+        return this;
+    }
+
+    public FacturXValidationResult Build()
+    {
+        if (!_expectedProfile.HasValue)
+        {
+            throw new InvalidOperationException("Expected profile must be set before building the result.");
+        }
+
+        return new FacturXValidationResult(_expectedProfile.Value, _results);
+    }
 }

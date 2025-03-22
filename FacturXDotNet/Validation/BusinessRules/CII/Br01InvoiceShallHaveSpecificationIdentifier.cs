@@ -8,5 +8,5 @@ record Br01InvoiceShallHaveSpecificationIdentifier() : CrossIndustryInvoiceBusin
     FacturXProfile.Minimum.AndHigher()
 )
 {
-    public override bool Check(CrossIndustryInvoice invoice) => Enum.IsDefined(invoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId);
+    public override bool Check(CrossIndustryInvoice? cii) => cii != null && Enum.IsDefined(cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId);
 }

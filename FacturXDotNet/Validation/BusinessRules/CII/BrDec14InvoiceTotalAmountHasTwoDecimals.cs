@@ -9,7 +9,7 @@ record BrDec14InvoiceTotalAmountHasTwoDecimals() : CrossIndustryInvoiceBusinessR
     FacturXProfile.Minimum.AndHigher()
 )
 {
-    public override bool Check(CrossIndustryInvoice invoice) =>
-        invoice.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount == null
-        || invoice.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount.CountDecimals() <= 2;
+    public override bool Check(CrossIndustryInvoice? cii) =>
+        cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount == null
+        || cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount.CountDecimals() <= 2;
 }
