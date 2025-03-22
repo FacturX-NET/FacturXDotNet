@@ -41,7 +41,7 @@ jobs:
         run: dotnet test --no-build --configuration Release --verbosity normal
 
       - name: Publish
-        run: dotnet pack FacturXDotNet.CLI\FacturXDotNet.CLI.csproj --no-build --configuration Release --output nupkg --framework net10.0
+        run: dotnet pack FacturXDotNet.CLI\FacturXDotNet.CLI.csproj --no-build --configuration Release --output nupkg
 
       - name: Publish NuGet tool
         run: dotnet nuget push nupkg\*.nupkg --api-key "${{ secrets.NUGET_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
