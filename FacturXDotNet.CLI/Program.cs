@@ -1,119 +1,73 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using FacturXDotNet;
-using FacturXDotNet.CLI;
-using FacturXDotNet.Models;
-using FacturXDotNet.Parsing;
-using FacturXDotNet.Parsing.CII;
-using FacturXDotNet.Parsing.XMP;
-using FacturXDotNet.Validation;
-using FacturXDotNet.Validation.BusinessRules;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Extensions.Logging;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
-
-Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
-SerilogLoggerFactory loggerFactory = new(Log.Logger);
-
-ILogger logger = loggerFactory.CreateLogger("Program");
+﻿using System.CommandLine;
+using System.CommandLine.Help;
+using System.Globalization;
+using System.Reflection;
+using FacturXDotNet.CLI.Extract;
+using Spectre.Console;
 
 try
 {
-    SourceGenerationContext sourceGenerationContext =
-        new(new JsonSerializerOptions(JsonSerializerDefaults.Web) { WriteIndented = true, Converters = { new JsonStringEnumConverter() } });
+    // force error messages to be in English
+    Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
-    IConfigurationRoot configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
-    Options options = configuration.Get<Options>() ?? new Options();
-    string environment = options.Environment ?? string.Empty;
+    RootCommand rootCommand = new("facturx extract facture.pdf --cii --xmp");
 
-    await using FileStream example = File.OpenRead(@"D:\source\repos\FacturXDotNet\FacturXDotNet.CLI\Examples\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.pdf");
+    CommandLineConfiguration configuration = new(rootCommand)
+    {
+        EnableDefaultExceptionHandler = true,
+        EnablePosixBundling = true
+    };
 
-    FacturXParser parser = new(
-        new FacturXParserOptions
-        {
-            Xmp =
-            {
-                Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? loggerFactory.CreateLogger<XmpMetadataParser>() : null
-            },
-            Cii =
-            {
-                Logger = environment.Equals("development", StringComparison.InvariantCultureIgnoreCase) ? loggerFactory.CreateLogger<CrossIndustryInvoiceParser>() : null
-            }
-        }
+    #region Help customization
+
+    Assembly assembly = typeof(Program).Assembly;
+    AssemblyName assemblyName = assembly.GetName();
+    string title = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "FacturX.NET";
+    string? copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
+    string version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? assemblyName.Version?.ToString() ?? "~dev";
+
+    HelpBuilder helpBuilder = new();
+    helpBuilder.CustomizeLayout(
+        _ => HelpBuilder.Default.GetLayout()
+            .Skip(1)
+            .Prepend(
+                context =>
+                {
+                    context.Output.WriteLine($"{title} v{version}");
+                    if (copyright != null)
+                    {
+                        context.Output.WriteLine(copyright);
+                    }
+                    return true;
+                }
+            )
     );
 
-    FacturX facturX = await parser.ParseFacturXPdfAsync(example);
-    logger.LogInformation("-------------");
-    logger.LogInformation("     XMP");
-    logger.LogInformation("-------------");
-    logger.LogInformation("{XMP}", JsonSerializer.Serialize(facturX.XmpMetadata, sourceGenerationContext.XmpMetadata));
+    Option helpOption = rootCommand.Options.Single(opt => opt is HelpOption);
+    rootCommand.Options.Remove(helpOption);
+    rootCommand.Add(new HelpOption { Action = new HelpAction { Builder = helpBuilder } });
 
-    logger.LogInformation("-------------");
-    logger.LogInformation("     CII");
-    logger.LogInformation("-------------");
-    logger.LogInformation("{CII}", JsonSerializer.Serialize(facturX.CrossIndustryInvoice, sourceGenerationContext.CrossIndustryInvoice));
+    #endregion
 
-    FacturXValidator validator = new();
-    FacturXValidationResult validationResult = validator.GetValidationResult(facturX);
+    #region Register commands
 
-    logger.LogInformation("-------------");
-    logger.LogInformation(" VALIDATION");
-    logger.LogInformation("-------------");
+    rootCommand.AddCommand(new ExtractCommand());
 
-    logger.LogInformation("Success: {Success}", validationResult.Success);
-    logger.LogInformation("Actual profile: {Profile}", validationResult.ValidProfiles.GetMaxProfile());
+    #endregion
 
-    logger.LogInformation("Details:");
+#if DEBUG
+    configuration.ThrowIfInvalid();
+#endif
 
-    if (validationResult.Fatal.Count > 0)
-    {
-        logger.LogError("- Failed: ({FailedCount})", validationResult.Fatal.Count);
-    }
-    else
-    {
-        logger.LogInformation("- Failed: ({FailedCount})", validationResult.Fatal.Count);
-    }
-    foreach (FacturXBusinessRule rule in validationResult.Fatal)
-    {
-        logger.LogError("  - KO {Rule}", rule.Format());
-    }
-
-    logger.LogInformation("- Passed: ({PassedCount})", validationResult.Passed.Count);
-    foreach (FacturXBusinessRule? rule in validationResult.Passed)
-    {
-        logger.LogInformation("  - OK {Rule}", rule.Format());
-    }
-
-    logger.LogInformation("- Expected to fail: ({ExpectedToFailCount})", validationResult.ExpectedToFail.Count);
-    foreach (FacturXBusinessRule? rule in validationResult.ExpectedToFail)
-    {
-        logger.LogInformation("  - KO {Rule}", rule.Format());
-    }
-
-    logger.LogInformation("- Skipped: ({SkippedCount})", validationResult.Skipped.Count);
-    foreach (FacturXBusinessRule? rule in validationResult.Skipped)
-    {
-        logger.LogInformation("  - ?? {Rule}", rule.Format());
-    }
+    return await configuration.InvokeAsync(args);
 }
 catch (Exception exn)
 {
-    logger.LogCritical(exn, "Unhandled exception.");
+    AnsiConsole.WriteException(exn, ExceptionFormats.ShortenEverything);
+    return 1;
 }
-
-namespace FacturXDotNet.CLI
+finally
 {
-    class Options
-    {
-        public string? Environment { get; set; }
-    }
-
-    [JsonSourceGenerationOptions(WriteIndented = true)]
-    [JsonSerializable(typeof(CrossIndustryInvoice))]
-    [JsonSerializable(typeof(XmpMetadata))]
-    partial class SourceGenerationContext : JsonSerializerContext
-    {
-    }
+    await Console.Out.FlushAsync();
+    await Console.Error.FlushAsync();
 }
