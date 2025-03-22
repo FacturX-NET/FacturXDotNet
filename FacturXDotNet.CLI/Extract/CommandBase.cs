@@ -4,7 +4,7 @@ using System.CommandLine.Parsing;
 
 namespace FacturXDotNet.CLI.Extract;
 
-abstract class CommandBase<TOption>(string name, string description, IReadOnlyList<Argument>? arguments = null, IReadOnlyList<Option>? options = null)
+abstract class CommandBase<TOptions>(string name, string description, IReadOnlyList<Argument>? arguments = null, IReadOnlyList<Option>? options = null)
 {
     public string Name { get; } = name;
     public string Description { get; } = description;
@@ -25,14 +25,36 @@ abstract class CommandBase<TOption>(string name, string description, IReadOnlyLi
             command.Add(option);
         }
 
-        command.Action = CommandHandler.Create<TOption, CancellationToken>(RunAsync);
-        command.Validators.Add(Validate);
+        command.Action = CommandHandler.Create(
+            async (ParseResult result, CancellationToken cancellationToken) =>
+            {
+                try
+                {
+                    TOptions opt = ParseOptions(result.CommandResult);
+                    return await RunImplAsync(opt, cancellationToken);
+                }
+                catch (Exception exception)
+                {
+                    await Console.Error.WriteLineAsync(exception.ToString());
+                    return 1;
+                }
+            }
+        );
+
+        command.Validators.Add(
+            result =>
+            {
+                TOptions opt = ParseOptions(result);
+                ValidateOptions(result, opt);
+            }
+        );
 
         return command;
     }
 
-    public abstract Task RunAsync(TOption opt, CancellationToken cancellationToken = default);
-    protected virtual void Validate(CommandResult option) { }
+    protected abstract Task<int> RunImplAsync(TOptions options, CancellationToken cancellationToken = default);
+    protected abstract TOptions ParseOptions(CommandResult result);
+    protected virtual void ValidateOptions(CommandResult result, TOptions opt) { }
 }
 
 static class CommandBaseExtensions

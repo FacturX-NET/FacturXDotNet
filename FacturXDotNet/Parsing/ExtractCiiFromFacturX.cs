@@ -8,8 +8,19 @@ namespace FacturXDotNet.Parsing;
 /// <summary>
 ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.
 /// </summary>
-class ExtractCiiFromFacturX(string ciiAttachmentName)
+class ExtractCiiFromFacturX
 {
+    readonly string? _ciiAttachmentName;
+
+    /// <summary>
+    ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.
+    /// </summary>
+    /// <param name="ciiAttachmentName">The name of the attachment containing the Cross-Industry Invoice XML file. If not specified, the default name 'factur-x.xml' will be used.</param>
+    public ExtractCiiFromFacturX(string? ciiAttachmentName = null)
+    {
+        _ciiAttachmentName = ciiAttachmentName ?? "factur-x.xml";
+    }
+
     /// <summary>
     ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.
     /// </summary>
@@ -20,7 +31,7 @@ class ExtractCiiFromFacturX(string ciiAttachmentName)
             attachmentFileName = attachmentFileNameOrNull;
             return result;
         }
-        throw new InvalidOperationException($"The Cross-Industry Invoice XML attachment with name '{ciiAttachmentName}' could not be found.");
+        throw new InvalidOperationException($"The Cross-Industry Invoice XML attachment with name '{_ciiAttachmentName}' could not be found.");
     }
 
     /// <summary>
@@ -49,7 +60,7 @@ class ExtractCiiFromFacturX(string ciiAttachmentName)
             }
 
             string attachedFileName = fileSpec.Elements.GetString("/F");
-            if (attachedFileName != ciiAttachmentName)
+            if (attachedFileName != _ciiAttachmentName)
             {
                 continue;
             }
