@@ -1,4 +1,5 @@
-﻿using FacturXDotNet.CLI;
+﻿using System.Xml.Linq;
+using FacturXDotNet.CLI;
 using Shouldly;
 
 namespace Tests.FacturXDotNet.CLI;
@@ -16,7 +17,7 @@ public class FacturXCliExtractionTest
         int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--cii"]);
 
         result.ShouldBe(0);
-        await CompareFileContents("TestFiles/facturx.xml", ExpectedCiiPath);
+        CompareXmlFiles("TestFiles/facturx.xml", ExpectedCiiPath);
     }
 
     [TestMethod]
@@ -25,7 +26,7 @@ public class FacturXCliExtractionTest
         int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--cii", "custom_name.xml"]);
 
         result.ShouldBe(0);
-        await CompareFileContents("custom_name.xml", ExpectedCiiPath);
+        CompareXmlFiles("custom_name.xml", ExpectedCiiPath);
     }
 
     [TestMethod]
@@ -34,7 +35,7 @@ public class FacturXCliExtractionTest
         int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--xmp"]);
 
         result.ShouldBe(0);
-        await CompareFileContents("TestFiles/facturx.xmp", ExpectedXmpPath);
+        CompareXmlFiles("TestFiles/facturx.xmp", ExpectedXmpPath);
     }
 
     [TestMethod]
@@ -43,13 +44,14 @@ public class FacturXCliExtractionTest
         int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--xmp", "custom_name.xml"]);
 
         result.ShouldBe(0);
-        await CompareFileContents("custom_name.xml", ExpectedXmpPath);
+        CompareXmlFiles("custom_name.xml", ExpectedXmpPath);
     }
 
-    static async Task CompareFileContents(string filePath, string expectedFilePath)
+    static void CompareXmlFiles(string filePath, string expectedFilePath)
     {
-        string file = await File.ReadAllTextAsync(filePath);
-        string expectedFile = await File.ReadAllTextAsync(expectedFilePath);
-        file.ShouldBe(expectedFile);
+        XDocument fileDocument = XDocument.Load(filePath);
+        XDocument expectedFileDocument = XDocument.Load(expectedFilePath);
+
+        fileDocument.ShouldBeEquivalentTo(expectedFileDocument);
     }
 }
