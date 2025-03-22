@@ -6,7 +6,7 @@ record BrHybrid01() : HybridBusinessRule(
     FacturXBusinessRuleSeverity.Information
 )
 {
-    public override bool Check(FacturXDocument invoice) =>
+    public override bool Check(XmpMetadata xmp, string ciiAttachmentName, CrossIndustryInvoice cii) =>
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        invoice.XmpMetadata != null;
+        xmp != null;
 }

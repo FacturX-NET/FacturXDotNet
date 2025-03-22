@@ -8,18 +8,15 @@ namespace FacturXDotNet.Validation.BusinessRules;
 /// <param name="Name">The name of the rule.</param>
 /// <param name="Description">A description of the rule.</param>
 /// <param name="Profiles">The profiles in which this rule should be enforced.</param>
-/// <param name="Severity">The severity of the rule.</param>
-public abstract record FacturXBusinessRule(string Name, string Description, FacturXProfileFlags Profiles, FacturXBusinessRuleSeverity Severity)
+public abstract record CrossIndustryInvoiceBusinessRule(string Name, string Description, FacturXProfileFlags Profiles) : BusinessRule(Name, Description)
 {
     /// <summary>
     ///     Determines whether the invoice satisfies the conditions defined by the rule.
     /// </summary>
-    /// <param name="invoice">The invoice to validate.</param>
+    /// <param name="cii">The Cross-Industry Invoice to validate.</param>
     /// <returns><c>true</c> if the rule is satisfied by the invoice; otherwise <c>false</c>.</returns>
-    public abstract bool Check(FacturXDocument invoice);
+    public abstract bool Check(CrossIndustryInvoice cii);
 
-    /// <summary>
-    ///     Formats the rule as a string.
-    /// </summary>
-    public abstract string Format();
+    /// <inheritdoc />
+    public override string Format() => $"[{Profiles.GetMinProfile()}] {Name} - {Description}";
 }

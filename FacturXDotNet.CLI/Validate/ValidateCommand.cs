@@ -2,7 +2,6 @@
 using System.CommandLine.Parsing;
 using System.Diagnostics;
 using FacturXDotNet.Models;
-using FacturXDotNet.Parsing;
 using FacturXDotNet.Validation;
 using Humanizer;
 using Spectre.Console;
@@ -83,13 +82,6 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         ShowOptions(options);
         AnsiConsole.WriteLine();
 
-        FacturXParserOptions parserOptions = new()
-        {
-            CiiXmlAttachmentName = options.CiiAttachment
-        };
-
-        FacturXParser parser = new(parserOptions);
-
         FacturXDocument? facturX = null;
         await AnsiConsole.Status()
             .Spinner(Spinner.Known.Default)
@@ -101,7 +93,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
                     sw.Start();
 
                     await using FileStream stream = options.Path.OpenRead();
-                    facturX = await parser.ParseFacturXPdfAsync(stream);
+                    facturX = await FacturXDocument.FromStream(stream, cancellationToken);
 
                     sw.Stop();
 
@@ -122,17 +114,17 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         validationOptions.RulesToSkip.AddRange(options.RulesToSkip);
 
         FacturXValidationResult result = default;
-        AnsiConsole.Status()
+        await AnsiConsole.Status()
             .Spinner(Spinner.Known.Default)
-            .Start(
+            .StartAsync(
                 "Validating...",
-                _ =>
+                async _ =>
                 {
                     Stopwatch sw = new();
                     sw.Start();
 
                     FacturXValidator validator = new(validationOptions);
-                    result = validator.GetValidationResult(facturX);
+                    result = await validator.GetValidationResultAsync(facturX, options.CiiAttachment, cancellationToken: cancellationToken);
 
                     sw.Stop();
 
@@ -184,7 +176,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
 
     static void ShowFinalResult(FacturXDocument document, FacturXValidationResult result)
     {
-        FacturXProfile documentProfile = document.CrossIndustryInvoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfile();
+        FacturXProfile documentProfile = result.ExpectedProfile;
         FacturXProfile detectedProfile = result.ValidProfiles.GetMaxProfile();
         if (result.Success)
         {

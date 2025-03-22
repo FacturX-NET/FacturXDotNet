@@ -7,7 +7,6 @@ using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Running;
 using FacturXDotNet;
 using FacturXDotNet.Models.CII;
-using FacturXDotNet.Parsing;
 using FacturXDotNet.Validation;
 
 BenchmarkRunner.Run<BenchmarkCii>();
@@ -44,8 +43,8 @@ namespace Benchmark
             string sourceFilePath = GetSourceFilePath();
             await using FileStream file = File.OpenRead(sourceFilePath);
 
-            FacturXParser parser = new();
-            _ = await parser.ParseFacturXPdfAsync(file);
+            FacturXDocument document = await FacturXDocument.FromFileAsync(GetSourceFilePath());
+            _ = document.GetCrossIndustryInvoiceAttachmentAsync();
         }
 
         [Benchmark]
@@ -54,11 +53,9 @@ namespace Benchmark
             string sourceFilePath = GetSourceFilePath();
             await using FileStream file = File.OpenRead(sourceFilePath);
 
-            FacturXParser parser = new();
-            FacturXDocument document = await parser.ParseFacturXPdfAsync(file);
-
+            FacturXDocument document = await FacturXDocument.FromFileAsync(GetSourceFilePath());
             FacturXValidator validator = new();
-            _ = validator.IsValid(document);
+            _ = await validator.IsValidAsync(document);
         }
 
         string GetSourceFilePath()

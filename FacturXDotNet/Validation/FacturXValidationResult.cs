@@ -20,27 +20,35 @@ namespace FacturXDotNet.Validation;
 /// </param>
 /// <param name="Skipped">The collection of business rules that were not checked.</param>
 public readonly record struct FacturXValidationResult(
-    IReadOnlyCollection<FacturXBusinessRule> Passed,
-    IReadOnlyCollection<FacturXBusinessRule> Fatal,
-    IReadOnlyCollection<FacturXBusinessRule> Warning,
-    IReadOnlyCollection<FacturXBusinessRule> Information,
-    IReadOnlyCollection<FacturXBusinessRule> ExpectedToFail,
-    IReadOnlyCollection<FacturXBusinessRule> Skipped
+    IReadOnlyCollection<CrossIndustryInvoiceBusinessRule> Passed,
+    IReadOnlyCollection<CrossIndustryInvoiceBusinessRule> Fatal,
+    IReadOnlyCollection<CrossIndustryInvoiceBusinessRule> Warning,
+    IReadOnlyCollection<CrossIndustryInvoiceBusinessRule> Information,
+    IReadOnlyCollection<CrossIndustryInvoiceBusinessRule> ExpectedToFail,
+    IReadOnlyCollection<CrossIndustryInvoiceBusinessRule> Skipped
 )
 {
     /// <summary>
-    ///     Gets the profiles that are valid for the document.
+    ///     The profile that was expected for the document. This is the profile that is specified in the document.
+    /// </summary>
+    public FacturXProfile ExpectedProfile { get; }
+
+    /// <summary>
+    ///     The profiles that are valid for the document.
     /// </summary>
     public FacturXProfileFlags ValidProfiles { get; } = ComputeActualProfile(Fatal, ExpectedToFail);
 
     /// <summary>
-    ///     Gets a value indicating whether the validation was successful.
+    ///     Whether the validation was successful.
     /// </summary>
     /// <remarks>
     ///     The validation is considered successful if no business rules have failed, except those that were expected to fail.
     /// </remarks>
-    public bool Success => Fatal.Count == 0;
+    public bool Success => Fatal == null || Fatal.Count == 0;
 
-    static FacturXProfileFlags ComputeActualProfile(IReadOnlyCollection<FacturXBusinessRule> failed, IReadOnlyCollection<FacturXBusinessRule> expectedToFail) =>
+    static FacturXProfileFlags ComputeActualProfile(
+        IReadOnlyCollection<CrossIndustryInvoiceBusinessRule> failed,
+        IReadOnlyCollection<CrossIndustryInvoiceBusinessRule> expectedToFail
+    ) =>
         failed.Concat(expectedToFail).Select(r => r.Profiles).Aggregate(FacturXProfileFlags.All, (result, failedProfiles) => result & ~failedProfiles);
 }

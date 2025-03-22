@@ -115,15 +115,19 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
         return 0;
     }
 
-    static async Task ExtractCii(FileInfo pdfPath, string? ciiAttachment, string outputPath, CancellationToken cancellationToken)
+    static async Task ExtractCii(FileInfo pdfPath, string? ciiAttachmentName, string outputPath, CancellationToken cancellationToken)
     {
         await using FileStream stream = pdfPath.OpenRead();
+        FacturXDocument document = await FacturXDocument.FromStream(stream, cancellationToken);
 
-        FacturXCrossIndustryInvoiceExtractor extractor = new(new FacturXCrossIndustryInvoiceExtractorOptions { CiiXmlAttachmentName = ciiAttachment });
-        await using Stream xmpStream = extractor.ExtractCiiAsync(stream);
+        CrossIndustryInvoiceAttachment? ciiAttachment = await document.GetCrossIndustryInvoiceAttachmentAsync(ciiAttachmentName, cancellationToken: cancellationToken);
+        if (ciiAttachment == null)
+        {
+            return;
+        }
 
         await using FileStream xmpFile = File.Open(outputPath, FileMode.Create);
-        await xmpStream.CopyToAsync(xmpFile, cancellationToken);
+        await ciiAttachment.CopyToAsync(xmpFile, cancellationToken: cancellationToken);
     }
 
     static async Task ExtractXmp(FileInfo pdfPath, string outputPath, CancellationToken cancellationToken)

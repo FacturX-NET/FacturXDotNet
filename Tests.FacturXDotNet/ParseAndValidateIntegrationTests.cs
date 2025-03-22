@@ -1,6 +1,5 @@
 using FacturXDotNet;
 using FacturXDotNet.Models;
-using FacturXDotNet.Parsing;
 using FacturXDotNet.Validation;
 using Shouldly;
 
@@ -68,13 +67,10 @@ public class ParseAndValidateIntegrationTests
     [DataRow("TestFiles/FacturX/4.EXTENDED/Facture_UC1_2023025_F-LE_FOURNISSEUR-POUR-L'ACHETEUR_EXTENDED.pdf", FacturXProfile.Extended)]
     public async Task ParseAndValidateProfile(string filePath, FacturXProfile profile)
     {
-        await using FileStream file = File.OpenRead(filePath);
-
-        FacturXParser parser = new();
-        FacturXDocument invoice = await parser.ParseFacturXPdfAsync(file);
+        FacturXDocument invoice = await FacturXDocument.FromFileAsync(filePath);
 
         FacturXValidator validator = new();
-        FacturXValidationResult validationResult = validator.GetValidationResult(invoice);
+        FacturXValidationResult validationResult = await validator.GetValidationResultAsync(invoice);
 
         validationResult.Fatal.ShouldBeEmpty();
         validationResult.ValidProfiles.ShouldBe(profile.AndLower());
