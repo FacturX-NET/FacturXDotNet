@@ -102,7 +102,7 @@ public class FacturXParserOptions
     /// <summary>
     ///     The name of the attachment containing the Cross-Industry Invoice XML file.
     /// </summary>
-    public string CiiXmlAttachmentName { get; set; } = "factur-x.xml";
+    public string? CiiXmlAttachmentName { get; set; }
 
     /// <summary>
     ///     The options for parsing the XMP metadata.

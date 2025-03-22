@@ -2,6 +2,7 @@
 using System.CommandLine.Help;
 using System.Reflection;
 using FacturXDotNet.CLI.Extract;
+using FacturXDotNet.CLI.Validate;
 
 namespace FacturXDotNet.CLI;
 
@@ -24,6 +25,7 @@ public static class CommandLineConfigurationBuilder
         rootCommand.Add(new HelpOption { Action = new HelpAction { Builder = helpBuilder } });
 
         rootCommand.Add(new ExtractCommand().GetCommand());
+        rootCommand.Add(new ValidateCommand().GetCommand());
 
         return configuration;
     }

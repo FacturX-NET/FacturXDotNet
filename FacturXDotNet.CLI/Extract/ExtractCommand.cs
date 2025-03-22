@@ -74,7 +74,7 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
                 .Spinner(Spinner.Known.Default)
                 .StartAsync(
                     "Exporting CII XML...",
-                    async ctx =>
+                    async _ =>
                     {
                         string outputPath = string.IsNullOrWhiteSpace(options.Cii) ? Path.ChangeExtension(options.Path.FullName, ".xml") : options.Cii;
                         await ExtractCii(options.Path, options.CiiAttachment, outputPath, cancellationToken);
@@ -90,7 +90,7 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
                 .Spinner(Spinner.Known.Default)
                 .StartAsync(
                     "Exporting XMP metadata...",
-                    async ctx =>
+                    async _ =>
                     {
                         string outputPath = string.IsNullOrWhiteSpace(options.Xmp) ? Path.ChangeExtension(options.Path.FullName, ".xmp") : options.Xmp;
                         await ExtractXmp(options.Path, outputPath, cancellationToken);

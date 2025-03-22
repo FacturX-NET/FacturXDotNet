@@ -6,40 +6,44 @@ namespace Tests.FacturXDotNet.CLI;
 [TestClass]
 public class FacturXCliExtractionTest
 {
+    const string FacturXPath = "TestFiles/facturx.pdf";
+    const string ExpectedCiiPath = "TestFiles/facturx.expected.xml";
+    const string ExpectedXmpPath = "TestFiles/facturx.expected.xmp";
+
     [TestMethod]
     public async Task ShouldExtractCii()
     {
-        const string facturXPath = "TestFiles/facturx.pdf";
-        await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", facturXPath, "--cii"]);
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--cii"]);
 
-        await CompareFileContents("TestFiles/facturx.xml", "TestFiles/facturx.expected.xml");
+        result.ShouldBe(0);
+        await CompareFileContents("TestFiles/facturx.xml", ExpectedCiiPath);
     }
 
     [TestMethod]
     public async Task ShouldExtractCii_WithCustomName()
     {
-        const string facturXPath = "TestFiles/facturx.pdf";
-        await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", facturXPath, "--cii", "custom_name.xml"]);
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--cii", "custom_name.xml"]);
 
-        await CompareFileContents("custom_name.xml", "TestFiles/facturx.expected.xml");
+        result.ShouldBe(0);
+        await CompareFileContents("custom_name.xml", ExpectedCiiPath);
     }
 
     [TestMethod]
     public async Task ShouldExtractXmp()
     {
-        const string facturXPath = "TestFiles/facturx.pdf";
-        await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", facturXPath, "--xmp"]);
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--xmp"]);
 
-        await CompareFileContents("TestFiles/facturx.xmp", "TestFiles/facturx.expected.xmp");
+        result.ShouldBe(0);
+        await CompareFileContents("TestFiles/facturx.xmp", ExpectedXmpPath);
     }
 
     [TestMethod]
     public async Task ShouldExtractXmp_WithCustomName()
     {
-        const string facturXPath = "TestFiles/facturx.pdf";
-        await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", facturXPath, "--xmp", "custom_name.xml"]);
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--xmp", "custom_name.xml"]);
 
-        await CompareFileContents("custom_name.xml", "TestFiles/facturx.expected.xmp");
+        result.ShouldBe(0);
+        await CompareFileContents("custom_name.xml", ExpectedXmpPath);
     }
 
     static async Task CompareFileContents(string filePath, string expectedFilePath)
