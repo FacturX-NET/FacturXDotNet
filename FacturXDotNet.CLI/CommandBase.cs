@@ -3,7 +3,7 @@ using System.CommandLine.NamingConventionBinder;
 using System.CommandLine.Parsing;
 using Spectre.Console;
 
-namespace FacturXDotNet.CLI.Extract;
+namespace FacturXDotNet.CLI;
 
 abstract class CommandBase<TOptions>(string name, string description, IReadOnlyList<Argument>? arguments = null, IReadOnlyList<Option>? options = null)
 {

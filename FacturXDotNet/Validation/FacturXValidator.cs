@@ -134,7 +134,8 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     bool ShouldSkipRule(FacturXBusinessRule rule) => _options.RulesToSkip.Any(r => string.Equals(rule.Name, r, StringComparison.InvariantCultureIgnoreCase));
 
     FacturXProfile GetExpectedProfile(FacturX invoice) =>
-        _options.ProfileOverride
-        ?? invoice.XmpMetadata.FacturX?.ConformanceLevel?.ToFacturXProfile()
-        ?? invoice.CrossIndustryInvoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfileOrNull() ?? FacturXProfile.Minimum;
+        _options.ProfileOverride.HasValue && _options.ProfileOverride is not FacturXProfile.None
+            ? _options.ProfileOverride.Value
+            : invoice.XmpMetadata.FacturX?.ConformanceLevel?.ToFacturXProfile()
+              ?? invoice.CrossIndustryInvoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfileOrNull() ?? FacturXProfile.Minimum;
 }
