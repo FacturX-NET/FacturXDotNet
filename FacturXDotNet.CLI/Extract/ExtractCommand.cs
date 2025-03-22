@@ -1,6 +1,7 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Parsing;
 using FacturXDotNet.Parsing;
+using Spectre.Console;
 
 namespace FacturXDotNet.CLI.Extract;
 
@@ -69,16 +70,34 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
     {
         if (options.ExportCii)
         {
-            string outputPath = string.IsNullOrWhiteSpace(options.Cii) ? Path.ChangeExtension(options.Path.FullName, ".xml") : options.Cii;
-            await ExtractCii(options.Path, options.CiiAttachment, outputPath, cancellationToken);
-            Console.WriteLine("Extracted CII XML to '{0}'.", outputPath);
+            await AnsiConsole.Status()
+                .Spinner(Spinner.Known.Default)
+                .StartAsync(
+                    "Exporting CII XML...",
+                    async ctx =>
+                    {
+                        string outputPath = string.IsNullOrWhiteSpace(options.Cii) ? Path.ChangeExtension(options.Path.FullName, ".xml") : options.Cii;
+                        await ExtractCii(options.Path, options.CiiAttachment, outputPath, cancellationToken);
+
+                        AnsiConsole.MarkupLine("[green]:check_mark:[/] Extracted CII XML to '[bold]{0}[/]'.", outputPath);
+                    }
+                );
         }
 
         if (options.ExportXmp)
         {
-            string outputPath = string.IsNullOrWhiteSpace(options.Xmp) ? Path.ChangeExtension(options.Path.FullName, ".xmp") : options.Xmp;
-            await ExtractXmp(options.Path, outputPath, cancellationToken);
-            Console.WriteLine("Extracted XMP metadata to '{0}'.", outputPath);
+            await AnsiConsole.Status()
+                .Spinner(Spinner.Known.Default)
+                .StartAsync(
+                    "Exporting XMP metadata...",
+                    async ctx =>
+                    {
+                        string outputPath = string.IsNullOrWhiteSpace(options.Xmp) ? Path.ChangeExtension(options.Path.FullName, ".xmp") : options.Xmp;
+                        await ExtractXmp(options.Path, outputPath, cancellationToken);
+
+                        AnsiConsole.MarkupLine("[green]:check_mark:[/] Extracted XMP metadata to '[bold]{0}[/]'.", outputPath);
+                    }
+                );
         }
 
         return 0;

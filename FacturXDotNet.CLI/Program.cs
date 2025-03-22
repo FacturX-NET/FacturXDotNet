@@ -3,6 +3,7 @@ using System.CommandLine.Help;
 using System.Globalization;
 using System.Reflection;
 using FacturXDotNet.CLI.Extract;
+using Spectre.Console;
 
 try
 {
@@ -62,7 +63,7 @@ try
 }
 catch (Exception exn)
 {
-    await Console.Error.WriteLineAsync(exn.ToString());
+    AnsiConsole.WriteException(exn, ExceptionFormats.ShortenEverything);
     return 1;
 }
 finally

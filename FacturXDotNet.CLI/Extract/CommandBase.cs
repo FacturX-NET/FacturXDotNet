@@ -1,6 +1,7 @@
 ﻿using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using System.CommandLine.Parsing;
+using Spectre.Console;
 
 namespace FacturXDotNet.CLI.Extract;
 
@@ -35,7 +36,7 @@ abstract class CommandBase<TOptions>(string name, string description, IReadOnlyL
                 }
                 catch (Exception exception)
                 {
-                    await Console.Error.WriteLineAsync(exception.ToString());
+                    AnsiConsole.WriteException(exception, ExceptionFormats.ShortenEverything);
                     return 1;
                 }
             }
