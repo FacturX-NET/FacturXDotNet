@@ -5,13 +5,17 @@
         <OutputType>exe</OutputType>
         <PackAsTool>True</PackAsTool>
         <ToolCommmandName>facturx</ToolCommmandName>
-        <ApplicationIcon>..\Assets\Logo\logo_icon_128.png</ApplicationIcon>
+        <ApplicationIcon>..\Assets\Logo\logo_icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <PropertyGroup>
+        <PackageId>FacturX.NET</PackageId>
         <Product>FacturX.NET CLI</Product>
-        <Company>Ismail Bennani</Company>
-        <Copyright>Copyright © $([System.DateTime]::Now.Year) $(Company)</Copyright>
+        <Authors>Ismail Bennani</Authors>
+        <Company>facturx.net@gmail.com</Company>
+        <Copyright>Copyright © $([System.DateTime]::Now.Year) $(Authors)</Copyright>
+        <PackageProjectUrl>https://github.com/ismailbennani/FacturXDotNet</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -33,7 +37,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\Assets\Logo\logo_icon_128.png" Pack="True" PackagePath="" Link="logo_icon_128.png"/>
+        <None Include="..\Assets\Logo\logo_icon.ico" Pack="True" PackagePath="" Link="logo_icon.ico"/>
+        <None Include="README.md" />
     </ItemGroup>
 
 </Project>

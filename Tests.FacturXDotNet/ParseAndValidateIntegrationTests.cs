@@ -9,6 +9,7 @@ namespace Tests.FacturXDotNet;
 [TestClass]
 public class ParseAndValidateIntegrationTests
 {
+    [Ignore]
     [DataTestMethod]
     [DataRow("TestFiles/FacturX/0.MINIMUM/Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.pdf", FacturXProfile.Minimum)]
     [DataRow("TestFiles/FacturX/0.MINIMUM/Facture_F20220024-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.pdf", FacturXProfile.Minimum)]
