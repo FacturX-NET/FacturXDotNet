@@ -57,8 +57,3 @@ abstract class CommandBase<TOptions>(string name, string description, IReadOnlyL
     protected abstract TOptions ParseOptions(CommandResult result);
     protected virtual void ValidateOptions(CommandResult result, TOptions opt) { }
 }
-
-static class CommandBaseExtensions
-{
-    public static void AddCommand<T>(this RootCommand rootCommand, CommandBase<T> command) => rootCommand.Subcommands.Add(command.GetCommand());
-}
