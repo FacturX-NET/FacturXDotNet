@@ -12,7 +12,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
     bool _nextLanguageAlternativeIsDefault;
 
     /// <summary>
-    ///     True when the value of <see cref="_schemaPrefix" /> is the prefix that should be used to parse the <see cref="XmpFacturXMetadata" />.
+    ///     True when the value of <see cref="_pfASchemaPrefix" /> is the prefix that should be used to parse the <see cref="XmpFacturXMetadata" />.
     /// </summary>
     bool _schemaPrefixIsFacturXSchemaPrefix;
 

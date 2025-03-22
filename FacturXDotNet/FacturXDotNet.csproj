@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
     <Title>FacturX.NET</Title>
-    <Description>Read, Write and Validate FacturX files in .NET</Description>
+    <Description>Extract, Validate and Create FacturX documents in .NET</Description>
     <Authors>ismailbennani</Authors>
     <PackageProjectUrl>https://github.com/ismailbennani/FacturXDotNet</PackageProjectUrl>
     <PackageLicenseUrl>MIT</PackageLicenseUrl>

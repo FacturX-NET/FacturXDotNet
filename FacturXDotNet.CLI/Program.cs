@@ -97,8 +97,6 @@ try
     {
         logger.LogInformation("  - ?? {Rule}", rule.Format());
     }
-
-
 }
 catch (Exception exn)
 {

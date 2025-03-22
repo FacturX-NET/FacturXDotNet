@@ -8,6 +8,7 @@ namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 /// </summary>
 /// <param name="Name">The name of the rule.</param>
 /// <param name="Description">A description of the rule.</param>
+/// <param name="Severity">The severity of the rule.</param>
 public abstract record HybridBusinessRule(string Name, string Description, FacturXBusinessRuleSeverity Severity = FacturXBusinessRuleSeverity.Fatal) : FacturXBusinessRule(
     Name,
     Description,

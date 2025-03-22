@@ -13,19 +13,22 @@ class ExtractCiiFromFacturX(string ciiAttachmentName)
     /// <summary>
     ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.
     /// </summary>
-    /// <param name="document"></param>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    public Stream ExtractFacturXAttachment(PdfDocument document, out string attachmentFileName) =>
-        TryExtractFacturXAttachment(document, out Stream? result, out attachmentFileName)
-            ? result
-            : throw new InvalidOperationException($"The Cross-Industry Invoice XML attachment with name '{ciiAttachmentName}' could not be found.");
+    public Stream ExtractFacturXAttachment(PdfDocument document, out string attachmentFileName)
+    {
+        if (TryExtractFacturXAttachment(document, out Stream? result, out string? attachmentFileNameOrNull))
+        {
+            attachmentFileName = attachmentFileNameOrNull;
+            return result;
+        }
+        throw new InvalidOperationException($"The Cross-Industry Invoice XML attachment with name '{ciiAttachmentName}' could not be found.");
+    }
 
     /// <summary>
     ///     Extract the Cross-Industry Invoice XML attachment from a Factur-X PDF document.
     /// </summary>
     /// <param name="document">The Factur-X PDF document to parse.</param>
     /// <param name="facturXAttachment">The Cross-Industry Invoice document.</param>
+    /// <param name="attachmentFileName">The name of the attachment containing the Cross-Industry Invoice XML file.</param>
     public bool TryExtractFacturXAttachment(PdfDocument document, [NotNullWhen(true)] out Stream? facturXAttachment, [NotNullWhen(true)] out string? attachmentFileName)
     {
         PdfCatalog catalog = document.Internals.Catalog;
