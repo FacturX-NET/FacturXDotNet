@@ -8,7 +8,7 @@ record Br14InvoiceShallHaveTotalAmountWithVat() : CrossIndustryInvoiceBusinessRu
     FacturXProfile.Minimum.AndHigher()
 )
 {
-    public override bool Check(CrossIndustryInvoice invoice) =>
-        invoice.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement != null
-        && invoice.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount != 0;
+    public override bool Check(CrossIndustryInvoice? cii) =>
+        cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement != null
+        && cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount != 0;
 }

@@ -11,7 +11,7 @@ record BrS01() : CrossIndustryInvoiceBusinessRule(
     FacturXProfile.BasicWl.AndHigher()
 )
 {
-    public override bool Check(CrossIndustryInvoice invoice) =>
+    public override bool Check(CrossIndustryInvoice? cii) =>
         // TODO
         true;
 }

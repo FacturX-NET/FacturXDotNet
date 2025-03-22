@@ -8,6 +8,6 @@ record Br09InvoiceShallHaveSellerPostalAddressWithCountryCode() : CrossIndustryI
     FacturXProfile.Minimum.AndHigher()
 )
 {
-    public override bool Check(CrossIndustryInvoice invoice) =>
-        !string.IsNullOrWhiteSpace(invoice.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress.CountryId);
+    public override bool Check(CrossIndustryInvoice? cii) =>
+        !string.IsNullOrWhiteSpace(cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress.CountryId);
 }

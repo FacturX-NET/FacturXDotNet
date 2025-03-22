@@ -12,10 +12,10 @@ record BrCo09() : CrossIndustryInvoiceBusinessRule(
     FacturXProfile.Minimum.AndHigher()
 )
 {
-    public override bool Check(CrossIndustryInvoice invoice) =>
+    public override bool Check(CrossIndustryInvoice? cii) =>
         // TODO: also check BT-63 and BT-48
-        invoice.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration is { Id: not null }
-        && CheckPrefix(invoice.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration.Id.AsSpan(0, 2));
+        cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration is { Id: not null }
+        && CheckPrefix(cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration.Id.AsSpan(0, 2));
 
     static bool CheckPrefix(ReadOnlySpan<char> prefix) => Iso31661CountryCodesUtils.IsValidCountryCode(prefix) || prefix is "el" || prefix is "El" || prefix is "EL";
 }

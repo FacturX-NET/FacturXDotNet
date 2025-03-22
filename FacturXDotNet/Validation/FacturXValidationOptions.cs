@@ -1,5 +1,6 @@
 ﻿using FacturXDotNet.Models;
 using FacturXDotNet.Validation.BusinessRules.CII;
+using Microsoft.Extensions.Logging;
 
 namespace FacturXDotNet.Validation;
 
@@ -27,6 +28,11 @@ public class FacturXValidationOptions
     ///     The list of rules to skip during validation.
     /// </summary>
     public List<string> RulesToSkip { get; } = [];
+
+    /// <summary>
+    ///     The logger that should be used by the validator.
+    /// </summary>
+    public ILogger? Logger { get; set; }
 
     /// <summary>
     ///     Skips all Cross-Industry Invoice business rules during validation.
