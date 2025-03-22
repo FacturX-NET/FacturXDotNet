@@ -23,7 +23,7 @@ public abstract record CrossIndustryInvoiceBusinessRule(string Name, string Desc
     public abstract bool Check(CrossIndustryInvoice invoice);
 
     /// <inheritdoc />
-    public override sealed bool Check(FacturX invoice) => Check(invoice.CrossIndustryInvoice);
+    public override sealed bool Check(FacturXDocument invoice) => Check(invoice.CrossIndustryInvoice);
 
     /// <summary>
     ///     Returns a string representation of the business rule.

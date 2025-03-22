@@ -34,14 +34,14 @@ public partial class FacturXParser
     /// </summary>
     /// <param name="stream"></param>
     /// <returns></returns>
-    public async Task<FacturX> ParseFacturXPdfAsync(Stream stream)
+    public async Task<FacturXDocument> ParseFacturXPdfAsync(Stream stream)
     {
         using PdfDocument document = OpenPdfDocument(stream);
         XmpMetadata xmpMetadata = await ParseXmpMetadataAsync(document);
         await using Stream ciiXmlStream = _ciiExtractor.ExtractFacturXAttachment(document, out string attachmentFileName);
         CrossIndustryInvoice ciiXml = _ciiParser.ParseCiiXml(ciiXmlStream);
 
-        return new FacturX
+        return new FacturXDocument
         {
             XmpMetadata = xmpMetadata,
             CrossIndustryInvoiceFileInformation = new CrossIndustryInvoiceFileInformation { Name = attachmentFileName },

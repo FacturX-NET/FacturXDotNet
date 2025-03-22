@@ -2,5 +2,5 @@
 
 record BrHybrid10() : HybridBusinessRule("BR-HYBRID-10", "The fx:Version SHOULD be 1.0.", FacturXBusinessRuleSeverity.Warning)
 {
-    public override bool Check(FacturX invoice) => invoice.XmpMetadata.FacturX is { Version: "1.0" };
+    public override bool Check(FacturXDocument invoice) => invoice.XmpMetadata.FacturX is { Version: "1.0" };
 }

@@ -3,7 +3,7 @@
 /// <summary>
 ///     A Factur-X document.
 /// </summary>
-public class FacturX
+public class FacturXDocument
 {
     /// <summary>
     ///     The XMP metadata of the Factur-X document.

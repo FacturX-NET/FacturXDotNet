@@ -55,10 +55,10 @@ namespace Benchmark
             await using FileStream file = File.OpenRead(sourceFilePath);
 
             FacturXParser parser = new();
-            FacturX facturX = await parser.ParseFacturXPdfAsync(file);
+            FacturXDocument document = await parser.ParseFacturXPdfAsync(file);
 
             FacturXValidator validator = new();
-            _ = validator.IsValid(facturX);
+            _ = validator.IsValid(document);
         }
 
         string GetSourceFilePath()

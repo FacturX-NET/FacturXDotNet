@@ -90,7 +90,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
 
         FacturXParser parser = new(parserOptions);
 
-        FacturX? facturX = null;
+        FacturXDocument? facturX = null;
         await AnsiConsole.Status()
             .Spinner(Spinner.Known.Default)
             .StartAsync(
@@ -182,9 +182,9 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         AnsiConsole.Write(new Panel(panelContent).Header("Options").Border(BoxBorder.Rounded));
     }
 
-    static void ShowFinalResult(FacturX facturX, FacturXValidationResult result)
+    static void ShowFinalResult(FacturXDocument document, FacturXValidationResult result)
     {
-        FacturXProfile documentProfile = facturX.CrossIndustryInvoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfile();
+        FacturXProfile documentProfile = document.CrossIndustryInvoice.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfile();
         FacturXProfile detectedProfile = result.ValidProfiles.GetMaxProfile();
         if (result.Success)
         {

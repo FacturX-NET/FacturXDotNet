@@ -16,7 +16,7 @@ public abstract record FacturXBusinessRule(string Name, string Description, Fact
     /// </summary>
     /// <param name="invoice">The invoice to validate.</param>
     /// <returns><c>true</c> if the rule is satisfied by the invoice; otherwise <c>false</c>.</returns>
-    public abstract bool Check(FacturX invoice);
+    public abstract bool Check(FacturXDocument invoice);
 
     /// <summary>
     ///     Formats the rule as a string.

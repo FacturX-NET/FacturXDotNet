@@ -71,7 +71,7 @@ public class ParseAndValidateIntegrationTests
         await using FileStream file = File.OpenRead(filePath);
 
         FacturXParser parser = new();
-        FacturX invoice = await parser.ParseFacturXPdfAsync(file);
+        FacturXDocument invoice = await parser.ParseFacturXPdfAsync(file);
 
         FacturXValidator validator = new();
         FacturXValidationResult validationResult = validator.GetValidationResult(invoice);

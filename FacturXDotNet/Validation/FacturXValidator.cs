@@ -27,7 +27,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     /// </remarks>
     /// <param name="invoice">The invoice to validate.</param>
     /// <returns><c>true</c> if the invoice meets all required business rules; otherwise, <c>false</c>.</returns>
-    public bool IsValid(FacturX invoice)
+    public bool IsValid(FacturXDocument invoice)
     {
         FacturXProfile profile = GetExpectedProfile(invoice);
         IEnumerable<FacturXBusinessRule> rules = CrossIndustryInvoiceBusinessRules.Rules.Concat<FacturXBusinessRule>(HybridBusinessRules.Rules)
@@ -60,14 +60,14 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     /// <returns>
     ///     A <see cref="FacturXValidationResult" /> containing details of passed, failed, and skipped business rules.
     /// </returns>
-    public FacturXValidationResult GetValidationResult(FacturX invoice)
+    public FacturXValidationResult GetValidationResult(FacturXDocument invoice)
     {
         IEnumerable<FacturXBusinessRule> rules = CrossIndustryInvoiceBusinessRules.Rules.Concat<FacturXBusinessRule>(HybridBusinessRules.Rules);
         (List<FacturXBusinessRule> passed, List<FacturXBusinessRule> failed, List<FacturXBusinessRule> skipped) = CheckRules(rules, invoice);
         return BuildValidationResult(invoice, failed, passed, skipped);
     }
 
-    (List<FacturXBusinessRule>, List<FacturXBusinessRule>, List<FacturXBusinessRule>) CheckRules(IEnumerable<FacturXBusinessRule> rules, FacturX invoice)
+    (List<FacturXBusinessRule>, List<FacturXBusinessRule>, List<FacturXBusinessRule>) CheckRules(IEnumerable<FacturXBusinessRule> rules, FacturXDocument invoice)
     {
         List<FacturXBusinessRule> passed = [];
         List<FacturXBusinessRule> failed = [];
@@ -94,7 +94,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
         return (passed, failed, skipped);
     }
 
-    FacturXValidationResult BuildValidationResult(FacturX invoice, List<FacturXBusinessRule> failed, List<FacturXBusinessRule> passed, List<FacturXBusinessRule> skipped)
+    FacturXValidationResult BuildValidationResult(FacturXDocument invoice, List<FacturXBusinessRule> failed, List<FacturXBusinessRule> passed, List<FacturXBusinessRule> skipped)
     {
         FacturXProfile profile = GetExpectedProfile(invoice);
 
@@ -133,7 +133,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
 
     bool ShouldSkipRule(FacturXBusinessRule rule) => _options.RulesToSkip.Any(r => string.Equals(rule.Name, r, StringComparison.InvariantCultureIgnoreCase));
 
-    FacturXProfile GetExpectedProfile(FacturX invoice) =>
+    FacturXProfile GetExpectedProfile(FacturXDocument invoice) =>
         _options.ProfileOverride.HasValue && _options.ProfileOverride is not FacturXProfile.None
             ? _options.ProfileOverride.Value
             : invoice.XmpMetadata.FacturX?.ConformanceLevel?.ToFacturXProfile()
