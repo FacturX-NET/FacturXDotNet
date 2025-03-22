@@ -38,7 +38,7 @@ jobs:
         run: dotnet build --no-restore --configuration Release /p:Version=${{ steps.get_version.outputs.version }}
 
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --no-build --configuration Release --verbosity normal
 
       - name: Publish
         run: dotnet pack FacturXDotNet.CLI\FacturXDotNet.CLI.csproj --no-build --configuration Release --output nupkg --framework net10.0
