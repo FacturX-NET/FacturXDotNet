@@ -11,6 +11,7 @@ kinds = ["zip"]
 rid = ["linux-x64", "linux-arm64"]
 kinds = ["deb", "tar"]
 [[pack]]
+publish = false
 rid = ["rhel-x64"]
 kinds = ["rpm", "tar"]
 [[pack]]
