@@ -18,6 +18,7 @@ rid = ["osx-x64", "osx-arm64"]
 kinds = ["tar"]
 
 [coverage]
+include_test_assembly = false
 badge_upload_to_gist = true
 badge_gist_id = "39cc9832bf323ebb2e7c25a6f0e585b7"
 
