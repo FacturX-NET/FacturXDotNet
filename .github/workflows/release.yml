@@ -32,7 +32,7 @@ jobs:
       - name: Install .NET 8.0 (for dotnet-releaser)
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '8.0.x'
 
       - name: Add System.CommandLine daily builds nuget source
         run: dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json --name "System.CommandLine - Daily Builds"
