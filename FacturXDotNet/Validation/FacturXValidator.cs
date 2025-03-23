@@ -91,6 +91,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     /// <param name="invoice">The invoice to validate.</param>
     /// <param name="ciiAttachmentName">The name of the attachment containing the Cross-Industry Invoice XML file. If not specified, the default name 'factur-x.xml' will be used.</param>
     /// <param name="password">The password to open the PDF document.</param>
+    /// <param name="progress">An optional progress reporter for tracking the validation progress.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>
     ///     A <see cref="FacturXValidationReport" /> containing details of passed, failed, and skipped business rules.
@@ -99,11 +100,11 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
         FacturXDocument invoice,
         string? ciiAttachmentName = null,
         string? password = null,
+        IProgress<FacturXValidationProgressArgs>? progress = null,
         CancellationToken cancellationToken = default
     )
     {
         ciiAttachmentName ??= "factur-x.xml";
-        FacturXValidationResultBuilder builder = new();
 
         (XmpMetadata? xmp, CrossIndustryInvoiceAttachment? ciiAttachment) = await ExtractXmpAndCiiAsync(invoice, ciiAttachmentName, password, cancellationToken);
 
@@ -112,50 +113,86 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
             : await ciiAttachment.GetCrossIndustryInvoiceAsync(password, new CrossIndustryInvoiceParserOptions { Logger = options?.Logger }, cancellationToken);
 
         FacturXProfile expectedProfile = GetExpectedProfile(xmp, cii);
-        builder.SetExpectedProfile(expectedProfile);
 
-        CheckHybridRules(builder, xmp, cii == null ? null : ciiAttachmentName, cii);
-        CheckBusinessRules(builder, expectedProfile, cii);
+        BusinessRule[] allRules = HybridBusinessRules.Rules.Concat<BusinessRule>(CrossIndustryInvoiceBusinessRules.Rules).ToArray();
+        List<BusinessRuleValidationResult> results = [];
 
-        return builder.Build();
+        Progress<BusinessRuleValidationResult>? hybridProgress = progress == null
+            ? null
+            : new Progress<BusinessRuleValidationResult>(
+                lastResult => progress.Report(new FacturXValidationProgressArgs { Rules = allRules, Results = results, LastResult = lastResult })
+            );
+        CheckRules(results, HybridBusinessRules.Rules, xmp, cii == null ? null : ciiAttachmentName, cii, hybridProgress);
+
+        Progress<BusinessRuleValidationResult>? ciiProgress = progress == null
+            ? null
+            : new Progress<BusinessRuleValidationResult>(
+                lastResult => progress.Report(new FacturXValidationProgressArgs { Rules = allRules, Results = results, LastResult = lastResult })
+            );
+        CheckRules(results, CrossIndustryInvoiceBusinessRules.Rules, expectedProfile, cii, ciiProgress);
+
+        return new FacturXValidationReport(expectedProfile, results);
     }
 
-    void CheckHybridRules(FacturXValidationResultBuilder builder, XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii)
+    void CheckRules(
+        List<BusinessRuleValidationResult> results,
+        HybridBusinessRule[] rules,
+        XmpMetadata? xmp,
+        string? ciiAttachmentName,
+        CrossIndustryInvoice? cii,
+        IProgress<BusinessRuleValidationResult>? progress = null
+    )
     {
-        foreach (HybridBusinessRule rule in HybridBusinessRules.Rules)
+        foreach (HybridBusinessRule rule in rules)
         {
             // Hybrid rules are always expected to pass
             const BusinessRuleExpectedValidationStatus expectation = BusinessRuleExpectedValidationStatus.Success;
 
+            BusinessRuleValidationResult ruleResult;
             if (ShouldSkipRule(rule))
             {
-                builder.AddRuleStatus(rule, expectation, BusinessRuleValidationStatus.Skipped);
+                ruleResult = new BusinessRuleValidationResult(rule, expectation, BusinessRuleValidationStatus.Skipped);
+                results.Add(ruleResult);
             }
             else
             {
                 BusinessRuleValidationStatus status = rule.Check(xmp, ciiAttachmentName, cii) ? BusinessRuleValidationStatus.Passed : BusinessRuleValidationStatus.Failed;
-                builder.AddRuleStatus(rule, expectation, status);
+                ruleResult = new BusinessRuleValidationResult(rule, expectation, status);
+                results.Add(ruleResult);
             }
+
+            progress?.Report(ruleResult);
         }
     }
 
-    void CheckBusinessRules(FacturXValidationResultBuilder builder, FacturXProfile expectedProfile, CrossIndustryInvoice? cii)
+    void CheckRules(
+        List<BusinessRuleValidationResult> results,
+        CrossIndustryInvoiceBusinessRule[] rules,
+        FacturXProfile expectedProfile,
+        CrossIndustryInvoice? cii,
+        IProgress<BusinessRuleValidationResult>? progress = null
+    )
     {
-        foreach (CrossIndustryInvoiceBusinessRule rule in CrossIndustryInvoiceBusinessRules.Rules)
+        foreach (CrossIndustryInvoiceBusinessRule rule in rules)
         {
             // Hybrid rules are always expected to pass
             BusinessRuleExpectedValidationStatus expectation =
                 IsRuleExpectedToFail(rule, expectedProfile) ? BusinessRuleExpectedValidationStatus.Failure : BusinessRuleExpectedValidationStatus.Success;
 
+            BusinessRuleValidationResult ruleResult;
             if (ShouldSkipRule(rule))
             {
-                builder.AddRuleStatus(rule, expectation, BusinessRuleValidationStatus.Skipped);
+                ruleResult = new BusinessRuleValidationResult(rule, expectation, BusinessRuleValidationStatus.Skipped);
+                results.Add(ruleResult);
             }
             else
             {
                 BusinessRuleValidationStatus status = rule.Check(cii) ? BusinessRuleValidationStatus.Passed : BusinessRuleValidationStatus.Failed;
-                builder.AddRuleStatus(rule, expectation, status);
+                ruleResult = new BusinessRuleValidationResult(rule, expectation, status);
+                results.Add(ruleResult);
             }
+
+            progress?.Report(ruleResult);
         }
     }
 
@@ -181,4 +218,27 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     static bool IsRuleExpectedToFail(CrossIndustryInvoiceBusinessRule rule, FacturXProfile profile) => !rule.Profiles.Match(profile);
     bool ShouldSkipRule(CrossIndustryInvoiceBusinessRule rule) => _options.RulesToSkip.Any(r => string.Equals(rule.Name, r, StringComparison.InvariantCultureIgnoreCase));
     bool ShouldSkipRule(HybridBusinessRule rule) => _options.RulesToSkip.Any(r => string.Equals(rule.Name, r, StringComparison.InvariantCultureIgnoreCase));
+}
+
+/// <summary>
+///     The progress of a Factur-X validation.
+/// </summary>
+public class FacturXValidationProgressArgs
+{
+    internal FacturXValidationProgressArgs() { }
+
+    /// <summary>
+    ///     All the rules.
+    /// </summary>
+    public required IReadOnlyCollection<BusinessRule> Rules { get; init; }
+
+    /// <summary>
+    ///     The rules that were evaluated.
+    /// </summary>
+    public required IReadOnlyList<BusinessRuleValidationResult> Results { get; init; }
+
+    /// <summary>
+    ///     The last rule that was evaluated.
+    /// </summary>
+    public required BusinessRuleValidationResult? LastResult { get; init; }
 }

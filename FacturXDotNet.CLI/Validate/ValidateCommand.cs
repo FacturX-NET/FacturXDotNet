@@ -74,37 +74,73 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
             CiiAttachment = result.GetValue(CiiAttachmentOption),
             TreatWarningsAsErrors = result.GetValue(TreatWarningsAsErrorsOption),
             Profile = result.GetValue(ProfileOption),
-            RulesToSkip = result.GetValue(RulesToSkipOption)?.ToList() ?? []
+            RulesToSkip = result.GetValue(RulesToSkipOption)?.ToList() ?? [],
+            Verbosity = result.GetValue(GlobalOptions.VerbosityOption)
         };
 
     protected override async Task<int> RunImplAsync(ValidateCommandOptions options, CancellationToken cancellationToken = default)
     {
-        ShowOptions(options);
-        AnsiConsole.WriteLine();
-
-        FacturXDocument? facturX = null;
-        await AnsiConsole.Status()
-            .Spinner(Spinner.Known.Default)
-            .StartAsync(
-                "Parsing...",
-                async _ =>
-                {
-                    Stopwatch sw = new();
-                    sw.Start();
-
-                    await using FileStream stream = options.Path.OpenRead();
-                    facturX = await FacturXDocument.FromStream(stream, cancellationToken);
-
-                    sw.Stop();
-
-                    AnsiConsole.MarkupLine($":check_mark: The document has been parsed in {sw.Elapsed.Humanize()}.");
-                }
-            );
-
-        if (facturX == null)
+        if (options.Verbosity >= Verbosity.Minimal)
         {
-            throw new Exception("This will never happen.");
+            ShowOptions(options);
+            AnsiConsole.WriteLine();
         }
+
+        FacturXDocument facturX = await LoadFacturXDocument(options, cancellationToken);
+        FacturXValidationReport report = await ValidateFacturXDocument(facturX, options, cancellationToken);
+
+        if (options.Verbosity >= Verbosity.Normal)
+        {
+            ShowReportBreakdown(report);
+        }
+
+        if (options.Verbosity >= Verbosity.Minimal)
+        {
+            ShowFinalResult(report);
+        }
+
+        return report.Success ? 0 : 1;
+    }
+
+    static async Task<FacturXDocument> LoadFacturXDocument(ValidateCommandOptions options, CancellationToken cancellationToken)
+    {
+        FacturXDocument? facturX = null;
+
+        if (options.Verbosity >= Verbosity.Minimal)
+        {
+            await AnsiConsole.Status()
+                .Spinner(Spinner.Known.Default)
+                .StartAsync(
+                    "Loading...",
+                    async _ =>
+                    {
+                        Stopwatch sw = new();
+                        sw.Start();
+
+                        await using FileStream stream = options.Path.OpenRead();
+                        facturX = await FacturXDocument.FromStream(stream, cancellationToken);
+
+                        sw.Stop();
+
+                        if (options.Verbosity >= Verbosity.Normal)
+                        {
+                            AnsiConsole.MarkupLine($":check_mark: The document has been loaded in {sw.Elapsed.Humanize()}.");
+                        }
+                    }
+                );
+        }
+        else
+        {
+            await using FileStream stream = options.Path.OpenRead();
+            facturX = await FacturXDocument.FromStream(stream, cancellationToken);
+        }
+
+        return facturX!;
+    }
+
+    static async Task<FacturXValidationReport> ValidateFacturXDocument(FacturXDocument facturX, ValidateCommandOptions options, CancellationToken cancellationToken)
+    {
+
 
         FacturXValidationOptions validationOptions = new()
         {
@@ -114,28 +150,88 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         validationOptions.RulesToSkip.AddRange(options.RulesToSkip);
 
         FacturXValidationReport report = default;
-        await AnsiConsole.Status()
-            .Spinner(Spinner.Known.Default)
-            .StartAsync(
-                "Validating...",
-                async _ =>
+        if (options.Verbosity >= Verbosity.Detailed)
+        {
+            Progress<FacturXValidationProgressArgs> progress = new(
+                args =>
                 {
-                    Stopwatch sw = new();
-                    sw.Start();
-
-                    FacturXValidator validator = new(validationOptions);
-                    report = await validator.ValidateAsync(facturX, options.CiiAttachment, cancellationToken: cancellationToken);
-
-                    sw.Stop();
-
-                    AnsiConsole.MarkupLine($":check_mark: The document has been checked in {sw.Elapsed.Humanize()}.");
+                    if (args.LastResult.HasValue)
+                    {
+                        if (args.LastResult.Value.HasFailed)
+                        {
+                            AnsiConsole.MarkupLineInterpolated($"[grey]:cross_mark: {args.LastResult.Value.Rule.Format()}[/]");
+                        }
+                        else
+                        {
+                            AnsiConsole.MarkupLineInterpolated($"[grey]:check_mark: {args.LastResult.Value.Rule.Format()}[/]");
+                        }
+                    }
                 }
             );
 
-        AnsiConsole.WriteLine();
-        ShowFinalResult(facturX, report);
+            Stopwatch sw = new();
+            sw.Start();
 
-        return report.Success ? 0 : 1;
+            report = await new FacturXValidator(validationOptions).ValidateAsync(facturX, options.CiiAttachment, progress: progress, cancellationToken: cancellationToken);
+
+            sw.Stop();
+
+            // wait a bit for progress to be printed to the console
+            await Task.Delay(100, cancellationToken);
+
+            AnsiConsole.MarkupLine($":check_mark: The document has been checked in {sw.Elapsed.Humanize()}.");
+        }
+        else if (options.Verbosity >= Verbosity.Minimal)
+        {
+            await AnsiConsole.Progress()
+                .AutoClear(true)
+                .StartAsync(
+                    async ctx =>
+                    {
+                        ProgressTask progressBar = ctx.AddTask("Validation");
+
+                        Progress<FacturXValidationProgressArgs> progress = new(
+                            args =>
+                            {
+                                progressBar.MaxValue = args.Rules.Count;
+                                progressBar.Value = args.Results.Count;
+
+                                if (args.LastResult.HasValue)
+                                {
+                                    if (args.LastResult.Value.HasFailed)
+                                    {
+                                        progressBar.Description = $"[red]:cross_mark:[/] {args.LastResult.Value.Rule.Name.EscapeMarkup()}";
+                                    }
+                                    else
+                                    {
+                                        progressBar.Description = $"[green]:check_mark:[/] {args.LastResult.Value.Rule.Name.EscapeMarkup()}";
+                                    }
+                                }
+                            }
+                        );
+
+                        Stopwatch sw = new();
+                        sw.Start();
+
+                        report = await new FacturXValidator(validationOptions).ValidateAsync(
+                            facturX,
+                            options.CiiAttachment,
+                            progress: progress,
+                            cancellationToken: cancellationToken
+                        );
+
+                        sw.Stop();
+
+                        AnsiConsole.MarkupLine($":check_mark: The document has been checked in {sw.Elapsed.Humanize()}.");
+                    }
+                );
+        }
+        else
+        {
+            report = await new FacturXValidator(validationOptions).ValidateAsync(facturX, options.CiiAttachment, cancellationToken: cancellationToken);
+        }
+
+        return report;
     }
 
     static void ShowOptions(ValidateCommandOptions options)
@@ -161,6 +257,11 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
             optionsGrid.AddRow("[bold]Rules to skip[/]", string.Join(", ", options.RulesToSkip));
         }
 
+        if (options.Verbosity != Verbosity.Normal)
+        {
+            optionsGrid.AddRow("[bold]Verbosity[/]", options.Verbosity.ToString());
+        }
+
         IRenderable panelContent;
         if (options.TreatWarningsAsErrors)
         {
@@ -174,7 +275,34 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         AnsiConsole.Write(new Panel(panelContent).Header("Options").Border(BoxBorder.Rounded));
     }
 
-    static void ShowFinalResult(FacturXDocument document, FacturXValidationReport report)
+    static void ShowReportBreakdown(FacturXValidationReport report)
+    {
+        BreakdownChart breakdown = new BreakdownChart().Width(120)
+            .AddItem("Passed", report.Rules.Count(r => r.Status == BusinessRuleValidationStatus.Passed), Color.LightGreen)
+            .AddItem(
+                "Expected to fail, but passed",
+                report.Rules.Count(r => r.ExpectedStatus is BusinessRuleExpectedValidationStatus.Failure && r.Status is BusinessRuleValidationStatus.Passed),
+                Color.Green
+            )
+            .AddItem("Failed", report.Rules.Count(r => r.HasFailed), Color.Red)
+            .AddItem(
+                "Expected to fail, and failed",
+                report.Rules.Count(r => r.ExpectedStatus is BusinessRuleExpectedValidationStatus.Failure && r.Status is BusinessRuleValidationStatus.Failed),
+                Color.Grey78
+            );
+
+        int skipped = report.Rules.Count(r => r.Status is BusinessRuleValidationStatus.Skipped);
+        if (skipped > 0)
+        {
+            breakdown.AddItem("Skipped", skipped, Color.Grey);
+        }
+
+        AnsiConsole.WriteLine();
+        AnsiConsole.Write(breakdown);
+        AnsiConsole.WriteLine();
+    }
+
+    static void ShowFinalResult(FacturXValidationReport report)
     {
         FacturXProfile documentProfile = report.ExpectedProfile;
         FacturXProfile detectedProfile = report.ValidProfiles.GetMaxProfile();
@@ -227,4 +355,9 @@ public class ValidateCommandOptions
     ///     The business rules that should be skipped.
     /// </summary>
     public List<string> RulesToSkip { get; set; } = [];
+
+    /// <summary>
+    ///     The verbosity level of the output.
+    /// </summary>
+    public Verbosity Verbosity { get; set; }
 }

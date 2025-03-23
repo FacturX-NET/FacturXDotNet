@@ -29,11 +29,13 @@ namespace Benchmark
         };
 
         [Params(
-            GuidelineSpecifiedDocumentContextParameterId.Minimum,
+            GuidelineSpecifiedDocumentContextParameterId.Minimum
+            /*
             GuidelineSpecifiedDocumentContextParameterId.BasicWl,
             GuidelineSpecifiedDocumentContextParameterId.Basic,
             GuidelineSpecifiedDocumentContextParameterId.En16931,
             GuidelineSpecifiedDocumentContextParameterId.Extended
+            */
         )]
         public GuidelineSpecifiedDocumentContextParameterId Profile { get; set; }
 
@@ -48,7 +50,7 @@ namespace Benchmark
         }
 
         [Benchmark]
-        public async Task ValidateFacturX()
+        public async Task ValidateFast()
         {
             string sourceFilePath = GetSourceFilePath();
             await using FileStream file = File.OpenRead(sourceFilePath);
@@ -56,6 +58,17 @@ namespace Benchmark
             FacturXDocument document = await FacturXDocument.FromFileAsync(GetSourceFilePath());
             FacturXValidator validator = new();
             _ = await validator.ValidateFastAsync(document);
+        }
+
+        [Benchmark]
+        public async Task GenerateReport()
+        {
+            string sourceFilePath = GetSourceFilePath();
+            await using FileStream file = File.OpenRead(sourceFilePath);
+
+            FacturXDocument document = await FacturXDocument.FromFileAsync(GetSourceFilePath());
+            FacturXValidator validator = new();
+            _ = await validator.ValidateAsync(document);
         }
 
         string GetSourceFilePath()
