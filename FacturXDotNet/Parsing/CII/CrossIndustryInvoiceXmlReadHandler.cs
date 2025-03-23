@@ -28,7 +28,7 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
         }
         catch (Exception exception)
         {
-            throw new CrossIndustryInvoiceParsingException(newPath, line, column, exception);
+            throw CrossIndustryInvoiceReaderException.ParsingError(newPath, line, column, exception);
         }
     }
 
@@ -49,7 +49,7 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
         }
         catch (Exception exception)
         {
-            throw new CrossIndustryInvoiceParsingException($"{path}@{name}", valueLine, valueColumn, exception);
+            throw CrossIndustryInvoiceReaderException.ParsingError($"{path}@{name}", valueLine, valueColumn, exception);
         }
     }
 
@@ -66,7 +66,7 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
         }
         catch (Exception exception)
         {
-            throw new CrossIndustryInvoiceParsingException(path.Span, line, column, exception);
+            throw CrossIndustryInvoiceReaderException.ParsingError(path.Span, line, column, exception);
         }
     }
 
@@ -353,7 +353,7 @@ readonly struct CrossIndustryInvoiceXmlReadHandler(CrossIndustryInvoice result, 
     public void OnError(string message, int line, int column)
     {
         string path = _pathStack.TryPeek(out ReadOnlyMemory<char> p) ? p.ToString() : string.Empty;
-        throw new CrossIndustryInvoiceParsingException(path, line, column, message);
+        throw CrossIndustryInvoiceReaderException.ParsingError(path, line, column, message);
     }
 
     static GuidelineSpecifiedDocumentContextParameterId ParseGuidelineSpecifiedDocumentContextParameterId(ReadOnlySpan<char> value) =>

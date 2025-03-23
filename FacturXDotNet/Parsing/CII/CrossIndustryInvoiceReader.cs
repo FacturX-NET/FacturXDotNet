@@ -23,7 +23,7 @@ public class CrossIndustryInvoiceReader(CrossIndustryInvoiceReaderOptions? optio
         List<string> errors = ValidateResult(result);
         if (errors.Count > 0)
         {
-            throw new CrossIndustryInvoiceReaderValidationException(errors);
+            throw CrossIndustryInvoiceReaderException.ValidationError(errors);
         }
 
         return result;
