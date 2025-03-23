@@ -1,0 +1,35 @@
+[msbuild]
+project = "FacturXDotNet.sln"
+
+[msbuild.properties]
+PublishTrimmed = false
+
+[[pack]]
+rid = ["win-x64", "win-arm64"]
+kinds = ["zip"]
+[[pack]]
+rid = ["linux-x64", "linux-arm64"]
+kinds = ["deb", "tar"]
+[[pack]]
+rid = ["rhel-x64"]
+kinds = ["rpm", "tar"]
+[[pack]]
+rid = ["osx-x64", "osx-arm64"]
+kinds = ["tar"]
+
+[coverage]
+badge_upload_to_gist = true
+badge_gist_id = "39cc9832bf323ebb2e7c25a6f0e585b7"
+
+[github]
+user = "ismailbennani"
+repo = "FacturXDotNet"
+
+[nuget]
+publish_draft = true
+
+[homebrew]
+publish = false
+
+[scoop]
+publish = false

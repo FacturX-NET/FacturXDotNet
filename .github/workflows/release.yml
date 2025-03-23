@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  dotnet-releaser:
+    name: Build, Test, Pack, Publish, Push
+    runs-on: ubuntu-latest
+    
+    permissions:
+      actions: write
+      contents: write
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install .NET 10.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Add System.CommandLine daily builds nuget source
+        run: dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json --name "System.CommandLine - Daily Builds"
+
+      - name: Build, Tests, Cover, Pack and Publish (on push tag)
+        shell: bash
+        run: |
+          dotnet tool install --global dotnet-releaser
+          dotnet-releaser run --nuget-token "${{ secrets.NUGET_TOKEN }}" --github-token "${{ secrets.PAT_GITHUB_TOKEN }}" dotnet-releaser.toml --github-token-gist "${{ secrets.PAT_GITHUB_TOKEN }}"
+
