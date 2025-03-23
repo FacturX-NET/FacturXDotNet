@@ -18,7 +18,7 @@ public class XmpMetadata
     /// <summary>
     ///     The PDF/A ID metadata of the invoice.
     /// </summary>
-    public XmpPdfAIdentificationXmpMetadata? PdfAIdentification { get; set; }
+    public XmpPdfAIdentificationMetadata? PdfAIdentification { get; set; }
 
     /// <summary>
     ///     The basic descriptive information of the document.

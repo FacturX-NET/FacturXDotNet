@@ -393,7 +393,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
     static double ParseDouble(ReadOnlySpan<char> value) =>
         double.TryParse(value, CultureInfo.InvariantCulture, out double d) ? d : throw new FormatException($"Expected value to be a double, but found {value}.");
 
-    void CreatePdfAIdentificationMetadata() => result.PdfAIdentification ??= new XmpPdfAIdentificationXmpMetadata { Part = -1, Conformance = (XmpPdfAConformanceLevel)(-1) };
+    void CreatePdfAIdentificationMetadata() => result.PdfAIdentification ??= new XmpPdfAIdentificationMetadata { Part = -1, Conformance = (XmpPdfAConformanceLevel)(-1) };
     void CreateBasicMetadata() => result.Basic ??= new XmpBasicMetadata();
     void CreatePdfMetadata() => result.Pdf ??= new XmpPdfMetadata();
     void CreateDublinCoreMetadata() => result.DublinCore ??= new XmpDublinCoreMetadata();
