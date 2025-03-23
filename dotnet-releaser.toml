@@ -38,7 +38,7 @@ user = "ismailbennani"
 repo = "FacturXDotNet"
 
 [nuget]
-publish_draft = true
+publish_draft = false # no need to publish to nuget every time we push a commit to main
 
 [brew]
 publish = false
