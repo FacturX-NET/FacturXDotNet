@@ -8,7 +8,7 @@
 /// <remarks>See https://pdfa.org/wp-content/uploads/2011/08/tn0008_predefined_xmp_properties_in_pdfa-1_2008-03-20.pdf</remarks>
 /// <URI>http://www.aiim.org/pdfa/ns/id/</URI>
 /// <Prefix>pdfaid</Prefix>
-public class XmpPdfAIdentificationXmpMetadata
+public class XmpPdfAIdentificationMetadata
 {
     /// <summary>
     ///     Optional PDF/A amendment identifier

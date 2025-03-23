@@ -18,13 +18,13 @@ public class XmpThumbnail
     ///     Height in pixels.
     /// </summary>
     /// <XmpTag>xmpGlmg:height</XmpTag>
-    public int Height { get; set; }
+    public int? Height { get; set; }
 
     /// <summary>
     ///     Width in pixels.
     /// </summary>
     /// <XmpTag>xmpGlmg:width</XmpTag>
-    public int Width { get; set; }
+    public int? Width { get; set; }
 
     /// <summary>
     ///     The full thumbnail image data, converted to base 64 notation(according to section 6.8 of RFC 2045). This is the thumbnail data typically found in a digital image, such as the
