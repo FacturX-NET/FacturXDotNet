@@ -9,6 +9,7 @@
         <PackageId>FacturXDotNet.CLI</PackageId>
         <PackAsTool>True</PackAsTool>
         <ToolCommmandName>facturx</ToolCommmandName>
+        <AssemblyName>facturx</AssemblyName>
         <Title>FacturX.NET CLI</Title>
         <Product>FacturX.NET CLI</Product>
         <Version>0.0.0.0</Version>
