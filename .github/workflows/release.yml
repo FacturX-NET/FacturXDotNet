@@ -43,3 +43,9 @@ jobs:
           dotnet tool install --global dotnet-releaser
           dotnet-releaser run --nuget-token "${{ secrets.NUGET_KEY }}" --github-token "${{ secrets.PAT_GITHUB_TOKEN }}" --github-token-gist "${{ secrets.PAT_GITHUB_TOKEN }}" dotnet-releaser.toml
 
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: artifacts-dotnet-releaser
+          if-no-files-found: 'error'
