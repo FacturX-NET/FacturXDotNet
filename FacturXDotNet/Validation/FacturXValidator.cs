@@ -166,7 +166,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
         CancellationToken cancellationToken
     )
     {
-        XmpMetadata? xmp = await invoice.GetXmpMetadataAsync(password, new XmpMetadataParserOptions { Logger = options?.Logger }, cancellationToken);
+        XmpMetadata? xmp = await invoice.GetXmpMetadataAsync(password, new XmpMetadataReaderOptions { Logger = options?.Logger }, cancellationToken);
         CrossIndustryInvoiceAttachment? cii = await invoice.GetCrossIndustryInvoiceAttachmentAsync(ciiAttachmentName, password, cancellationToken);
 
         return (xmp, cii);

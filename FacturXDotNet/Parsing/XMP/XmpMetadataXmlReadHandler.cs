@@ -35,7 +35,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
         }
         catch (Exception exception)
         {
-            throw new XmpMetadataParsingException(line, column, exception);
+            throw XmpMetadataReaderException.ParsingError(newPath, line, column, exception);
         }
     }
 
@@ -49,19 +49,19 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
             return;
         }
 
+        if (HandleLanguageAlternative(path.Span, name, value))
+        {
+            return;
+        }
+
+        string attributePath = $"{path}/{name}";
         try
         {
-            if (HandleLanguageAlternative(path.Span, name, value))
-            {
-                return;
-            }
-
-            string attributePath = $"{path}/{name}";
             Handle(attributePath, value);
         }
         catch (Exception exception)
         {
-            throw new XmpMetadataParsingException(valueLine, valueColumn, exception);
+            throw XmpMetadataReaderException.ParsingError(attributePath, valueLine, valueColumn, exception);
         }
     }
 
@@ -78,11 +78,15 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
         }
         catch (Exception exception)
         {
-            throw new XmpMetadataParsingException(line, column, exception);
+            throw XmpMetadataReaderException.ParsingError(path.Span, line, column, exception);
         }
     }
 
-    public void OnError(string message, int line, int column) => throw new XmpMetadataParsingException(line, column, message);
+    public void OnError(string message, int line, int column)
+    {
+        string path = _pathStack.TryPeek(out ReadOnlyMemory<char> p) ? p.ToString() : string.Empty;
+        throw XmpMetadataReaderException.ParsingError(path, line, column, message);
+    }
 
     void HandleTag(string path)
     {
