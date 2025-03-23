@@ -28,7 +28,7 @@ repo = "FacturXDotNet"
 [nuget]
 publish_draft = true
 
-[homebrew]
+[brew]
 publish = false
 
 [scoop]
