@@ -156,7 +156,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 result.Basic!.ModifyDate = ParseDate(value);
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/xmp:Rating":
-                result.Basic!.Rating = ParseDecimal(value);
+                result.Basic!.Rating = ParseDouble(value);
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/xmp:BaseURL":
                 result.Basic!.BaseUrl = value.ToString();
@@ -390,8 +390,8 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                                 ? d6
                                 : throw new FormatException($"Expected value to be a date, but found {value}.");
 
-    static decimal ParseDecimal(ReadOnlySpan<char> value) =>
-        decimal.TryParse(value, CultureInfo.InvariantCulture, out decimal d) ? d : throw new FormatException($"Expected value to be a decimal, but found {value}.");
+    static double ParseDouble(ReadOnlySpan<char> value) =>
+        double.TryParse(value, CultureInfo.InvariantCulture, out double d) ? d : throw new FormatException($"Expected value to be a double, but found {value}.");
 
     void CreatePdfAIdentificationMetadata() => result.PdfAIdentification ??= new XmpPdfAIdentificationXmpMetadata { Part = -1, Conformance = (XmpPdfAConformanceLevel)(-1) };
     void CreateBasicMetadata() => result.Basic ??= new XmpBasicMetadata();

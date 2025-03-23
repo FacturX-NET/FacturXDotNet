@@ -62,7 +62,7 @@ public class XmpBasicMetadata
     ///     Anticipated usage is for a typical “star rating” UI, with the addition of a notion of rejection.
     /// </remarks>
     /// <XmpTag>xmp:Rating</XmpTag>
-    public decimal Rating { get; set; }
+    public double Rating { get; set; }
 
     /// <summary>
     ///     The base URL for relative URLs in the document content. If this document contains Internet links, and those links are relative, they are relative to this base URL. This
