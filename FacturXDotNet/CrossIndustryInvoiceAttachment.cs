@@ -25,15 +25,15 @@ public class CrossIndustryInvoiceAttachment : FacturXDocumentAttachment
     /// <returns>The parsed Cross-Industry Invoice.</returns>
     public async Task<CrossIndustryInvoice> GetCrossIndustryInvoiceAsync(
         string? password = null,
-        CrossIndustryInvoiceParserOptions? options = null,
+        CrossIndustryInvoiceReaderOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        options ??= new CrossIndustryInvoiceParserOptions();
+        options ??= new CrossIndustryInvoiceReaderOptions();
 
         await using Stream stream = await FindAttachmentStreamAsync(password, cancellationToken);
 
-        CrossIndustryInvoiceParser parser = new(options);
-        return parser.ParseCiiXml(stream);
+        CrossIndustryInvoiceReader reader = new(options);
+        return reader.Read(stream);
     }
 }

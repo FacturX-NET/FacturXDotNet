@@ -1,9 +1,9 @@
 ﻿namespace FacturXDotNet.Parsing.CII.Exceptions;
 
 /// <summary>
-///     Represent an exception that occurs while parsing a <see cref="CrossIndustryInvoice" />.
+///     Represent an exception that occurs while reading a <see cref="CrossIndustryInvoice" />.
 /// </summary>
-public class CrossIndustryInvoiceParsingException : CrossIndustryInvoiceParserException
+public class CrossIndustryInvoiceParsingException : CrossIndustryInvoiceReaderException
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="CrossIndustryInvoiceParsingException" /> class.

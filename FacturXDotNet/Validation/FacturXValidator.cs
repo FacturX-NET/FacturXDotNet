@@ -103,7 +103,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
 
         CrossIndustryInvoice? cii = ciiAttachment == null
             ? null
-            : await ciiAttachment.GetCrossIndustryInvoiceAsync(password, new CrossIndustryInvoiceParserOptions { Logger = options?.Logger }, cancellationToken);
+            : await ciiAttachment.GetCrossIndustryInvoiceAsync(password, new CrossIndustryInvoiceReaderOptions { Logger = options?.Logger }, cancellationToken);
 
         FacturXProfile expectedProfile = GetExpectedProfile(xmp, cii);
         builder.SetExpectedProfile(expectedProfile);
