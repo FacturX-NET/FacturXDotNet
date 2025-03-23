@@ -10,7 +10,7 @@ abstract class CommandBase<TOptions>(string name, string description, IReadOnlyL
     public string Name { get; } = name;
     public string Description { get; } = description;
     public IReadOnlyList<Argument> Arguments => arguments ?? [];
-    public IReadOnlyList<Option> Options => options ?? [];
+    public IReadOnlyList<Option> Options => (options ?? []).Concat([GlobalOptions.VerbosityOption]).ToArray();
 
     public Command GetCommand()
     {
