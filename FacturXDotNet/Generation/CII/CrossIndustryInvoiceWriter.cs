@@ -1,5 +1,7 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Xml;
+using FacturXDotNet.Generation.Extensions;
 using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.Generation.CII;
@@ -78,7 +80,7 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
         await WriteRamAsync(writer, "TypeCode", exchangedDocument.TypeCode.ToSpecificationIdentifier().ToString());
 
         await StartRamAsync(writer, "TypeCode");
-        await WriteDateOnlyAsync(writer, exchangedDocument.IssueDateTime);
+        await writer.WriteDateOnlyAsync(exchangedDocument.IssueDateTime);
         await writer.WriteEndElementAsync();
 
         await writer.WriteEndElementAsync();
@@ -231,13 +233,6 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
         await writer.WriteEndElementAsync();
     }
 
-    static async Task WriteDateOnlyAsync(XmlWriter writer, DateOnly value)
-    {
-        await StartUdtAsync(writer, "DateTimeString");
-        await writer.WriteAttributeStringAsync(null, "format", null, DateOnlyFormat.DateOnly.ToDateOnlyFormat().ToString());
-        await writer.WriteStringAsync(value.ToString("yyyyMMdd"));
-        await writer.WriteEndElementAsync();
-    }
 
     static async Task TryWriteIdAndSchemeId(XmlWriter writer, string? id, string? schemeId)
     {
@@ -257,11 +252,10 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
         await writer.WriteEndElementAsync();
     }
 
-    static string FormatAmount(decimal amount) => amount.ToString("0.##");
+    static string FormatAmount(decimal amount) => amount.ToString("0.##", CultureInfo.InvariantCulture);
 
     static async Task StartRsmAsync(XmlWriter writer, string localname) => await writer.WriteStartElementAsync(PrefixRsm, localname, NsRsm);
     static async Task StartRamAsync(XmlWriter writer, string localname) => await writer.WriteStartElementAsync(PrefixRam, localname, NsRam);
-    static async Task StartUdtAsync(XmlWriter writer, string localname) => await writer.WriteStartElementAsync(PrefixUdt, localname, NsUdt);
 
     static async Task WriteRamAsync(XmlWriter writer, string localname, string value) => await writer.WriteElementStringAsync(PrefixRam, localname, NsRam, value);
 

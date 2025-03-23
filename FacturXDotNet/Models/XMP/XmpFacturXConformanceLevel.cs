@@ -75,7 +75,7 @@ public static class XmpFacturXConformanceLevelMappingExtensions
     /// <summary>
     ///     Convert the <see cref="XmpFacturXConformanceLevel" /> to its string representation.
     /// </summary>
-    public static ReadOnlySpan<char> ToXmpFacturXConformanceLevel(this XmpFacturXConformanceLevel conformanceLevel) =>
+    public static ReadOnlySpan<char> ToXmpFacturXConformanceLevelString(this XmpFacturXConformanceLevel conformanceLevel) =>
         conformanceLevel switch
         {
             XmpFacturXConformanceLevel.Minimum => "MINIMUM",

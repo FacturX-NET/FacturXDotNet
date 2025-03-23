@@ -30,5 +30,5 @@ public class XmpPdfMetadata
     ///     True when the document has been trapped.
     /// </summary>
     /// <XmpTag>pdf:Trapped</XmpTag>
-    public bool Trapped { get; set; }
+    public bool? Trapped { get; set; }
 }

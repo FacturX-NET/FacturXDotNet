@@ -24,7 +24,7 @@ public static class XmpFacturXDocumentTypeMappingExtensions
     /// <summary>
     ///     Convert the <see cref="XmpFacturXDocumentType" /> to its string representation.
     /// </summary>
-    public static ReadOnlySpan<char> ToFacturXDocumentType(this XmpFacturXDocumentType documentType) =>
+    public static ReadOnlySpan<char> ToFacturXDocumentTypeString(this XmpFacturXDocumentType documentType) =>
         documentType switch
         {
             XmpFacturXDocumentType.Invoice => "INVOICE",

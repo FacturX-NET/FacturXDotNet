@@ -23,7 +23,7 @@ public class XmpMetadataWriterTest
             },
             Basic = new XmpBasicMetadata
             {
-                Identifier = "IDENTIFIER",
+              Identifier = ["IDENTIFIER1", "IDENTIFIER2"],
                 CreateDate = new DateTime(1, 2, 3),
                 CreatorTool = "CREATOR_TOOL",
                 Label = "LABEL",
@@ -46,7 +46,7 @@ public class XmpMetadataWriterTest
                 Contributor = ["DC_CONTRIBUTOR1", "DC_CONTRIBUTOR2"],
                 Coverage = "DC_COVERAGE",
                 Creator = ["DC_CREATOR1", "DC_CREATOR2"],
-                Date = [new DateTime(2, 3, 4), new DateTime(3, 4, 5, 6, 7, 8, 9)],
+                Date = [new DateTime(2, 3, 4), new DateTime(3, 4, 5, 6, 7, 8, 9, 10)],
                 Description = ["DC_DESCRIPTION1", "DC_DESCRIPTION2"],
                 Format = "DC_FORMAT",
                 Identifier = "DC_IDENTIFIER",
@@ -176,7 +176,7 @@ public class XmpMetadataWriterTest
                                           <dc:date>
                                             <rdf:Seq>
                                               <rdf:li>0002-03-04</rdf:li>
-                                              <rdf:li>0003-04-05T06:07:08.009Z</rdf:li>
+                                              <rdf:li>0003-04-05T06:07:08.009010Z</rdf:li>
                                             </rdf:Seq>
                                           </dc:date>
                                           <dc:description>
@@ -237,10 +237,15 @@ public class XmpMetadataWriterTest
                                           <pdf:Producer>PDF_PRODUCER</pdf:Producer>
                                           <pdf:Trapped>True</pdf:Trapped>
                                         </rdf:Description>
-                                        <rdf:Description xmlns:xmp="http://ns.adobe.com/xap/1.0/" rdf:about="">
-                                          <xmp:Identifier>IDENTIFIER</xmp:Identifier>
+                                        <rdf:Description xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmlns:xmpGlmg="http://ns.adobe.com/xap/1.0/g/img/" rdf:about="">
                                           <xmp:CreateDate>0001-02-03</xmp:CreateDate>
                                           <xmp:CreatorTool>CREATOR_TOOL</xmp:CreatorTool>
+                                          <xmp:Identifier>
+                                            <rdf:Bag>
+                                              <rdf:li>IDENTIFIER1</rdf:li>
+                                              <rdf:li>IDENTIFIER2</rdf:li>
+                                            </rdf:Bag>
+                                          </xmp:Identifier>
                                           <xmp:Label>LABEL</xmp:Label>
                                           <xmp:MetadataDate>0002-03-04</xmp:MetadataDate>
                                           <xmp:ModifyDate>0003-04-05</xmp:ModifyDate>
@@ -258,11 +263,14 @@ public class XmpMetadataWriterTest
                                             </rdf:Alt>
                                           </xmp:Thumbnails>
                                         </rdf:Description>
-                                        <rdf:Description xmlns:pdfaExtension="http://www.aiim.org/pdfa/ns/extension/" xmlns:pdfaSchema="http://www.aiim.org/pdfa/ns/schema#" xmlns:pdfaProperty="http://www.aiim.org/pdfa/ns/property#" rdf:about="">
+                                        <rdf:Description xmlns:pdfaExtension="http://www.aiim.org/pdfa/ns/extension/" 
+                                          xmlns:pdfaSchema="http://www.aiim.org/pdfa/ns/schema#" 
+                                          xmlns:pdfaProperty="http://www.aiim.org/pdfa/ns/property#" 
+                                          xmlns:pdfaType="http://www.aiim.org/pdfa/ns/type#" 
+                                          xmlns:pdfaField="http://www.aiim.org/pdfa/ns/field#" rdf:about="">
                                           <pdfaExtension:schemas>
                                             <rdf:Bag>
                                               <rdf:li rdf:parseType="Resource">
-                                                <pdfaSchema:schema>SCHEMA1_SCHEMA</pdfaSchema:schema>
                                                 <pdfaSchema:namespaceURI>SCHEMA1_NAMESPACE</pdfaSchema:namespaceURI>
                                                 <pdfaSchema:prefix>SCHEMA1_PREFIX</pdfaSchema:prefix>
                                                 <pdfaSchema:property>
@@ -281,6 +289,7 @@ public class XmpMetadataWriterTest
                                                     </rdf:li>
                                                   </rdf:Seq>
                                                 </pdfaSchema:property>
+                                                <pdfaSchema:schema>SCHEMA1_SCHEMA</pdfaSchema:schema>
                                                 <pdfaSchema:valueType>
                                                   <rdf:Seq>
                                                     <rdf:li rdf:parseType="Resource">
@@ -291,12 +300,12 @@ public class XmpMetadataWriterTest
                                                             <pdfaField:description>SCHEMA1_VALUE_TYPE1_FIELD1_DESCRIPTION</pdfaField:description>
                                                             <pdfaField:name>SCHEMA1_VALUE_TYPE1_FIELD1_NAME</pdfaField:name>
                                                             <pdfaField:valueType>SCHEMA1_VALUE_TYPE1_FIELD1_VALUE_TYPE</pdfaField:valueType>
-                                                        </rdf:Seq>
-                                                        <rdf:Seq>
+                                                          </rdf:li>
                                                           <rdf:li rdf:parseType="Resource">
                                                             <pdfaField:description>SCHEMA1_VALUE_TYPE1_FIELD2_DESCRIPTION</pdfaField:description>
                                                             <pdfaField:name>SCHEMA1_VALUE_TYPE1_FIELD2_NAME</pdfaField:name>
                                                             <pdfaField:valueType>SCHEMA1_VALUE_TYPE1_FIELD2_VALUE_TYPE</pdfaField:valueType>
+                                                          </rdf:li>
                                                         </rdf:Seq>
                                                       </pdfaType:field>
                                                       <pdfaType:namespaceURI>SCHEMA1_VALUE_TYPE1_NAMESPACE</pdfaType:namespaceURI>
@@ -311,12 +320,12 @@ public class XmpMetadataWriterTest
                                                             <pdfaField:description>SCHEMA1_VALUE_TYPE2_FIELD1_DESCRIPTION</pdfaField:description>
                                                             <pdfaField:name>SCHEMA1_VALUE_TYPE2_FIELD1_NAME</pdfaField:name>
                                                             <pdfaField:valueType>SCHEMA1_VALUE_TYPE2_FIELD1_VALUE_TYPE</pdfaField:valueType>
-                                                        </rdf:Seq>
-                                                        <rdf:Seq>
+                                                          </rdf:li>
                                                           <rdf:li rdf:parseType="Resource">
                                                             <pdfaField:description>SCHEMA1_VALUE_TYPE2_FIELD2_DESCRIPTION</pdfaField:description>
                                                             <pdfaField:name>SCHEMA1_VALUE_TYPE2_FIELD2_NAME</pdfaField:name>
                                                             <pdfaField:valueType>SCHEMA1_VALUE_TYPE2_FIELD2_VALUE_TYPE</pdfaField:valueType>
+                                                          </rdf:li>
                                                         </rdf:Seq>
                                                       </pdfaType:field>
                                                       <pdfaType:namespaceURI>SCHEMA1_VALUE_TYPE2_NAMESPACE</pdfaType:namespaceURI>

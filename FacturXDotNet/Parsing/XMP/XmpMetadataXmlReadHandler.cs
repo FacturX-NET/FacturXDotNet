@@ -137,8 +137,8 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
             case "/x:xmpmeta/rdf:RDF/rdf:Description/xmlns:xmp":
                 CreateBasicMetadata();
                 break;
-            case "/x:xmpmeta/rdf:RDF/rdf:Description/xmp:Identifier":
-                result.Basic!.Identifier = value.ToString();
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/xmp:Identifier/rdf:Bag/rdf:li":
+                result.Basic!.Identifier.Add(value.ToString());
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/xmp:CreateDate":
                 result.Basic!.CreateDate = ParseDate(value);

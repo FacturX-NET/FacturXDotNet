@@ -64,38 +64,40 @@ public class XmpMetadataWriter(XmpMetadataWriterOptions? options = null)
 
         await writer.WriteProcessingInstructionAsync("xpacket", "begin='\uFEFF' id='W5M0MpCehiHzreSzNTczkc9d'");
 
-        await writer.WriteStartElementAsync("x", "xmpmeta", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+        await writer.WriteStartElementAsync("x", "xmpmeta", "adobe:ns:meta/");
+        await writer.WriteStartElementAsync("rdf", "RDF", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 
         if (xmp.PdfAIdentification != null)
         {
-            await _xmpPdfAIdentificationMetadataWriter.WriteAsync(stream, xmp.PdfAIdentification);
+            await _xmpPdfAIdentificationMetadataWriter.WriteAsync(writer, xmp.PdfAIdentification);
         }
 
         if (xmp.DublinCore != null)
         {
-            await _xmpDublinCoreMetadataWriter.WriteAsync(stream, xmp.DublinCore);
+            await _xmpDublinCoreMetadataWriter.WriteAsync(writer, xmp.DublinCore);
         }
 
         if (xmp.Pdf != null)
         {
-            await _xmpPdfMetadataWriter.WriteAsync(stream, xmp.Pdf);
+            await _xmpPdfMetadataWriter.WriteAsync(writer, xmp.Pdf);
         }
 
         if (xmp.Basic != null)
         {
-            await _xmpBasicMetadataWriter.WriteAsync(stream, xmp.Basic);
+            await _xmpBasicMetadataWriter.WriteAsync(writer, xmp.Basic);
         }
 
         if (xmp.PdfAExtensions != null)
         {
-            await _xmpPdfAExtensionsMetadataWriter.WriteAsync(stream, xmp.PdfAExtensions);
+            await _xmpPdfAExtensionsMetadataWriter.WriteAsync(writer, xmp.PdfAExtensions);
         }
 
         if (xmp.FacturX != null)
         {
-            await _xmpFacturXMetadataWriter.WriteAsync(stream, xmp.FacturX);
+            await _xmpFacturXMetadataWriter.WriteAsync(writer, xmp.FacturX);
         }
 
+        await writer.WriteEndElementAsync();
         await writer.WriteEndElementAsync();
 
         // XMP Specification page 12
@@ -120,5 +122,6 @@ public class XmpMetadataWriter(XmpMetadataWriterOptions? options = null)
         //      constraints of the original application.
 
         await writer.WriteProcessingInstructionAsync("xpacket", "end='w'");
+        await writer.FlushAsync();
     }
 }
