@@ -4,7 +4,7 @@
 )](https://www.nuget.org/packages/FacturXDotNet/)
 [![NuGet - CLI](https://img.shields.io/nuget/v/FacturXDotNet.CLI?label=tool
 )](https://www.nuget.org/packages/FacturXDotNet.CLI/)
-![Coverage](https://gist.githubusercontent.com/xoofx/39cc9832bf323ebb2e7c25a6f0e585b7/raw/dotnet-releaser-coverage-badge-ismailbennani-FacturXDotNet.svg)
+![Coverage](https://gist.githubusercontent.com/ismailbennani/39cc9832bf323ebb2e7c25a6f0e585b7/raw/dotnet-releaser-coverage-badge-ismailbennani-FacturXDotNet.svg)
 
 The FacturX.NET library is a high-performance .NET library ([benchmarks](https://github.com/ismailbennani/FacturXDotNet/tree/master/Benchmark)) that provides support for the
 FacturX data formats, as defined by the [FNFE](https://fnfe-mpe.org/factur-x/) (also known as ZUGFeRD in Germany).
