@@ -33,6 +33,56 @@ include_test_assembly = false
 badge_upload_to_gist = true
 badge_gist_id = "39cc9832bf323ebb2e7c25a6f0e585b7"
 
+[[changelog.autolabeler]]
+label = "breaking-change"
+title = '^[^:]+!:'
+
+[[changelog.autolabeler]]
+label = "maintenance"
+title = '^ci:'
+
+[[changelog.autolabeler]]
+label = "documentation"
+title = '^doc:'
+
+[[changelog.autolabeler]]
+label = "tests"
+title = '^test:'
+
+[[changelog.autolabeler]]
+label = "examples"
+title = [
+    '^example:',
+    '^sample:'
+]
+
+[[changelog.autolabeler]]
+label = "accessibility"
+title = '^access:'
+
+[[changelog.autolabeler]]
+label = "bugfix"
+title = '^fix:'
+
+[[changelog.autolabeler]]
+label = "feature"
+title = '^feat:'
+
+[[changelog.autolabeler]]
+label = "enhancement"
+title = [
+    '^refactor:',
+    '^perf:'
+]
+
+[[changelog.autolabeler]]
+label = "dependencies"
+title = '^deps:'
+
+[[changelog.autolabeler]]
+label = "misc"
+title = '.'
+
 [github]
 user = "ismailbennani"
 repo = "FacturXDotNet"
