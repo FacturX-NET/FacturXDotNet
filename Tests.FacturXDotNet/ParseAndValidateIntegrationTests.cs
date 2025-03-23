@@ -67,7 +67,7 @@ public class ParseAndValidateIntegrationTests
     [DataRow("TestFiles/FacturX/4.EXTENDED/Facture_UC1_2023025_F-LE_FOURNISSEUR-POUR-L'ACHETEUR_EXTENDED.pdf", FacturXProfile.Extended)]
     public async Task ParseAndValidateProfile(string filePath, FacturXProfile profile)
     {
-        FacturXDocument invoice = await FacturXDocument.FromFileAsync(filePath);
+        FacturXDocument invoice = await FacturXDocument.LoadFromFileAsync(filePath);
 
         FacturXValidator validator = new();
         FacturXValidationResult validationResult = await validator.GetValidationResultAsync(invoice);

@@ -1,8 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using CommunityToolkit.HighPerformance;
-using FacturXDotNet.Parsing;
+using FacturXDotNet.Generation;
 using FacturXDotNet.Parsing.XMP;
+using FacturXDotNet.Utils;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 
@@ -27,17 +28,33 @@ public partial class FacturXDocument
     public ReadOnlyMemory<byte> Data { get; }
 
     /// <summary>
-    ///     Get the XMP metadata of the Factur-X document.
+    ///     Get the XMP metadata of the Factur-X document as a stream.
+    /// </summary>
+    /// <param name="password">The password to open the PDF document.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The XMP metadata of the Factur-X document as a stream.</returns>
+    /// <seealso cref="GetXmpMetadataAsync" />
+    public async Task<Stream> GetXmpMetadataStreamAsync(string? password = null, CancellationToken cancellationToken = default)
+    {
+        using PdfDocument pdfDocument = await OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
+
+        ExtractXmpFromPdf extractor = new();
+        return extractor.ExtractXmpMetadata(pdfDocument);
+    }
+
+    /// <summary>
+    ///     Get the XMP metadata of the Factur-X document as a structured object.
     /// </summary>
     /// <param name="password">The password to open the PDF document.</param>
     /// <param name="xmpParserOptions">The options to parse the XMP metadata.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The XMP metadata of the Factur-X document.</returns>
+    /// <seealso cref="GetXmpMetadataStreamAsync" />
     public async Task<XmpMetadata?> GetXmpMetadataAsync(string? password = null, XmpMetadataReaderOptions? xmpParserOptions = null, CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await OpenPdfDocumentAsync(password, cancellationToken);
+        using PdfDocument pdfDocument = await OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
 
-        ExtractXmpFromFacturX extractor = new();
+        ExtractXmpFromPdf extractor = new();
         if (!extractor.TryExtractXmpMetadata(pdfDocument, out Stream? xmpStream))
         {
             return null;
@@ -78,20 +95,14 @@ public partial class FacturXDocument
     )
     {
         attachmentFileName ??= "factur-x.xml";
-        using PdfDocument pdfDocument = await OpenPdfDocumentAsync(password, cancellationToken);
+        using PdfDocument pdfDocument = await OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
 
-        ExtractAttachmentsFromFacturX extractor = new();
-        foreach ((string Name, Stream Content) attachment in extractor.ExtractFacturXAttachments(pdfDocument))
+        if (!pdfDocument.ListAttachments().Contains(attachmentFileName))
         {
-            if (attachment.Name != attachmentFileName)
-            {
-                continue;
-            }
-
-            return new CrossIndustryInvoiceAttachment(this, attachmentFileName);
+            return null;
         }
 
-        return null;
+        return new CrossIndustryInvoiceAttachment(this, attachmentFileName);
     }
 
     /// <summary>
@@ -102,10 +113,9 @@ public partial class FacturXDocument
     /// <returns>The attachments of the Factur-X document.</returns>
     public async IAsyncEnumerable<FacturXDocumentAttachment> GetAttachmentsAsync(string? password = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await OpenPdfDocumentAsync(password, cancellationToken);
+        using PdfDocument pdfDocument = await OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
 
-        ExtractAttachmentsFromFacturX extractor = new();
-        foreach ((string Name, Stream Content) attachment in extractor.ExtractFacturXAttachments(pdfDocument))
+        foreach ((string Name, Stream Content) attachment in pdfDocument.ListAttachments().Select(n => (n, pdfDocument.ExtractAttachment(n))))
         {
             byte[] attachmentBytes = new byte[attachment.Content.Length];
             attachment.Content.ReadExactly(attachmentBytes);
@@ -113,7 +123,13 @@ public partial class FacturXDocument
         }
     }
 
-    internal async Task<PdfDocument> OpenPdfDocumentAsync(string? password, CancellationToken _ = default)
+    /// <summary>
+    ///     Export the Factur-X document to a stream.
+    /// </summary>
+    /// <param name="outputStream">The stream to write the Factur-X document to.</param>
+    public async Task ExportAsync(Stream outputStream) => await outputStream.WriteAsync(Data);
+
+    internal async Task<PdfDocument> OpenPdfDocumentReadOnlyAsync(string? password, CancellationToken _ = default)
     {
         await using Stream stream = Data.AsStream();
         PdfDocument document;
@@ -131,9 +147,15 @@ public partial class FacturXDocument
     }
 
     /// <summary>
+    ///     Create a new Factur-X document builder.
+    ///     The builder must be configured with the desired PDF image, Cross-Industry Invoice, XMP metadata.
+    /// </summary>
+    public static FacturXDocumentBuilder Create() => new();
+
+    /// <summary>
     ///     Create a new Factur-X document from a file.
     /// </summary>
-    public static async Task<FacturXDocument> FromFileAsync(string filePath, CancellationToken cancellationToken = default)
+    public static async Task<FacturXDocument> LoadFromFileAsync(string filePath, CancellationToken cancellationToken = default)
     {
         byte[] buffer = await File.ReadAllBytesAsync(filePath, cancellationToken);
         return new FacturXDocument(buffer);
@@ -143,12 +165,17 @@ public partial class FacturXDocument
     ///     Create a new Factur-X document from a stream.
     /// </summary>
     /// <remarks>This method will copy the entire stream. Consider using the <see cref="FacturXDocument(ReadOnlyMemory{byte})" /> constructor if the data is already in memory.</remarks>
-    public static async Task<FacturXDocument> FromStream(Stream stream, CancellationToken cancellationToken = default)
+    public static async Task<FacturXDocument> LoadFromStream(Stream stream, CancellationToken cancellationToken = default)
     {
         byte[] buffer = new byte[stream.Length];
         await stream.ReadExactlyAsync(buffer, cancellationToken);
         return new FacturXDocument(buffer);
     }
+
+    /// <summary>
+    ///     Create a new Factur-X document from a buffer.
+    /// </summary>
+    public static FacturXDocument LoadFromBuffer(ReadOnlyMemory<byte> buffer) => new(buffer);
 
     [GeneratedRegex("<\\?xpacket.*?\\?>")]
     private static partial Regex PacketInstructions();

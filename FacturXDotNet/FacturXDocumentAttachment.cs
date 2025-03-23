@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Parsing;
+﻿using FacturXDotNet.Utils;
 using PdfSharp.Pdf;
 
 namespace FacturXDotNet;
@@ -30,7 +30,7 @@ public class FacturXDocumentAttachment
     /// <exception cref="InvalidOperationException">The attachment with the specified name could not be found.</exception>
     public async Task<ReadOnlyMemory<byte>> ReadAsync(string? password = null, CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await _facturX.OpenPdfDocumentAsync(password, cancellationToken);
+        using PdfDocument pdfDocument = await _facturX.OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
         await using Stream attachmentStream = await FindAttachmentStreamAsync(password, cancellationToken);
 
         byte[] attachmentBytes = new byte[attachmentStream.Length];
@@ -47,7 +47,7 @@ public class FacturXDocumentAttachment
     /// <param name="cancellationToken">The cancellation token.</param>
     public async Task CopyToAsync(Stream outputStream, string? password = null, CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await _facturX.OpenPdfDocumentAsync(password, cancellationToken);
+        using PdfDocument pdfDocument = await _facturX.OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
         await using Stream attachmentStream = await FindAttachmentStreamAsync(password, cancellationToken);
         await attachmentStream.CopyToAsync(outputStream, cancellationToken);
     }
@@ -61,19 +61,7 @@ public class FacturXDocumentAttachment
     /// <exception cref="InvalidOperationException">The attachment with the specified name could not be found.</exception>
     protected async Task<Stream> FindAttachmentStreamAsync(string? password = null, CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await _facturX.OpenPdfDocumentAsync(password, cancellationToken);
-
-        ExtractAttachmentsFromFacturX extractor = new();
-        foreach ((string Name, Stream Content) attachment in extractor.ExtractFacturXAttachments(pdfDocument))
-        {
-            if (attachment.Name != Name)
-            {
-                continue;
-            }
-
-            return attachment.Content;
-        }
-
-        throw new InvalidOperationException("Could not find attachment with name '{Name}'.");
+        using PdfDocument pdfDocument = await _facturX.OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
+        return pdfDocument.ExtractAttachment(Name);
     }
 }
