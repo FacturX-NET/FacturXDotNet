@@ -3,16 +3,16 @@
 namespace FacturXDotNet.Parsing.XMP;
 
 /// <summary>
-///     Parse a <see cref="XmpMetadata" /> from an XML stream.
+///     Read a <see cref="XmpMetadata" /> from an XML stream.
 /// </summary>
-public class XmpMetadataParser(XmpMetadataParserOptions? options = null)
+public class XmpMetadataReader(XmpMetadataReaderOptions? options = null)
 {
-    readonly XmpMetadataParserOptions _options = options ?? new XmpMetadataParserOptions();
+    readonly XmpMetadataReaderOptions _options = options ?? new XmpMetadataReaderOptions();
 
     /// <summary>
     ///     Parse the given stream into a <see cref="XmpMetadata" />.
     /// </summary>
-    public XmpMetadata ParseXmpMetadata(Stream stream)
+    public XmpMetadata Read(Stream stream)
     {
         XmpMetadata result = new();
         XmpMetadataXmlReadHandler handler = new(result, _options.Logger);

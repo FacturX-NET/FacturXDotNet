@@ -6,14 +6,14 @@ namespace FacturXDotNet.Parsing.CII;
 /// <summary>
 ///     Parse a <see cref="CrossIndustryInvoice" /> from an XML stream.
 /// </summary>
-public class CrossIndustryInvoiceParser(CrossIndustryInvoiceParserOptions? options = null)
+public class CrossIndustryInvoiceReader(CrossIndustryInvoiceReaderOptions? options = null)
 {
-    readonly CrossIndustryInvoiceParserOptions _options = options ?? new CrossIndustryInvoiceParserOptions();
+    readonly CrossIndustryInvoiceReaderOptions _options = options ?? new CrossIndustryInvoiceReaderOptions();
 
     /// <summary>
     ///     Parse the given stream into a <see cref="CrossIndustryInvoice" />.
     /// </summary>
-    public CrossIndustryInvoice ParseCiiXml(Stream stream)
+    public CrossIndustryInvoice Read(Stream stream)
     {
         CrossIndustryInvoice result = InitializeResult();
         CrossIndustryInvoiceXmlReadHandler handler = new(result, _options.Logger);
@@ -23,7 +23,7 @@ public class CrossIndustryInvoiceParser(CrossIndustryInvoiceParserOptions? optio
         List<string> errors = ValidateResult(result);
         if (errors.Count > 0)
         {
-            throw new CrossIndustryInvoiceInvalidResultException(errors);
+            throw CrossIndustryInvoiceReaderException.ValidationError(errors);
         }
 
         return result;
@@ -32,8 +32,8 @@ public class CrossIndustryInvoiceParser(CrossIndustryInvoiceParserOptions? optio
     static CrossIndustryInvoice InitializeResult() =>
         new()
         {
-            // We put null values for now, they will be filled by the parser.
-            // If the non-null values are still null after the parser is done, we will throw: see Validate
+            // We put null values for now, they will be filled by the reader.
+            // If the non-null values are still null after the reader is done, we will throw: see Validate
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             ExchangedDocumentContext = null,
             ExchangedDocument = null,

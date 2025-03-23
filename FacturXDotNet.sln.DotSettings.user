@@ -30,5 +30,10 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AXmlParser_002Ecs_002Fl_003AC_0021_003FUsers_003Flahki_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003F1a2a86e0dbbd14ad398b73854bfa97b6cc97507fc3d2a3b7a7e0d73c90f08acb_003FXmlParser_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/SweaWarningsMode/@EntryValue">ShowAndRun</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5bf5f1c8_002Dc714_002D46dd_002D928a_002D650dd9e8db3b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ParseAndValidateMinimumProfile" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Project Location="D:\source\repos\FacturXDotNet\Tests.FacturXDotNet.CLI" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Tests.FacturXDotNet.CLI&amp;gt;" /&gt;&#xD;
+  &lt;Or&gt;&#xD;
+    &lt;Project Location="D:\source\repos\FacturXDotNet\Tests.FacturXDotNet.CLI" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Tests.FacturXDotNet.CLI&amp;gt;" /&gt;&#xD;
+    &lt;TestAncestor&gt;&#xD;
+      &lt;TestId&gt;MSTest::801B25B9-F3D5-4390-8F9B-B6A3975D93A0::net9.0::Tests.FacturXDotNet.Generation.CrossIndustryInvoiceWriterTest.ShouldWriteCrossIndustryInvoiceXml_Minimum&lt;/TestId&gt;&#xD;
+    &lt;/TestAncestor&gt;&#xD;
+  &lt;/Or&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

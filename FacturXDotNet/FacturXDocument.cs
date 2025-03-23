@@ -33,7 +33,7 @@ public partial class FacturXDocument
     /// <param name="xmpParserOptions">The options to parse the XMP metadata.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The XMP metadata of the Factur-X document.</returns>
-    public async Task<XmpMetadata?> GetXmpMetadataAsync(string? password = null, XmpMetadataParserOptions? xmpParserOptions = null, CancellationToken cancellationToken = default)
+    public async Task<XmpMetadata?> GetXmpMetadataAsync(string? password = null, XmpMetadataReaderOptions? xmpParserOptions = null, CancellationToken cancellationToken = default)
     {
         using PdfDocument pdfDocument = await OpenPdfDocumentAsync(password, cancellationToken);
 
@@ -60,8 +60,8 @@ public partial class FacturXDocument
         await writer.FlushAsync(cancellationToken);
         transformedStream.Seek(0, SeekOrigin.Begin);
 
-        XmpMetadataParser xmpParser = new(xmpParserOptions);
-        return xmpParser.ParseXmpMetadata(transformedStream);
+        XmpMetadataReader xmpReader = new(xmpParserOptions);
+        return xmpReader.Read(transformedStream);
     }
 
     /// <summary>
