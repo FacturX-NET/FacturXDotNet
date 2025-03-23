@@ -17,10 +17,16 @@ rid = ["osx-x64", "osx-arm64"]
 kinds = ["tar"]
 
 # Disable builds that didn't work
+
 # error NETSDK1083: The specified RuntimeIdentifier 'rhel-x64' is not recognized. See https://aka.ms/netsdk1083 for more information.
 # [[pack]]
 # rid = ["rhel-x64"]
 # kinds = ["rpm", "tar"]
+
+# error NETSDK1084: There is no application host available for the specified RuntimeIdentifier 'win-arm'.
+# [[pack]]
+# rid = ["win-arm"]
+# kinds = ["zip"]
 
 [coverage]
 include_test_assembly = false
