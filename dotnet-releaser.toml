@@ -43,7 +43,10 @@ title = '^ci:'
 
 [[changelog.autolabeler]]
 label = "documentation"
-title = '^doc:'
+title = [
+    '^doc:',
+    '^docs:',
+]
 
 [[changelog.autolabeler]]
 label = "tests"
@@ -72,12 +75,19 @@ title = '^feat:'
 label = "enhancement"
 title = [
     '^refactor:',
+    '^build:',
     '^perf:'
 ]
 
 [[changelog.autolabeler]]
 label = "dependencies"
 title = '^deps:'
+
+[[changelog.autolabeler]]
+label = "skip-release-notes"
+title = [
+    '^Merge remote-tracking branch'
+]
 
 [[changelog.autolabeler]]
 label = "misc"
