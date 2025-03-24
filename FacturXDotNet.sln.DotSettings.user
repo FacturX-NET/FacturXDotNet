@@ -37,5 +37,6 @@
       &lt;TestId&gt;MSTest::801B25B9-F3D5-4390-8F9B-B6A3975D93A0::net9.0::Tests.FacturXDotNet.Generation.XmpMetadataWriterTest.ShouldWriteXmpMetadataXml_Minimum&lt;/TestId&gt;&#xD;
     &lt;/TestAncestor&gt;&#xD;
     &lt;ProjectFile&gt;801B25B9-F3D5-4390-8F9B-B6A3975D93A0/d:Generation/f:XmpMetadataWriterTest.cs&lt;/ProjectFile&gt;&#xD;
+    &lt;Project Location="D:\source\repos\FacturXDotNet\Tests.FacturXDotNet" Presentation="&amp;lt;Tests&amp;gt;\&amp;lt;Tests.FacturXDotNet&amp;gt;" /&gt;&#xD;
   &lt;/Or&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
