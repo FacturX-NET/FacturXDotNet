@@ -7,7 +7,7 @@ namespace FacturXDotNet.Generation.PDF;
 /// <summary>
 ///     Add an attachment to a PDF document.
 /// </summary>
-static class AddAttachmentToPdfToDocument
+static class AddAttachmentToPdfDocument
 {
     /// <summary>
     ///     Add an attachment to a PDF document.
