@@ -9,6 +9,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -29,3 +35,12 @@ jobs:
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            test-results/**/*.xml
+            test-results/**/*.trx
+            test-results/**/*.json
