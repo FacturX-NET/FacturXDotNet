@@ -282,7 +282,11 @@ public class XmpMetadataReaderTest
                     Contributor = ["DC_CONTRIBUTOR1", "DC_CONTRIBUTOR2"],
                     Coverage = "DC_COVERAGE",
                     Creator = ["DC_CREATOR1", "DC_CREATOR2"],
-                    Date = [new DateTime(2, 3, 4), new DateTimeOffset(3, 4, 5, 6, 7, 8, 9, 10, TimeSpan.FromHours(-2)).UtcDateTime],
+                    Date =
+                    [
+                      new DateTimeOffset(2, 3, 4, 0, 0, 0, TimeSpan.Zero),
+                      new DateTimeOffset(3, 4, 5, 6, 7, 8, 9, 10, TimeSpan.Zero)
+                    ],
                     Description = ["DC_DESCRIPTION1", "DC_DESCRIPTION2"],
                     Format = "DC_FORMAT",
                     Identifier = "DC_IDENTIFIER",
