@@ -12,7 +12,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
     bool _nextLanguageAlternativeIsDefault;
 
     /// <summary>
-    ///     True when the value of <see cref="_pfASchemaPrefix" /> is the prefix that should be used to parse the <see cref="XmpFacturXMetadata" />.
+    ///     True when the value of <see cref="_pdfaSchemaPrefix" /> is the prefix that should be used to parse the <see cref="XmpFacturXMetadata" />.
     /// </summary>
     bool _schemaPrefixIsFacturXSchemaPrefix;
 
@@ -20,7 +20,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
     ///     A prefix that was found in a PDF/A Schema declaration. When <see cref="_schemaPrefixIsFacturXSchemaPrefix" /> is true, this value should not be edited anymore
     ///     and should be the one to look for to find the data for <see cref="XmpFacturXMetadata" />.
     /// </summary>
-    ReadOnlyMemory<char> _pfASchemaPrefix = ReadOnlyMemory<char>.Empty;
+    ReadOnlyMemory<char> _pdfaSchemaPrefix = ReadOnlyMemory<char>.Empty;
 
     public void OnBeginTag(ReadOnlySpan<char> name, int line, int column)
     {
@@ -103,7 +103,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 if (!_schemaPrefixIsFacturXSchemaPrefix)
                 {
                     // reset the prefix so that it can be set by the current schema
-                    _pfASchemaPrefix = ReadOnlyMemory<char>.Empty;
+                    _pdfaSchemaPrefix = ReadOnlyMemory<char>.Empty;
                 }
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:property/rdf:Seq/rdf:li":
@@ -112,7 +112,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:valueType/rdf:Seq/rdf:li":
                 result.PdfAExtensions!.Schemas[^1].ValueType.Add(new XmpPdfATypeMetadata());
                 break;
-            case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:valueType/rdf:Seq/rdf:li/pdfAType:field/rdc:Seq/rdf:li":
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:valueType/rdf:Seq/rdf:li/pdfaType:field/rdf:Seq/rdf:li":
                 result.PdfAExtensions!.Schemas[^1].ValueType[^1].Field.Add(new XmpPdfAFieldMetadata());
                 break;
         }
@@ -210,6 +210,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 if (_nextLanguageAlternativeIsDefault)
                 {
                     result.DublinCore!.Description.Insert(0, value.ToString());
+                    _nextLanguageAlternativeIsDefault = false;
                 }
                 else
                 {
@@ -235,6 +236,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 if (_nextLanguageAlternativeIsDefault)
                 {
                     result.DublinCore!.Rights.Insert(0, value.ToString());
+                    _nextLanguageAlternativeIsDefault = false;
                 }
                 else
                 {
@@ -251,13 +253,14 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 if (_nextLanguageAlternativeIsDefault)
                 {
                     result.DublinCore!.Title.Insert(0, value.ToString());
+                    _nextLanguageAlternativeIsDefault = false;
                 }
                 else
                 {
                     result.DublinCore!.Title.Add(value.ToString());
                 }
                 break;
-            case "/x:xmpmeta/rdf:RDF/rdf:Description/dc:type":
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/dc:type/rdf:Bag/rdf:li":
                 result.DublinCore!.Type.Add(value.ToString());
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:namespaceURI":
@@ -269,9 +272,9 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:prefix":
                 result.PdfAExtensions!.Schemas[^1].Prefix = value.ToString();
-                if (_pfASchemaPrefix.Length == 0)
+                if (_pdfaSchemaPrefix.Length == 0)
                 {
-                    _pfASchemaPrefix = value.ToString().AsMemory();
+                    _pdfaSchemaPrefix = value.ToString().AsMemory();
                 }
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:schema":
@@ -301,40 +304,35 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
             case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:valueType/rdf:Seq/rdf:li/pdfaType:type":
                 result.PdfAExtensions!.Schemas[^1].ValueType[^1].Type = value.ToString();
                 break;
-            case
-                "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:valueType/rdf:Seq/rdf:li/pdfaType:type/pdfaField/rdf:Seq/rdf:li/pdfaField:description"
-                :
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:valueType/rdf:Seq/rdf:li/pdfaType:field/rdf:Seq/rdf:li/pdfaField:description":
                 result.PdfAExtensions!.Schemas[^1].ValueType[^1].Field[^1].Description = value.ToString();
                 break;
-            case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:valueType/rdf:Seq/rdf:li/pdfaType:type/pdfaField/rdf:Seq/rdf:li/pdfaField:name"
-                :
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:valueType/rdf:Seq/rdf:li/pdfaType:field/rdf:Seq/rdf:li/pdfaField:name":
                 result.PdfAExtensions!.Schemas[^1].ValueType[^1].Field[^1].Name = value.ToString();
                 break;
-            case
-                "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:valueType/rdf:Seq/rdf:li/pdfaType:type/pdfaField/rdf:Seq/rdf:li/pdfaField:valueType"
-                :
+            case "/x:xmpmeta/rdf:RDF/rdf:Description/pdfaExtension:schemas/rdf:Bag/rdf:li/pdfaSchema:valueType/rdf:Seq/rdf:li/pdfaType:field/rdf:Seq/rdf:li/pdfaField:valueType":
                 result.PdfAExtensions!.Schemas[^1].ValueType[^1].Field[^1].ValueType = value.ToString();
                 break;
 
             default:
                 // dynamic cases
-                if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/xmlns:{_pfASchemaPrefix}"))
+                if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/xmlns:{_pdfaSchemaPrefix}"))
                 {
                     CreateFacturXMetadata();
                 }
-                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pfASchemaPrefix}:DocumentFileName"))
+                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pdfaSchemaPrefix}:DocumentFileName"))
                 {
                     result.FacturX!.DocumentFileName = value.ToString();
                 }
-                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pfASchemaPrefix}:DocumentType"))
+                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pdfaSchemaPrefix}:DocumentType"))
                 {
                     result.FacturX!.DocumentType = value.ToFacturXDocumentType();
                 }
-                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pfASchemaPrefix}:Version"))
+                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pdfaSchemaPrefix}:Version"))
                 {
                     result.FacturX!.Version = value.ToString();
                 }
-                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pfASchemaPrefix}:ConformanceLevel"))
+                else if (path.SequenceEqual($"/x:xmpmeta/rdf:RDF/rdf:Description/{_pdfaSchemaPrefix}:ConformanceLevel"))
                 {
                     result.FacturX!.ConformanceLevel = value.ToXmpFacturXConformanceLevel();
                 }
