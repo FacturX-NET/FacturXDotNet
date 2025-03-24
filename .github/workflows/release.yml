@@ -16,10 +16,7 @@ jobs:
     
     permissions:
       actions: write
-      contents: read
-      issues: read
-      checks: write
-      pull-requests: write
+      contents: write
     
     steps:
       - name: Checkout
@@ -45,15 +42,6 @@ jobs:
         run: |
           dotnet tool install --global dotnet-releaser
           dotnet-releaser run --nuget-token "${{ secrets.NUGET_KEY }}" --github-token "${{ secrets.PAT_GITHUB_TOKEN }}" --github-token-gist "${{ secrets.PAT_GITHUB_TOKEN }}" --skip-app-packages-for-build-only dotnet-releaser.toml
-
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: |
-            TestResults/**/*.xml
-            TestResults/**/*.trx
-            TestResults/**/*.json
 
       - name: Upload binaries
         uses: actions/upload-artifact@v4
