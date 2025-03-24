@@ -382,11 +382,11 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 ? d2
                 : DateTime.TryParseExact(value, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d3)
                     ? d3
-                    : DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mmzzz", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d4)
+                    : DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mmK", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d4)
                         ? d4
-                        : DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:sszzz", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d5)
+                        : DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:ssK", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d5)
                             ? d5
-                            : DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:ss.fffffffzzz", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d6)
+                            : DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:ss.ffffffK", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d6)
                                 ? d6
                                 : throw new FormatException($"Expected value to be a date, but found {value}.");
 
