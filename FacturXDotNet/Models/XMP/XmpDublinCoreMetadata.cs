@@ -54,7 +54,7 @@ public class XmpDublinCoreMetadata
     ///     </para>
     /// </summary>
     /// <XmpTag>dc:date</XmpTag>
-    public List<DateTime> Date { get; set; } = [];
+    public List<DateTimeOffset> Date { get; set; } = [];
 
     /// <summary>
     ///     <para>

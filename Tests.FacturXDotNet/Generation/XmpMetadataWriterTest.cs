@@ -250,7 +250,7 @@ public class XmpMetadataWriterTest
                                           <xmp:MetadataDate>0002-03-04</xmp:MetadataDate>
                                           <xmp:ModifyDate>0003-04-05</xmp:ModifyDate>
                                           <xmp:Rating>4.2</xmp:Rating>
-                                          <xmp:BaseUrl>BASE_URL</xmp:BaseUrl>
+                                          <xmp:BaseURL>BASE_URL</xmp:BaseURL>
                                           <xmp:Nickname>NICKNAME</xmp:Nickname>
                                           <xmp:Thumbnails>
                                             <rdf:Alt>
