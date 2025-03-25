@@ -2,7 +2,10 @@
 
 namespace FacturXDotNet.Validation.BusinessRules.CII.BrCo;
 
-record BrCo26() : CrossIndustryInvoiceBusinessRule(
+/// <summary>
+///     BR-CO-26: "
+/// </summary>
+public record BrCo26() : CrossIndustryInvoiceBusinessRule(
     "BR-CO-26",
     """
     In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) 
@@ -11,6 +14,7 @@ record BrCo26() : CrossIndustryInvoiceBusinessRule(
     FacturXProfile.Minimum.AndHigher()
 )
 {
+    /// <inheritdoc />
     public override bool Check(CrossIndustryInvoice? cii) =>
         // TODO: check BT-29
         !string.IsNullOrWhiteSpace(cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization?.Id)

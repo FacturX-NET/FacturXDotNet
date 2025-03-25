@@ -2,7 +2,10 @@
 
 namespace FacturXDotNet.Validation.BusinessRules.CII.BrS;
 
-record BrS01() : CrossIndustryInvoiceBusinessRule(
+/// <summary>
+///     BR-S-01: "
+/// </summary>
+public record BrS01() : CrossIndustryInvoiceBusinessRule(
     "BR-S-01",
     """
     An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) 
@@ -11,6 +14,7 @@ record BrS01() : CrossIndustryInvoiceBusinessRule(
     FacturXProfile.BasicWl.AndHigher()
 )
 {
+    /// <inheritdoc />
     public override bool Check(CrossIndustryInvoice? cii) =>
         // TODO
         true;

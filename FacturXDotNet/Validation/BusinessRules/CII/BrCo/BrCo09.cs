@@ -3,7 +3,10 @@ using FacturXDotNet.Validation.Utils;
 
 namespace FacturXDotNet.Validation.BusinessRules.CII.BrCo;
 
-record BrCo09() : CrossIndustryInvoiceBusinessRule(
+/// <summary>
+///     BR-CO-09: "
+/// </summary>
+public record BrCo09() : CrossIndustryInvoiceBusinessRule(
     "BR-CO-09",
     """
     The Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) shall have a prefix in accordance 
@@ -12,6 +15,7 @@ record BrCo09() : CrossIndustryInvoiceBusinessRule(
     FacturXProfile.Minimum.AndHigher()
 )
 {
+    /// <inheritdoc />
     public override bool Check(CrossIndustryInvoice? cii) =>
         // TODO: also check BT-63 and BT-48
         cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration is { Id: not null }

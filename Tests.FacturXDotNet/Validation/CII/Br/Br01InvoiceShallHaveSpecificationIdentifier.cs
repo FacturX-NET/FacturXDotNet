@@ -1,6 +1,6 @@
 ﻿using FacturXDotNet;
 using FacturXDotNet.Models.CII;
-using FacturXDotNet.Validation;
+using FacturXDotNet.Validation.BusinessRules.CII.Br;
 using Shouldly;
 using Tests.FacturXDotNet.TestTools;
 
@@ -10,34 +10,34 @@ namespace Tests.FacturXDotNet.Validation.CII.Br;
 public class Br01InvoiceShallHaveSpecificationIdentifierTest
 {
     [TestMethod]
-    public async Task ShouldValidate()
+    public void ShouldValidate_WhenValueIsValid()
     {
-        CrossIndustryInvoice cii = CiiGenerators.CrossIndustryInvoice.Generate();
+        CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
         cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.En16931;
 
-        FacturXValidator validator = new();
-        await result = validator.GetValidationResultAsync(cii);
+        Br01InvoiceShallHaveSpecificationIdentifier rule = new();
+        bool result = rule.Check(cii);
 
         result.ShouldBeTrue();
     }
 
     [TestMethod]
-    public async Task ShouldNotValidate_WhenNull()
+    public void ShouldNotValidate_WhenCiiIsNull()
     {
-        FacturXValidator validator = new();
-        await result = validator.GetValidationResultAsync(null);
+        Br01InvoiceShallHaveSpecificationIdentifier rule = new();
+        bool result = rule.Check(null);
 
         result.ShouldBeFalse();
     }
 
     [TestMethod]
-    public void ShouldNotValidate_WhenInvalidProfile()
+    public void ShouldNotValidate_WhenValueIsInvalid()
     {
-        CrossIndustryInvoice cii = CiiGenerators.CrossIndustryInvoice.Generate();
+        CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
         cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId = (GuidelineSpecifiedDocumentContextParameterId)(-1);
 
-        Br01InvoiceShallHaveSpecificationIdentifier validator = new();
-        bool result = validator.Check(cii);
+        Br01InvoiceShallHaveSpecificationIdentifier rule = new();
+        bool result = rule.Check(cii);
 
         result.ShouldBeFalse();
     }

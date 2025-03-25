@@ -37,7 +37,7 @@ class ExtractXmpFromPdf
         }
 
         byte[] bytes;
-        if (pdfStream.TryUnfilter())
+        if (pdfStream.TryUncompress())
         {
             bytes = pdfStream.Value;
         }

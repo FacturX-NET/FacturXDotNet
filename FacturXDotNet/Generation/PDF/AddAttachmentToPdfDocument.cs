@@ -70,7 +70,7 @@ static class AddAttachmentToPdfDocument
         {
             embeddedFiles = new PdfDictionary();
             document.Internals.AddObject(embeddedFiles);
-            document.Internals.Catalog.Names.Elements.SetReference("/EmbeddedFiles", embeddedFiles.Reference);
+            document.Internals.Catalog.Names.Elements.SetReference("/EmbeddedFiles", embeddedFiles.ReferenceNotNull);
         }
 
         if (embeddedFiles.Elements.GetObject("/Names") is not PdfArray embeddedFileNames)
