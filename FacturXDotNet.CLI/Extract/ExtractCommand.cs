@@ -1,7 +1,6 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.Diagnostics;
-using FacturXDotNet.Parsing;
 using Humanizer;
 using Spectre.Console;
 
@@ -118,7 +117,7 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
     static async Task ExtractCii(FileInfo pdfPath, string? ciiAttachmentName, string outputPath, CancellationToken cancellationToken)
     {
         await using FileStream stream = pdfPath.OpenRead();
-        FacturXDocument document = await FacturXDocument.FromStream(stream, cancellationToken);
+        FacturXDocument document = await FacturXDocument.LoadFromStream(stream, cancellationToken);
 
         CrossIndustryInvoiceAttachment? ciiAttachment = await document.GetCrossIndustryInvoiceAttachmentAsync(ciiAttachmentName, cancellationToken: cancellationToken);
         if (ciiAttachment == null)
@@ -133,9 +132,9 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
     static async Task ExtractXmp(FileInfo pdfPath, string outputPath, CancellationToken cancellationToken)
     {
         await using FileStream stream = pdfPath.OpenRead();
+        FacturXDocument document = await FacturXDocument.LoadFromStream(stream, cancellationToken);
 
-        FacturXXmpExtractor extractor = new();
-        await using Stream xmpStream = extractor.ExtractXmpAsync(stream);
+        await using Stream xmpStream = await document.GetXmpMetadataStreamAsync(cancellationToken: cancellationToken);
 
         await using FileStream xmpFile = File.Open(outputPath, FileMode.Create);
         await xmpStream.CopyToAsync(xmpFile, cancellationToken);

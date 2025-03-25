@@ -93,7 +93,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
                     sw.Start();
 
                     await using FileStream stream = options.Path.OpenRead();
-                    facturX = await FacturXDocument.FromStream(stream, cancellationToken);
+                    facturX = await FacturXDocument.LoadFromStream(stream, cancellationToken);
 
                     sw.Stop();
 
