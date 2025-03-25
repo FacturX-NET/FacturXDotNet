@@ -3,7 +3,6 @@ using CommunityToolkit.HighPerformance;
 using FacturXDotNet.Extensions;
 using FacturXDotNet.Generation;
 using FacturXDotNet.Parsing.XMP;
-using FacturXDotNet.Utils;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 

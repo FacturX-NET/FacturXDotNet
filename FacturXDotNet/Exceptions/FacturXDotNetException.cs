@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Parsing.Exceptions;
+﻿namespace FacturXDotNet.Exceptions;
 
 /// <summary>
 ///     An exception that is thrown when an error occurs in the FacturXDotNet library.

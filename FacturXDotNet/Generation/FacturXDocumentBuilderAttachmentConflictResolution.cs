@@ -1,9 +1,9 @@
-﻿namespace FacturXDotNet.Utils;
+﻿namespace FacturXDotNet.Generation;
 
 /// <summary>
 ///     The action to take when an attachment with the same name already exists in the base document.
 /// </summary>
-public enum PdfAttachmentConflictResolution
+public enum FacturXDocumentBuilderAttachmentConflictResolution
 {
     /// <summary>
     ///     Overwrite the existing attachment with the new one.
