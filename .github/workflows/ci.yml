@@ -34,7 +34,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test --configuration Release --no-build --logger "trx;logfilename=TestResults.trx" --results-directory TestResults
+        run: dotnet test --configuration Release --no-build --logger trx --collect:"XPlat Code Coverage" --results-directory TestResults
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -44,3 +44,8 @@ jobs:
             TestResults/**/*.xml
             TestResults/**/*.trx
             TestResults/**/*.json
+
+      - name: Publish coverage
+        uses: neofinancial/coverage-upload-action@v2.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
