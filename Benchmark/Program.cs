@@ -55,7 +55,7 @@ namespace Benchmark
 
             FacturXDocument document = await FacturXDocument.LoadFromFileAsync(GetSourceFilePath());
             FacturXValidator validator = new();
-            _ = await validator.IsValidAsync(document);
+            _ = await validator.ValidateAsync(document);
         }
 
         string GetSourceFilePath()

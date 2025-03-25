@@ -12,9 +12,12 @@ public class FacturXDocumentBuilder
 {
     Stream? _basePdf;
     string? _basePdfPassword;
+    bool _basePdfLeaveOpen;
     Stream? _cii;
     string? _ciiAttachmentName;
+    bool _ciiLeaveOpen;
     Stream? _xmp;
+    bool _xmpLeaveOpen;
     readonly List<(PdfAttachmentData Name, PdfAttachmentConflictResolution ConflictResolution)> _attachments = [];
     ILogger? _logger;
 
@@ -40,11 +43,13 @@ public class FacturXDocumentBuilder
     /// </summary>
     /// <param name="pdfImageStream">The stream containing the base PDF image.</param>
     /// <param name="password">The password to open the PDF image.</param>
+    /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithBasePdf(Stream pdfImageStream, string? password = null)
+    public FacturXDocumentBuilder WithBasePdf(Stream pdfImageStream, string? password = null, bool leaveOpen = true)
     {
         _basePdf = pdfImageStream;
         _basePdfPassword = password;
+        _basePdfLeaveOpen = leaveOpen;
         return this;
     }
 
@@ -57,11 +62,13 @@ public class FacturXDocumentBuilder
     /// </remarks>
     /// <param name="ciiStream">The stream containing the Cross Industry Invoice data.</param>
     /// <param name="ciiAttachmentName">The name of the attachment.</param>
+    /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithCrossIndustryInvoice(Stream ciiStream, string? ciiAttachmentName = null)
+    public FacturXDocumentBuilder WithCrossIndustryInvoice(Stream ciiStream, string? ciiAttachmentName = null, bool leaveOpen = true)
     {
         _cii = ciiStream;
         _ciiAttachmentName = ciiAttachmentName;
+        _ciiLeaveOpen = leaveOpen;
         return this;
     }
 
@@ -72,10 +79,12 @@ public class FacturXDocumentBuilder
     ///     This method takes the raw XMP metadata as a stream. It can be used to add data without having to parse it into a <see cref="XmpMetadata" /> object.
     /// </remarks>
     /// <param name="xmpStream">The stream containing the XMP metadata.</param>
+    /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithXmpMetadata(Stream xmpStream)
+    public FacturXDocumentBuilder WithXmpMetadata(Stream xmpStream, bool leaveOpen = true)
     {
         _xmp = xmpStream;
+        _xmpLeaveOpen = leaveOpen;
         return this;
     }
 
@@ -108,10 +117,20 @@ public class FacturXDocumentBuilder
 
         using PdfDocument pdfDocument = OpenPdfDocumentAsync(_basePdf, _basePdfPassword);
 
+        if (!_basePdfLeaveOpen)
+        {
+            await _basePdf.DisposeAsync();
+        }
+
         if (_xmp != null)
         {
             byte[] newMetadataBytes = new byte[(int)_xmp.Length];
             await _xmp.ReadExactlyAsync(newMetadataBytes);
+
+            if (!_xmpLeaveOpen)
+            {
+                await _xmp.DisposeAsync();
+            }
 
             ReplaceXmpMetadataOfPdfDocument.ReplaceXmpMetadata(pdfDocument, newMetadataBytes);
 
@@ -124,6 +143,11 @@ public class FacturXDocumentBuilder
             ciiAttachment.Description = "CII XML - FacturX";
             ciiAttachment.Relationship = AfRelationship.Alternative;
             ciiAttachment.MimeType = "application/xml";
+
+            if (!_ciiLeaveOpen)
+            {
+                await _cii.DisposeAsync();
+            }
 
             AddAttachment(pdfDocument, ciiAttachment, PdfAttachmentConflictResolution.Overwrite);
 
