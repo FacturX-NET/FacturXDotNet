@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Filters;
 
 namespace FacturXDotNet.Parsing.XMP;
 
@@ -36,16 +35,8 @@ class ExtractXmpFromPdf
             return false;
         }
 
-        byte[] bytes;
-        if (pdfStream.TryUncompress())
-        {
-            bytes = pdfStream.Value;
-        }
-        else
-        {
-            FlateDecode flate = new();
-            bytes = flate.Decode(pdfStream.Value, new PdfDictionary());
-        }
+        pdfStream.TryUncompress();
+        byte[] bytes = pdfStream.Value;
 
         xmpMetadataStream = new MemoryStream(bytes);
         return true;
