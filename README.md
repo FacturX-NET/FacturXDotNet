@@ -8,6 +8,9 @@
 [![Build & Test](https://github.com/ismailbennani/FacturXDotNet/actions/workflows/ci.yml/badge.svg)](https://github.com/ismailbennani/FacturXDotNet/actions/workflows/ci.yml)
 ![Coverage](https://gist.githubusercontent.com/ismailbennani/39cc9832bf323ebb2e7c25a6f0e585b7/raw/dotnet-releaser-coverage-badge-ismailbennani-FacturXDotNet.svg)
 
+> [!IMPORTANT]
+> **The library is still a work in progress. If you stumbled upon this somehow, you are lost!**
+
 The FacturX.NET library is a high-performance .NET library ([benchmarks](https://github.com/ismailbennani/FacturXDotNet/tree/master/Benchmark)) that provides support for the
 FacturX data formats, as defined by the [FNFE](https://fnfe-mpe.org/factur-x/) (also known as ZUGFeRD in Germany).
 
