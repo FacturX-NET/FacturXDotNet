@@ -1,4 +1,4 @@
-﻿using FacturXDotNet;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.BusinessRules.CII.BrCo;
 using Shouldly;
 using Tests.FacturXDotNet.TestTools;

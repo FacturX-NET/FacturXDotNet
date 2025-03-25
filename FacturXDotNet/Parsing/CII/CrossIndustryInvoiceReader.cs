@@ -1,4 +1,5 @@
-﻿using FacturXDotNet.Parsing.CII.Exceptions;
+﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Parsing.CII.Exceptions;
 using TurboXml;
 
 namespace FacturXDotNet.Parsing.CII;

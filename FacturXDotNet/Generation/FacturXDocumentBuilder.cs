@@ -1,5 +1,7 @@
 ﻿using FacturXDotNet.Extensions;
 using FacturXDotNet.Generation.PDF;
+using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;

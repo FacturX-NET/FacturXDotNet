@@ -1,6 +1,4 @@
-﻿using FacturXDotNet.Models.CII;
-
-namespace FacturXDotNet;
+﻿namespace FacturXDotNet.Models.CII;
 
 /// <summary>
 ///     An invoice in the Factur-X format.

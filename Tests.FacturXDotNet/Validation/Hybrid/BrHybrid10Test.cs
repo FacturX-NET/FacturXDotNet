@@ -1,4 +1,4 @@
-﻿using FacturXDotNet;
+﻿using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Validation.BusinessRules.Hybrid;
 using Shouldly;
 using Tests.FacturXDotNet.TestTools;

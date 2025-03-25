@@ -1,4 +1,6 @@
 ﻿using FacturXDotNet.Models;
+using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.CII;
 using FacturXDotNet.Parsing.XMP;
 using FacturXDotNet.Validation.BusinessRules;

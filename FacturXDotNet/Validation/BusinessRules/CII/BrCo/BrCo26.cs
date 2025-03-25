@@ -1,4 +1,5 @@
 ﻿using FacturXDotNet.Models;
+using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.Validation.BusinessRules.CII.BrCo;
 

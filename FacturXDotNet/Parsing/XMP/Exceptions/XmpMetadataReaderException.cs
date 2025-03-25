@@ -1,4 +1,6 @@
 ﻿using FacturXDotNet.Exceptions;
+using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
 
 namespace FacturXDotNet.Parsing.XMP.Exceptions;
 
