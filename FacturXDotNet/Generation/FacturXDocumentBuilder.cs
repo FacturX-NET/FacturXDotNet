@@ -1,5 +1,5 @@
-﻿using FacturXDotNet.Generation.PDF;
-using FacturXDotNet.Utils;
+﻿using FacturXDotNet.Extensions;
+using FacturXDotNet.Generation.PDF;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
@@ -18,7 +18,7 @@ public class FacturXDocumentBuilder
     bool _ciiLeaveOpen;
     Stream? _xmp;
     bool _xmpLeaveOpen;
-    readonly List<(PdfAttachmentData Name, PdfAttachmentConflictResolution ConflictResolution)> _attachments = [];
+    readonly List<(PdfAttachmentData Name, FacturXDocumentBuilderAttachmentConflictResolution ConflictResolution)> _attachments = [];
     ILogger? _logger;
 
     /// <summary>
@@ -94,7 +94,10 @@ public class FacturXDocumentBuilder
     /// <param name="attachment">The attachment to add.</param>
     /// <param name="conflictResolution">The action to take when an attachment with the same name already exists in the base document.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithAttachment(PdfAttachmentData attachment, PdfAttachmentConflictResolution conflictResolution = PdfAttachmentConflictResolution.Overwrite)
+    public FacturXDocumentBuilder WithAttachment(
+        PdfAttachmentData attachment,
+        FacturXDocumentBuilderAttachmentConflictResolution conflictResolution = FacturXDocumentBuilderAttachmentConflictResolution.Overwrite
+    )
     {
         _attachments.Add((attachment, conflictResolution));
         return this;
@@ -149,12 +152,12 @@ public class FacturXDocumentBuilder
                 await _cii.DisposeAsync();
             }
 
-            AddAttachment(pdfDocument, ciiAttachment, PdfAttachmentConflictResolution.Overwrite);
+            AddAttachment(pdfDocument, ciiAttachment, FacturXDocumentBuilderAttachmentConflictResolution.Overwrite);
 
             _logger?.LogInformation("Added CII attachment to the PDF document.");
         }
 
-        foreach ((PdfAttachmentData attachment, PdfAttachmentConflictResolution conflictResolution) in _attachments)
+        foreach ((PdfAttachmentData attachment, FacturXDocumentBuilderAttachmentConflictResolution conflictResolution) in _attachments)
         {
             AddAttachment(pdfDocument, attachment, conflictResolution);
             _logger?.LogInformation("Added attachment {AttachmentName} to the PDF document.", attachment.Name);
@@ -172,26 +175,26 @@ public class FacturXDocumentBuilder
         return FacturXDocument.LoadFromBuffer(resultStream.GetBuffer().AsMemory(0, (int)resultStream.Length));
     }
 
-    void AddAttachment(PdfDocument document, PdfAttachmentData attachment, PdfAttachmentConflictResolution conflictResolution)
+    void AddAttachment(PdfDocument document, PdfAttachmentData attachment, FacturXDocumentBuilderAttachmentConflictResolution conflictResolution)
     {
         if (document.ListAttachments().Contains(attachment.Name))
         {
             switch (conflictResolution)
             {
-                case PdfAttachmentConflictResolution.KeepOld:
+                case FacturXDocumentBuilderAttachmentConflictResolution.KeepOld:
                     // nothing to do, we keep the old attachment
                     _logger?.LogWarning("An attachment with the name {AttachmentName} already exists in the PDF document, will keep the old attachment.", attachment.Name);
                     return;
-                case PdfAttachmentConflictResolution.Overwrite:
+                case FacturXDocumentBuilderAttachmentConflictResolution.Overwrite:
                     // we remove the old attachment and add the new one
                     document.RemoveAttachment(attachment.Name);
                     _logger?.LogWarning("An attachment with the name {AttachmentName} already exists in the PDF document, will overwrite the old attachment.", attachment.Name);
                     break;
-                case PdfAttachmentConflictResolution.KeepBoth:
+                case FacturXDocumentBuilderAttachmentConflictResolution.KeepBoth:
                     // we add the new attachment in addition to the old one
                     _logger?.LogWarning("An attachment with the name {AttachmentName} already exists in the PDF document, will keep both attachments.", attachment.Name);
                     break;
-                case PdfAttachmentConflictResolution.Throw:
+                case FacturXDocumentBuilderAttachmentConflictResolution.Throw:
                     throw new InvalidOperationException($"An attachment with the name {attachment.Name} already exists in the PDF document.");
                 default:
                     throw new ArgumentOutOfRangeException(nameof(conflictResolution), conflictResolution, null);

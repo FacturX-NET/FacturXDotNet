@@ -1,9 +1,9 @@
 ﻿using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 
-namespace FacturXDotNet.Utils;
+namespace FacturXDotNet.Extensions;
 
-static class PdfSharpAttachmentUtils
+static class PdfSharpAttachmentExtensions
 {
     /// <summary>
     ///     Extract attachments from a Factur-X PDF document.
