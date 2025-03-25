@@ -10,15 +10,15 @@ public class MinimumCrossIndustryInvoice
     MinimumExchangedDocument _exchangedDocument;
     MinimumSupplyChainTradeTransaction _supplyChainTradeTransaction;
 
-    internal MinimumCrossIndustryInvoice(CrossIndustryInvoice invoice)
+    internal MinimumCrossIndustryInvoice(CrossIndustryInvoice crossIndustryInvoice)
     {
-        Invoice = invoice;
-        _exchangedDocumentContext = new MinimumExchangedDocumentContext(invoice.ExchangedDocumentContext!);
-        _exchangedDocument = new MinimumExchangedDocument(invoice.ExchangedDocument!);
-        _supplyChainTradeTransaction = new MinimumSupplyChainTradeTransaction(invoice.SupplyChainTradeTransaction!);
+        CrossIndustryInvoice = crossIndustryInvoice;
+        _exchangedDocumentContext = new MinimumExchangedDocumentContext(crossIndustryInvoice.ExchangedDocumentContext!);
+        _exchangedDocument = new MinimumExchangedDocument(crossIndustryInvoice.ExchangedDocument!);
+        _supplyChainTradeTransaction = new MinimumSupplyChainTradeTransaction(crossIndustryInvoice.SupplyChainTradeTransaction!);
     }
 
-    internal CrossIndustryInvoice Invoice { get; }
+    internal CrossIndustryInvoice CrossIndustryInvoice { get; }
 
     /// <inheritdoc cref="CII.CrossIndustryInvoice.ExchangedDocumentContext" />
     public MinimumExchangedDocumentContext ExchangedDocumentContext {
@@ -26,7 +26,7 @@ public class MinimumCrossIndustryInvoice
 
         set {
             _exchangedDocumentContext = value;
-            Invoice.ExchangedDocumentContext = value.ExchangedDocumentContext;
+            CrossIndustryInvoice.ExchangedDocumentContext = value.ExchangedDocumentContext;
         }
     }
 
@@ -36,7 +36,7 @@ public class MinimumCrossIndustryInvoice
 
         set {
             _exchangedDocument = value;
-            Invoice.ExchangedDocument = value.ExchangedDocument;
+            CrossIndustryInvoice.ExchangedDocument = value.ExchangedDocument;
         }
     }
 
@@ -46,9 +46,19 @@ public class MinimumCrossIndustryInvoice
 
         set {
             _supplyChainTradeTransaction = value;
-            Invoice.SupplyChainTradeTransaction = value.SupplyChainTradeTransaction;
+            CrossIndustryInvoice.SupplyChainTradeTransaction = value.SupplyChainTradeTransaction;
         }
     }
+
+    /// <summary>
+    ///     Return the <see cref="CII.CrossIndustryInvoice" /> that this class is a view of.
+    /// </summary>
+    /// <remarks>
+    ///     The <see cref="MinimumCrossIndustryInvoice" /> view is useful when manipulating the invoice because it has better nullability checks, but some methods still
+    ///     use the <see cref="CII.CrossIndustryInvoice" /> class. This method allows you to get the original <see cref="CII.CrossIndustryInvoice" /> back.
+    /// </remarks>
+    /// <returns>The <see cref="CII.CrossIndustryInvoice" /> that this class is a view of.</returns>
+    public CrossIndustryInvoice ToCrossIndustryInvoice() => CrossIndustryInvoice;
 }
 
 /// <summary>

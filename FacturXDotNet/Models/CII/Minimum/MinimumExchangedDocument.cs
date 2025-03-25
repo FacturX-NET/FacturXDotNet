@@ -21,4 +21,14 @@ public class MinimumExchangedDocument
 
     /// <inheritdoc cref="CII.ExchangedDocument.IssueDateTimeFormat" />
     public DateOnlyFormat IssueDateTimeFormat { get => ExchangedDocument.IssueDateTimeFormat!.Value; set => ExchangedDocument.IssueDateTimeFormat = value; }
+
+    /// <summary>
+    ///     Return the <see cref="CII.ExchangedDocument" /> that this class is a view of.
+    /// </summary>
+    /// <remarks>
+    ///     The <see cref="MinimumExchangedDocument" /> view is useful when manipulating the invoice because it has better nullability checks, but some methods still
+    ///     use the <see cref="CII.ExchangedDocument" /> class. This method allows you to get the original <see cref="CII.ExchangedDocument" /> back.
+    /// </remarks>
+    /// <returns>The <see cref="CII.ExchangedDocument" /> that this class is a view of.</returns>
+    public ExchangedDocument ToExchangedDocument() => ExchangedDocument;
 }

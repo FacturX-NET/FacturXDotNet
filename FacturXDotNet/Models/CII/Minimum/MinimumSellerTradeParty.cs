@@ -53,4 +53,14 @@ public class MinimumSellerTradeParty
             SellerTradeParty.SpecifiedTaxRegistration = value?.SpecifiedTaxRegistration;
         }
     }
+
+    /// <summary>
+    ///     Return the <see cref="CII.SellerTradeParty" /> that this class is a view of.
+    /// </summary>
+    /// <remarks>
+    ///     The <see cref="MinimumSellerTradeParty" /> view is useful when manipulating the invoice because it has better nullability checks, but some methods still
+    ///     use the <see cref="CII.SellerTradeParty" /> class. This method allows you to get the original <see cref="CII.SellerTradeParty" /> back.
+    /// </remarks>
+    /// <returns>The <see cref="CII.SellerTradeParty" /> that this class is a view of.</returns>
+    public SellerTradeParty ToSellerTradeParty() => SellerTradeParty;
 }
