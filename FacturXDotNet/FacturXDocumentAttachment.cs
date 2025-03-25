@@ -1,5 +1,8 @@
-﻿using FacturXDotNet.Utils;
+﻿using CommunityToolkit.HighPerformance;
+using FacturXDotNet.Extensions;
+using FacturXDotNet.Utils;
 using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 
 namespace FacturXDotNet;
 
@@ -30,7 +33,8 @@ public class FacturXDocumentAttachment
     /// <exception cref="InvalidOperationException">The attachment with the specified name could not be found.</exception>
     public async Task<ReadOnlyMemory<byte>> ReadAsync(string? password = null, CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await _facturX.OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
+        await using Stream dataStream = _facturX.Data.AsStream();
+        using PdfDocument pdfDocument = dataStream.OpenPdfDocumentAsync(PdfDocumentOpenMode.Import, password);
         await using Stream attachmentStream = await FindAttachmentStreamAsync(password, cancellationToken);
 
         byte[] attachmentBytes = new byte[attachmentStream.Length];
@@ -47,7 +51,8 @@ public class FacturXDocumentAttachment
     /// <param name="cancellationToken">The cancellation token.</param>
     public async Task CopyToAsync(Stream outputStream, string? password = null, CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await _facturX.OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
+        await using Stream dataStream = _facturX.Data.AsStream();
+        using PdfDocument pdfDocument = dataStream.OpenPdfDocumentAsync(PdfDocumentOpenMode.Import, password);
         await using Stream attachmentStream = await FindAttachmentStreamAsync(password, cancellationToken);
         await attachmentStream.CopyToAsync(outputStream, cancellationToken);
     }
@@ -61,7 +66,8 @@ public class FacturXDocumentAttachment
     /// <exception cref="InvalidOperationException">The attachment with the specified name could not be found.</exception>
     protected async Task<Stream> FindAttachmentStreamAsync(string? password = null, CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await _facturX.OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
+        await using Stream dataStream = _facturX.Data.AsStream();
+        using PdfDocument pdfDocument = dataStream.OpenPdfDocumentAsync(PdfDocumentOpenMode.Import, password);
         return pdfDocument.ExtractAttachment(Name);
     }
 }

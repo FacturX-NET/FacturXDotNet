@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using CommunityToolkit.HighPerformance;
+using FacturXDotNet.Extensions;
 using FacturXDotNet.Generation;
 using FacturXDotNet.Parsing.XMP;
 using FacturXDotNet.Utils;
@@ -12,7 +12,7 @@ namespace FacturXDotNet;
 /// <summary>
 ///     A Factur-X document.
 /// </summary>
-public partial class FacturXDocument
+public class FacturXDocument
 {
     /// <summary>
     ///     Create a new Factur-X document.
@@ -36,7 +36,8 @@ public partial class FacturXDocument
     /// <seealso cref="GetXmpMetadataAsync" />
     public async Task<Stream> GetXmpMetadataStreamAsync(string? password = null, CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
+        await using Stream dataStream = Data.AsStream();
+        using PdfDocument pdfDocument = dataStream.OpenPdfDocumentAsync(PdfDocumentOpenMode.Import, password);
 
         ExtractXmpFromPdf extractor = new();
         return extractor.ExtractXmpMetadata(pdfDocument);
@@ -52,7 +53,8 @@ public partial class FacturXDocument
     /// <seealso cref="GetXmpMetadataStreamAsync" />
     public async Task<XmpMetadata?> GetXmpMetadataAsync(string? password = null, XmpMetadataReaderOptions? xmpParserOptions = null, CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
+        await using Stream dataStream = Data.AsStream();
+        using PdfDocument pdfDocument = dataStream.OpenPdfDocumentAsync(PdfDocumentOpenMode.Import, password);
 
         ExtractXmpFromPdf extractor = new();
         if (!extractor.TryExtractXmpMetadata(pdfDocument, out Stream? xmpStream))
@@ -79,7 +81,8 @@ public partial class FacturXDocument
     )
     {
         attachmentFileName ??= "factur-x.xml";
-        using PdfDocument pdfDocument = await OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
+        await using Stream dataStream = Data.AsStream();
+        using PdfDocument pdfDocument = dataStream.OpenPdfDocumentAsync(PdfDocumentOpenMode.Import, password);
 
         if (!pdfDocument.ListAttachments().Contains(attachmentFileName))
         {
@@ -97,7 +100,8 @@ public partial class FacturXDocument
     /// <returns>The attachments of the Factur-X document.</returns>
     public async IAsyncEnumerable<FacturXDocumentAttachment> GetAttachmentsAsync(string? password = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        using PdfDocument pdfDocument = await OpenPdfDocumentReadOnlyAsync(password, cancellationToken);
+        await using Stream dataStream = Data.AsStream();
+        using PdfDocument pdfDocument = dataStream.OpenPdfDocumentAsync(PdfDocumentOpenMode.Import, password);
 
         foreach ((string Name, Stream Content) attachment in pdfDocument.ListAttachments().Select(n => (n, pdfDocument.ExtractAttachment(n))))
         {
@@ -112,23 +116,6 @@ public partial class FacturXDocument
     /// </summary>
     /// <param name="outputStream">The stream to write the Factur-X document to.</param>
     public async Task ExportAsync(Stream outputStream) => await outputStream.WriteAsync(Data);
-
-    internal async Task<PdfDocument> OpenPdfDocumentReadOnlyAsync(string? password, CancellationToken _ = default)
-    {
-        await using Stream stream = Data.AsStream();
-        PdfDocument document;
-
-        if (password != null)
-        {
-            document = PdfReader.Open(stream, PdfDocumentOpenMode.Import, args => args.Password = password);
-        }
-        else
-        {
-            document = PdfReader.Open(stream, PdfDocumentOpenMode.Import);
-        }
-
-        return document;
-    }
 
     /// <summary>
     ///     Create a new Factur-X document builder.
@@ -160,7 +147,4 @@ public partial class FacturXDocument
     ///     Create a new Factur-X document from a buffer.
     /// </summary>
     public static FacturXDocument LoadFromBuffer(ReadOnlyMemory<byte> buffer) => new(buffer);
-
-    [GeneratedRegex("<\\?xpacket.*?\\?>")]
-    private static partial Regex PacketInstructions();
 }
