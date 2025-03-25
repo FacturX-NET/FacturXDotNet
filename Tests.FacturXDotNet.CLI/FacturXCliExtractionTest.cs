@@ -8,6 +8,8 @@ namespace Tests.FacturXDotNet.CLI;
 public class FacturXCliExtractionTest
 {
     const string FacturXPath = "TestFiles/facturx.pdf";
+    const string FacturXWithoutXmpPath = "TestFiles/facturx_without_xmp.pdf";
+    const string FacturXWithCiiNameXRechnung = "TestFiles/facturx_with_cii_named_xrechnung.pdf";
     const string ExpectedCiiPath = "TestFiles/facturx.expected.xml";
     const string ExpectedXmpPath = "TestFiles/facturx.expected.xmp";
 
@@ -18,6 +20,13 @@ public class FacturXCliExtractionTest
 
         result.ShouldBe(0);
         CompareXmlFiles("TestFiles/facturx.xml", ExpectedCiiPath);
+    }
+
+    [TestMethod]
+    public async Task ShouldFailToExtractCii_WhenNotInPdf()
+    {
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXWithCiiNameXRechnung, "--cii"]);
+        result.ShouldBe(1);
     }
 
     [TestMethod]
@@ -36,6 +45,13 @@ public class FacturXCliExtractionTest
 
         result.ShouldBe(0);
         CompareXmlFiles("TestFiles/facturx.xmp", ExpectedXmpPath);
+    }
+
+    [TestMethod]
+    public async Task ShouldFailToExtractXmp_WhenNoXmpInPdf()
+    {
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXWithoutXmpPath, "--xmp"]);
+        result.ShouldNotBe(0);
     }
 
     [TestMethod]
