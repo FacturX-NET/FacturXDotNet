@@ -90,9 +90,19 @@ static class FakeData
                     SellerTradeParty = new SellerTradeParty
                     {
                         Name = string.Empty,
+                        SpecifiedLegalOrganization = new SellerTradePartySpecifiedLegalOrganization
+                        {
+                            Id = string.Empty,
+                            IdSchemeId = string.Empty
+                        },
                         PostalTradeAddress = new SellerTradePartyPostalTradeAddress
                         {
                             CountryId = string.Empty
+                        },
+                        SpecifiedTaxRegistration = new SellerTradePartySpecifiedTaxRegistration
+                        {
+                            Id = string.Empty,
+                            IdSchemeId = VatOnlyTaxSchemeIdentifier.Vat
                         }
                     },
                     BuyerTradeParty = new BuyerTradeParty

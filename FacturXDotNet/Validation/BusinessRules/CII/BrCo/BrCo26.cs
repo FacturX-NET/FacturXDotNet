@@ -3,7 +3,8 @@
 namespace FacturXDotNet.Validation.BusinessRules.CII.BrCo;
 
 /// <summary>
-///     BR-CO-26: "
+///     BR-CO-26: In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller VAT
+///     identifier (BT-31) shall be present.
 /// </summary>
 public record BrCo26() : CrossIndustryInvoiceBusinessRule(
     "BR-CO-26",
