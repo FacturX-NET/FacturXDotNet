@@ -15,6 +15,6 @@ public record BrDec14InvoiceTotalAmountHasTwoDecimals() : CrossIndustryInvoiceBu
 {
     /// <inheritdoc />
     public override bool Check(CrossIndustryInvoice? cii) =>
-        cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount == null
-        || cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount.CountDecimals() <= 2;
+        cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.GrandTotalAmount is null
+        || cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount.Value.CountDecimals() <= 2;
 }

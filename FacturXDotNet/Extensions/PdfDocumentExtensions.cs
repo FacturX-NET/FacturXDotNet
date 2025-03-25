@@ -9,7 +9,7 @@ static class PdfDocumentExtensions
     {
         PdfDocument document;
 
-        if (password != null)
+        if (password is not null)
         {
             document = PdfReader.Open(data, mode, args => args.Password = password);
         }

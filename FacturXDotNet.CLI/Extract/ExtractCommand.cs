@@ -120,7 +120,7 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
         FacturXDocument document = await FacturXDocument.LoadFromStream(stream, cancellationToken);
 
         CrossIndustryInvoiceAttachment? ciiAttachment = await document.GetCrossIndustryInvoiceAttachmentAsync(ciiAttachmentName, cancellationToken: cancellationToken);
-        if (ciiAttachment == null)
+        if (ciiAttachment is null)
         {
             return;
         }

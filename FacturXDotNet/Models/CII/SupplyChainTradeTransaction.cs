@@ -9,10 +9,10 @@
 public sealed class SupplyChainTradeTransaction
 {
     /// <inheritdoc cref="CII.ApplicableHeaderTradeAgreement" />
-    public required ApplicableHeaderTradeAgreement ApplicableHeaderTradeAgreement { get; set; }
+    public ApplicableHeaderTradeAgreement? ApplicableHeaderTradeAgreement { get; set; }
 
     /// <inheritdoc cref="CII.ApplicableHeaderTradeDelivery" />
-    public required ApplicableHeaderTradeDelivery ApplicableHeaderTradeDelivery { get; set; }
+    public ApplicableHeaderTradeDelivery? ApplicableHeaderTradeDelivery { get; set; }
 
     /// <inheritdoc cref="CII.ApplicableHeaderTradeSettlement" />
     public ApplicableHeaderTradeSettlement? ApplicableHeaderTradeSettlement { get; set; }

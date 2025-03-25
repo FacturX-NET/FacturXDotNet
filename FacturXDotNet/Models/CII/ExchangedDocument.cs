@@ -20,10 +20,10 @@ public sealed class ExchangedDocument
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:ID</CiiXPath>
     /// <Profile>MINIMUM</Profile>
     /// <ChorusPro>The invoice number is limited to 20 characters.</ChorusPro>
-    public required string Id { get; set; }
+    public string? Id { get; set; }
 
     /// <inheritdoc cref="InvoiceTypeCode" />
-    public required InvoiceTypeCode TypeCode { get; set; }
+    public InvoiceTypeCode? TypeCode { get; set; }
 
     /// <summary>
     ///     <b>Invoice issue date</b> - The date when the Invoice was issued.
@@ -33,7 +33,7 @@ public sealed class ExchangedDocument
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString</CiiXPath>
     /// <Profile>MINIMUM</Profile>
     /// <ChorusPro>The issue date must be before or equal to the deposit date.</ChorusPro>
-    public required DateOnly IssueDateTime { get; set; }
+    public DateOnly? IssueDateTime { get; set; }
 
     /// <summary>
     ///     <b>Date, format</b>
@@ -44,5 +44,5 @@ public sealed class ExchangedDocument
     /// <ID>BT-2-0</ID>
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString/@format</CiiXPath>
     /// <Profile>MINIMUM</Profile>
-    public required DateOnlyFormat IssueDateTimeFormat { get; set; }
+    public DateOnlyFormat? IssueDateTimeFormat { get; set; }
 }

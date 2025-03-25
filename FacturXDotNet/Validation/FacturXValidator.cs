@@ -194,7 +194,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
         _options.ProfileOverride.HasValue && _options.ProfileOverride is not FacturXProfile.None
             ? _options.ProfileOverride.Value
             : xmp?.FacturX?.ConformanceLevel?.ToFacturXProfile()
-              ?? cii?.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfileOrNull() ?? FacturXProfile.None;
+              ?? cii?.ExchangedDocumentContext?.GuidelineSpecifiedDocumentContextParameterId?.ToFacturXProfileOrNull() ?? FacturXProfile.None;
 
     static bool IsRuleExpectedToFail(CrossIndustryInvoiceBusinessRule rule, FacturXProfile profile) => !rule.Profiles.Match(profile);
 
@@ -225,7 +225,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     {
         CrossIndustryInvoiceAttachment? ciiAttachment = await invoice.GetCrossIndustryInvoiceAttachmentAsync(ciiAttachmentName, password, cancellationToken);
         CrossIndustryInvoice? cii = ciiAttachment is null ? null : await ciiAttachment.GetCrossIndustryInvoiceAsync(password, cancellationToken: cancellationToken);
-        return cii != null && ciiRule.Check(cii);
+        return cii is not null && ciiRule.Check(cii);
     }
 
     async Task<(XmpMetadata? Xmp, CrossIndustryInvoiceAttachment? Cii)> ExtractXmpAndCiiAsync(

@@ -28,7 +28,7 @@ public class SpecifiedTradeSettlementHeaderMonetarySummation
     /// </BR-CO-13>
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxBasisTotalAmount</CiiXPath>
     /// <Profile>MINIMUM</Profile>
-    public required decimal TaxBasisTotalAmount { get; set; }
+    public decimal? TaxBasisTotalAmount { get; set; }
 
     /// <summary>
     ///     <b>Invoice total VAT amount</b> - The total VAT amount for the Invoice.
@@ -51,7 +51,7 @@ public class SpecifiedTradeSettlementHeaderMonetarySummation
     /// <ID>BT-110-1</ID>
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount/@currencyID</CiiXPath>
     /// <Profile>MINIMUM</Profile>
-    public required string TaxTotalAmountCurrencyId { get; set; }
+    public string? TaxTotalAmountCurrencyId { get; set; }
 
     /// <summary>
     ///     <b>Invoice total amount with VAT</b> - The total amount of the Invoice with VAT.
@@ -65,7 +65,7 @@ public class SpecifiedTradeSettlementHeaderMonetarySummation
     /// <BR-FXEXT-CO-15>For EXTENDED profile only, BR-CO-15 is replaced by BR-FXEXT-CO-15, which add a tolerance of 0,01 euro per line, document level charge and allowance in calculation.</BR-FXEXT-CO-15>
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:GrandTotalAmount</CiiXPath>
     /// <Profile>MINIMUM</Profile>
-    public required decimal GrandTotalAmount { get; set; }
+    public decimal? GrandTotalAmount { get; set; }
 
     /// <summary>
     ///     <b>Amount due for payment</b> - The outstanding amount that is requested to be paid.
@@ -79,5 +79,5 @@ public class SpecifiedTradeSettlementHeaderMonetarySummation
     /// <BR-CO-16><c>Amount due for payment (BT-115)</c> = <c>Invoice total amount with VAT (BT-112)</c> - <c>Paid amount (BT-113)</c> + <c>Rounding amount (BT-114)</c>.</BR-CO-16>
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:DuePayableAmount</CiiXPath>
     /// <Profile>MINIMUM</Profile>
-    public required decimal DuePayableAmount { get; set; }
+    public decimal? DuePayableAmount { get; set; }
 }

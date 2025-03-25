@@ -16,7 +16,7 @@ static class ValidationIntegrationTestUtils
     {
         FacturXDocumentBuilder builder = FacturXDocument.Create().WithBasePdfFile("TestFiles/facturx.pdf");
 
-        if (xmp != null)
+        if (xmp is not null)
         {
             MemoryStream stream = new();
             await using StreamWriter streamWriter = new(stream, leaveOpen: true);
@@ -26,7 +26,7 @@ static class ValidationIntegrationTestUtils
             builder.WithXmpMetadata(stream, false);
         }
 
-        if (cii != null)
+        if (cii is not null)
         {
             MemoryStream stream = new();
             await using StreamWriter streamWriter = new(stream, leaveOpen: true);
@@ -56,7 +56,7 @@ static class ValidationIntegrationTestUtils
         }
 
         BusinessRuleValidationResult rule = result.Rules.SingleOrDefault(r => r.Rule.Name == ruleName);
-        if (rule.Rule == null)
+        if (rule.Rule is null)
         {
             throw new InvalidOperationException($"Could not find rule {ruleName}.");
         }

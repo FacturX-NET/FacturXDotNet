@@ -13,5 +13,5 @@ public record BrHybrid01() : HybridBusinessRule(
 )
 {
     /// <inheritdoc />
-    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) => xmp != null;
+    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) => xmp is not null;
 }

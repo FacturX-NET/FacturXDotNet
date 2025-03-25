@@ -12,7 +12,7 @@ class XmpFacturXMetadataWriter(XmpFacturXMetadataWriterOptions? options = null)
         await writer.WriteStartElementAsync("rdf", "Description", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         await writer.WriteAttributeStringAsync("xmlns", _options.Prefix, "http://www.w3.org/2000/xmlns/", _options.NamespaceUri);
 
-        if (data.DocumentFileName != null)
+        if (data.DocumentFileName is not null)
         {
             await writer.WriteElementStringAsync(_options.Prefix, "DocumentFileName", _options.NamespaceUri, data.DocumentFileName);
         }
@@ -22,7 +22,7 @@ class XmpFacturXMetadataWriter(XmpFacturXMetadataWriterOptions? options = null)
             await writer.WriteElementStringAsync(_options.Prefix, "DocumentType", _options.NamespaceUri, data.DocumentType.Value.ToFacturXDocumentTypeString().ToString());
         }
 
-        if (data.Version != null)
+        if (data.Version is not null)
         {
             await writer.WriteElementStringAsync(_options.Prefix, "Version", _options.NamespaceUri, data.Version);
         }

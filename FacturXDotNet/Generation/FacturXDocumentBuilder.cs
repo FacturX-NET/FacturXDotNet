@@ -111,7 +111,7 @@ public class FacturXDocumentBuilder
     /// <returns>The Factur-X document.</returns>
     public async Task<FacturXDocument> BuildAsync()
     {
-        if (_basePdf == null)
+        if (_basePdf is null)
         {
             throw new InvalidOperationException("A base PDF image must be provided.");
         }
@@ -127,7 +127,7 @@ public class FacturXDocumentBuilder
             await _basePdf.DisposeAsync();
         }
 
-        if (_xmp != null)
+        if (_xmp is not null)
         {
             byte[] newMetadataBytes = new byte[(int)_xmp.Length];
             await _xmp.ReadExactlyAsync(newMetadataBytes);
@@ -142,7 +142,7 @@ public class FacturXDocumentBuilder
             _logger?.LogInformation("Added XMP metadata to the PDF document.");
         }
 
-        if (_cii != null)
+        if (_cii is not null)
         {
             PdfAttachmentData ciiAttachment = PdfAttachmentData.LoadFromStream(ciiAttachmentName, _cii);
             ciiAttachment.Description = "CII XML - FacturX";
@@ -210,7 +210,7 @@ public class FacturXDocumentBuilder
     {
         PdfDocument document;
 
-        if (password != null)
+        if (password is not null)
         {
             document = PdfReader.Open(stream, PdfDocumentOpenMode.Modify, args => args.Password = password);
         }

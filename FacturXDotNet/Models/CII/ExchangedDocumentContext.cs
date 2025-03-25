@@ -17,5 +17,5 @@ public sealed class ExchangedDocumentContext
     public string? BusinessProcessSpecifiedDocumentContextParameterId { get; set; }
 
     /// <inheritdoc cref="CII.GuidelineSpecifiedDocumentContextParameterId" />
-    public required GuidelineSpecifiedDocumentContextParameterId GuidelineSpecifiedDocumentContextParameterId { get; set; }
+    public GuidelineSpecifiedDocumentContextParameterId? GuidelineSpecifiedDocumentContextParameterId { get; set; }
 }

@@ -10,5 +10,5 @@ public record BrHybrid14() : HybridBusinessRule("BR-HYBRID-14", "The embedded fi
 {
     /// <inheritdoc />
     public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) =>
-        xmp?.FacturX?.DocumentFileName != null && ciiAttachmentName == xmp.FacturX.DocumentFileName;
+        xmp?.FacturX?.DocumentFileName is not null && ciiAttachmentName == xmp.FacturX.DocumentFileName;
 }

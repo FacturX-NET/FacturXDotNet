@@ -7,11 +7,11 @@
 public sealed class CrossIndustryInvoice
 {
     /// <inheritdoc cref="Models.CII.ExchangedDocumentContext" />
-    public required ExchangedDocumentContext ExchangedDocumentContext { get; set; }
+    public ExchangedDocumentContext? ExchangedDocumentContext { get; set; }
 
     /// <inheritdoc cref="Models.CII.ExchangedDocument" />
-    public required ExchangedDocument ExchangedDocument { get; set; }
+    public ExchangedDocument? ExchangedDocument { get; set; }
 
     /// <inheritdoc cref="Models.CII.SupplyChainTradeTransaction" />
-    public required SupplyChainTradeTransaction SupplyChainTradeTransaction { get; set; }
+    public SupplyChainTradeTransaction? SupplyChainTradeTransaction { get; set; }
 }

@@ -50,13 +50,13 @@ static class AddAttachmentToPdfDocument
         fileSpecificationDictionary.Elements.Add("/EF", embeddedFileDictionary);
         document.Internals.AddObject(fileSpecificationDictionary);
 
-        if (file.Description != null)
+        if (file.Description is not null)
         {
             fileSpecificationDictionary.Elements.Add("/Desc", new PdfString(file.Description));
         }
 
         PdfArray? attachedFiles = document.Internals.Catalog.Elements.GetArray("/AF");
-        if (attachedFiles == null)
+        if (attachedFiles is null)
         {
             attachedFiles = new PdfArray(document);
             document.Internals.AddObject(attachedFiles);

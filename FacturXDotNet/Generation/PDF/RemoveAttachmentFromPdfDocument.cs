@@ -38,7 +38,7 @@ static class RemoveAttachmentFromPdfDocument
         PdfDictionary? embeddedFiles = names?.Elements.GetDictionary("/EmbeddedFiles");
         PdfArray? embeddedFilesNames = embeddedFiles?.Elements.GetArray("/Names");
 
-        if (embeddedFilesNames == null)
+        if (embeddedFilesNames is null)
         {
             return;
         }
@@ -76,7 +76,7 @@ static class RemoveAttachmentFromPdfDocument
     static void RemoveFileSpecificationsInAssociatedFiles(PdfDocument document, string name)
     {
         PdfArray? attachedFiles = document.Internals.Catalog.Elements.GetArray("/AF");
-        if (attachedFiles == null)
+        if (attachedFiles is null)
         {
             return;
         }

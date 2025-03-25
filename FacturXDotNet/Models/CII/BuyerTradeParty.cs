@@ -16,7 +16,7 @@ public class BuyerTradeParty
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:BuyerTradeParty/ram:Name</CiiXPath>
     /// <Profile>MINIMUM</Profile>
     /// <ChorusPro>This field is limited to 99 characters.</ChorusPro>
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <inheritdoc cref="BuyerTradePartySpecifiedLegalOrganization" />
     public BuyerTradePartySpecifiedLegalOrganization? SpecifiedLegalOrganization { get; set; }

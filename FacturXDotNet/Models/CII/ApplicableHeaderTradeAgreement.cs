@@ -21,10 +21,10 @@ public class ApplicableHeaderTradeAgreement
     public string? BuyerReference { get; set; }
 
     /// <inheritdoc cref="CII.SellerTradeParty" />
-    public required SellerTradeParty SellerTradeParty { get; set; }
+    public SellerTradeParty? SellerTradeParty { get; set; }
 
     /// <inheritdoc cref="CII.BuyerTradeParty" />
-    public required BuyerTradeParty BuyerTradeParty { get; set; }
+    public BuyerTradeParty? BuyerTradeParty { get; set; }
 
     /// <inheritdoc cref="CII.BuyerOrderReferencedDocument" />
     public BuyerOrderReferencedDocument? BuyerOrderReferencedDocument { get; set; }

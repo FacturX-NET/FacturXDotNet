@@ -13,7 +13,7 @@ class XmpPdfAIdentificationMetadataWriter
         await writer.WriteStartElementAsync("rdf", "Description", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         await writer.WriteAttributeStringAsync("xmlns", PrefixPdfaid, "http://www.w3.org/2000/xmlns/", NsPdfaid);
 
-        if (data.Amendment != null)
+        if (data.Amendment is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfaid, "amd", NsPdfaid, data.Amendment);
         }

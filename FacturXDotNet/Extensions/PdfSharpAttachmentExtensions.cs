@@ -15,7 +15,7 @@ static class PdfSharpAttachmentExtensions
         PdfCatalog catalog = document.Internals.Catalog;
         PdfArray? attachedFiles = catalog.Elements.GetArray("/AF");
 
-        if (attachedFiles == null)
+        if (attachedFiles is null)
         {
             yield break;
         }
@@ -36,7 +36,7 @@ static class PdfSharpAttachmentExtensions
         PdfCatalog catalog = document.Internals.Catalog;
         PdfArray? attachedFiles = catalog.Elements.GetArray("/AF");
 
-        if (attachedFiles != null)
+        if (attachedFiles is not null)
         {
             foreach (PdfItem? attachedFile in attachedFiles.Elements)
             {

@@ -20,7 +20,7 @@ public record BrCo09() : CrossIndustryInvoiceBusinessRule(
     /// <inheritdoc />
     public override bool Check(CrossIndustryInvoice? cii) =>
         // TODO: also check BT-63 and BT-48
-        cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration is { Id: not null }
+        cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.SpecifiedTaxRegistration?.Id is not null
         && CheckPrefix(cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration.Id.AsSpan(0, 2));
 
     static bool CheckPrefix(ReadOnlySpan<char> prefix) => Iso31661CountryCodesUtils.IsValidCountryCode(prefix) || prefix is "el" || prefix is "El" || prefix is "EL";

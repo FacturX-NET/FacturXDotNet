@@ -68,32 +68,32 @@ public class XmpMetadataWriter(XmpMetadataWriterOptions? options = null)
         await writer.WriteStartElementAsync("x", "xmpmeta", "adobe:ns:meta/");
         await writer.WriteStartElementAsync("rdf", "RDF", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 
-        if (xmp.PdfAIdentification != null)
+        if (xmp.PdfAIdentification is not null)
         {
             await _xmpPdfAIdentificationMetadataWriter.WriteAsync(writer, xmp.PdfAIdentification);
         }
 
-        if (xmp.DublinCore != null)
+        if (xmp.DublinCore is not null)
         {
             await _xmpDublinCoreMetadataWriter.WriteAsync(writer, xmp.DublinCore);
         }
 
-        if (xmp.Pdf != null)
+        if (xmp.Pdf is not null)
         {
             await _xmpPdfMetadataWriter.WriteAsync(writer, xmp.Pdf);
         }
 
-        if (xmp.Basic != null)
+        if (xmp.Basic is not null)
         {
             await _xmpBasicMetadataWriter.WriteAsync(writer, xmp.Basic);
         }
 
-        if (xmp.PdfAExtensions != null)
+        if (xmp.PdfAExtensions is not null)
         {
             await _xmpPdfAExtensionsMetadataWriter.WriteAsync(writer, xmp.PdfAExtensions);
         }
 
-        if (xmp.FacturX != null)
+        if (xmp.FacturX is not null)
         {
             await _xmpFacturXMetadataWriter.WriteAsync(writer, xmp.FacturX);
         }
