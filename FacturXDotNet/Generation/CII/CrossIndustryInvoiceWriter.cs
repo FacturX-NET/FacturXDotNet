@@ -79,7 +79,7 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
         await WriteRamAsync(writer, "ID", exchangedDocument.Id);
         await WriteRamAsync(writer, "TypeCode", exchangedDocument.TypeCode.ToSpecificationIdentifier().ToString());
 
-        await StartRamAsync(writer, "TypeCode");
+        await StartRamAsync(writer, "IssueDateTime");
         await writer.WriteDateOnlyAsync(exchangedDocument.IssueDateTime);
         await writer.WriteEndElementAsync();
 
