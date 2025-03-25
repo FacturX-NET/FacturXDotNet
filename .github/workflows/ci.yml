@@ -63,10 +63,18 @@ jobs:
           thresholds: '60 80'
 
       - name: Prepend title to coverage markdown
-        run: sed -i '1s;^;## Coverage;' inFile
+        run: sed -i '1s;^;## Coverage;' code-coverage-results.md
 
       - name: Add Coverage as Job Summary
         run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Add Coverage as Check Summary
+        id: md
+        uses: mediatech15/markdown-to-summary-action@v1.0.0
+        with:
+          file: code-coverage-results.md
+          check_name: coverage
+          conclusion: success
 
       - name: Add Coverage as PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
