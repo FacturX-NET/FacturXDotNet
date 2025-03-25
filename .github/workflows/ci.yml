@@ -62,6 +62,9 @@ jobs:
           output: both
           thresholds: '60 80'
 
+      - name: Prepend title to coverage markdown
+        run: sed -i '1s;^;## Coverage;' inFile
+
       - name: Add Coverage as Job Summary
         run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
