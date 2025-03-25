@@ -1,6 +1,8 @@
-﻿using FacturXDotNet.Models;
+﻿using FacturXDotNet;
+using FacturXDotNet.Models;
+using FacturXDotNet.Validation.BusinessRules;
 
-namespace FacturXDotNet.Validation.BusinessRules.CII;
+namespace Tests.FacturXDotNet.Validation.CII.Br;
 
 record Br04InvoiceShallHaveTypeCode() : CrossIndustryInvoiceBusinessRule("BR-04", "An Invoice shall have an Invoice type code (BT-3).", FacturXProfile.Minimum.AndHigher())
 {

@@ -1,6 +1,8 @@
-﻿using FacturXDotNet.Models;
+﻿using FacturXDotNet;
+using FacturXDotNet.Models;
+using FacturXDotNet.Validation.BusinessRules;
 
-namespace FacturXDotNet.Validation.BusinessRules.CII;
+namespace Tests.FacturXDotNet.Validation.CII.Br;
 
 record Br13InvoiceShallHaveTotalAmountWithoutVat() : CrossIndustryInvoiceBusinessRule(
     "BR-13",

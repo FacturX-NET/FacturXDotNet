@@ -1,6 +1,8 @@
-﻿using FacturXDotNet.Models;
+﻿using FacturXDotNet;
+using FacturXDotNet.Models;
+using FacturXDotNet.Validation.BusinessRules;
 
-namespace FacturXDotNet.Validation.BusinessRules.CII;
+namespace Tests.FacturXDotNet.Validation.CII.Br;
 
 record Br06InvoiceShallHaveSellerName() : CrossIndustryInvoiceBusinessRule("BR-06", "An Invoice shall contain the Seller name (BT-27).", FacturXProfile.Minimum.AndHigher())
 {

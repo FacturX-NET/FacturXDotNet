@@ -1,6 +1,8 @@
-﻿using FacturXDotNet.Models;
+﻿using FacturXDotNet;
+using FacturXDotNet.Models;
+using FacturXDotNet.Validation.BusinessRules;
 
-namespace FacturXDotNet.Validation.BusinessRules.CII;
+namespace Tests.FacturXDotNet.Validation.CII.Br;
 
 record Br02InvoiceShallHaveInvoiceNumber() : CrossIndustryInvoiceBusinessRule("BR-02", "An Invoice shall have an Invoice number (BT-1).", FacturXProfile.Minimum.AndHigher())
 {
