@@ -12,7 +12,7 @@ public class Br03InvoiceShallHaveIssueDateTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocument.IssueDateTime = DateOnly.FromDateTime(DateTime.Now);
+        cii.ExchangedDocument!.IssueDateTime = DateOnly.FromDateTime(DateTime.Now);
 
         Br03InvoiceShallHaveIssueDate rule = new();
         bool result = rule.Check(cii);
@@ -33,7 +33,7 @@ public class Br03InvoiceShallHaveIssueDateTest
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocument.IssueDateTime = default;
+        cii.ExchangedDocument!.IssueDateTime = default;
 
         Br03InvoiceShallHaveIssueDate rule = new();
         bool result = rule.Check(cii);

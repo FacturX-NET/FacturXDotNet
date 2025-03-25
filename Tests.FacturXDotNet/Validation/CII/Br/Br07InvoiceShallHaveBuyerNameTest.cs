@@ -12,7 +12,7 @@ public class Br07InvoiceShallHaveBuyerNameTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.Name = "Buyer Name";
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.BuyerTradeParty!.Name = "Buyer Name";
 
         Br07InvoiceShallHaveBuyerName rule = new();
         bool result = rule.Check(cii);
@@ -33,7 +33,7 @@ public class Br07InvoiceShallHaveBuyerNameTest
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.BuyerTradeParty.Name = string.Empty;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.BuyerTradeParty!.Name = string.Empty;
 
         Br07InvoiceShallHaveBuyerName rule = new();
         bool result = rule.Check(cii);

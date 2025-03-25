@@ -12,8 +12,8 @@ public class BrCo26Test
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization!.Id = "SELLER_ID";
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration!.Id = "SELLER_VAT";
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedLegalOrganization!.Id = "SELLER_ID";
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedTaxRegistration!.Id = "SELLER_VAT";
 
         BrCo26 rule = new();
         bool result = rule.Check(cii);
@@ -25,8 +25,8 @@ public class BrCo26Test
     public void ShouldValidate_WhenOnlySpecifiedLegalOrganization()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization!.Id = "SELLER_ID";
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration = null;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedLegalOrganization!.Id = "SELLER_ID";
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedTaxRegistration = null;
 
         BrCo26 rule = new();
         bool result = rule.Check(cii);
@@ -38,8 +38,8 @@ public class BrCo26Test
     public void ShouldValidate_WhenOnlySpecifiedTaxRegistration()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization = null;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration!.Id = "SELLER_VAT";
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedLegalOrganization = null;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedTaxRegistration!.Id = "SELLER_VAT";
 
         BrCo26 rule = new();
         bool result = rule.Check(cii);
@@ -60,8 +60,8 @@ public class BrCo26Test
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization!.Id = "";
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration!.Id = "";
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedLegalOrganization!.Id = "";
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedTaxRegistration!.Id = "";
 
         BrCo26 rule = new();
         bool result = rule.Check(cii);

@@ -12,7 +12,7 @@ public class Br14InvoiceShallHaveTotalAmountWithVatTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement!.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount = 1;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement!.SpecifiedTradeSettlementHeaderMonetarySummation!.GrandTotalAmount = 1;
 
         Br14InvoiceShallHaveTotalAmountWithVat rule = new();
         bool result = rule.Check(cii);
@@ -33,7 +33,7 @@ public class Br14InvoiceShallHaveTotalAmountWithVatTest
     public void ShouldNotValidate_WhenApplicableHeaderTradeSettlementIsNull()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement = null;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement = null;
 
         Br14InvoiceShallHaveTotalAmountWithVat rule = new();
         bool result = rule.Check(null);
@@ -45,7 +45,7 @@ public class Br14InvoiceShallHaveTotalAmountWithVatTest
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement!.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount = 0;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement!.SpecifiedTradeSettlementHeaderMonetarySummation!.GrandTotalAmount = 0;
 
         Br14InvoiceShallHaveTotalAmountWithVat rule = new();
         bool result = rule.Check(cii);

@@ -1,5 +1,4 @@
-﻿using FacturXDotNet;
-using FacturXDotNet.Models.CII;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.BusinessRules.CII.BrCo;
 using Shouldly;
 using Tests.FacturXDotNet.TestTools;
@@ -13,7 +12,7 @@ public class BrCo09Test
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration =
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedTaxRegistration =
             new SellerTradePartySpecifiedTaxRegistration { Id = "FR123456789" };
 
         BrCo09 rule = new();
@@ -26,7 +25,7 @@ public class BrCo09Test
     public void ShouldValidate_WhenValueIsEl()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration =
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedTaxRegistration =
             new SellerTradePartySpecifiedTaxRegistration { Id = "EL123456789" };
 
         BrCo09 rule = new();
@@ -48,7 +47,7 @@ public class BrCo09Test
     public void ShouldNotValidate_WhenSpecifiedTaxRegistrationIsNull()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration = null;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedTaxRegistration = null;
 
         BrCo09 rule = new();
         bool result = rule.Check(null);
@@ -60,7 +59,7 @@ public class BrCo09Test
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration =
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.SpecifiedTaxRegistration =
             new SellerTradePartySpecifiedTaxRegistration { Id = "123456789" };
 
         BrCo09 rule = new();

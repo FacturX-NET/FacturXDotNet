@@ -1,5 +1,4 @@
-﻿using FacturXDotNet;
-using FacturXDotNet.Models.CII;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.BusinessRules.CII.Br;
 using Shouldly;
 using Tests.FacturXDotNet.TestTools;
@@ -13,7 +12,7 @@ public class Br04InvoiceShallHaveTypeCodeTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocument.TypeCode = InvoiceTypeCode.CommercialInvoice;
+        cii.ExchangedDocument!.TypeCode = InvoiceTypeCode.CommercialInvoice;
 
         Br04InvoiceShallHaveTypeCode rule = new();
         bool result = rule.Check(cii);
@@ -34,7 +33,7 @@ public class Br04InvoiceShallHaveTypeCodeTest
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocument.TypeCode = (InvoiceTypeCode)(-1);
+        cii.ExchangedDocument!.TypeCode = (InvoiceTypeCode)(-1);
 
         Br04InvoiceShallHaveTypeCode rule = new();
         bool result = rule.Check(cii);

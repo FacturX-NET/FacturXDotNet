@@ -12,7 +12,7 @@ public class Br09InvoiceShallHaveSellerPostalAddressWithCountryCodeTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress.CountryId = "DE";
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.PostalTradeAddress!.CountryId = "DE";
 
         Br09InvoiceShallHaveSellerPostalAddressWithCountryCode rule = new();
         bool result = rule.Check(cii);
@@ -33,7 +33,7 @@ public class Br09InvoiceShallHaveSellerPostalAddressWithCountryCodeTest
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress.CountryId = string.Empty;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.PostalTradeAddress!.CountryId = string.Empty;
 
         Br09InvoiceShallHaveSellerPostalAddressWithCountryCode rule = new();
         bool result = rule.Check(cii);

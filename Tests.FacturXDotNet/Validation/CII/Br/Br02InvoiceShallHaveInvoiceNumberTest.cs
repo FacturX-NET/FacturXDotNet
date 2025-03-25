@@ -12,7 +12,7 @@ public class Br02InvoiceShallHaveInvoiceNumberTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocument.Id = "123";
+        cii.ExchangedDocument!.Id = "123";
 
         Br02InvoiceShallHaveInvoiceNumber rule = new();
         bool result = rule.Check(cii);
@@ -33,7 +33,7 @@ public class Br02InvoiceShallHaveInvoiceNumberTest
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocument.Id = "";
+        cii.ExchangedDocument!.Id = "";
 
         Br02InvoiceShallHaveInvoiceNumber rule = new();
         bool result = rule.Check(cii);

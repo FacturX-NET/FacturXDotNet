@@ -6,7 +6,7 @@
 /// <ID>BT-1-00</ID>
 /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:ExchangedDocument</CiiXPath>
 /// <Profile>MINIMUM</Profile>
-public sealed class ExchangedDocument
+public class ExchangedDocument
 {
     /// <summary>
     ///     <b>Invoice number</b> - A unique identification of the Invoice.

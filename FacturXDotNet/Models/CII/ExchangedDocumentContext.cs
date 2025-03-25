@@ -6,7 +6,7 @@
 /// <ID>BG-2</ID>
 /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:ExchangedDocumentContext</CiiXPath>
 /// <Profile>MINIMUM</Profile>
-public sealed class ExchangedDocumentContext
+public class ExchangedDocumentContext
 {
     /// <summary>
     ///     <b>Business process type</b> - Identifies the business process context in which the transaction appears, to enable the Buyer to process the Invoice in an appropriate way.

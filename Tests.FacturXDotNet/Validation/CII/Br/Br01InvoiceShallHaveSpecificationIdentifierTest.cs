@@ -1,5 +1,4 @@
-﻿using FacturXDotNet;
-using FacturXDotNet.Models.CII;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.BusinessRules.CII.Br;
 using Shouldly;
 using Tests.FacturXDotNet.TestTools;
@@ -13,7 +12,7 @@ public class Br01InvoiceShallHaveSpecificationIdentifierTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.En16931;
+        cii.ExchangedDocumentContext!.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.En16931;
 
         Br01InvoiceShallHaveSpecificationIdentifier rule = new();
         bool result = rule.Check(cii);
@@ -34,7 +33,7 @@ public class Br01InvoiceShallHaveSpecificationIdentifierTest
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId = (GuidelineSpecifiedDocumentContextParameterId)(-1);
+        cii.ExchangedDocumentContext!.GuidelineSpecifiedDocumentContextParameterId = (GuidelineSpecifiedDocumentContextParameterId)(-1);
 
         Br01InvoiceShallHaveSpecificationIdentifier rule = new();
         bool result = rule.Check(cii);

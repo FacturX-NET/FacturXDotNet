@@ -212,7 +212,7 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
     {
         await StartRamAsync(writer, "SpecifiedTaxRegistration");
 
-        await TryWriteIdAndSchemeId(writer, specifiedTaxRegistration.Id, specifiedTaxRegistration.IdSchemeId.ToVatOnlyTaxSchemeIdentifier());
+        await TryWriteIdAndSchemeId(writer, specifiedTaxRegistration.Id, specifiedTaxRegistration.IdSchemeId?.ToVatOnlyTaxSchemeIdentifier());
 
         await writer.WriteEndElementAsync();
     }
@@ -302,6 +302,7 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
         {
             return;
         }
+
         await WriteRamAsync(writer, localname, value);
     }
 }

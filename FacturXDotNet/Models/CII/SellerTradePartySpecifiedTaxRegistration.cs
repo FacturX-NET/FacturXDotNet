@@ -36,5 +36,5 @@ public class SellerTradePartySpecifiedTaxRegistration
     /// <ID>BT-31-0</ID>
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:SpecifiedTaxRegistration/ram:ID/@schemeID</CiiXPath>
     /// <Profile>MINIMUM</Profile>
-    public VatOnlyTaxSchemeIdentifier IdSchemeId { get; set; }
+    public VatOnlyTaxSchemeIdentifier? IdSchemeId { get; set; }
 }

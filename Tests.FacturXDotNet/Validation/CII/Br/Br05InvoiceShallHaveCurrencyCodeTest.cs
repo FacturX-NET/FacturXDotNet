@@ -12,7 +12,7 @@ public class Br05InvoiceShallHaveCurrencyCodeTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement!.InvoiceCurrencyCode = "EUR";
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement!.InvoiceCurrencyCode = "EUR";
 
         Br05InvoiceShallHaveCurrencyCode rule = new();
         bool result = rule.Check(cii);
@@ -33,7 +33,7 @@ public class Br05InvoiceShallHaveCurrencyCodeTest
     public void ShouldNotValidate_WhenApplicableHeaderTradeSettlementIsNull()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement = null;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement = null;
 
         Br05InvoiceShallHaveCurrencyCode rule = new();
         bool result = rule.Check(null);
@@ -45,7 +45,7 @@ public class Br05InvoiceShallHaveCurrencyCodeTest
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement!.InvoiceCurrencyCode = string.Empty;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement!.InvoiceCurrencyCode = string.Empty;
 
         Br05InvoiceShallHaveCurrencyCode rule = new();
         bool result = rule.Check(cii);

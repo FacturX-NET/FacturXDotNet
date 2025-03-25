@@ -1,5 +1,4 @@
-﻿using FacturXDotNet;
-using FacturXDotNet.Models.CII;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Validation.BusinessRules.Hybrid;
 using Shouldly;
@@ -15,7 +14,7 @@ public class BrHybrid15Test
     {
         XmpMetadata xmp = FakeData.XmpMetadata;
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
+        cii.ExchangedDocumentContext!.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
         xmp.FacturX!.ConformanceLevel = XmpFacturXConformanceLevel.Extended;
 
         BrHybrid15 rule = new();
@@ -49,7 +48,7 @@ public class BrHybrid15Test
     {
         XmpMetadata xmp = FakeData.XmpMetadata;
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
+        cii.ExchangedDocumentContext!.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
         xmp.FacturX!.ConformanceLevel = null;
 
         BrHybrid15 rule = new();
@@ -75,7 +74,7 @@ public class BrHybrid15Test
     {
         XmpMetadata xmp = FakeData.XmpMetadata;
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
+        cii.ExchangedDocumentContext!.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
         xmp.FacturX!.ConformanceLevel = XmpFacturXConformanceLevel.Basic;
 
         BrHybrid15 rule = new();

@@ -12,7 +12,7 @@ public class Br15InvoiceShallHaveAmountDueForPaymentTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement!.SpecifiedTradeSettlementHeaderMonetarySummation.DuePayableAmount = 100;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement!.SpecifiedTradeSettlementHeaderMonetarySummation!.DuePayableAmount = 100;
 
         Br15InvoiceShallHaveAmountDueForPayment rule = new();
         bool result = rule.Check(cii);
@@ -33,7 +33,7 @@ public class Br15InvoiceShallHaveAmountDueForPaymentTest
     public void ShouldNotValidate_WhenApplicableHeaderTradeSettlementIsNull()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement = null;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement = null;
 
         Br15InvoiceShallHaveAmountDueForPayment rule = new();
         bool result = rule.Check(null);
@@ -45,7 +45,7 @@ public class Br15InvoiceShallHaveAmountDueForPaymentTest
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement!.SpecifiedTradeSettlementHeaderMonetarySummation.DuePayableAmount = 0;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement!.SpecifiedTradeSettlementHeaderMonetarySummation!.DuePayableAmount = 0;
 
         Br15InvoiceShallHaveAmountDueForPayment rule = new();
         bool result = rule.Check(cii);

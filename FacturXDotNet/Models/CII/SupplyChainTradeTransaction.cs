@@ -6,7 +6,7 @@
 /// <ID>BG-25-00</ID>
 /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction</CiiXPath>
 /// <Profile>MINIMUM</Profile>
-public sealed class SupplyChainTradeTransaction
+public class SupplyChainTradeTransaction
 {
     /// <inheritdoc cref="CII.ApplicableHeaderTradeAgreement" />
     public ApplicableHeaderTradeAgreement? ApplicableHeaderTradeAgreement { get; set; }
