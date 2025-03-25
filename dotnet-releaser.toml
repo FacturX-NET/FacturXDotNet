@@ -43,10 +43,7 @@ title = '^ci:'
 
 [[changelog.autolabeler]]
 label = "documentation"
-title = [
-    '^doc:',
-    '^docs:',
-]
+title = '^docs:'
 
 [[changelog.autolabeler]]
 label = "tests"
