@@ -42,6 +42,7 @@ jobs:
         with:
           files: |
             TestResults/**/*.xml
+            !TestResults/**/*.cobertura.xml
             TestResults/**/*.trx
             TestResults/**/*.json
 
