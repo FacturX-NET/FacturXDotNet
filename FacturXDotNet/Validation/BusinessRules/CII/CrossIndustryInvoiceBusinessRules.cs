@@ -1,4 +1,7 @@
-﻿using FacturXDotNet.Validation.BusinessRules.CII.VatRelated.StandardAndReducedRate;
+﻿using FacturXDotNet.Validation.BusinessRules.CII.Br;
+using FacturXDotNet.Validation.BusinessRules.CII.BrCo;
+using FacturXDotNet.Validation.BusinessRules.CII.BrDec;
+using FacturXDotNet.Validation.BusinessRules.CII.BrS;
 
 namespace FacturXDotNet.Validation.BusinessRules.CII;
 

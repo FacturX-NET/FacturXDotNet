@@ -1,6 +1,6 @@
 ﻿using FacturXDotNet.Models;
 
-namespace FacturXDotNet.Validation.BusinessRules.CII.VatRelated.StandardAndReducedRate;
+namespace FacturXDotNet.Validation.BusinessRules.CII.BrS;
 
 record BrS01() : CrossIndustryInvoiceBusinessRule(
     "BR-S-01",

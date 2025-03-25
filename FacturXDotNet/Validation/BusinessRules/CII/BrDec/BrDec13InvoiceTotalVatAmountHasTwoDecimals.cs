@@ -1,7 +1,7 @@
 ﻿using FacturXDotNet.Models;
 using FacturXDotNet.Validation.Utils;
 
-namespace FacturXDotNet.Validation.BusinessRules.CII;
+namespace FacturXDotNet.Validation.BusinessRules.CII.BrDec;
 
 record BrDec13InvoiceTotalVatAmountHasTwoDecimals() : CrossIndustryInvoiceBusinessRule(
     "BR-DEC-13",

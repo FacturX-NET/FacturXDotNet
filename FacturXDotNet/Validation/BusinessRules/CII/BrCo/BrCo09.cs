@@ -1,7 +1,7 @@
 ﻿using FacturXDotNet.Models;
 using FacturXDotNet.Validation.Utils;
 
-namespace FacturXDotNet.Validation.BusinessRules.CII;
+namespace FacturXDotNet.Validation.BusinessRules.CII.BrCo;
 
 record BrCo09() : CrossIndustryInvoiceBusinessRule(
     "BR-CO-09",
