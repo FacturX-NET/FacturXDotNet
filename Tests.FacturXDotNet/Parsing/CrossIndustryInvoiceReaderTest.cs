@@ -2,6 +2,7 @@
 using FacturXDotNet;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Parsing.CII;
+using FacturXDotNet.Parsing.CII.Exceptions;
 using Shouldly;
 
 namespace Tests.FacturXDotNet.Parsing;
@@ -141,5 +142,38 @@ public class CrossIndustryInvoiceReaderTest
                 }
             }
         );
+    }
+
+    [TestMethod]
+    public async Task ShouldFailToReadInvalidCrossIndustryInvoiceXml()
+    {
+        const string invalidContent = "not a CII XML";
+        await using MemoryStream fileStream = new(Encoding.UTF8.GetBytes(invalidContent));
+
+        CrossIndustryInvoiceReader reader = new();
+        Action action = () => reader.Read(fileStream);
+
+        action.ShouldThrow<CrossIndustryInvoiceReaderException>();
+    }
+
+    [TestMethod]
+    public async Task ShouldFailToValidateEmptyCrossIndustryInvoiceXml()
+    {
+        const string invalidContent = """
+                                      <?xml version='1.0' encoding='UTF-8'?>
+                                      <rsm:CrossIndustryInvoice 
+                                      xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+                                      xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+                                      xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+                                      xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+                                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                                      </rsm:CrossIndustryInvoice> 
+                                      """;
+        await using MemoryStream fileStream = new(Encoding.UTF8.GetBytes(invalidContent));
+
+        CrossIndustryInvoiceReader reader = new();
+        Action action = () => reader.Read(fileStream);
+
+        action.ShouldThrow<CrossIndustryInvoiceReaderException>();
     }
 }
