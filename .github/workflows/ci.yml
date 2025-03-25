@@ -78,7 +78,7 @@ jobs:
           name: Coverage
           conclusion: success
           output: |
-            { "title": "Coverage", "summary": "Code coverage report" }
+            { "summary": "Code coverage report" }
           output_text_description_file: code-coverage-results.md
 
       - name: Add Coverage as PR Comment
