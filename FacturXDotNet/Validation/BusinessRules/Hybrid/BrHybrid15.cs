@@ -13,5 +13,7 @@ public record BrHybrid15() : HybridBusinessRule(
 {
     /// <inheritdoc />
     public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) =>
-        xmp?.FacturX != null && cii?.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfile() == xmp.FacturX.ConformanceLevel?.ToFacturXProfile();
+        cii != null
+        && xmp?.FacturX != null
+        && cii?.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfile() == xmp.FacturX.ConformanceLevel?.ToFacturXProfile();
 }

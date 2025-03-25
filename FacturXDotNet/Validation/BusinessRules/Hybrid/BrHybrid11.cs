@@ -11,6 +11,6 @@ public record BrHybrid11() : HybridBusinessRule(
 {
     /// <inheritdoc />
     public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) =>
-        // At this point this is necessarily true because we must have found it in order to create the FacturX instance. 
+        // TODO: extract the relationship between the embedded document and the PDF file
         true;
 }

@@ -1,0 +1,43 @@
+﻿using FacturXDotNet;
+using FacturXDotNet.Validation.BusinessRules.Hybrid;
+using Shouldly;
+using Tests.FacturXDotNet.TestTools;
+
+namespace Tests.FacturXDotNet.Validation.Hybrid;
+
+[TestClass]
+public class BrHybrid02Test
+{
+    [TestMethod]
+    public void ShouldValidate_WhenValueIsValid()
+    {
+        XmpMetadata xmp = FakeData.XmpMetadata;
+        xmp.PdfAIdentification!.Part = 3;
+
+        BrHybrid02 rule = new();
+        bool result = rule.Check(xmp, null, null);
+
+        result.ShouldBeTrue();
+    }
+
+    [TestMethod]
+    public void ShouldNotValidate_WhenValueIsInvalid()
+    {
+        XmpMetadata xmp = FakeData.XmpMetadata;
+        xmp.PdfAIdentification!.Part = 2;
+
+        BrHybrid02 rule = new();
+        bool result = rule.Check(xmp, null, null);
+
+        result.ShouldBeFalse();
+    }
+
+    [TestMethod]
+    public void ShouldNotValidate_WhenValueIsNull()
+    {
+        BrHybrid02 rule = new();
+        bool result = rule.Check(null, null, null);
+
+        result.ShouldBeFalse();
+    }
+}
