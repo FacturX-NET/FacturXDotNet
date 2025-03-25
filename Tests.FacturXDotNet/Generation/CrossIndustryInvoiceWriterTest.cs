@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using System.Xml;
+using System.Text.RegularExpressions;
 using FacturXDotNet;
 using FacturXDotNet.Generation.CII;
 using FacturXDotNet.Models.CII;
@@ -52,7 +52,7 @@ public class CrossIndustryInvoiceWriterTest
                     {
                         Name = "BUYER_NAME", SpecifiedLegalOrganization = new BuyerTradePartySpecifiedLegalOrganization
                         {
-                            Id = "SELLER_LEGAL_ID", IdSchemeId = "4321"
+                            Id = "BUYER_LEGAL_ID", IdSchemeId = "4321"
                         }
                     },
                     BuyerOrderReferencedDocument = new BuyerOrderReferencedDocument
@@ -110,7 +110,7 @@ public class CrossIndustryInvoiceWriterTest
                                                    <ram:SellerTradeParty>
                                                         <ram:Name>SELLER_NAME</ram:Name>
                                                         <ram:SpecifiedLegalOrganization>
-                                                             <ram:ID schemeID="0002">SELLER_LEGAL_ID</ram:ID>
+                                                             <ram:ID schemeID="1234">SELLER_LEGAL_ID</ram:ID>
                                                         </ram:SpecifiedLegalOrganization>
                                                         <ram:PostalTradeAddress>
                                                              <ram:CountryID>SELLER_COUNTRY</ram:CountryID>
@@ -122,7 +122,7 @@ public class CrossIndustryInvoiceWriterTest
                                                    <ram:BuyerTradeParty>
                                                         <ram:Name>BUYER_NAME</ram:Name>
                                                         <ram:SpecifiedLegalOrganization>
-                                                             <ram:ID schemeID="0002">BUYER_LEGAL_ID</ram:ID>
+                                                             <ram:ID schemeID="4321">BUYER_LEGAL_ID</ram:ID>
                                                         </ram:SpecifiedLegalOrganization>
                                                    </ram:BuyerTradeParty>
                                                    <ram:BuyerOrderReferencedDocument>
@@ -144,17 +144,23 @@ public class CrossIndustryInvoiceWriterTest
                                     """;
         await using MemoryStream expectedFileStream = new(Encoding.UTF8.GetBytes(expectedFile));
 
-        CompareXmlFiles(resultStream, expectedFileStream);
+        CompareXmlFiles(resultStream, expectedFile);
     }
 
-    static void CompareXmlFiles(Stream fileStream, Stream expectedFileStream)
+    static void CompareXmlFiles(Stream fileStream, string expectedFile)
     {
-        XmlDocument fileDocument = new();
-        fileDocument.Load(fileStream);
+        using StreamReader fileStreamReader = new(fileStream);
+        string file = fileStreamReader.ReadToEnd();
 
-        XmlDocument expectedFileDocument = new();
-        expectedFileDocument.Load(expectedFileStream);
+        string fileSanitized = Sanitize(file);
+        string expectedFileSanitized = Sanitize(expectedFile);
 
-        fileDocument.ShouldBeEquivalentTo(expectedFileDocument);
+        fileSanitized.ShouldBe(expectedFileSanitized);
+    }
+
+    static string Sanitize(string file)
+    {
+        Regex regex = new("\\s");
+        return regex.Replace(file, string.Empty).Replace("'", "\"").ToLowerInvariant();
     }
 }

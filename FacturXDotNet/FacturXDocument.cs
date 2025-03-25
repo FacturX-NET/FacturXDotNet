@@ -61,24 +61,8 @@ public partial class FacturXDocument
         }
 
         await using Stream _ = xmpStream;
-
-        // TODO: avoid these two extra copies, it is only required because TurboXML doesn't support the <?xpacket...?> processing instructions
-        // an issue has been opened to address this: https://github.com/xoofx/TurboXml/issues/6
-        // I need to fix this in the library, but it will take some time
-
-        using StreamReader reader = new(xmpStream);
-        string content = await reader.ReadToEndAsync(cancellationToken);
-        string transformedContent = PacketInstructions().Replace(content, string.Empty);
-
-        await using MemoryStream transformedStream = new(transformedContent.Length + 54);
-        await using StreamWriter writer = new(transformedStream);
-        await writer.WriteAsync("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
-        await writer.WriteAsync(transformedContent);
-        await writer.FlushAsync(cancellationToken);
-        transformedStream.Seek(0, SeekOrigin.Begin);
-
         XmpMetadataReader xmpReader = new(xmpParserOptions);
-        return xmpReader.Read(transformedStream);
+        return xmpReader.Read(xmpStream);
     }
 
     /// <summary>
