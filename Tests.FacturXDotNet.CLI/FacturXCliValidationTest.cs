@@ -9,9 +9,22 @@ public class FacturXCliValidationTest
     [TestMethod]
     public async Task ShouldValidateFacturX()
     {
-        const string facturXPath = "TestFiles/facturx.pdf";
-        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["validate", facturXPath]);
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["validate", "TestFiles/facturx.pdf"]);
 
         result.ShouldBe(0);
+    }
+
+    [TestMethod]
+    public async Task ShouldNotValidateFacturX_WithoutCii()
+    {
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["validate", "TestFiles/facturx_with_cii_named_xrechnung.pdf"]);
+        result.ShouldBe(1);
+    }
+
+    [TestMethod]
+    public async Task ShouldNotValidateFacturX_WithoutXmp()
+    {
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["validate", "TestFiles/facturx_without_xmp.pdf"]);
+        result.ShouldBe(1);
     }
 }
