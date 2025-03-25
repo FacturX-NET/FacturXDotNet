@@ -3,7 +3,7 @@ using FacturXDotNet.Models;
 using FacturXDotNet.Validation;
 using Shouldly;
 
-namespace Tests.FacturXDotNet;
+namespace Tests.FacturXDotNet.Validation.Integration;
 
 [TestClass]
 public class ParseAndValidateIntegrationTests

@@ -22,29 +22,29 @@ public class BrCo26Test
     }
 
     [TestMethod]
-    public void ShouldNotValidate_WhenSpecifiedLegalOrganizationIsNull()
-    {
-        CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization = null;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration!.Id = "SELLER_VAT";
-
-        BrCo26 rule = new();
-        bool result = rule.Check(null);
-
-        result.ShouldBeFalse();
-    }
-
-    [TestMethod]
-    public void ShouldNotValidate_WhenSpecifiedTaxRegistrationIsNull()
+    public void ShouldValidate_WhenOnlySpecifiedLegalOrganization()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
         cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization!.Id = "SELLER_ID";
         cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration = null;
 
         BrCo26 rule = new();
-        bool result = rule.Check(null);
+        bool result = rule.Check(cii);
 
-        result.ShouldBeFalse();
+        result.ShouldBeTrue();
+    }
+
+    [TestMethod]
+    public void ShouldValidate_WhenOnlySpecifiedTaxRegistration()
+    {
+        CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
+        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedLegalOrganization = null;
+        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration!.Id = "SELLER_VAT";
+
+        BrCo26 rule = new();
+        bool result = rule.Check(cii);
+
+        result.ShouldBeTrue();
     }
 
     [TestMethod]
