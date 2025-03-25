@@ -43,7 +43,7 @@ namespace Benchmark
             string sourceFilePath = GetSourceFilePath();
             await using FileStream file = File.OpenRead(sourceFilePath);
 
-            FacturXDocument document = await FacturXDocument.FromFileAsync(GetSourceFilePath());
+            FacturXDocument document = await FacturXDocument.LoadFromFileAsync(GetSourceFilePath());
             _ = document.GetCrossIndustryInvoiceAttachmentAsync();
         }
 
@@ -53,7 +53,7 @@ namespace Benchmark
             string sourceFilePath = GetSourceFilePath();
             await using FileStream file = File.OpenRead(sourceFilePath);
 
-            FacturXDocument document = await FacturXDocument.FromFileAsync(GetSourceFilePath());
+            FacturXDocument document = await FacturXDocument.LoadFromFileAsync(GetSourceFilePath());
             FacturXValidator validator = new();
             _ = await validator.IsValidAsync(document);
         }

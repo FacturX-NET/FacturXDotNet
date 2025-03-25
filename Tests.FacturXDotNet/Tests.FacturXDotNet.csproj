@@ -184,6 +184,9 @@
         <None Update="TestFiles\FacturX\4.EXTENDED\Facture_UC1_2023025_F-LE_FOURNISSEUR-POUR-L'ACHETEUR_EXTENDED.pdf">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="TestFiles\blank.pdf">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>

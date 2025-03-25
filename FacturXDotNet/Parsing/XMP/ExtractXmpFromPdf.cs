@@ -3,12 +3,12 @@ using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 using PdfSharp.Pdf.Filters;
 
-namespace FacturXDotNet.Parsing;
+namespace FacturXDotNet.Parsing.XMP;
 
 /// <summary>
 ///     Extracts the XMP metadata from a Factur-X invoice.
 /// </summary>
-class ExtractXmpFromFacturX
+class ExtractXmpFromPdf
 {
     /// <summary>
     ///     Extracts the XMP metadata from a Factur-X PDF document.
