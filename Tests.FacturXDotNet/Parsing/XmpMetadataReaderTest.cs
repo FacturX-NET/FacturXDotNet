@@ -2,6 +2,7 @@
 using FacturXDotNet;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.XMP;
+using FacturXDotNet.Parsing.XMP.Exceptions;
 using Shouldly;
 
 namespace Tests.FacturXDotNet.Parsing;
@@ -9,6 +10,21 @@ namespace Tests.FacturXDotNet.Parsing;
 [TestClass]
 public class XmpMetadataReaderTest
 {
+  [TestMethod]
+  public async Task ShouldReadEmptyXmpData()
+  {
+    const string invalidContent = """
+                                  <?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
+                                  <?xpacket end="w"?>
+                                  """;
+    await using MemoryStream fileStream = new(Encoding.UTF8.GetBytes(invalidContent));
+
+    XmpMetadataReader reader = new();
+    XmpMetadata result = reader.Read(fileStream);
+
+    result.ShouldBeEquivalentTo(new XmpMetadata());
+  }
+
     [TestMethod]
     public async Task ShouldParseXmpMetadata()
     {
@@ -422,5 +438,17 @@ public class XmpMetadataReaderTest
                 }
             }
         );
+    }
+
+    [TestMethod]
+    public async Task ShouldFailToReadInvalidCrossIndustryInvoiceXml()
+    {
+      const string invalidContent = "not an XMP";
+      await using MemoryStream fileStream = new(Encoding.UTF8.GetBytes(invalidContent));
+
+      XmpMetadataReader reader = new();
+      Action action = () => reader.Read(fileStream);
+
+      action.ShouldThrow<XmpMetadataReaderException>();
     }
 }
