@@ -1,6 +1,5 @@
 ﻿using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Filters;
 
 namespace FacturXDotNet.Utils;
 
@@ -73,17 +72,8 @@ static class PdfSharpAttachmentUtils
                     break;
                 }
 
-                byte[] bytes;
-                if (pdfStream.TryUnfilter())
-                {
-                    bytes = pdfStream.Value;
-                }
-                else
-                {
-                    FlateDecode flate = new();
-                    bytes = flate.Decode(pdfStream.Value, new PdfDictionary());
-                }
-
+                pdfStream.TryUncompress();
+                byte[] bytes = pdfStream.Value;
                 return new MemoryStream(bytes);
             }
         }
