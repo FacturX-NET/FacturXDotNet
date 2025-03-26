@@ -11,7 +11,6 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="MSTest.TestAdapter" Version="3.1.1"/>
         <PackageReference Include="MSTest.TestFramework" Version="3.1.1"/>
-        <PackageReference Include="Shouldly" Version="4.3.0"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -32,6 +31,12 @@
 
     <ItemGroup>
         <ProjectReference Include="..\FacturXDotNet.CLI\FacturXDotNet.CLI.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="FluentAssertions">
+        <HintPath>C:\Users\lahki\.nuget\packages\fluentassertions\7.2.0\lib\net6.0\FluentAssertions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

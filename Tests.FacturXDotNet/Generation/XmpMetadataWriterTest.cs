@@ -1,9 +1,8 @@
 ﻿using System.Text;
 using System.Xml;
-using FacturXDotNet;
 using FacturXDotNet.Generation.XMP;
 using FacturXDotNet.Models.XMP;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Generation;
 
@@ -361,6 +360,6 @@ public class XmpMetadataWriterTest
         XmlDocument expectedFileDocument = new();
         expectedFileDocument.Load(expectedFileStream);
 
-        fileDocument.ShouldBeEquivalentTo(expectedFileDocument);
+        fileDocument.Should().BeEquivalentTo(expectedFileDocument);
     }
 }

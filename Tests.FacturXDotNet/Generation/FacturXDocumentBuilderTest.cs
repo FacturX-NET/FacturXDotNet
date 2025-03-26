@@ -1,6 +1,6 @@
 ﻿using FacturXDotNet;
 using FacturXDotNet.Generation.PDF;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Generation;
 
@@ -18,11 +18,11 @@ public class FacturXDocumentBuilderTest
         FacturXDocument newFacturXDocument = await FacturXDocument.Create().WithBasePdf(basePdf).WithCrossIndustryInvoice(ciiContentStream).BuildAsync();
         CrossIndustryInvoiceAttachment? ciiAttachment = await newFacturXDocument.GetCrossIndustryInvoiceAttachmentAsync();
 
-        ciiAttachment.ShouldNotBeNull();
+        ciiAttachment.Should().NotBeNull();
 
         ReadOnlyMemory<byte> newDocumentCiiContent = await ciiAttachment.ReadAsync();
 
-        newDocumentCiiContent.ToArray().ShouldBeEquivalentTo(ciiContent.ToArray());
+        newDocumentCiiContent.ToArray().Should().BeEquivalentTo(ciiContent.ToArray());
     }
 
     [TestMethod]
@@ -38,7 +38,7 @@ public class FacturXDocumentBuilderTest
         byte[] newDocumentXmpContent = new byte[xmpStream.Length];
         await xmpStream.ReadExactlyAsync(newDocumentXmpContent);
 
-        newDocumentXmpContent.ToArray().ShouldBeEquivalentTo(xmpContent.ToArray());
+        newDocumentXmpContent.ToArray().Should().BeEquivalentTo(xmpContent.ToArray());
     }
 
     [TestMethod]
@@ -54,10 +54,10 @@ public class FacturXDocumentBuilderTest
         List<FacturXDocumentAttachment> newDocumentAttachments = await newFacturXDocument.GetAttachmentsAsync().ToListAsync();
         FacturXDocumentAttachment? newDocumentAttachment = newDocumentAttachments.SingleOrDefault(a => a.Name == attachmentName);
 
-        newDocumentAttachment.ShouldNotBeNull();
+        newDocumentAttachment.Should().NotBeNull();
 
         ReadOnlyMemory<byte> newDocumentAttachmentContent = await newDocumentAttachment.ReadAsync();
 
-        newDocumentAttachmentContent.ToArray().ShouldBeEquivalentTo(xmpContent.ToArray());
+        newDocumentAttachmentContent.ToArray().Should().BeEquivalentTo(xmpContent.ToArray());
     }
 }

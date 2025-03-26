@@ -1,6 +1,6 @@
 ﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.BusinessRules.CII.BrCo;
-using Shouldly;
+using FluentAssertions;
 using Tests.FacturXDotNet.TestTools;
 
 namespace Tests.FacturXDotNet.Validation.CII.BrCo;
@@ -18,7 +18,7 @@ public class BrCo26Test
         BrCo26 rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -31,7 +31,7 @@ public class BrCo26Test
         BrCo26 rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -44,7 +44,7 @@ public class BrCo26Test
         BrCo26 rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -53,7 +53,7 @@ public class BrCo26Test
         BrCo26 rule = new();
         bool result = rule.Check(null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
@@ -66,6 +66,6 @@ public class BrCo26Test
         BrCo26 rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 }

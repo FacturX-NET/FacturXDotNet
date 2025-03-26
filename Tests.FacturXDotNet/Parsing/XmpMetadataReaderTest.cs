@@ -1,9 +1,8 @@
 ﻿using System.Text;
-using FacturXDotNet;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.XMP;
 using FacturXDotNet.Parsing.XMP.Exceptions;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Parsing;
 
@@ -22,7 +21,7 @@ public class XmpMetadataReaderTest
     XmpMetadataReader reader = new();
     XmpMetadata result = reader.Read(fileStream);
 
-    result.ShouldBeEquivalentTo(new XmpMetadata());
+    result.Should().BeEquivalentTo(new XmpMetadata());
   }
 
     [TestMethod]
@@ -264,180 +263,181 @@ public class XmpMetadataReaderTest
         XmpMetadataReader reader = new();
         XmpMetadata result = reader.Read(fileStream);
 
-        result.ShouldBeEquivalentTo(
+        result.Should()
+          .BeEquivalentTo(
             new XmpMetadata
             {
-                PdfAIdentification = new XmpPdfAIdentificationMetadata
-                {
-                    Amendment = "AMEND",
-                    Conformance = XmpPdfAConformanceLevel.B,
-                    Part = 123
-                },
-                Basic = new XmpBasicMetadata
-                {
-                    Identifier = ["IDENTIFIER1", "IDENTIFIER2"],
-                    CreateDate = new DateTime(1, 2, 3),
-                    CreatorTool = "CREATOR_TOOL",
-                    Label = "LABEL",
-                    MetadataDate = new DateTime(2, 3, 4),
-                    ModifyDate = new DateTime(3, 4, 5),
-                    Rating = 4.2,
-                    BaseUrl = "BASE_URL",
-                    Nickname = "NICKNAME",
-                    Thumbnails = [new XmpThumbnail { Width = 123, Height = 456, Format = XmpThumbnailFormat.Jpeg, Image = "THUMBNAIL_IMAGE" }]
-                },
-                Pdf = new XmpPdfMetadata
-                {
-                    Keywords = "PDF,KEYWORDS",
-                    PdfVersion = "PDF_VERSION",
-                    Producer = "PDF_PRODUCER",
-                    Trapped = true
-                },
-                DublinCore = new XmpDublinCoreMetadata
-                {
-                    Contributor = ["DC_CONTRIBUTOR1", "DC_CONTRIBUTOR2"],
-                    Coverage = "DC_COVERAGE",
-                    Creator = ["DC_CREATOR1", "DC_CREATOR2"],
-                    Date =
+              PdfAIdentification = new XmpPdfAIdentificationMetadata
+              {
+                Amendment = "AMEND",
+                Conformance = XmpPdfAConformanceLevel.B,
+                Part = 123
+              },
+              Basic = new XmpBasicMetadata
+              {
+                Identifier = ["IDENTIFIER1", "IDENTIFIER2"],
+                CreateDate = new DateTime(1, 2, 3),
+                CreatorTool = "CREATOR_TOOL",
+                Label = "LABEL",
+                MetadataDate = new DateTime(2, 3, 4),
+                ModifyDate = new DateTime(3, 4, 5),
+                Rating = 4.2,
+                BaseUrl = "BASE_URL",
+                Nickname = "NICKNAME",
+                Thumbnails = [new XmpThumbnail { Width = 123, Height = 456, Format = XmpThumbnailFormat.Jpeg, Image = "THUMBNAIL_IMAGE" }]
+              },
+              Pdf = new XmpPdfMetadata
+              {
+                Keywords = "PDF,KEYWORDS",
+                PdfVersion = "PDF_VERSION",
+                Producer = "PDF_PRODUCER",
+                Trapped = true
+              },
+              DublinCore = new XmpDublinCoreMetadata
+              {
+                Contributor = ["DC_CONTRIBUTOR1", "DC_CONTRIBUTOR2"],
+                Coverage = "DC_COVERAGE",
+                Creator = ["DC_CREATOR1", "DC_CREATOR2"],
+                Date =
+                [
+                  new DateTimeOffset(2, 3, 4, 0, 0, 0, TimeSpan.Zero),
+                  new DateTimeOffset(3, 4, 5, 6, 7, 8, 9, 10, TimeSpan.Zero)
+                ],
+                Description = ["DC_DESCRIPTION1", "DC_DESCRIPTION2"],
+                Format = "DC_FORMAT",
+                Identifier = "DC_IDENTIFIER",
+                Language = ["DC_LANGUAGE1", "DC_LANGUAGE2"],
+                Publisher = ["DC_PUBLISHER1", "DC_PUBLISHER2"],
+                Relation = ["DC_RELATION1", "DC_RELATION2"],
+                Rights = ["DC_RIGHTS1", "DC_RIGHTS2"],
+                Source = "DC_SOURCE",
+                Subject = ["DC_SUBJECT1", "DC_SUBJECT2"],
+                Title = ["DC_TITLE1", "DC_TITLE2"],
+                Type = ["DC_TYPE1", "DC_TYPE2"]
+              },
+              PdfAExtensions = new XmpPdfAExtensionsMetadata
+              {
+                Schemas =
+                [
+                  new XmpPdfASchemaMetadata
+                  {
+                    NamespaceUri = "SCHEMA1_NAMESPACE",
+                    Prefix = "SCHEMA1_PREFIX",
+                    Property =
                     [
-                      new DateTimeOffset(2, 3, 4, 0, 0, 0, TimeSpan.Zero),
-                      new DateTimeOffset(3, 4, 5, 6, 7, 8, 9, 10, TimeSpan.Zero)
+                      new XmpPdfAPropertyMetadata
+                      {
+                        Category = XmpPdfAPropertyCategory.External,
+                        Description = "SCHEMA1_PROPERTY1_DESCRIPTION",
+                        Name = "SCHEMA1_PROPERTY1_NAME",
+                        ValueType = "SCHEMA1_PROPERTY1_VALUE_TYPE"
+                      },
+                      new XmpPdfAPropertyMetadata
+                      {
+                        Category = XmpPdfAPropertyCategory.Internal,
+                        Description = "SCHEMA1_PROPERTY2_DESCRIPTION",
+                        Name = "SCHEMA1_PROPERTY2_NAME",
+                        ValueType = "SCHEMA1_PROPERTY2_VALUE_TYPE"
+                      }
                     ],
-                    Description = ["DC_DESCRIPTION1", "DC_DESCRIPTION2"],
-                    Format = "DC_FORMAT",
-                    Identifier = "DC_IDENTIFIER",
-                    Language = ["DC_LANGUAGE1", "DC_LANGUAGE2"],
-                    Publisher = ["DC_PUBLISHER1", "DC_PUBLISHER2"],
-                    Relation = ["DC_RELATION1", "DC_RELATION2"],
-                    Rights = ["DC_RIGHTS1", "DC_RIGHTS2"],
-                    Source = "DC_SOURCE",
-                    Subject = ["DC_SUBJECT1", "DC_SUBJECT2"],
-                    Title = ["DC_TITLE1", "DC_TITLE2"],
-                    Type = ["DC_TYPE1", "DC_TYPE2"]
-                },
-                PdfAExtensions = new XmpPdfAExtensionsMetadata
-                {
-                    Schemas =
+                    Schema = "SCHEMA1_SCHEMA",
+                    ValueType =
                     [
-                        new XmpPdfASchemaMetadata
-                        {
-                            NamespaceUri = "SCHEMA1_NAMESPACE",
-                            Prefix = "SCHEMA1_PREFIX",
-                            Property =
-                            [
-                                new XmpPdfAPropertyMetadata
-                                {
-                                    Category = XmpPdfAPropertyCategory.External,
-                                    Description = "SCHEMA1_PROPERTY1_DESCRIPTION",
-                                    Name = "SCHEMA1_PROPERTY1_NAME",
-                                    ValueType = "SCHEMA1_PROPERTY1_VALUE_TYPE"
-                                },
-                                new XmpPdfAPropertyMetadata
-                                {
-                                    Category = XmpPdfAPropertyCategory.Internal,
-                                    Description = "SCHEMA1_PROPERTY2_DESCRIPTION",
-                                    Name = "SCHEMA1_PROPERTY2_NAME",
-                                    ValueType = "SCHEMA1_PROPERTY2_VALUE_TYPE"
-                                }
-                            ],
-                            Schema = "SCHEMA1_SCHEMA",
-                            ValueType =
-                            [
-                                new XmpPdfATypeMetadata
-                                {
-                                    Description = "SCHEMA1_VALUE_TYPE1_DESCRIPTION",
-                                    Field =
-                                    [
-                                        new XmpPdfAFieldMetadata
-                                        {
-                                            Description = "SCHEMA1_VALUE_TYPE1_FIELD1_DESCRIPTION",
-                                            Name = "SCHEMA1_VALUE_TYPE1_FIELD1_NAME",
-                                            ValueType = "SCHEMA1_VALUE_TYPE1_FIELD1_VALUE_TYPE"
-                                        },
-                                        new XmpPdfAFieldMetadata
-                                        {
-                                            Description = "SCHEMA1_VALUE_TYPE1_FIELD2_DESCRIPTION",
-                                            Name = "SCHEMA1_VALUE_TYPE1_FIELD2_NAME",
-                                            ValueType = "SCHEMA1_VALUE_TYPE1_FIELD2_VALUE_TYPE"
-                                        }
-                                    ],
-                                    NamespaceUri = "SCHEMA1_VALUE_TYPE1_NAMESPACE",
-                                    Prefix = "SCHEMA1_VALUE_TYPE1_PREFIX",
-                                    Type = "SCHEMA1_VALUE_TYPE1_TYPE"
-                                },
-                                new XmpPdfATypeMetadata
-                                {
-                                    Description = "SCHEMA1_VALUE_TYPE2_DESCRIPTION",
-                                    Field =
-                                    [
-                                        new XmpPdfAFieldMetadata
-                                        {
-                                            Description = "SCHEMA1_VALUE_TYPE2_FIELD1_DESCRIPTION",
-                                            Name = "SCHEMA1_VALUE_TYPE2_FIELD1_NAME",
-                                            ValueType = "SCHEMA1_VALUE_TYPE2_FIELD1_VALUE_TYPE"
-                                        },
-                                        new XmpPdfAFieldMetadata
-                                        {
-                                            Description = "SCHEMA1_VALUE_TYPE2_FIELD2_DESCRIPTION",
-                                            Name = "SCHEMA1_VALUE_TYPE2_FIELD2_NAME",
-                                            ValueType = "SCHEMA1_VALUE_TYPE2_FIELD2_VALUE_TYPE"
-                                        }
-                                    ],
-                                    NamespaceUri = "SCHEMA1_VALUE_TYPE2_NAMESPACE",
-                                    Prefix = "SCHEMA1_VALUE_TYPE2_PREFIX",
-                                    Type = "SCHEMA1_VALUE_TYPE2_TYPE"
-                                }
-                            ]
-                        },
-                        new XmpPdfASchemaMetadata
-                        {
-                            NamespaceUri = "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#",
-                            Prefix = "fx",
-                            Property =
-                            [
-                                new XmpPdfAPropertyMetadata
-                                {
-                                    Category = XmpPdfAPropertyCategory.External,
-                                    Description = "The name of the embedded XML document",
-                                    Name = "DocumentFileName",
-                                    ValueType = "Text"
-                                },
-                                new XmpPdfAPropertyMetadata
-                                {
-                                    Category = XmpPdfAPropertyCategory.External,
-                                    Description = "The type of the hybrid document in capital letters, e.g. INVOICE or ORDER",
-                                    Name = "DocumentType",
-                                    ValueType = "Text"
-                                },
-                                new XmpPdfAPropertyMetadata
-                                {
-                                    Category = XmpPdfAPropertyCategory.External,
-                                    Description = "The actual version of the standard applying to the embedded XML document",
-                                    Name = "Version",
-                                    ValueType = "Text"
-                                },
-                                new XmpPdfAPropertyMetadata
-                                {
-                                    Category = XmpPdfAPropertyCategory.External,
-                                    Description = "The conformance level of the embedded XML document",
-                                    Name = "ConformanceLevel",
-                                    ValueType = "Text"
-                                }
-                            ],
-                            Schema = "Factur-X PDFA Extension Schema",
-                            ValueType = []
-                        }
+                      new XmpPdfATypeMetadata
+                      {
+                        Description = "SCHEMA1_VALUE_TYPE1_DESCRIPTION",
+                        Field =
+                        [
+                          new XmpPdfAFieldMetadata
+                          {
+                            Description = "SCHEMA1_VALUE_TYPE1_FIELD1_DESCRIPTION",
+                            Name = "SCHEMA1_VALUE_TYPE1_FIELD1_NAME",
+                            ValueType = "SCHEMA1_VALUE_TYPE1_FIELD1_VALUE_TYPE"
+                          },
+                          new XmpPdfAFieldMetadata
+                          {
+                            Description = "SCHEMA1_VALUE_TYPE1_FIELD2_DESCRIPTION",
+                            Name = "SCHEMA1_VALUE_TYPE1_FIELD2_NAME",
+                            ValueType = "SCHEMA1_VALUE_TYPE1_FIELD2_VALUE_TYPE"
+                          }
+                        ],
+                        NamespaceUri = "SCHEMA1_VALUE_TYPE1_NAMESPACE",
+                        Prefix = "SCHEMA1_VALUE_TYPE1_PREFIX",
+                        Type = "SCHEMA1_VALUE_TYPE1_TYPE"
+                      },
+                      new XmpPdfATypeMetadata
+                      {
+                        Description = "SCHEMA1_VALUE_TYPE2_DESCRIPTION",
+                        Field =
+                        [
+                          new XmpPdfAFieldMetadata
+                          {
+                            Description = "SCHEMA1_VALUE_TYPE2_FIELD1_DESCRIPTION",
+                            Name = "SCHEMA1_VALUE_TYPE2_FIELD1_NAME",
+                            ValueType = "SCHEMA1_VALUE_TYPE2_FIELD1_VALUE_TYPE"
+                          },
+                          new XmpPdfAFieldMetadata
+                          {
+                            Description = "SCHEMA1_VALUE_TYPE2_FIELD2_DESCRIPTION",
+                            Name = "SCHEMA1_VALUE_TYPE2_FIELD2_NAME",
+                            ValueType = "SCHEMA1_VALUE_TYPE2_FIELD2_VALUE_TYPE"
+                          }
+                        ],
+                        NamespaceUri = "SCHEMA1_VALUE_TYPE2_NAMESPACE",
+                        Prefix = "SCHEMA1_VALUE_TYPE2_PREFIX",
+                        Type = "SCHEMA1_VALUE_TYPE2_TYPE"
+                      }
                     ]
-                },
-                FacturX = new XmpFacturXMetadata
-                {
-                    DocumentFileName = "DOC_FILE_NAME",
-                    DocumentType = XmpFacturXDocumentType.Invoice,
-                    Version = "DOC_VERSION",
-                    ConformanceLevel = XmpFacturXConformanceLevel.En16931
-                }
+                  },
+                  new XmpPdfASchemaMetadata
+                  {
+                    NamespaceUri = "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#",
+                    Prefix = "fx",
+                    Property =
+                    [
+                      new XmpPdfAPropertyMetadata
+                      {
+                        Category = XmpPdfAPropertyCategory.External,
+                        Description = "The name of the embedded XML document",
+                        Name = "DocumentFileName",
+                        ValueType = "Text"
+                      },
+                      new XmpPdfAPropertyMetadata
+                      {
+                        Category = XmpPdfAPropertyCategory.External,
+                        Description = "The type of the hybrid document in capital letters, e.g. INVOICE or ORDER",
+                        Name = "DocumentType",
+                        ValueType = "Text"
+                      },
+                      new XmpPdfAPropertyMetadata
+                      {
+                        Category = XmpPdfAPropertyCategory.External,
+                        Description = "The actual version of the standard applying to the embedded XML document",
+                        Name = "Version",
+                        ValueType = "Text"
+                      },
+                      new XmpPdfAPropertyMetadata
+                      {
+                        Category = XmpPdfAPropertyCategory.External,
+                        Description = "The conformance level of the embedded XML document",
+                        Name = "ConformanceLevel",
+                        ValueType = "Text"
+                      }
+                    ],
+                    Schema = "Factur-X PDFA Extension Schema",
+                    ValueType = []
+                  }
+                ]
+              },
+              FacturX = new XmpFacturXMetadata
+              {
+                DocumentFileName = "DOC_FILE_NAME",
+                DocumentType = XmpFacturXDocumentType.Invoice,
+                Version = "DOC_VERSION",
+                ConformanceLevel = XmpFacturXConformanceLevel.En16931
+              }
             }
-        );
+          );
     }
 
     [TestMethod]
@@ -449,6 +449,6 @@ public class XmpMetadataReaderTest
       XmpMetadataReader reader = new();
       Action action = () => reader.Read(fileStream);
 
-      action.ShouldThrow<XmpMetadataReaderException>();
+      action.Should().Throw<XmpMetadataReaderException>();
     }
 }

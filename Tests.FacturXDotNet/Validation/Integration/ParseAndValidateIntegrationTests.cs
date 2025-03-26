@@ -1,7 +1,7 @@
 using FacturXDotNet;
 using FacturXDotNet.Models;
 using FacturXDotNet.Validation;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Validation.Integration;
 
@@ -72,8 +72,8 @@ public class ParseAndValidateIntegrationTests
         FacturXValidator validator = new();
         FacturXValidationResult validationResult = await validator.GetValidationResultAsync(invoice);
 
-        validationResult.Rules.Where(r => r.HasFailed).ShouldBeEmpty();
-        validationResult.ExpectedProfile.ShouldBe(profile);
-        validationResult.ValidProfiles.ShouldBe(profile.AndLower());
+        validationResult.Rules.Where(r => r.HasFailed).Should().BeEmpty();
+        validationResult.ExpectedProfile.Should().Be(profile);
+        validationResult.ValidProfiles.Should().Be(profile.AndLower());
     }
 }
