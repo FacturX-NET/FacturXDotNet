@@ -1,5 +1,4 @@
-﻿using FacturXDotNet;
-using FacturXDotNet.Models.CII;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
 
 namespace Tests.FacturXDotNet.TestTools;
@@ -72,15 +71,15 @@ static class FakeData
             ExchangedDocumentContext = new ExchangedDocumentContext
             {
                 BusinessProcessSpecifiedDocumentContextParameterId = string.Empty,
-                GuidelineSpecifiedDocumentContextParameterId = default
+                GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Basic
 
             },
             ExchangedDocument = new ExchangedDocument
             {
                 Id = string.Empty,
-                TypeCode = default,
-                IssueDateTime = default,
-                IssueDateTimeFormat = default
+                TypeCode = InvoiceTypeCode.CommercialInvoice,
+                IssueDateTime = DateOnly.MinValue,
+                IssueDateTimeFormat = DateOnlyFormat.DateOnly
             },
             SupplyChainTradeTransaction = new SupplyChainTradeTransaction
             {
@@ -107,7 +106,12 @@ static class FakeData
                     },
                     BuyerTradeParty = new BuyerTradeParty
                     {
-                        Name = string.Empty
+                        Name = string.Empty,
+                        SpecifiedLegalOrganization = new BuyerTradePartySpecifiedLegalOrganization
+                        {
+                            Id = string.Empty,
+                            IdSchemeId = string.Empty
+                        }
                     },
                     BuyerOrderReferencedDocument = new BuyerOrderReferencedDocument
                     {
