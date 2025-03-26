@@ -1,8 +1,8 @@
-﻿# FacturX.NET - Models
+﻿# FacturX.NET
 
-The main goal of this library is to provide well-documented data structures to work with Factur-X data, based on the [Factur-X standard](https://fnfe-mpe.org/factur-x/) version 1.0.07.2.
+This library contains a set of tools to work with the Factur-X standard in .NET applications. It provides classes to represent Factur-X data structures, parse Factur-X PDF files, validate Factur-X data against the Factur-X schematron rules, and even generate Factur-X documents from structured data.
 
-The library is distributed as a [nuget package](#) (coming soon).
+It is distributed as a [nuget package](https://www.nuget.org/packages/FacturXDotNet)
 ```
 dotnet add package FacturXDotNet
 ```
@@ -12,15 +12,23 @@ dotnet add package FacturXDotNet
 ```csharp
 await using FileStream myFileStream = File.OpenRead("path/to/my/file");
 
-FacturXParser parser = new();
-XmpMetadata xmp = await parser.ParseXmpMetadataInFacturXPdfAsync(myFileStream);
-CrossIndustryInvoice cii = await parser.ParseCiiXmlInFacturXPdfAsync(myFileStream);
+FacturXDocument document = await FacturXDocument.LoadAsync(myFileStream);
 
-CrossIndustryInvoiceSchematronValidator validator = new();
-FacturXValidationResult validationResult = validator.GetValidationResult(cii);
+// Get the XMP metadata from the PDF document and parse it into a XmpMetadata object
+XmpMetadata xmp = await document.GetXmpMetadataAsync();
 
-Console.WriteLine(validationResult.Success);
-Console.WriteLine(validationResult.ValidProfiles.GetMaxProfile());
+// Get the attachment corresponding to the Cross-Industry Invoice (CII) data
+var ciiAttachment = await document.GetCrossIndustryInvoiceAttachmentAsync();
+
+// Get the content of the attachment and parse it into a CrossIndustryInvoice object
+CrossIndustryInvoice cii = await ciiAttachment.GetCrossIndustryInvoiceAsync();
+
+// Check that the document is valid according to the specifications
+FacturXValidator validator = new();
+FacturXValidationResult validationResult = await validator.GetValidationResultAsync(document);
+
+Console.WriteLine($"Validation has succeeded: {validationResult.Success}");
+Console.WriteLine($"Detected document profile: {validationResult.ValidProfiles.GetMaxProfile()}");
 ```
 
 ## Design Choices
