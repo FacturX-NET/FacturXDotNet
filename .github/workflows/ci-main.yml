@@ -1,9 +1,9 @@
-name: Release
+name: Build & Test (main)
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
   workflow_dispatch:
 
 env:
@@ -11,7 +11,7 @@ env:
 
 jobs:
   dotnet-releaser:
-    name: Build, Test, Pack, Publish, Push
+    name: Build, Test, Cover
     runs-on: ubuntu-latest
     
     permissions:
@@ -37,8 +37,15 @@ jobs:
       - name: Add System.CommandLine daily builds nuget source
         run: dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json --name "System.CommandLine - Daily Builds"
 
-      - name: Build, Tests, Cover, Pack and Publish
+      - name: Build, Tests, Cover
         shell: bash
         run: |
           dotnet tool install --global dotnet-releaser
           dotnet-releaser run --nuget-token "${{ secrets.NUGET_KEY }}" --github-token "${{ secrets.PAT_GITHUB_TOKEN }}" --github-token-gist "${{ secrets.PAT_GITHUB_TOKEN }}" --skip-app-packages-for-build-only dotnet-releaser.toml
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: artifacts-dotnet-releaser
+          if-no-files-found: 'error'
