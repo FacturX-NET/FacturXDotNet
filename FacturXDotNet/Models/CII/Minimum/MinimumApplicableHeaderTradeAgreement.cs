@@ -61,4 +61,12 @@ public class MinimumApplicableHeaderTradeAgreement
     /// </remarks>
     /// <returns>The <see cref="CII.ApplicableHeaderTradeAgreement" /> that this class is a view of.</returns>
     public ApplicableHeaderTradeAgreement ToApplicableHeaderTradeAgreement() => ApplicableHeaderTradeAgreement;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumApplicableHeaderTradeAgreement" /> to a <see cref="CII.ApplicableHeaderTradeAgreement" />.
+    /// </summary>
+    /// <param name="applicableHeaderTradeAgreement">The <see cref="MinimumApplicableHeaderTradeAgreement" /> to convert.</param>
+    /// <returns>The <see cref="CII.ApplicableHeaderTradeAgreement" /> that this class is a view of.</returns>
+    public static implicit operator ApplicableHeaderTradeAgreement(MinimumApplicableHeaderTradeAgreement applicableHeaderTradeAgreement) =>
+        applicableHeaderTradeAgreement.ToApplicableHeaderTradeAgreement();
 }

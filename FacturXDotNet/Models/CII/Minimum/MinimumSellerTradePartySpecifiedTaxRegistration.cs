@@ -27,4 +27,12 @@ public class MinimumSellerTradePartySpecifiedTaxRegistration
     /// </remarks>
     /// <returns>The <see cref="CII.SellerTradePartySpecifiedTaxRegistration" /> that this class is a view of.</returns>
     public SellerTradePartySpecifiedTaxRegistration ToSellerTradePartySpecifiedTaxRegistration() => SpecifiedTaxRegistration;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumSellerTradePartySpecifiedTaxRegistration" /> to a <see cref="CII.SellerTradePartySpecifiedTaxRegistration" />.
+    /// </summary>
+    /// <param name="sellerTradePartySpecifiedTaxRegistration">The <see cref="MinimumSellerTradePartySpecifiedTaxRegistration" /> to convert.</param>
+    /// <returns>The <see cref="CII.SellerTradePartySpecifiedTaxRegistration" /> that this class is a view of.</returns>
+    public static implicit operator SellerTradePartySpecifiedTaxRegistration(MinimumSellerTradePartySpecifiedTaxRegistration sellerTradePartySpecifiedTaxRegistration) =>
+        sellerTradePartySpecifiedTaxRegistration.ToSellerTradePartySpecifiedTaxRegistration();
 }

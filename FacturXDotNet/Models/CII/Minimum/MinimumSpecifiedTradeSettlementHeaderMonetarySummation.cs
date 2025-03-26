@@ -52,4 +52,14 @@ public class MinimumSpecifiedTradeSettlementHeaderMonetarySummation
     /// </remarks>
     /// <returns>The <see cref="CII.SpecifiedTradeSettlementHeaderMonetarySummation" /> that this class is a view of.</returns>
     public SpecifiedTradeSettlementHeaderMonetarySummation ToSpecifiedTradeSettlementHeaderMonetarySummation() => SpecifiedTradeSettlementHeaderMonetarySummation;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumSpecifiedTradeSettlementHeaderMonetarySummation" /> to a <see cref="CII.SpecifiedTradeSettlementHeaderMonetarySummation" />.
+    /// </summary>
+    /// <param name="specifiedTradeSettlementHeaderMonetarySummation">The <see cref="MinimumSpecifiedTradeSettlementHeaderMonetarySummation" /> to convert.</param>
+    /// <returns>The <see cref="CII.SpecifiedTradeSettlementHeaderMonetarySummation" /> that this class is a view of.</returns>
+    public static implicit operator SpecifiedTradeSettlementHeaderMonetarySummation(
+        MinimumSpecifiedTradeSettlementHeaderMonetarySummation specifiedTradeSettlementHeaderMonetarySummation
+    ) =>
+        specifiedTradeSettlementHeaderMonetarySummation.ToSpecifiedTradeSettlementHeaderMonetarySummation();
 }

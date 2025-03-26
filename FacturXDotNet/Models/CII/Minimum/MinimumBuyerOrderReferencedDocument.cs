@@ -22,4 +22,12 @@ public class MinimumBuyerOrderReferencedDocument
     /// </remarks>
     /// <returns>The <see cref="CII.BuyerOrderReferencedDocument" /> that this class is a view of.</returns>
     public BuyerOrderReferencedDocument ToBuyerOrderReferencedDocument() => BuyerOrderReferencedDocument;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumBuyerOrderReferencedDocument" /> to a <see cref="CII.BuyerOrderReferencedDocument" />.
+    /// </summary>
+    /// <param name="buyerOrderReferencedDocument">The <see cref="MinimumBuyerOrderReferencedDocument" /> to convert.</param>
+    /// <returns>The <see cref="CII.BuyerOrderReferencedDocument" /> that this class is a view of.</returns>
+    public static implicit operator BuyerOrderReferencedDocument(MinimumBuyerOrderReferencedDocument buyerOrderReferencedDocument) =>
+        buyerOrderReferencedDocument.ToBuyerOrderReferencedDocument();
 }

@@ -19,4 +19,12 @@ public class MinimumApplicableHeaderTradeDelivery
     /// </remarks>
     /// <returns>The <see cref="CII.ApplicableHeaderTradeDelivery" /> that this class is a view of.</returns>
     public ApplicableHeaderTradeDelivery ToApplicableHeaderTradeDelivery() => ApplicableHeaderTradeDelivery;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumApplicableHeaderTradeDelivery" /> to a <see cref="CII.ApplicableHeaderTradeDelivery" />.
+    /// </summary>
+    /// <param name="applicableHeaderTradeDelivery">The <see cref="MinimumApplicableHeaderTradeDelivery" /> to convert.</param>
+    /// <returns>The <see cref="CII.ApplicableHeaderTradeDelivery" /> that this class is a view of.</returns>
+    public static implicit operator ApplicableHeaderTradeDelivery(MinimumApplicableHeaderTradeDelivery applicableHeaderTradeDelivery) =>
+        applicableHeaderTradeDelivery.ToApplicableHeaderTradeDelivery();
 }

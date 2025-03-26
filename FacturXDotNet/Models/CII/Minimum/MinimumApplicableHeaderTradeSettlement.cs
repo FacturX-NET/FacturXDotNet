@@ -36,4 +36,12 @@ public class MinimumApplicableHeaderTradeSettlement
     /// </remarks>
     /// <returns>The <see cref="CII.ApplicableHeaderTradeSettlement" /> that this class is a view of.</returns>
     public ApplicableHeaderTradeSettlement ToApplicableHeaderTradeSettlement() => ApplicableHeaderTradeSettlement;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumApplicableHeaderTradeSettlement" /> to a <see cref="CII.ApplicableHeaderTradeSettlement" />.
+    /// </summary>
+    /// <param name="applicableHeaderTradeSettlement">The <see cref="MinimumApplicableHeaderTradeSettlement" /> to convert.</param>
+    /// <returns>The <see cref="CII.ApplicableHeaderTradeSettlement" /> that this class is a view of.</returns>
+    public static implicit operator ApplicableHeaderTradeSettlement(MinimumApplicableHeaderTradeSettlement applicableHeaderTradeSettlement) =>
+        applicableHeaderTradeSettlement.ToApplicableHeaderTradeSettlement();
 }

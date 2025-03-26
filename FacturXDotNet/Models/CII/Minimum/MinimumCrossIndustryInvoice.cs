@@ -59,6 +59,13 @@ public class MinimumCrossIndustryInvoice
     /// </remarks>
     /// <returns>The <see cref="CII.CrossIndustryInvoice" /> that this class is a view of.</returns>
     public CrossIndustryInvoice ToCrossIndustryInvoice() => CrossIndustryInvoice;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumCrossIndustryInvoice" /> to a <see cref="CII.CrossIndustryInvoice" />.
+    /// </summary>
+    /// <param name="minimumCrossIndustryInvoice">The <see cref="MinimumCrossIndustryInvoice" /> to convert.</param>
+    /// <returns>The <see cref="CII.CrossIndustryInvoice" /> that this class is a view of.</returns>
+    public static implicit operator CrossIndustryInvoice(MinimumCrossIndustryInvoice minimumCrossIndustryInvoice) => minimumCrossIndustryInvoice.ToCrossIndustryInvoice();
 }
 
 /// <summary>

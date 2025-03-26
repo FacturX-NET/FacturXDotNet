@@ -58,4 +58,12 @@ public class MinimumSupplyChainTradeTransaction
     /// </remarks>
     /// <returns>The <see cref="CII.SupplyChainTradeTransaction" /> that this class is a view of.</returns>
     public SupplyChainTradeTransaction ToSupplyChainTradeTransaction() => SupplyChainTradeTransaction;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumSupplyChainTradeTransaction" /> to a <see cref="CII.SupplyChainTradeTransaction" />.
+    /// </summary>
+    /// <param name="supplyChainTradeTransaction">The <see cref="MinimumSupplyChainTradeTransaction" /> to convert.</param>
+    /// <returns>The <see cref="CII.SupplyChainTradeTransaction" /> that this class is a view of.</returns>
+    public static implicit operator SupplyChainTradeTransaction(MinimumSupplyChainTradeTransaction supplyChainTradeTransaction) =>
+        supplyChainTradeTransaction.ToSupplyChainTradeTransaction();
 }

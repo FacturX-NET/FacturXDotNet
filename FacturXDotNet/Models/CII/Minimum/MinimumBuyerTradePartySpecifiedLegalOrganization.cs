@@ -27,4 +27,12 @@ public class MinimumBuyerTradePartySpecifiedLegalOrganization
     /// </remarks>
     /// <returns>The <see cref="CII.BuyerTradePartySpecifiedLegalOrganization" /> that this class is a view of.</returns>
     public BuyerTradePartySpecifiedLegalOrganization ToBuyerTradePartySpecifiedLegalOrganization() => SpecifiedLegalOrganization;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumBuyerTradePartySpecifiedLegalOrganization" /> to a <see cref="CII.BuyerTradePartySpecifiedLegalOrganization" />.
+    /// </summary>
+    /// <param name="buyerTradePartySpecifiedLegalOrganization">The <see cref="MinimumBuyerTradePartySpecifiedLegalOrganization" /> to convert.</param>
+    /// <returns>The <see cref="CII.BuyerTradePartySpecifiedLegalOrganization" /> that this class is a view of.</returns>
+    public static implicit operator BuyerTradePartySpecifiedLegalOrganization(MinimumBuyerTradePartySpecifiedLegalOrganization buyerTradePartySpecifiedLegalOrganization) =>
+        buyerTradePartySpecifiedLegalOrganization.ToBuyerTradePartySpecifiedLegalOrganization();
 }

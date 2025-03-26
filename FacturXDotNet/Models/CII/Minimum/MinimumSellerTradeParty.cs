@@ -63,4 +63,11 @@ public class MinimumSellerTradeParty
     /// </remarks>
     /// <returns>The <see cref="CII.SellerTradeParty" /> that this class is a view of.</returns>
     public SellerTradeParty ToSellerTradeParty() => SellerTradeParty;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumSellerTradeParty" /> to a <see cref="CII.SellerTradeParty" />.
+    /// </summary>
+    /// <param name="sellerTradeParty">The <see cref="MinimumSellerTradeParty" /> to convert.</param>
+    /// <returns>The <see cref="CII.SellerTradeParty" /> that this class is a view of.</returns>
+    public static implicit operator SellerTradeParty(MinimumSellerTradeParty sellerTradeParty) => sellerTradeParty.ToSellerTradeParty();
 }

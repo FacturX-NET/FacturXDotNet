@@ -22,4 +22,12 @@ public class MinimumSellerTradePartyPostalTradeAddress
     /// </remarks>
     /// <returns>The <see cref="CII.SellerTradePartyPostalTradeAddress" /> that this class is a view of.</returns>
     public SellerTradePartyPostalTradeAddress ToSellerTradePartyPostalTradeAddress() => PostalTradeAddress;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumSellerTradePartyPostalTradeAddress" /> to a <see cref="CII.SellerTradePartyPostalTradeAddress" />.
+    /// </summary>
+    /// <param name="sellerTradePartyPostalTradeAddress">The <see cref="MinimumSellerTradePartyPostalTradeAddress" /> to convert.</param>
+    /// <returns>The <see cref="CII.SellerTradePartyPostalTradeAddress" /> that this class is a view of.</returns>
+    public static implicit operator SellerTradePartyPostalTradeAddress(MinimumSellerTradePartyPostalTradeAddress sellerTradePartyPostalTradeAddress) =>
+        sellerTradePartyPostalTradeAddress.ToSellerTradePartyPostalTradeAddress();
 }

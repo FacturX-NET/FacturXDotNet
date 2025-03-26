@@ -31,4 +31,11 @@ public class MinimumExchangedDocumentContext
     /// </remarks>
     /// <returns>The <see cref="CII.ExchangedDocumentContext" /> that this class is a view of.</returns>
     public ExchangedDocumentContext ToExchangedDocumentContext() => ExchangedDocumentContext;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumExchangedDocumentContext" /> to a <see cref="CII.ExchangedDocumentContext" />.
+    /// </summary>
+    /// <param name="exchangedDocumentContext">The <see cref="MinimumExchangedDocumentContext" /> to convert.</param>
+    /// <returns>The <see cref="CII.ExchangedDocumentContext" /> that this class is a view of.</returns>
+    public static implicit operator ExchangedDocumentContext(MinimumExchangedDocumentContext exchangedDocumentContext) => exchangedDocumentContext.ToExchangedDocumentContext();
 }

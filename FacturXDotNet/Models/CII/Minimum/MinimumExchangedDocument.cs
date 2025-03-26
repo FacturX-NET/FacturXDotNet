@@ -31,4 +31,11 @@ public class MinimumExchangedDocument
     /// </remarks>
     /// <returns>The <see cref="CII.ExchangedDocument" /> that this class is a view of.</returns>
     public ExchangedDocument ToExchangedDocument() => ExchangedDocument;
+
+    /// <summary>
+    ///     Implicitly convert a <see cref="MinimumExchangedDocument" /> to a <see cref="CII.ExchangedDocument" />.
+    /// </summary>
+    /// <param name="exchangedDocument">The <see cref="MinimumExchangedDocument" /> to convert.</param>
+    /// <returns>The <see cref="CII.ExchangedDocument" /> that this class is a view of.</returns>
+    public static implicit operator ExchangedDocument(MinimumExchangedDocument exchangedDocument) => exchangedDocument.ToExchangedDocument();
 }
