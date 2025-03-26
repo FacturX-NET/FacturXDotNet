@@ -24,6 +24,7 @@ class XmpPdfAExtensionsMetadataWriter
     {
         await writer.WriteStartElementAsync("rdf", "Description", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         await writer.WriteAttributeStringAsync("xmlns", PrefixPdfAExtension, "http://www.w3.org/2000/xmlns/", NsPdfAExtension);
+        await writer.WriteAttributeStringAsync("rdf", "about", "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "");
 
         if (data.Schemas.Count > 0)
         {

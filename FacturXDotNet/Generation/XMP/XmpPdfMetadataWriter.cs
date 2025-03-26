@@ -12,6 +12,7 @@ class XmpPdfMetadataWriter
     {
         await writer.WriteStartElementAsync("rdf", "Description", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         await writer.WriteAttributeStringAsync("xmlns", PrefixPdf, "http://www.w3.org/2000/xmlns/", NsPdf);
+        await writer.WriteAttributeStringAsync("rdf", "about", "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "");
 
         if (data.Keywords is not null)
         {

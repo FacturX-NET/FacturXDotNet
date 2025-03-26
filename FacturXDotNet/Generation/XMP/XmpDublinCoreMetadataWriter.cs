@@ -13,6 +13,7 @@ class XmpDublinCoreMetadataWriter
     {
         await writer.WriteStartElementAsync("rdf", "Description", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         await writer.WriteAttributeStringAsync("xmlns", PrefixDc, "http://www.w3.org/2000/xmlns/", NsDc);
+        await writer.WriteAttributeStringAsync("rdf", "about", "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "");
 
         if (data.Contributor.Count > 0)
         {

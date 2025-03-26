@@ -141,7 +141,7 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 result.Basic!.Identifier.Add(value.ToString());
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/xmp:CreateDate":
-                result.Basic!.CreateDate = ParseDate(value);
+                result.Basic!.CreateDate = ParseDateOffset(value);
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/xmp:CreatorTool":
                 result.Basic!.CreatorTool = value.ToString();
@@ -150,10 +150,10 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                 result.Basic!.Label = value.ToString();
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/xmp:MetadataDate":
-                result.Basic!.MetadataDate = ParseDate(value);
+                result.Basic!.MetadataDate = ParseDateOffset(value);
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/xmp:ModifyDate":
-                result.Basic!.ModifyDate = ParseDate(value);
+                result.Basic!.ModifyDate = ParseDateOffset(value);
                 break;
             case "/x:xmpmeta/rdf:RDF/rdf:Description/xmp:Rating":
                 result.Basic!.Rating = ParseDouble(value);
@@ -391,21 +391,6 @@ struct XmpMetadataXmlReadHandler(XmpMetadata result, ILogger? logger) : IXmlRead
                                 DateTimeStyles.AssumeUniversal,
                                 out DateTimeOffset d6
                             )
-                                ? d6
-                                : throw new FormatException($"Expected value to be a date, but found {value}.");
-
-    static DateTime ParseDate(ReadOnlySpan<char> value) =>
-        DateTime.TryParseExact(value, "yyyy", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d1)
-            ? d1
-            : DateTime.TryParseExact(value, "yyyy-MM", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d2)
-                ? d2
-                : DateTime.TryParseExact(value, "yyyy-MM-dd", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d3)
-                    ? d3
-                    : DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mmK", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d4)
-                        ? d4
-                        : DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:ssK", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d5)
-                            ? d5
-                            : DateTime.TryParseExact(value, "yyyy-MM-ddTHH:mm:ss.ffffffK", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out DateTime d6)
                                 ? d6
                                 : throw new FormatException($"Expected value to be a date, but found {value}.");
 

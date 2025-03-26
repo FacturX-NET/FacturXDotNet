@@ -11,6 +11,7 @@ class XmpFacturXMetadataWriter(XmpFacturXMetadataWriterOptions? options = null)
     {
         await writer.WriteStartElementAsync("rdf", "Description", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         await writer.WriteAttributeStringAsync("xmlns", _options.Prefix, "http://www.w3.org/2000/xmlns/", _options.NamespaceUri);
+        await writer.WriteAttributeStringAsync("rdf", "about", "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "");
 
         if (data.DocumentFileName is not null)
         {
