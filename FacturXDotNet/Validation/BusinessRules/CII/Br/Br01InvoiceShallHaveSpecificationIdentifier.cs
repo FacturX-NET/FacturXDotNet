@@ -1,4 +1,5 @@
 ﻿using FacturXDotNet.Models;
+using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 
@@ -12,5 +13,7 @@ public record Br01InvoiceShallHaveSpecificationIdentifier() : CrossIndustryInvoi
 )
 {
     /// <inheritdoc />
-    public override bool Check(CrossIndustryInvoice? cii) => cii != null && Enum.IsDefined(cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId);
+    public override bool Check(CrossIndustryInvoice? cii) =>
+        cii?.ExchangedDocumentContext?.GuidelineSpecifiedDocumentContextParameterId is not null
+        && Enum.IsDefined(cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.Value);
 }

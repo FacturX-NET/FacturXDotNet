@@ -1,9 +1,8 @@
 ﻿using System.Text;
 using System.Xml;
-using FacturXDotNet;
 using FacturXDotNet.Generation.XMP;
 using FacturXDotNet.Models.XMP;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Generation;
 
@@ -24,11 +23,11 @@ public class XmpMetadataWriterTest
             Basic = new XmpBasicMetadata
             {
               Identifier = ["IDENTIFIER1", "IDENTIFIER2"],
-                CreateDate = new DateTime(1, 2, 3),
+              CreateDate = new DateTimeOffset(1, 2, 3, 0, 0, 0, TimeSpan.Zero),
                 CreatorTool = "CREATOR_TOOL",
                 Label = "LABEL",
-                MetadataDate = new DateTime(2, 3, 4),
-                ModifyDate = new DateTime(3, 4, 5),
+                MetadataDate = new DateTimeOffset(2, 3, 4, 0, 0, 0, TimeSpan.Zero),
+                ModifyDate = new DateTimeOffset(3, 4, 5, 0, 0, 0, TimeSpan.Zero),
                 Rating = 4.2,
                 BaseUrl = "BASE_URL",
                 Nickname = "NICKNAME",
@@ -46,7 +45,11 @@ public class XmpMetadataWriterTest
                 Contributor = ["DC_CONTRIBUTOR1", "DC_CONTRIBUTOR2"],
                 Coverage = "DC_COVERAGE",
                 Creator = ["DC_CREATOR1", "DC_CREATOR2"],
-                Date = [new DateTime(2, 3, 4), new DateTime(3, 4, 5, 6, 7, 8, 9, 10)],
+                Date =
+                [
+                  new DateTimeOffset(2, 3, 4, 0, 0, 0, TimeSpan.Zero),
+                  new DateTimeOffset(3, 4, 5, 6, 7, 8, 9, 10, TimeSpan.Zero)
+                ],
                 Description = ["DC_DESCRIPTION1", "DC_DESCRIPTION2"],
                 Format = "DC_FORMAT",
                 Identifier = "DC_IDENTIFIER",
@@ -107,7 +110,7 @@ public class XmpMetadataWriterTest
                                 ],
                                 NamespaceUri = "SCHEMA1_VALUE_TYPE1_NAMESPACE",
                                 Prefix = "SCHEMA1_VALUE_TYPE1_PREFIX",
-                                Type = "SCHEMA1_VALUE_TYPE1"
+                                Type = "SCHEMA1_VALUE_TYPE1_TYPE"
                             },
                             new XmpPdfATypeMetadata
                             {
@@ -129,7 +132,7 @@ public class XmpMetadataWriterTest
                                 ],
                                 NamespaceUri = "SCHEMA1_VALUE_TYPE2_NAMESPACE",
                                 Prefix = "SCHEMA1_VALUE_TYPE2_PREFIX",
-                                Type = "SCHEMA1_VALUE_TYPE2"
+                                Type = "SCHEMA1_VALUE_TYPE2_TYPE"
                             }
                         ]
                     }
@@ -155,9 +158,9 @@ public class XmpMetadataWriterTest
                                     <x:xmpmeta xmlns:x="adobe:ns:meta/">
                                       <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
                                         <rdf:Description xmlns:pdfaid="http://www.aiim.org/pdfa/ns/id/" rdf:about="">
-                                          <pdfaid:part>123</pdfaid:part>
-                                          <pdfaid:conformance>B</pdfaid:conformance>
                                           <pdfaid:amd>AMEND</pdfaid:amd>
+                                          <pdfaid:conformance>B</pdfaid:conformance>
+                                          <pdfaid:part>123</pdfaid:part>
                                         </rdf:Description>
                                         <rdf:Description xmlns:dc="http://purl.org/dc/elements/1.1/" rdf:about="">
                                           <dc:contributor>
@@ -276,16 +279,16 @@ public class XmpMetadataWriterTest
                                                 <pdfaSchema:property>
                                                   <rdf:Seq>
                                                     <rdf:li rdf:parseType="Resource">
-                                                      <pdfaProperty:name>SCHEMA1_PROPERTY1_NAME</pdfaProperty:name>
-                                                      <pdfaProperty:valueType>SCHEMA1_PROPERTY1_VALUE_TYPE</pdfaProperty:valueType>
                                                       <pdfaProperty:category>external</pdfaProperty:category>
                                                       <pdfaProperty:description>SCHEMA1_PROPERTY1_DESCRIPTION</pdfaProperty:description>
+                                                      <pdfaProperty:name>SCHEMA1_PROPERTY1_NAME</pdfaProperty:name>
+                                                      <pdfaProperty:valueType>SCHEMA1_PROPERTY1_VALUE_TYPE</pdfaProperty:valueType>
                                                     </rdf:li>
                                                     <rdf:li rdf:parseType="Resource">
-                                                      <pdfaProperty:name>SCHEMA1_PROPERTY2_NAME</pdfaProperty:name>
-                                                      <pdfaProperty:valueType>SCHEMA1_PROPERTY2_VALUE_TYPE</pdfaProperty:valueType>
                                                       <pdfaProperty:category>internal</pdfaProperty:category>
                                                       <pdfaProperty:description>SCHEMA1_PROPERTY2_DESCRIPTION</pdfaProperty:description>
+                                                      <pdfaProperty:name>SCHEMA1_PROPERTY2_NAME</pdfaProperty:name>
+                                                      <pdfaProperty:valueType>SCHEMA1_PROPERTY2_VALUE_TYPE</pdfaProperty:valueType>
                                                     </rdf:li>
                                                   </rdf:Seq>
                                                 </pdfaSchema:property>
@@ -339,8 +342,8 @@ public class XmpMetadataWriterTest
                                           </pdfaExtension:schemas>
                                         </rdf:Description>
                                         <rdf:Description xmlns:fx="urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#" rdf:about="">
-                                          <fx:DocumentType>INVOICE</fx:DocumentType>
                                           <fx:DocumentFileName>DOC_FILE_NAME</fx:DocumentFileName>
+                                          <fx:DocumentType>INVOICE</fx:DocumentType>
                                           <fx:Version>DOC_VERSION</fx:Version>
                                           <fx:ConformanceLevel>EN 16931</fx:ConformanceLevel>
                                         </rdf:Description>
@@ -361,6 +364,6 @@ public class XmpMetadataWriterTest
         XmlDocument expectedFileDocument = new();
         expectedFileDocument.Load(expectedFileStream);
 
-        fileDocument.ShouldBeEquivalentTo(expectedFileDocument);
+        fileDocument.Should().BeEquivalentTo(expectedFileDocument);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FacturXDotNet.Models;
+using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 
@@ -13,6 +14,6 @@ public record Br13InvoiceShallHaveTotalAmountWithoutVat() : CrossIndustryInvoice
 {
     /// <inheritdoc />
     public override bool Check(CrossIndustryInvoice? cii) =>
-        cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement != null
+        cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.TaxBasisTotalAmount is not null
         && cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation.TaxBasisTotalAmount != 0;
 }

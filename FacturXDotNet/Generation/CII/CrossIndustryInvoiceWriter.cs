@@ -43,9 +43,20 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
         await writer.WriteAttributeStringAsync("xmlns", PrefixUdt, NsXmlns, NsUdt);
         await writer.WriteAttributeStringAsync("xmlns", PrefixXsi, NsXmlns, NsXsi);
 
-        await WriteExchangeDocumentContextAsync(writer, cii.ExchangedDocumentContext);
-        await WriteExchangeDocumentAsync(writer, cii.ExchangedDocument);
-        await WriteSupplyChainTradeTransactionAsync(writer, cii.SupplyChainTradeTransaction);
+        if (cii.ExchangedDocumentContext is not null)
+        {
+            await WriteExchangeDocumentContextAsync(writer, cii.ExchangedDocumentContext);
+        }
+
+        if (cii.ExchangedDocument is not null)
+        {
+            await WriteExchangeDocumentAsync(writer, cii.ExchangedDocument);
+        }
+
+        if (cii.SupplyChainTradeTransaction is not null)
+        {
+            await WriteSupplyChainTradeTransactionAsync(writer, cii.SupplyChainTradeTransaction);
+        }
 
         await writer.WriteEndElementAsync();
 
@@ -64,7 +75,7 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
         await writer.WriteEndElementAsync();
         
         await StartRamAsync(writer,  "GuidelineSpecifiedDocumentContextParameter");
-        await TryWriteRamAsync(writer, "ID", exchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToGuidelineSpecifiedDocumentContextParameterId().ToString());
+        await TryWriteRamAsync(writer, "ID", exchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId?.ToGuidelineSpecifiedDocumentContextParameterId().ToString());
         await writer.WriteEndElementAsync();
 
         await writer.WriteEndElementAsync();
@@ -76,12 +87,15 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
     {
         await StartRsmAsync(writer, "ExchangedDocument");
 
-        await WriteRamAsync(writer, "ID", exchangedDocument.Id);
-        await WriteRamAsync(writer, "TypeCode", exchangedDocument.TypeCode.ToSpecificationIdentifier().ToString());
+        await TryWriteRamAsync(writer, "ID", exchangedDocument.Id);
+        await TryWriteRamAsync(writer, "TypeCode", exchangedDocument.TypeCode?.ToSpecificationIdentifier().ToString());
 
-        await StartRamAsync(writer, "IssueDateTime");
-        await writer.WriteDateOnlyAsync(exchangedDocument.IssueDateTime);
-        await writer.WriteEndElementAsync();
+        if (exchangedDocument.IssueDateTime.HasValue)
+        {
+            await StartRamAsync(writer, "IssueDateTime");
+            await writer.WriteDateOnlyAsync(exchangedDocument.IssueDateTime.Value);
+            await writer.WriteEndElementAsync();
+        }
 
         await writer.WriteEndElementAsync();
     }
@@ -90,10 +104,17 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
     {
         await StartRsmAsync(writer, "SupplyChainTradeTransaction");
 
-        await WriteApplicableHeaderTradeAgreementAsync(writer, supplyChainTradeTransaction.ApplicableHeaderTradeAgreement);
-        await WriteApplicableHeaderTradeDeliveryAsync(writer, supplyChainTradeTransaction.ApplicableHeaderTradeDelivery);
+        if (supplyChainTradeTransaction.ApplicableHeaderTradeAgreement is not null)
+        {
+            await WriteApplicableHeaderTradeAgreementAsync(writer, supplyChainTradeTransaction.ApplicableHeaderTradeAgreement);
+        }
 
-        if (supplyChainTradeTransaction.ApplicableHeaderTradeSettlement != null)
+        if (supplyChainTradeTransaction.ApplicableHeaderTradeDelivery is not null)
+        {
+            await WriteApplicableHeaderTradeDeliveryAsync(writer, supplyChainTradeTransaction.ApplicableHeaderTradeDelivery);
+        }
+
+        if (supplyChainTradeTransaction.ApplicableHeaderTradeSettlement is not null)
         {
             await WriteApplicableHeaderTradeSettlementAsync(writer, supplyChainTradeTransaction.ApplicableHeaderTradeSettlement);
         }
@@ -106,10 +127,18 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
         await StartRamAsync(writer, "ApplicableHeaderTradeAgreement");
 
         await TryWriteRamAsync(writer, "BuyerReference", applicableHeaderTradeAgreement.BuyerReference);
-        await WriteSellerTradePartyAsync(writer, applicableHeaderTradeAgreement.SellerTradeParty);
-        await WriteBuyerTradePartyAsync(writer, applicableHeaderTradeAgreement.BuyerTradeParty);
 
-        if (applicableHeaderTradeAgreement.BuyerOrderReferencedDocument != null)
+        if (applicableHeaderTradeAgreement.SellerTradeParty is not null)
+        {
+            await WriteSellerTradePartyAsync(writer, applicableHeaderTradeAgreement.SellerTradeParty);
+        }
+
+        if (applicableHeaderTradeAgreement.BuyerTradeParty is not null)
+        {
+            await WriteBuyerTradePartyAsync(writer, applicableHeaderTradeAgreement.BuyerTradeParty);
+        }
+
+        if (applicableHeaderTradeAgreement.BuyerOrderReferencedDocument is not null)
         {
             await WriteBuyerOrderReferencedDocument(writer, applicableHeaderTradeAgreement.BuyerOrderReferencedDocument);
         }
@@ -117,7 +146,7 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
         await writer.WriteEndElementAsync();
     }
 
-    static async Task WriteApplicableHeaderTradeDeliveryAsync(XmlWriter writer, ApplicableHeaderTradeDelivery applicableHeaderTradeDelivery)
+    static async Task WriteApplicableHeaderTradeDeliveryAsync(XmlWriter writer, ApplicableHeaderTradeDelivery _)
     {
         await StartRamAsync(writer, "ApplicableHeaderTradeDelivery");
         await writer.WriteEndElementAsync();
@@ -127,8 +156,12 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
     {
         await StartRamAsync(writer, "ApplicableHeaderTradeSettlement");
 
-        await WriteRamAsync(writer, "InvoiceCurrencyCode", applicableHeaderTradeSettlement.InvoiceCurrencyCode);
-        await WriteSpecifiedTradeSettlementHeaderMonetarySummationAsync(writer, applicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation);
+        await TryWriteRamAsync(writer, "InvoiceCurrencyCode", applicableHeaderTradeSettlement.InvoiceCurrencyCode);
+
+        if (applicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation is not null)
+        {
+            await WriteSpecifiedTradeSettlementHeaderMonetarySummationAsync(writer, applicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation);
+        }
 
         await writer.WriteEndElementAsync();
     }
@@ -137,16 +170,19 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
     {
         await StartRamAsync(writer, "SellerTradeParty");
 
-        await WriteRamAsync(writer, "Name", sellerTradeParty.Name);
+        await TryWriteRamAsync(writer, "Name", sellerTradeParty.Name);
 
-        if (sellerTradeParty.SpecifiedLegalOrganization != null)
+        if (sellerTradeParty.SpecifiedLegalOrganization is not null)
         {
             await WriteSellerTradePartySpecifiedLegalOrganizationAsync(writer, sellerTradeParty.SpecifiedLegalOrganization);
         }
 
-        await WriteSellerTradePartyPostalTradeAddressAsync(writer, sellerTradeParty.PostalTradeAddress);
+        if (sellerTradeParty.PostalTradeAddress is not null)
+        {
+            await WriteSellerTradePartyPostalTradeAddressAsync(writer, sellerTradeParty.PostalTradeAddress);
+        }
 
-        if (sellerTradeParty.SpecifiedTaxRegistration != null)
+        if (sellerTradeParty.SpecifiedTaxRegistration is not null)
         {
             await WriteSellerTradePartySpecifiedTaxRegistrationAsync(writer, sellerTradeParty.SpecifiedTaxRegistration);
         }
@@ -167,7 +203,7 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
     {
         await StartRamAsync(writer, "PostalTradeAddress");
 
-        await WriteRamAsync(writer, "CountryID", postalTradeAddress.CountryId);
+        await TryWriteRamAsync(writer, "CountryID", postalTradeAddress.CountryId);
 
         await writer.WriteEndElementAsync();
     }
@@ -176,7 +212,7 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
     {
         await StartRamAsync(writer, "SpecifiedTaxRegistration");
 
-        await TryWriteIdAndSchemeId(writer, specifiedTaxRegistration.Id, specifiedTaxRegistration.IdSchemeId.ToVatOnlyTaxSchemeIdentifier());
+        await TryWriteIdAndSchemeId(writer, specifiedTaxRegistration.Id, specifiedTaxRegistration.IdSchemeId?.ToVatOnlyTaxSchemeIdentifier());
 
         await writer.WriteEndElementAsync();
     }
@@ -185,9 +221,9 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
     {
         await StartRamAsync(writer, "BuyerTradeParty");
 
-        await WriteRamAsync(writer, "Name", buyerTradeParty.Name);
+        await TryWriteRamAsync(writer, "Name", buyerTradeParty.Name);
 
-        if (buyerTradeParty.SpecifiedLegalOrganization != null)
+        if (buyerTradeParty.SpecifiedLegalOrganization is not null)
         {
             await WriteBuyerTradePartySpecifiedLegalOrganizationAsync(writer, buyerTradeParty.SpecifiedLegalOrganization);
         }
@@ -217,7 +253,7 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
     {
         await StartRamAsync(writer, "SpecifiedTradeSettlementHeaderMonetarySummation");
 
-        await WriteRamAsync(writer, "TaxBasisTotalAmount", FormatAmount(headerMonetarySummation.TaxBasisTotalAmount));
+        await TryWriteRamAsync(writer, "TaxBasisTotalAmount", TryFormatAmount(headerMonetarySummation.TaxBasisTotalAmount));
 
         if (headerMonetarySummation.TaxTotalAmount.HasValue)
         {
@@ -227,8 +263,8 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
             await writer.WriteEndElementAsync();
         }
 
-        await WriteRamAsync(writer, "GrandTotalAmount", FormatAmount(headerMonetarySummation.GrandTotalAmount));
-        await WriteRamAsync(writer, "DuePayableAmount", FormatAmount(headerMonetarySummation.DuePayableAmount));
+        await TryWriteRamAsync(writer, "GrandTotalAmount", TryFormatAmount(headerMonetarySummation.GrandTotalAmount));
+        await TryWriteRamAsync(writer, "DuePayableAmount", TryFormatAmount(headerMonetarySummation.DuePayableAmount));
 
         await writer.WriteEndElementAsync();
     }
@@ -236,14 +272,14 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
 
     static async Task TryWriteIdAndSchemeId(XmlWriter writer, string? id, string? schemeId)
     {
-        if (id == null)
+        if (id is null)
         {
             return;
         }
 
         await StartRamAsync(writer, "ID");
 
-        if (schemeId != null)
+        if (schemeId is not null)
         {
             await writer.WriteAttributeStringAsync(null, "schemeID", null, schemeId);
         }
@@ -252,6 +288,7 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
         await writer.WriteEndElementAsync();
     }
 
+    static string? TryFormatAmount(decimal? amount) => amount?.ToString("0.##", CultureInfo.InvariantCulture);
     static string FormatAmount(decimal amount) => amount.ToString("0.##", CultureInfo.InvariantCulture);
 
     static async Task StartRsmAsync(XmlWriter writer, string localname) => await writer.WriteStartElementAsync(PrefixRsm, localname, NsRsm);
@@ -261,10 +298,11 @@ public class CrossIndustryInvoiceWriter(CrossIndustryInvoiceWriterOptions? optio
 
     static async Task TryWriteRamAsync(XmlWriter writer, string localname, string? value)
     {
-        if (value == null)
+        if (value is null)
         {
             return;
         }
+
         await WriteRamAsync(writer, localname, value);
     }
 }

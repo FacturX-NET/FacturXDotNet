@@ -2,26 +2,6 @@
 
 static class XmpDateExtensions
 {
-    public static string FormatXmpDate(this DateTime date)
-    {
-        if (date.TimeOfDay == TimeSpan.Zero)
-        {
-            return date.ToString("yyyy-MM-dd");
-        }
-
-        if (date is { Millisecond: 0, Microsecond: 0 })
-        {
-            return date.ToString("yyyy-MM-ddTHH:mm:sszzz");
-        }
-
-        if (date is { Millisecond: 0 })
-        {
-            return date.ToString("yyyy-MM-ddTHH:mm:ss.fffzzz");
-        }
-
-        return date.ToString("yyyy-MM-ddTHH:mm:ss.ffffffzzz");
-    }
-
     public static string FormatXmpDate(this DateTimeOffset date)
     {
         if (date.TimeOfDay == TimeSpan.Zero)
@@ -29,11 +9,22 @@ static class XmpDateExtensions
             return date.ToString("yyyy-MM-dd");
         }
 
-        if (date.Millisecond == 0)
+        if (date.Offset == TimeSpan.Zero)
         {
-            return date.ToString("yyyy-MM-ddTHH:mm:sszzz");
+            DateTime dateTime = date.UtcDateTime;
+            if (dateTime.Millisecond == 0)
+            {
+                return dateTime.ToString("yyyy-MM-ddTHH:mm:ssK");
+            }
+
+            return dateTime.ToString("yyyy-MM-ddTHH:mm:ss.ffffffK");
         }
 
-        return date.ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz");
+        if (date.Millisecond == 0)
+        {
+            return date.ToString("yyyy-MM-ddTHH:mm:ssK");
+        }
+
+        return date.ToString("yyyy-MM-ddTHH:mm:ss.ffffffK");
     }
 }

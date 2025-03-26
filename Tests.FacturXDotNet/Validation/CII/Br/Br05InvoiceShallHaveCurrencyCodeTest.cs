@@ -1,6 +1,6 @@
-﻿using FacturXDotNet;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.BusinessRules.CII.Br;
-using Shouldly;
+using FluentAssertions;
 using Tests.FacturXDotNet.TestTools;
 
 namespace Tests.FacturXDotNet.Validation.CII.Br;
@@ -12,12 +12,12 @@ public class Br05InvoiceShallHaveCurrencyCodeTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement!.InvoiceCurrencyCode = "EUR";
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement!.InvoiceCurrencyCode = "EUR";
 
         Br05InvoiceShallHaveCurrencyCode rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -26,30 +26,30 @@ public class Br05InvoiceShallHaveCurrencyCodeTest
         Br05InvoiceShallHaveCurrencyCode rule = new();
         bool result = rule.Check(null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
     public void ShouldNotValidate_WhenApplicableHeaderTradeSettlementIsNull()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement = null;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement = null;
 
         Br05InvoiceShallHaveCurrencyCode rule = new();
         bool result = rule.Check(null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement!.InvoiceCurrencyCode = string.Empty;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeSettlement!.InvoiceCurrencyCode = string.Empty;
 
         Br05InvoiceShallHaveCurrencyCode rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 }

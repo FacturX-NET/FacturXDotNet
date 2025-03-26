@@ -1,4 +1,5 @@
 ﻿using FacturXDotNet.Models;
+using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 
@@ -15,5 +16,5 @@ public record Br08InvoiceShallHaveSellerPostalAddress() : CrossIndustryInvoiceBu
     public override bool Check(CrossIndustryInvoice? cii) =>
         // Nullability analysis should guarantee that this is always true, however it is still a BT so we check it anyway
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress != null;
+        cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.PostalTradeAddress is not null;
 }

@@ -1,6 +1,4 @@
-﻿using FacturXDotNet.Models.XMP;
-
-namespace FacturXDotNet;
+﻿namespace FacturXDotNet.Models.XMP;
 
 /// <summary>
 ///     XMP metadata of a Factur-X invoice.

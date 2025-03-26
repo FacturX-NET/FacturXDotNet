@@ -2,7 +2,7 @@
 using FacturXDotNet;
 using FacturXDotNet.Generation;
 using FacturXDotNet.Validation;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Validation.Integration.Hybrid;
 
@@ -26,7 +26,7 @@ public class BrHybrid13Test
         FacturXValidationResult result = await validator.GetValidationResultAsync(invoice, ciiAttachmentName);
 
         BusinessRuleValidationResult rule = result.Rules.SingleOrDefault(r => r.Rule.Name == "BR-HYBRID-13");
-        rule.Rule.ShouldNotBeNull();
-        rule.Status.ShouldBe(BusinessRuleValidationStatus.Failed);
+        rule.Rule.Should().NotBeNull();
+        rule.Status.Should().Be(BusinessRuleValidationStatus.Failed);
     }
 }

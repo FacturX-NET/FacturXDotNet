@@ -1,9 +1,8 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
-using FacturXDotNet;
 using FacturXDotNet.Generation.CII;
 using FacturXDotNet.Models.CII;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Generation;
 
@@ -155,7 +154,7 @@ public class CrossIndustryInvoiceWriterTest
         string fileSanitized = Sanitize(file);
         string expectedFileSanitized = Sanitize(expectedFile);
 
-        fileSanitized.ShouldBe(expectedFileSanitized);
+        fileSanitized.Should().Be(expectedFileSanitized);
     }
 
     static string Sanitize(string file)

@@ -13,6 +13,7 @@ class XmpDublinCoreMetadataWriter
     {
         await writer.WriteStartElementAsync("rdf", "Description", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         await writer.WriteAttributeStringAsync("xmlns", PrefixDc, "http://www.w3.org/2000/xmlns/", NsDc);
+        await writer.WriteAttributeStringAsync("rdf", "about", "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "");
 
         if (data.Contributor.Count > 0)
         {
@@ -21,7 +22,7 @@ class XmpDublinCoreMetadataWriter
             await writer.WriteEndElementAsync();
         }
 
-        if (data.Coverage != null)
+        if (data.Coverage is not null)
         {
             await writer.WriteElementStringAsync(PrefixDc, "coverage", NsDc, data.Coverage);
         }
@@ -47,12 +48,12 @@ class XmpDublinCoreMetadataWriter
             await writer.WriteEndElementAsync();
         }
 
-        if (data.Format != null)
+        if (data.Format is not null)
         {
             await writer.WriteElementStringAsync(PrefixDc, "format", NsDc, data.Format);
         }
 
-        if (data.Identifier != null)
+        if (data.Identifier is not null)
         {
             await writer.WriteElementStringAsync(PrefixDc, "identifier", NsDc, data.Identifier);
         }
@@ -85,7 +86,7 @@ class XmpDublinCoreMetadataWriter
             await writer.WriteEndElementAsync();
         }
 
-        if (data.Source != null)
+        if (data.Source is not null)
         {
             await writer.WriteElementStringAsync(PrefixDc, "source", NsDc, data.Source);
         }

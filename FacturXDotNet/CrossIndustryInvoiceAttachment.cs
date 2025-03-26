@@ -1,10 +1,15 @@
-﻿using FacturXDotNet.Parsing.CII;
+﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Parsing.CII;
 
 namespace FacturXDotNet;
 
 /// <summary>
 ///     The Cross-Industry Invoice attachment.
 /// </summary>
+/// <remarks>
+///     This class is a specialization of <see cref="FacturXDocumentAttachment" /> for Cross-Industry Invoice attachments, it provides the <see cref="GetCrossIndustryInvoiceAsync" />
+///     that reads the file content and parses it.
+/// </remarks>
 public class CrossIndustryInvoiceAttachment : FacturXDocumentAttachment
 {
     /// <summary>

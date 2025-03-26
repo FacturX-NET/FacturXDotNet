@@ -1,4 +1,5 @@
-﻿using FacturXDotNet.Models.XMP;
+﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
 
 namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 

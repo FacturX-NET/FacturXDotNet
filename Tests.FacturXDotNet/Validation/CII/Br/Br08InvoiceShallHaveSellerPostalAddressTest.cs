@@ -1,7 +1,6 @@
-﻿using FacturXDotNet;
-using FacturXDotNet.Models.CII;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.BusinessRules.CII.Br;
-using Shouldly;
+using FluentAssertions;
 using Tests.FacturXDotNet.TestTools;
 
 namespace Tests.FacturXDotNet.Validation.CII.Br;
@@ -13,13 +12,13 @@ public class Br08InvoiceShallHaveSellerPostalAddressTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress =
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.PostalTradeAddress =
             new SellerTradePartyPostalTradeAddress { CountryId = "SELLER_COUNTRY" };
 
         Br08InvoiceShallHaveSellerPostalAddress rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -28,18 +27,18 @@ public class Br08InvoiceShallHaveSellerPostalAddressTest
         Br08InvoiceShallHaveSellerPostalAddress rule = new();
         bool result = rule.Check(null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress = null!;
+        cii.SupplyChainTradeTransaction!.ApplicableHeaderTradeAgreement!.SellerTradeParty!.PostalTradeAddress = null!;
 
         Br08InvoiceShallHaveSellerPostalAddress rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 }

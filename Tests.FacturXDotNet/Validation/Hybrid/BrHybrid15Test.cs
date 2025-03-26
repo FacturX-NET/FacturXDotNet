@@ -1,8 +1,7 @@
-﻿using FacturXDotNet;
-using FacturXDotNet.Models.CII;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Validation.BusinessRules.Hybrid;
-using Shouldly;
+using FluentAssertions;
 using Tests.FacturXDotNet.TestTools;
 
 namespace Tests.FacturXDotNet.Validation.Hybrid;
@@ -15,13 +14,13 @@ public class BrHybrid15Test
     {
         XmpMetadata xmp = FakeData.XmpMetadata;
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
+        cii.ExchangedDocumentContext!.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
         xmp.FacturX!.ConformanceLevel = XmpFacturXConformanceLevel.Extended;
 
         BrHybrid15 rule = new();
         bool result = rule.Check(xmp, null, cii);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -30,7 +29,7 @@ public class BrHybrid15Test
         BrHybrid15 rule = new();
         bool result = rule.Check(null, null, null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
@@ -41,7 +40,7 @@ public class BrHybrid15Test
         BrHybrid15 rule = new();
         bool result = rule.Check(xmp, null, null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
@@ -49,13 +48,13 @@ public class BrHybrid15Test
     {
         XmpMetadata xmp = FakeData.XmpMetadata;
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
+        cii.ExchangedDocumentContext!.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
         xmp.FacturX!.ConformanceLevel = null;
 
         BrHybrid15 rule = new();
         bool result = rule.Check(xmp, null, cii);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
@@ -67,7 +66,7 @@ public class BrHybrid15Test
         BrHybrid15 rule = new();
         bool result = rule.Check(xmp, null, null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
@@ -75,12 +74,12 @@ public class BrHybrid15Test
     {
         XmpMetadata xmp = FakeData.XmpMetadata;
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
+        cii.ExchangedDocumentContext!.GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Extended;
         xmp.FacturX!.ConformanceLevel = XmpFacturXConformanceLevel.Basic;
 
         BrHybrid15 rule = new();
         bool result = rule.Check(xmp, null, cii);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 }

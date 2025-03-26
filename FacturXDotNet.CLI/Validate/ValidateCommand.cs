@@ -101,7 +101,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
                 }
             );
 
-        if (facturX == null)
+        if (facturX is null)
         {
             throw new Exception("This will never happen.");
         }

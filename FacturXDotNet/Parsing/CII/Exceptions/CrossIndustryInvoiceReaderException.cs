@@ -1,4 +1,5 @@
 ﻿using FacturXDotNet.Exceptions;
+using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.Parsing.CII.Exceptions;
 

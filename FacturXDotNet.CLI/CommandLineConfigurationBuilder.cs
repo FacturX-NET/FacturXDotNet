@@ -46,7 +46,7 @@ public static class CommandLineConfigurationBuilder
                     context =>
                     {
                         context.Output.WriteLine($"{title} v{version}");
-                        if (copyright != null)
+                        if (copyright is not null)
                         {
                             context.Output.WriteLine(copyright);
                         }

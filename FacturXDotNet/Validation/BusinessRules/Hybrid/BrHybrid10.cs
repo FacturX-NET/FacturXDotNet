@@ -1,4 +1,7 @@
-﻿namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
+﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
+
+namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 
 /// <summary>
 ///     BR-HYBRID-10: The fx:Version SHOULD be 1.0.

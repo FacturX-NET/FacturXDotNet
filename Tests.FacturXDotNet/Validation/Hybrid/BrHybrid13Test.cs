@@ -1,5 +1,5 @@
 ﻿using FacturXDotNet.Validation.BusinessRules.Hybrid;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Validation.Hybrid;
 
@@ -12,7 +12,7 @@ public class BrHybrid13Test
         BrHybrid13 rule = new();
         bool result = rule.Check(null, "factur-x.xml", null);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -21,7 +21,7 @@ public class BrHybrid13Test
         BrHybrid13 rule = new();
         bool result = rule.Check(null, "xrechnung.xml", null);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -30,7 +30,7 @@ public class BrHybrid13Test
         BrHybrid13 rule = new();
         bool result = rule.Check(null, "order-x.xml", null);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -39,7 +39,7 @@ public class BrHybrid13Test
         BrHybrid13 rule = new();
         bool result = rule.Check(null, "invalid.xml", null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
@@ -48,6 +48,6 @@ public class BrHybrid13Test
         BrHybrid13 rule = new();
         bool result = rule.Check(null, null, null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 }

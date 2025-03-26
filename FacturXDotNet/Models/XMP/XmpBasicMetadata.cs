@@ -24,7 +24,7 @@ public class XmpBasicMetadata
     ///     time, modulo the time taken to write the file. Later file transfer, copying, and so on, can make the file-system time arbitrarily different.
     /// </summary>
     /// <XmpTag>xmp:CreateDate</XmpTag>
-    public DateTime? CreateDate { get; set; }
+    public DateTimeOffset? CreateDate { get; set; }
 
     /// <summary>
     ///     The name of the first known tool used to create the resource.
@@ -45,14 +45,14 @@ public class XmpBasicMetadata
     ///     The date and time that any metadata for this resource was last changed. It should be the same as or more recent than xmp:ModifyDate.
     /// </summary>
     /// <XmpTag>xmp:MetadataDate</XmpTag>
-    public DateTime? MetadataDate { get; set; }
+    public DateTimeOffset? MetadataDate { get; set; }
 
     /// <summary>
     ///     The date and time the resource was last modified. NOTE: The value of this property is not necessarily the same as the file’s system modification date because it is typically
     ///     set before the file is saved.
     /// </summary>
     /// <XmpTag>xmp:ModifyDate</XmpTag>
-    public DateTime? ModifyDate { get; set; }
+    public DateTimeOffset? ModifyDate { get; set; }
 
     /// <summary>
     ///     A user-assigned rating for this file. The value shall be -1 or in the range [0..5], where -1 indicates “rejected” and 0 indicates “unrated”. If xmp:Rating is not present, a

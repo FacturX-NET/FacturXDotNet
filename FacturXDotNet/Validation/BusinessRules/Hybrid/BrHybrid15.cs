@@ -1,4 +1,6 @@
 ﻿using FacturXDotNet.Models;
+using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
 
 namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 
@@ -13,7 +15,7 @@ public record BrHybrid15() : HybridBusinessRule(
 {
     /// <inheritdoc />
     public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) =>
-        cii != null
-        && xmp?.FacturX != null
-        && cii?.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.ToFacturXProfile() == xmp.FacturX.ConformanceLevel?.ToFacturXProfile();
+        cii?.ExchangedDocumentContext?.GuidelineSpecifiedDocumentContextParameterId is not null
+        && xmp?.FacturX?.ConformanceLevel is not null
+        && cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.Value.ToFacturXProfile() == xmp.FacturX.ConformanceLevel.Value.ToFacturXProfile();
 }

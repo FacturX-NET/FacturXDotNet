@@ -1,9 +1,8 @@
 ﻿using System.Text;
-using FacturXDotNet;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Parsing.CII;
 using FacturXDotNet.Parsing.CII.Exceptions;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Parsing;
 
@@ -79,69 +78,70 @@ public class CrossIndustryInvoiceReaderTest
         CrossIndustryInvoiceReader reader = new();
         CrossIndustryInvoice result = reader.Read(fileStream);
 
-        result.ShouldBeEquivalentTo(
-            new CrossIndustryInvoice
-            {
-                ExchangedDocumentContext = new ExchangedDocumentContext
+        result.Should()
+            .BeEquivalentTo(
+                new CrossIndustryInvoice
                 {
-                    BusinessProcessSpecifiedDocumentContextParameterId = "BUSINESS_PROCESS",
-                    GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Minimum
-                },
-                ExchangedDocument = new ExchangedDocument
-                {
-                    Id = "DOC_ID",
-                    TypeCode = InvoiceTypeCode.CommercialInvoice,
-                    IssueDateTime = new DateOnly(1, 2, 3),
-                    IssueDateTimeFormat = DateOnlyFormat.DateOnly
-                },
-                SupplyChainTradeTransaction = new SupplyChainTradeTransaction
-                {
-                    ApplicableHeaderTradeAgreement = new ApplicableHeaderTradeAgreement
+                    ExchangedDocumentContext = new ExchangedDocumentContext
                     {
-                        BuyerReference = "BUYER_REF",
-                        SellerTradeParty = new SellerTradeParty
-                        {
-                            Name = "SELLER_NAME",
-                            SpecifiedLegalOrganization = new SellerTradePartySpecifiedLegalOrganization
-                            {
-                                Id = "SELLER_LEGAL_ID", IdSchemeId = "1234"
-                            },
-                            PostalTradeAddress = new SellerTradePartyPostalTradeAddress
-                            {
-                                CountryId = "SELLER_COUNTRY"
-                            },
-                            SpecifiedTaxRegistration = new SellerTradePartySpecifiedTaxRegistration
-                            {
-                                Id = "SELLER_TAX_ID", IdSchemeId = VatOnlyTaxSchemeIdentifier.Vat
-                            }
-                        },
-                        BuyerTradeParty = new BuyerTradeParty
-                        {
-                            Name = "BUYER_NAME", SpecifiedLegalOrganization = new BuyerTradePartySpecifiedLegalOrganization
-                            {
-                                Id = "BUYER_LEGAL_ID", IdSchemeId = "4321"
-                            }
-                        },
-                        BuyerOrderReferencedDocument = new BuyerOrderReferencedDocument
-                        {
-                            IssuerAssignedId = "ORDER_ID"
-                        }
+                        BusinessProcessSpecifiedDocumentContextParameterId = "BUSINESS_PROCESS",
+                        GuidelineSpecifiedDocumentContextParameterId = GuidelineSpecifiedDocumentContextParameterId.Minimum
                     },
-                    ApplicableHeaderTradeDelivery = new ApplicableHeaderTradeDelivery(),
-                    ApplicableHeaderTradeSettlement = new ApplicableHeaderTradeSettlement
+                    ExchangedDocument = new ExchangedDocument
                     {
-                        InvoiceCurrencyCode = "CURRENCY_CODE", SpecifiedTradeSettlementHeaderMonetarySummation = new SpecifiedTradeSettlementHeaderMonetarySummation
+                        Id = "DOC_ID",
+                        TypeCode = InvoiceTypeCode.CommercialInvoice,
+                        IssueDateTime = new DateOnly(1, 2, 3),
+                        IssueDateTimeFormat = DateOnlyFormat.DateOnly
+                    },
+                    SupplyChainTradeTransaction = new SupplyChainTradeTransaction
+                    {
+                        ApplicableHeaderTradeAgreement = new ApplicableHeaderTradeAgreement
                         {
-                            TaxBasisTotalAmount = 123,
-                            TaxTotalAmount = 234,
-                            TaxTotalAmountCurrencyId = "TAX_CURRENCY_ID",
-                            GrandTotalAmount = 345,
-                            DuePayableAmount = 456
+                            BuyerReference = "BUYER_REF",
+                            SellerTradeParty = new SellerTradeParty
+                            {
+                                Name = "SELLER_NAME",
+                                SpecifiedLegalOrganization = new SellerTradePartySpecifiedLegalOrganization
+                                {
+                                    Id = "SELLER_LEGAL_ID", IdSchemeId = "1234"
+                                },
+                                PostalTradeAddress = new SellerTradePartyPostalTradeAddress
+                                {
+                                    CountryId = "SELLER_COUNTRY"
+                                },
+                                SpecifiedTaxRegistration = new SellerTradePartySpecifiedTaxRegistration
+                                {
+                                    Id = "SELLER_TAX_ID", IdSchemeId = VatOnlyTaxSchemeIdentifier.Vat
+                                }
+                            },
+                            BuyerTradeParty = new BuyerTradeParty
+                            {
+                                Name = "BUYER_NAME", SpecifiedLegalOrganization = new BuyerTradePartySpecifiedLegalOrganization
+                                {
+                                    Id = "BUYER_LEGAL_ID", IdSchemeId = "4321"
+                                }
+                            },
+                            BuyerOrderReferencedDocument = new BuyerOrderReferencedDocument
+                            {
+                                IssuerAssignedId = "ORDER_ID"
+                            }
+                        },
+                        ApplicableHeaderTradeDelivery = new ApplicableHeaderTradeDelivery(),
+                        ApplicableHeaderTradeSettlement = new ApplicableHeaderTradeSettlement
+                        {
+                            InvoiceCurrencyCode = "CURRENCY_CODE", SpecifiedTradeSettlementHeaderMonetarySummation = new SpecifiedTradeSettlementHeaderMonetarySummation
+                            {
+                                TaxBasisTotalAmount = 123,
+                                TaxTotalAmount = 234,
+                                TaxTotalAmountCurrencyId = "TAX_CURRENCY_ID",
+                                GrandTotalAmount = 345,
+                                DuePayableAmount = 456
+                            }
                         }
                     }
                 }
-            }
-        );
+            );
     }
 
     [TestMethod]
@@ -153,27 +153,6 @@ public class CrossIndustryInvoiceReaderTest
         CrossIndustryInvoiceReader reader = new();
         Action action = () => reader.Read(fileStream);
 
-        action.ShouldThrow<CrossIndustryInvoiceReaderException>();
-    }
-
-    [TestMethod]
-    public async Task ShouldFailToValidateEmptyCrossIndustryInvoiceXml()
-    {
-        const string invalidContent = """
-                                      <?xml version='1.0' encoding='UTF-8'?>
-                                      <rsm:CrossIndustryInvoice 
-                                      xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
-                                      xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
-                                      xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
-                                      xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
-                                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                                      </rsm:CrossIndustryInvoice> 
-                                      """;
-        await using MemoryStream fileStream = new(Encoding.UTF8.GetBytes(invalidContent));
-
-        CrossIndustryInvoiceReader reader = new();
-        Action action = () => reader.Read(fileStream);
-
-        action.ShouldThrow<CrossIndustryInvoiceReaderException>();
+        action.Should().Throw<CrossIndustryInvoiceReaderException>();
     }
 }

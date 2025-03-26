@@ -3,20 +3,20 @@ using FacturXDotNet.Generation;
 using FacturXDotNet.Parsing.CII.Exceptions;
 using FacturXDotNet.Parsing.XMP.Exceptions;
 using FacturXDotNet.Validation;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Validation.Integration;
 
 static class ValidationIntegrationTestUtils
 {
-    public static async Task CheckRulePasses(string ruleName, string? xmp = null, string? cii = null) => (await CheckRule(ruleName, xmp, cii)).ShouldBeTrue();
-    public static async Task CheckRuleFails(string ruleName, string? xmp = null, string? cii = null) => (await CheckRule(ruleName, xmp, cii)).ShouldBeFalse();
+    public static async Task CheckRulePasses(string ruleName, string? xmp = null, string? cii = null) => (await CheckRule(ruleName, xmp, cii)).Should().BeTrue();
+    public static async Task CheckRuleFails(string ruleName, string? xmp = null, string? cii = null) => (await CheckRule(ruleName, xmp, cii)).Should().BeFalse();
 
     static async Task<bool> CheckRule(string ruleName, string? xmp = null, string? cii = null)
     {
         FacturXDocumentBuilder builder = FacturXDocument.Create().WithBasePdfFile("TestFiles/facturx.pdf");
 
-        if (xmp != null)
+        if (xmp is not null)
         {
             MemoryStream stream = new();
             await using StreamWriter streamWriter = new(stream, leaveOpen: true);
@@ -26,7 +26,7 @@ static class ValidationIntegrationTestUtils
             builder.WithXmpMetadata(stream, false);
         }
 
-        if (cii != null)
+        if (cii is not null)
         {
             MemoryStream stream = new();
             await using StreamWriter streamWriter = new(stream, leaveOpen: true);
@@ -56,7 +56,7 @@ static class ValidationIntegrationTestUtils
         }
 
         BusinessRuleValidationResult rule = result.Rules.SingleOrDefault(r => r.Rule.Name == ruleName);
-        if (rule.Rule == null)
+        if (rule.Rule is null)
         {
             throw new InvalidOperationException($"Could not find rule {ruleName}.");
         }

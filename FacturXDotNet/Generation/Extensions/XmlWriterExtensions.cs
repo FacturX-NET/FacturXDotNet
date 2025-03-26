@@ -70,6 +70,14 @@ static class XmlWriterExtensions
         }
     }
 
+    public static async Task TryWriteDateOnlyAsync(this XmlWriter writer, DateOnly? value)
+    {
+        if (value.HasValue)
+        {
+            await WriteDateOnlyAsync(writer, value.Value);
+        }
+    }
+
     public static async Task WriteDateOnlyAsync(this XmlWriter writer, DateOnly value)
     {
         await writer.WriteStartElementAsync(PrefixUdt, "DateTimeString", NsUdt);

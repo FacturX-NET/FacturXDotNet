@@ -1,4 +1,5 @@
 ﻿using FacturXDotNet.Models;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.Utils;
 
 namespace FacturXDotNet.Validation.BusinessRules.CII.BrDec;
@@ -14,6 +15,6 @@ public record BrDec18InvoiceDueAmountHasTwoDecimals() : CrossIndustryInvoiceBusi
 {
     /// <inheritdoc />
     public override bool Check(CrossIndustryInvoice? cii) =>
-        cii?.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation.DuePayableAmount == null
-        || cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation.DuePayableAmount.CountDecimals() <= 2;
+        cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.DuePayableAmount is null
+        || cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation.DuePayableAmount.Value.CountDecimals() <= 2;
 }

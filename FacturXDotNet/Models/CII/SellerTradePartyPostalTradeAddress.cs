@@ -24,5 +24,5 @@ public class SellerTradePartyPostalTradeAddress
     /// <BR-9>The Seller postal address (BG-5) shall contain a Seller country code.</BR-9>
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:PostalTradeAddress/ram:CountryID</CiiXPath>
     /// <Profile>MINIMUM</Profile>
-    public required string CountryId { get; set; }
+    public string? CountryId { get; set; }
 }

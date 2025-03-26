@@ -1,4 +1,7 @@
-﻿namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
+﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
+
+namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 
 /// <summary>
 ///     BR-HYBRID-07: The fx:ConformanceLevel in the XMP instance SHALL be a value from the HybridConformanceType code list.

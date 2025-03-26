@@ -1,4 +1,5 @@
 ﻿using FacturXDotNet.Models;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.Utils;
 
 namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
@@ -14,5 +15,5 @@ public record Br09InvoiceShallHaveSellerPostalAddressWithCountryCode() : CrossIn
 {
     /// <inheritdoc />
     public override bool Check(CrossIndustryInvoice? cii) =>
-        cii != null && Iso31661CountryCodesUtils.IsValidCountryCode(cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.PostalTradeAddress.CountryId);
+        Iso31661CountryCodesUtils.IsValidCountryCode(cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.PostalTradeAddress?.CountryId);
 }

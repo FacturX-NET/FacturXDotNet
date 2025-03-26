@@ -16,13 +16,13 @@ public class SellerTradeParty
     /// <BR-6>An Invoice shall contain the Seller name.</BR-6>
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeAgreement/ram:SellerTradeParty/ram:Name</CiiXPath>
     /// <Profile>MINIMUM</Profile>
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <inheritdoc cref="SellerTradePartySpecifiedLegalOrganization" />
     public SellerTradePartySpecifiedLegalOrganization? SpecifiedLegalOrganization { get; set; }
 
     /// <inheritdoc cref="SellerTradePartyPostalTradeAddress" />
-    public required SellerTradePartyPostalTradeAddress PostalTradeAddress { get; set; }
+    public SellerTradePartyPostalTradeAddress? PostalTradeAddress { get; set; }
 
     /// <inheritdoc cref="SellerTradePartySpecifiedTaxRegistration" />
     public SellerTradePartySpecifiedTaxRegistration? SpecifiedTaxRegistration { get; set; }

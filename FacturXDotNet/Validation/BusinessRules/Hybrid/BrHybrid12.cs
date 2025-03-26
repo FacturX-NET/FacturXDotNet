@@ -1,4 +1,7 @@
-﻿namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
+﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
+
+namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 
 /// <summary>
 ///     BR-HYBRID-12: The method of embedding the XML into the PDF SHALL conform as defined in the current specification in order to assure easy extraction of the machine readable XML

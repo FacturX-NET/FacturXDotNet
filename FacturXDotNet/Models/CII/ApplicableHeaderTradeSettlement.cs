@@ -25,8 +25,8 @@ public class ApplicableHeaderTradeSettlement
     /// <CiiXPath>/rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:InvoiceCurrencyCode</CiiXPath>
     /// <Profile>MINIMUM</Profile>
     /// <ChorusPro>Invoices and credit notes or Chorus Pro are mono-currencies only.</ChorusPro>
-    public required string InvoiceCurrencyCode { get; set; }
+    public string? InvoiceCurrencyCode { get; set; }
 
     /// <inheritdoc cref="CII.SpecifiedTradeSettlementHeaderMonetarySummation" />
-    public required SpecifiedTradeSettlementHeaderMonetarySummation SpecifiedTradeSettlementHeaderMonetarySummation { get; set; }
+    public SpecifiedTradeSettlementHeaderMonetarySummation? SpecifiedTradeSettlementHeaderMonetarySummation { get; set; }
 }

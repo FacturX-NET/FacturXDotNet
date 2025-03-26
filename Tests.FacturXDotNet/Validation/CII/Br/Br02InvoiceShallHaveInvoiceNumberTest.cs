@@ -1,6 +1,6 @@
-﻿using FacturXDotNet;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.BusinessRules.CII.Br;
-using Shouldly;
+using FluentAssertions;
 using Tests.FacturXDotNet.TestTools;
 
 namespace Tests.FacturXDotNet.Validation.CII.Br;
@@ -12,12 +12,12 @@ public class Br02InvoiceShallHaveInvoiceNumberTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocument.Id = "123";
+        cii.ExchangedDocument!.Id = "123";
 
         Br02InvoiceShallHaveInvoiceNumber rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -26,18 +26,18 @@ public class Br02InvoiceShallHaveInvoiceNumberTest
         Br02InvoiceShallHaveInvoiceNumber rule = new();
         bool result = rule.Check(null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocument.Id = "";
+        cii.ExchangedDocument!.Id = "";
 
         Br02InvoiceShallHaveInvoiceNumber rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 }

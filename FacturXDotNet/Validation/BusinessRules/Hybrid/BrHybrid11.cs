@@ -1,4 +1,7 @@
-﻿namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
+﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
+
+namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 
 /// <summary>
 ///     BR-HYBRID-11: The relationship between the embedded document and the PDF file SHOULD follow the table defined in the current specification.

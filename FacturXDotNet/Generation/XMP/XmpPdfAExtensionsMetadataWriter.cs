@@ -24,6 +24,7 @@ class XmpPdfAExtensionsMetadataWriter
     {
         await writer.WriteStartElementAsync("rdf", "Description", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         await writer.WriteAttributeStringAsync("xmlns", PrefixPdfAExtension, "http://www.w3.org/2000/xmlns/", NsPdfAExtension);
+        await writer.WriteAttributeStringAsync("rdf", "about", "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "");
 
         if (data.Schemas.Count > 0)
         {
@@ -51,12 +52,12 @@ class XmpPdfAExtensionsMetadataWriter
     {
         await writer.WriteAttributeStringAsync(PrefixRdf, "parseType", NsRdf, "Resource");
 
-        if (schema.NamespaceUri != null)
+        if (schema.NamespaceUri is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfASchema, "namespaceURI", NsPdfASchema, schema.NamespaceUri);
         }
 
-        if (schema.Prefix != null)
+        if (schema.Prefix is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfASchema, "prefix", NsPdfASchema, schema.Prefix);
         }
@@ -68,7 +69,7 @@ class XmpPdfAExtensionsMetadataWriter
             await writer.WriteEndElementAsync();
         }
 
-        if (schema.Schema != null)
+        if (schema.Schema is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfASchema, "schema", NsPdfASchema, schema.Schema);
         }
@@ -90,17 +91,17 @@ class XmpPdfAExtensionsMetadataWriter
             await writer.WriteElementStringAsync(PrefixPdfAProperty, "category", NsPdfAProperty, property.Category.Value.ToXmpPdfAPropertyCategoryString());
         }
 
-        if (property.Description != null)
+        if (property.Description is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfAProperty, "description", NsPdfAProperty, property.Description);
         }
 
-        if (property.Name != null)
+        if (property.Name is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfAProperty, "name", NsPdfAProperty, property.Name);
         }
 
-        if (property.ValueType != null)
+        if (property.ValueType is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfAProperty, "valueType", NsPdfAProperty, property.ValueType);
         }
@@ -110,7 +111,7 @@ class XmpPdfAExtensionsMetadataWriter
     {
         await writer.WriteAttributeStringAsync(PrefixRdf, "parseType", NsRdf, "Resource");
 
-        if (type.Description != null)
+        if (type.Description is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfAType, "description", NsPdfAType, type.Description);
         }
@@ -122,17 +123,17 @@ class XmpPdfAExtensionsMetadataWriter
             await writer.WriteEndElementAsync();
         }
 
-        if (type.NamespaceUri != null)
+        if (type.NamespaceUri is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfAType, "namespaceURI", NsPdfAType, type.NamespaceUri);
         }
 
-        if (type.Prefix != null)
+        if (type.Prefix is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfAType, "prefix", NsPdfAType, type.Prefix);
         }
 
-        if (type.Type != null)
+        if (type.Type is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfAType, "type", NsPdfAType, type.Type);
         }
@@ -142,17 +143,17 @@ class XmpPdfAExtensionsMetadataWriter
     {
         await writer.WriteAttributeStringAsync(PrefixRdf, "parseType", NsRdf, "Resource");
 
-        if (field.Description != null)
+        if (field.Description is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfAField, "description", NsPdfAField, field.Description);
         }
 
-        if (field.Name != null)
+        if (field.Name is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfAField, "name", NsPdfAField, field.Name);
         }
 
-        if (field.ValueType != null)
+        if (field.ValueType is not null)
         {
             await writer.WriteElementStringAsync(PrefixPdfAField, "valueType", NsPdfAField, field.ValueType);
         }

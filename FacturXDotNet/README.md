@@ -54,11 +54,10 @@ The model intentionally introduces some redundancy to improve clarity and mainta
 
 This separation ensures that each property is mapped to a unique business term from the Factur-X specification. If a single model were used for both cases, properties would need to match multiple business terms, making the documentation less precise and harder to interpret.
 
-### 4. Support for Multiple Profiles
+### 4. Nullable Properties for Flexibility
 
-To ensure that a single object can support all Factur-X profiles, the model follows the constraints of the least restrictive profile, which is **MINIMUM**. This means that properties that are optional in MINIMUM remain nullable in all profiles, even if they are required in higher-level profiles such as BASIC or EN16931.
-
-When working with higher profiles, users can assume that properties required by those profiles are set, even though they are technically nullable.
+To ensure that the models can be used in a wide range of scenarios, all properties are nullable by default. This allows users to work with partial Factur-X data or to create new Factur-X documents without having to provide all properties.
+It also allows the use of one model for all profiles, as properties that are not present in simpler profiles can be null.
 
 ### 5. Reimplementation of Schematron Rules in C#
 

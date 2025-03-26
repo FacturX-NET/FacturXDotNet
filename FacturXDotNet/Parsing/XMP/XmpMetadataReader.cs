@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.XMP.Exceptions;
 using TurboXml;
 

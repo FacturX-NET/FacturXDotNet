@@ -1,7 +1,6 @@
-﻿using FacturXDotNet;
-using FacturXDotNet.Models.XMP;
+﻿using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Validation.BusinessRules.Hybrid;
-using Shouldly;
+using FluentAssertions;
 using Tests.FacturXDotNet.TestTools;
 
 namespace Tests.FacturXDotNet.Validation.Hybrid;
@@ -18,7 +17,7 @@ public class BrHybrid06Test
         BrHybrid06 rule = new();
         bool result = rule.Check(xmp, null, null);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -27,7 +26,7 @@ public class BrHybrid06Test
         BrHybrid06 rule = new();
         bool result = rule.Check(null, null, null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
@@ -39,7 +38,7 @@ public class BrHybrid06Test
         BrHybrid06 rule = new();
         bool result = rule.Check(null, null, null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
@@ -51,6 +50,6 @@ public class BrHybrid06Test
         BrHybrid06 rule = new();
         bool result = rule.Check(xmp, null, null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 }

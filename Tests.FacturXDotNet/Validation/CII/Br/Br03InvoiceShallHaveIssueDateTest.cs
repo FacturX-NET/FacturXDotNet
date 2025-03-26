@@ -1,6 +1,6 @@
-﻿using FacturXDotNet;
+﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation.BusinessRules.CII.Br;
-using Shouldly;
+using FluentAssertions;
 using Tests.FacturXDotNet.TestTools;
 
 namespace Tests.FacturXDotNet.Validation.CII.Br;
@@ -12,12 +12,12 @@ public class Br03InvoiceShallHaveIssueDateTest
     public void ShouldValidate_WhenValueIsValid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocument.IssueDateTime = DateOnly.FromDateTime(DateTime.Now);
+        cii.ExchangedDocument!.IssueDateTime = DateOnly.FromDateTime(DateTime.Now);
 
         Br03InvoiceShallHaveIssueDate rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeTrue();
+        result.Should().BeTrue();
     }
 
     [TestMethod]
@@ -26,18 +26,18 @@ public class Br03InvoiceShallHaveIssueDateTest
         Br03InvoiceShallHaveIssueDate rule = new();
         bool result = rule.Check(null);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 
     [TestMethod]
     public void ShouldNotValidate_WhenValueIsInvalid()
     {
         CrossIndustryInvoice cii = FakeData.CrossIndustryInvoice;
-        cii.ExchangedDocument.IssueDateTime = default;
+        cii.ExchangedDocument!.IssueDateTime = default;
 
         Br03InvoiceShallHaveIssueDate rule = new();
         bool result = rule.Check(cii);
 
-        result.ShouldBeFalse();
+        result.Should().BeFalse();
     }
 }

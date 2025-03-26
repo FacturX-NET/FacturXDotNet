@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 using FacturXDotNet.CLI;
-using Shouldly;
+using FluentAssertions;
 
 namespace Tests.FacturXDotNet.CLI;
 
@@ -18,7 +18,7 @@ public class FacturXCliExtractionTest
     {
         int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--cii"]);
 
-        result.ShouldBe(0);
+        result.Should().Be(0);
         CompareXmlFiles("TestFiles/facturx.xml", ExpectedCiiPath);
     }
 
@@ -26,7 +26,7 @@ public class FacturXCliExtractionTest
     public async Task ShouldFailToExtractCii_WhenNotInPdf()
     {
         int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXWithCiiNameXRechnung, "--cii"]);
-        result.ShouldBe(1);
+        result.Should().Be(1);
     }
 
     [TestMethod]
@@ -34,7 +34,7 @@ public class FacturXCliExtractionTest
     {
         int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--cii", "custom_name.xml"]);
 
-        result.ShouldBe(0);
+        result.Should().Be(0);
         CompareXmlFiles("custom_name.xml", ExpectedCiiPath);
     }
 
@@ -43,7 +43,7 @@ public class FacturXCliExtractionTest
     {
         int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--xmp"]);
 
-        result.ShouldBe(0);
+        result.Should().Be(0);
         CompareXmlFiles("TestFiles/facturx.xmp", ExpectedXmpPath);
     }
 
@@ -51,7 +51,7 @@ public class FacturXCliExtractionTest
     public async Task ShouldFailToExtractXmp_WhenNoXmpInPdf()
     {
         int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXWithoutXmpPath, "--xmp"]);
-        result.ShouldNotBe(0);
+        result.Should().NotBe(0);
     }
 
     [TestMethod]
@@ -59,7 +59,7 @@ public class FacturXCliExtractionTest
     {
         int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--xmp", "custom_name.xml"]);
 
-        result.ShouldBe(0);
+        result.Should().Be(0);
         CompareXmlFiles("custom_name.xml", ExpectedXmpPath);
     }
 
@@ -68,6 +68,6 @@ public class FacturXCliExtractionTest
         XDocument fileDocument = XDocument.Load(filePath);
         XDocument expectedFileDocument = XDocument.Load(expectedFilePath);
 
-        fileDocument.ShouldBeEquivalentTo(expectedFileDocument);
+        fileDocument.Should().BeEquivalentTo(expectedFileDocument);
     }
 }

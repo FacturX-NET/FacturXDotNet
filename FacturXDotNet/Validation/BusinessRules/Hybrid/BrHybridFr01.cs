@@ -1,4 +1,7 @@
-﻿namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
+﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
+
+namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 
 /// <summary>
 ///     BR-HYBRID-FR-01: If the Buyer Country BT-40 is France and the Seller Country BT-55 is France the XRECHNUNG profile SHALL NOT be used.
