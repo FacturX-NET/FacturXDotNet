@@ -47,7 +47,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
                 }
             }
         };
-        CiiAttachmentOption = new Option<string>("--cii-attachment")
+        CiiAttachmentOption = new Option<string>("--cii-name")
         {
             Description = "The name of the CII attachment.",
             HelpName = "name",

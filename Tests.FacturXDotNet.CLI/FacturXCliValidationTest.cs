@@ -15,9 +15,16 @@ public class FacturXCliValidationTest
     }
 
     [TestMethod]
+    public async Task ShouldUseCustomName_ForCii()
+    {
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["validate", "TestFiles/facturx_with_xrechnung.pdf", "--cii-name", "xrechnung.xml"]);
+        result.Should().Be(1);
+    }
+
+    [TestMethod]
     public async Task ShouldNotValidateFacturX_WithoutCii()
     {
-        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["validate", "TestFiles/facturx_with_cii_named_xrechnung.pdf"]);
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["validate", "TestFiles/facturx_with_xrechnung.pdf"]);
         result.Should().Be(1);
     }
 

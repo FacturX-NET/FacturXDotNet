@@ -147,7 +147,7 @@ public class FacturXDocumentBuilder
                 await _xmp.DisposeAsync();
             }
 
-            ReplaceXmpMetadataOfPdfDocument.ReplaceXmpMetadata(pdfDocument, newMetadataBytes);
+            ReplaceXmpMetadataOfPdfDocument.ReplaceXmpMetadata(pdfDocument, new byte[0]);
 
             _logger?.LogInformation("Added XMP metadata to the PDF document.");
         }

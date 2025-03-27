@@ -23,6 +23,7 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
         CiiOption,
         CiiAttachmentNameOption,
         AttachmentsOption,
+        OutputPathOption,
         SkipValidationOption,
         TreatWarningsAsErrorsOption,
         ProfileOption,
