@@ -148,8 +148,6 @@ public class FacturXDocumentBuilder
         pdfDocument.Options.UseFlateDecoderForJpegImages = PdfUseFlateDecoderForJpegImages.Automatic;
         pdfDocument.Options.AutomaticXmpGeneration = false;
 
-        pdfDocument.SetPdfA();
-
         await pdfDocument.SaveAsync(resultStream);
 
         return FacturXDocument.LoadFromBuffer(resultStream.GetBuffer().AsMemory(0, (int)resultStream.Length));

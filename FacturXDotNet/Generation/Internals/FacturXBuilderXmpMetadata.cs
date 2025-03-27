@@ -46,6 +46,7 @@ static class FacturXBuilderXmpMetadata
         xmpMetadata.DublinCore.Title = [ComputeTitle(cii)];
         xmpMetadata.DublinCore.Description = [ComputeDescription(cii)];
         xmpMetadata.DublinCore.Date = [now];
+        xmpMetadata.DublinCore.Creator = GetIssuer(cii) is { } issuer ? [issuer] : xmpMetadata.DublinCore.Creator;
         xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
         AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
         xmpMetadata.FacturX ??= new XmpFacturXMetadata();
@@ -139,19 +140,8 @@ static class FacturXBuilderXmpMetadata
     {
         string documentType = GetInvoiceType(cii);
 
-        string? issuer = cii.ExchangedDocument?.TypeCode switch
-        {
-            InvoiceTypeCode.SelfBilledInvoice or InvoiceTypeCode.SelfBilledCreditNote or InvoiceTypeCode.SelfBilledDebitNote => cii.SupplyChainTradeTransaction
-                ?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name,
-            _ => cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name
-        };
-
-        string? recipient = cii.ExchangedDocument?.TypeCode switch
-        {
-            InvoiceTypeCode.SelfBilledInvoice or InvoiceTypeCode.SelfBilledCreditNote or InvoiceTypeCode.SelfBilledDebitNote => cii.SupplyChainTradeTransaction
-                ?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name,
-            _ => cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name
-        };
+        string? issuer = GetIssuer(cii);
+        string? recipient = GetRecipient(cii);
 
         return $"{documentType} number {cii.ExchangedDocument?.Id} dated {cii.ExchangedDocument?.IssueDateTime?.ToString("d") ?? "???"} issued by {issuer} to {recipient}";
     }
@@ -215,5 +205,21 @@ static class FacturXBuilderXmpMetadata
             InvoiceTypeCode.FinalConstructionInvoice => "Final construction invoice (877)",
             InvoiceTypeCode.CustomsInvoice => "Customs invoice (935)",
             null or _ => "Document"
+        };
+
+    static string? GetIssuer(CrossIndustryInvoice cii) =>
+        cii.ExchangedDocument?.TypeCode switch
+        {
+            InvoiceTypeCode.SelfBilledInvoice or InvoiceTypeCode.SelfBilledCreditNote or InvoiceTypeCode.SelfBilledDebitNote => cii.SupplyChainTradeTransaction
+                ?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name,
+            _ => cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name
+        };
+
+    static string? GetRecipient(CrossIndustryInvoice cii) =>
+        cii.ExchangedDocument?.TypeCode switch
+        {
+            InvoiceTypeCode.SelfBilledInvoice or InvoiceTypeCode.SelfBilledCreditNote or InvoiceTypeCode.SelfBilledDebitNote => cii.SupplyChainTradeTransaction
+                ?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name,
+            _ => cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name
         };
 }
