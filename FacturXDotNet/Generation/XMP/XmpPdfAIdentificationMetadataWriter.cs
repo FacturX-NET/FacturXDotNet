@@ -19,8 +19,15 @@ class XmpPdfAIdentificationMetadataWriter
             await writer.WriteElementStringAsync(PrefixPdfaid, "amd", NsPdfaid, data.Amendment);
         }
 
-        await writer.WriteElementStringAsync(PrefixPdfaid, "conformance", NsPdfaid, data.Conformance.ToXmpPdfAConformanceLevel().ToString());
-        await writer.WriteElementStringAsync(PrefixPdfaid, "part", NsPdfaid, data.Part.ToString());
+        if (data.Conformance != null)
+        {
+            await writer.WriteElementStringAsync(PrefixPdfaid, "conformance", NsPdfaid, data.Conformance.Value.ToXmpPdfAConformanceLevel().ToString());
+        }
+
+        if (data.Part != null)
+        {
+            await writer.WriteElementStringAsync(PrefixPdfaid, "part", NsPdfaid, data.Part.Value.ToString());
+        }
 
         await writer.WriteEndElementAsync();
     }

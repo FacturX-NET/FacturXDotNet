@@ -1,5 +1,6 @@
 ﻿using FacturXDotNet.Generation.Internals;
 using FacturXDotNet.Generation.PDF;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
@@ -59,7 +60,7 @@ public class FacturXDocumentBuilder
     public FacturXDocumentBuilder WithCrossIndustryInvoice(Stream ciiStream, string? ciiAttachmentName = null, bool leaveOpen = true)
     {
         _args.Cii = ciiStream;
-        _args.CiiAttachmentName = ciiAttachmentName;
+        _args.CiiAttachmentName = ciiAttachmentName ?? _args.CiiAttachmentName;
         _args.CiiLeaveOpen = leaveOpen;
         return this;
     }
@@ -125,8 +126,8 @@ public class FacturXDocumentBuilder
             await _args.BasePdf.DisposeAsync();
         }
 
-        await FacturXBuilderXmpMetadata.AddXmpMetadataAsync(pdfDocument, _args);
-        await FacturXBuilderCrossIndustryInvoice.AddCrossIndustryInvoiceAttachmentAsync(pdfDocument, _args);
+        CrossIndustryInvoice cii = await FacturXBuilderCrossIndustryInvoice.AddCrossIndustryInvoiceAttachmentAsync(pdfDocument, _args);
+        await FacturXBuilderXmpMetadata.AddXmpMetadataAsync(pdfDocument, cii, _args);
         FacturXBuilderAttachments.AddAttachments(pdfDocument, _args);
 
         pdfDocument.Options.FlateEncodeMode = PdfFlateEncodeMode.BestCompression;
@@ -164,7 +165,7 @@ class FacturXDocumentBuildArgs
     public string? BasePdfPassword { get; set; }
     public bool BasePdfLeaveOpen { get; set; }
     public Stream? Cii { get; set; }
-    public string? CiiAttachmentName { get; set; }
+    public string CiiAttachmentName { get; set; } = "factur-x.xml";
     public bool CiiLeaveOpen { get; set; }
     public Stream? Xmp { get; set; }
     public bool XmpLeaveOpen { get; set; }

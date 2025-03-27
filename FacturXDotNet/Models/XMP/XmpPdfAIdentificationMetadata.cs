@@ -23,7 +23,7 @@ public class XmpPdfAIdentificationMetadata
     ///     Required.
     /// </remarks>
     /// <XmpTag>pdfaid:conformance</XmpTag>
-    public required XmpPdfAConformanceLevel Conformance { get; set; }
+    public XmpPdfAConformanceLevel? Conformance { get; set; }
 
     /// <summary>
     ///     PDF/A version identifier.
@@ -32,5 +32,5 @@ public class XmpPdfAIdentificationMetadata
     ///     Required.
     /// </remarks>
     /// <XmpTag>pdfaid:part</XmpTag>
-    public required int Part { get; set; }
+    public int? Part { get; set; }
 }
