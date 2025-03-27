@@ -132,7 +132,7 @@ static class FacturXBuilderXmpMetadata
     static string ComputeTitle(CrossIndustryInvoice cii)
     {
         string documentType = GetInvoiceType(cii);
-        return $"{documentType} {cii.ExchangedDocument?.Id} dated {cii.ExchangedDocument?.IssueDateTime?.ToString("d") ?? "???"}";
+        return $"{documentType} number {cii.ExchangedDocument?.Id} dated {cii.ExchangedDocument?.IssueDateTime?.ToString("d") ?? "???"}";
     }
 
     static string ComputeDescription(CrossIndustryInvoice cii)
@@ -153,7 +153,7 @@ static class FacturXBuilderXmpMetadata
             _ => cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name
         };
 
-        return $"{documentType} {cii.ExchangedDocument?.Id} dated {cii.ExchangedDocument?.IssueDateTime?.ToString("d") ?? "???"} issued by {issuer} to {recipient}";
+        return $"{documentType} number {cii.ExchangedDocument?.Id} dated {cii.ExchangedDocument?.IssueDateTime?.ToString("d") ?? "???"} issued by {issuer} to {recipient}";
     }
 
     static string GetInvoiceType(CrossIndustryInvoice cii) =>

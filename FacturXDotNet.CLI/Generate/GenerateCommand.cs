@@ -153,7 +153,7 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
 
                             if (!string.IsNullOrWhiteSpace(options.Author))
                             {
-                                metadata.DublinCore.Creator.Add(options.Author);
+                                metadata.DublinCore.Creator = [options.Author];
                             }
                         }
                     );
