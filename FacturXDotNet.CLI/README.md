@@ -1,5 +1,5 @@
 ```
-FacturX.NET CLI v1.0.0+4470971efa42b446a00d5a16d69ce7b8aebc59c7
+FacturX.NET CLI v0.1.0-alpha.4+82dc4ab997370e5b21e2a89d0357faa95c7bb8fe
 Copyright © 2025 Ismail Bennani
 
 Usage:
@@ -32,7 +32,7 @@ Options:
   --skip-validation                                                        Do not validate the generated Factur-X PDF. [default: False]
   --warnings-as-errors                                                     Treat warnings as errors. [default: False]
   -p, --profile <Basic|BasicWl|En16931|Extended|Minimum|None>              The profile to use for validation. If set, the profile will override the one specified in the Factur-X file.
-  -s, --skip-rule                                                          The business rules that should be skipped. Example: --skip-rule "BR-DE-1" --skip-rule "BR-DE-2"
+  -s, --skip-rule                                                          The business rules that should be skipped. Example: --skip-rule "BR-01" --skip-rule "BR-02"
   -v, --verbosity <d|detailed|diag|diagnostic|m|minimal|n|normal|q|quiet>  Set the verbosity level. [default: Normal]
   -?, -h, --help                                                           Show help and usage information
 ```
@@ -65,7 +65,7 @@ Result
 # Validate
 
 ```
-FacturX.NET CLI v1.0.0+4470971efa42b446a00d5a16d69ce7b8aebc59c7
+FacturX.NET CLI v0.1.0-alpha.4+82dc4ab997370e5b21e2a89d0357faa95c7bb8fe
 Copyright © 2025 Ismail Bennani
 
 Usage:
@@ -78,7 +78,7 @@ Options:
   --cii-attachment <name>                                      The name of the CII attachment. [default: factur-x.xml]
   --warnings-as-errors                                         Treat warnings as errors.
   -p, --profile <Basic|BasicWl|En16931|Extended|Minimum|None>  The profile to use for validation. If set, the profile will override the one specified in the Factur-X file.
-  -s, --skip-rule                                              The business rules that should be skipped. Example: --skip-rule "BR-DE-1" --skip-rule "BR-DE-2"
+  -s, --skip-rule                                              The business rules that should be skipped. Example: --skip-rule "BR-01" --skip-rule "BR-02"
   -?, -h, --help                                               Show help and usage information
 ```
 
@@ -103,7 +103,7 @@ Result
 # Extract
 
 ```
-FacturX.NET CLI v1.0.0+4470971efa42b446a00d5a16d69ce7b8aebc59c7
+FacturX.NET CLI v0.1.0-alpha.4+82dc4ab997370e5b21e2a89d0357faa95c7bb8fe
 Copyright © 2025 Ismail Bennani
 
 Usage:

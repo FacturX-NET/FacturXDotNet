@@ -64,7 +64,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         };
         RulesToSkipOption = new Option<IEnumerable<string>>("--skip-rule", "-s")
         {
-            Description = "The business rules that should be skipped. Example: --skip-rule \"BR-DE-1\" --skip-rule \"BR-DE-2\"",
+            Description = "The business rules that should be skipped. Example: --skip-rule \"BR-01\" --skip-rule \"BR-02\"",
             Arity = ArgumentArity.ZeroOrMore
         };
     }
