@@ -9,6 +9,8 @@ namespace FacturXDotNet.CLI.Extract;
 
 class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts the content of a Factur-X PDF.", [PathArgument], [CiiOption, CiiAttachmentOption, XmpOption])
 {
+    const string DefaultCiiAttachment = "factur-x.xml";
+
     static readonly Argument<FileInfo> PathArgument;
     static readonly Option<string> CiiOption;
     static readonly Option<string> CiiAttachmentOption;
@@ -41,7 +43,7 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
         {
             Description = "The name of the CII attachment.",
             HelpName = "name",
-            DefaultValueFactory = _ => "factur-x.xml"
+            DefaultValueFactory = _ => DefaultCiiAttachment
         };
         XmpOption = new Option<string>("--xmp")
         {
@@ -70,6 +72,9 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
 
     protected override async Task<int> RunImplAsync(ExtractCommandOptions options, CancellationToken cancellationToken = default)
     {
+        ShowOptions(options);
+        AnsiConsole.WriteLine();
+
         if (options.ExportCii)
         {
             await AnsiConsole.Status()
@@ -139,6 +144,27 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
 
         await using FileStream xmpFile = File.Open(outputPath, FileMode.Create);
         await xmpStream.CopyToAsync(xmpFile, cancellationToken);
+    }
+
+    static void ShowOptions(ExtractCommandOptions options)
+    {
+        Grid optionsGrid = new();
+        optionsGrid.AddColumn();
+        optionsGrid.AddColumn();
+
+        optionsGrid.AddRow("[bold]Document[/]", options.Path.FullName);
+
+        if (options.ExportCii)
+        {
+            if (!string.IsNullOrWhiteSpace(options.CiiAttachment) && options.CiiAttachment != DefaultCiiAttachment)
+            {
+                optionsGrid.AddRow("[bold]CII attachment name[/]", options.CiiAttachment);
+            }
+
+            optionsGrid.AddRow("[bold]Export CII[/]", "True");
+        }
+
+        AnsiConsole.Write(new Panel(optionsGrid).Header("Options").Border(BoxBorder.Rounded));
     }
 }
 

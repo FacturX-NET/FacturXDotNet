@@ -126,6 +126,12 @@ facturx validate "0.MINIMUM\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIEN_MINIM
 
 Result
 ```
-✔ Extracted CII XML to 'D:\source\repos\BenchmarkFacturX\Specification 1.0.07.2\5. FACTUR-X 1.07.2 - Examples\0.MINIMUM\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.xml' in 42 milliseconds.
-✔ Extracted XMP metadata to 'D:\source\repos\BenchmarkFacturX\Specification 1.0.07.2\5. FACTUR-X 1.07.2 - Examples\0.MINIMUM\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.xmp' in 4 milliseconds.
+╭─Options─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ Document    D:\source\repos\FacturXDotNet\Specification 1.0.07.2\5. FACTUR-X 1.07.2 - Examples\0.MINIMUM\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.pdf │
+│ Export CII  True                                                                                                                                                        │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✔ Extracted CII XML to 'D:\source\repos\FacturXDotNet\Specification 1.0.07.2\5. FACTUR-X 1.07.2 - Examples\0.MINIMUM\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.xml' in 75 milliseconds.
+✔ Extracted XMP metadata to 'D:\source\repos\FacturXDotNet\Specification 1.0.07.2\5. FACTUR-X 1.07.2 - Examples\0.MINIMUM\Facture_F20220023-LE_FOURNISSEUR-POUR-LE_CLIENT_MINIMUM.xmp' in 5 milliseconds.
+
 ```
