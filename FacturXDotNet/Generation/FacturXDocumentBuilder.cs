@@ -1,8 +1,6 @@
-﻿using FacturXDotNet.Extensions;
+﻿using FacturXDotNet.Generation.Internals;
 using FacturXDotNet.Generation.PDF;
-using FacturXDotNet.Generation.XMP;
 using FacturXDotNet.Models.XMP;
-using FacturXDotNet.Parsing.XMP;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
@@ -13,17 +11,7 @@ namespace FacturXDotNet.Generation;
 /// </summary>
 public class FacturXDocumentBuilder
 {
-    Stream? _basePdf;
-    string? _basePdfPassword;
-    bool _basePdfLeaveOpen;
-    Stream? _cii;
-    string? _ciiAttachmentName;
-    bool _ciiLeaveOpen;
-    Stream? _xmp;
-    bool _xmpLeaveOpen;
-    Action<XmpMetadata>? _postProcessXmpMetadata;
-    readonly List<(PdfAttachmentData Name, FacturXDocumentBuilderAttachmentConflictResolution ConflictResolution)> _attachments = [];
-    ILogger? _logger;
+    readonly FacturXDocumentBuildArgs _args = new();
 
     /// <summary>
     ///     Call <see cref="FacturXDocument.Create" /> to instantiate a new builder.
@@ -37,7 +25,7 @@ public class FacturXDocumentBuilder
     /// <returns>The builder itself for chaining.</returns>
     public FacturXDocumentBuilder SetLogger(ILogger? logger)
     {
-        _logger = logger;
+        _args.Logger = logger;
         return this;
     }
 
@@ -51,9 +39,9 @@ public class FacturXDocumentBuilder
     /// <returns>The builder itself for chaining.</returns>
     public FacturXDocumentBuilder WithBasePdf(Stream pdfImageStream, string? password = null, bool leaveOpen = true)
     {
-        _basePdf = pdfImageStream;
-        _basePdfPassword = password;
-        _basePdfLeaveOpen = leaveOpen;
+        _args.BasePdf = pdfImageStream;
+        _args.BasePdfPassword = password;
+        _args.BasePdfLeaveOpen = leaveOpen;
         return this;
     }
 
@@ -70,9 +58,9 @@ public class FacturXDocumentBuilder
     /// <returns>The builder itself for chaining.</returns>
     public FacturXDocumentBuilder WithCrossIndustryInvoice(Stream ciiStream, string? ciiAttachmentName = null, bool leaveOpen = true)
     {
-        _cii = ciiStream;
-        _ciiAttachmentName = ciiAttachmentName;
-        _ciiLeaveOpen = leaveOpen;
+        _args.Cii = ciiStream;
+        _args.CiiAttachmentName = ciiAttachmentName;
+        _args.CiiLeaveOpen = leaveOpen;
         return this;
     }
 
@@ -85,8 +73,8 @@ public class FacturXDocumentBuilder
     /// <returns>The builder itself for chaining.</returns>
     public FacturXDocumentBuilder WithXmpMetadata(Stream xmpStream, bool leaveOpen = true)
     {
-        _xmp = xmpStream;
-        _xmpLeaveOpen = leaveOpen;
+        _args.Xmp = xmpStream;
+        _args.XmpLeaveOpen = leaveOpen;
         return this;
     }
 
@@ -98,7 +86,7 @@ public class FacturXDocumentBuilder
     /// <returns>The builder itself for chaining.</returns>
     public FacturXDocumentBuilder PostProcessXmpMetadata(Action<XmpMetadata>? postProcess)
     {
-        _postProcessXmpMetadata = postProcess;
+        _args.PostProcessXmpMetadata = postProcess;
         return this;
     }
 
@@ -113,7 +101,7 @@ public class FacturXDocumentBuilder
         FacturXDocumentBuilderAttachmentConflictResolution conflictResolution = FacturXDocumentBuilderAttachmentConflictResolution.Overwrite
     )
     {
-        _attachments.Add((attachment, conflictResolution));
+        _args.Attachments.Add((attachment, conflictResolution));
         return this;
     }
 
@@ -123,48 +111,23 @@ public class FacturXDocumentBuilder
     /// <returns>The Factur-X document.</returns>
     public async Task<FacturXDocument> BuildAsync()
     {
-        if (_basePdf is null)
+        if (_args.BasePdf is null)
         {
             throw new InvalidOperationException("A base PDF image must be provided.");
         }
 
-        string ciiAttachmentName = _ciiAttachmentName ?? "factur-x.xml";
-
         await using MemoryStream resultStream = new();
 
-        using PdfDocument pdfDocument = OpenPdfDocumentAsync(_basePdf, _basePdfPassword);
+        using PdfDocument pdfDocument = OpenPdfDocumentAsync(_args.BasePdf, _args.BasePdfPassword);
 
-        if (!_basePdfLeaveOpen)
+        if (!_args.BasePdfLeaveOpen)
         {
-            await _basePdf.DisposeAsync();
+            await _args.BasePdf.DisposeAsync();
         }
 
-        await AddXmpMetadataAsync(pdfDocument);
-        _logger?.LogInformation("Added XMP metadata to the PDF document.");
-
-
-        if (_cii is not null)
-        {
-            PdfAttachmentData ciiAttachment = PdfAttachmentData.LoadFromStream(ciiAttachmentName, _cii);
-            ciiAttachment.Description = "CII XML - FacturX";
-            ciiAttachment.Relationship = AfRelationship.Alternative;
-            ciiAttachment.MimeType = "application/xml";
-
-            if (!_ciiLeaveOpen)
-            {
-                await _cii.DisposeAsync();
-            }
-
-            AddAttachment(pdfDocument, ciiAttachment, FacturXDocumentBuilderAttachmentConflictResolution.Overwrite);
-
-            _logger?.LogInformation("Added CII attachment to the PDF document.");
-        }
-
-        foreach ((PdfAttachmentData attachment, FacturXDocumentBuilderAttachmentConflictResolution conflictResolution) in _attachments)
-        {
-            AddAttachment(pdfDocument, attachment, conflictResolution);
-            _logger?.LogInformation("Added attachment {AttachmentName} to the PDF document.", attachment.Name);
-        }
+        await FacturXBuilderXmpMetadata.AddXmpMetadataAsync(pdfDocument, _args);
+        await FacturXBuilderCrossIndustryInvoice.AddCrossIndustryInvoiceAttachmentAsync(pdfDocument, _args);
+        FacturXBuilderAttachments.AddAttachments(pdfDocument, _args);
 
         pdfDocument.Options.FlateEncodeMode = PdfFlateEncodeMode.BestCompression;
         pdfDocument.Options.CompressContentStreams = true;
@@ -176,68 +139,6 @@ public class FacturXDocumentBuilder
         await pdfDocument.SaveAsync(resultStream);
 
         return FacturXDocument.LoadFromBuffer(resultStream.GetBuffer().AsMemory(0, (int)resultStream.Length));
-    }
-
-    async Task AddXmpMetadataAsync(PdfDocument pdfDocument)
-    {
-        Stream xmpStream;
-        if (_xmp is null)
-        {
-            ExtractXmpFromPdf extractor = new();
-            xmpStream = extractor.ExtractXmpMetadata(pdfDocument);
-
-            // ensure xmp stream is disposed
-            _xmpLeaveOpen = false;
-        }
-        else
-        {
-            xmpStream = _xmp;
-        }
-
-        XmpMetadataReader xmpReader = new();
-        XmpMetadata xmpMetadata = xmpReader.Read(xmpStream);
-
-        _postProcessXmpMetadata?.Invoke(xmpMetadata);
-
-        if (!_xmpLeaveOpen)
-        {
-            await xmpStream.DisposeAsync();
-        }
-
-        await using MemoryStream finalXmpStream = new();
-        XmpMetadataWriter xmpWriter = new();
-        await xmpWriter.WriteAsync(finalXmpStream, xmpMetadata);
-
-        ReplaceXmpMetadataOfPdfDocument.ReplaceXmpMetadata(pdfDocument, finalXmpStream.GetBuffer().AsSpan(0, (int)finalXmpStream.Length));
-    }
-
-    void AddAttachment(PdfDocument document, PdfAttachmentData attachment, FacturXDocumentBuilderAttachmentConflictResolution conflictResolution)
-    {
-        if (document.ListAttachments().Contains(attachment.Name))
-        {
-            switch (conflictResolution)
-            {
-                case FacturXDocumentBuilderAttachmentConflictResolution.KeepOld:
-                    // nothing to do, we keep the old attachment
-                    _logger?.LogWarning("An attachment with the name {AttachmentName} already exists in the PDF document, will keep the old attachment.", attachment.Name);
-                    return;
-                case FacturXDocumentBuilderAttachmentConflictResolution.Overwrite:
-                    // we remove the old attachment and add the new one
-                    document.RemoveAttachment(attachment.Name);
-                    _logger?.LogWarning("An attachment with the name {AttachmentName} already exists in the PDF document, will overwrite the old attachment.", attachment.Name);
-                    break;
-                case FacturXDocumentBuilderAttachmentConflictResolution.KeepBoth:
-                    // we add the new attachment in addition to the old one
-                    _logger?.LogWarning("An attachment with the name {AttachmentName} already exists in the PDF document, will keep both attachments.", attachment.Name);
-                    break;
-                case FacturXDocumentBuilderAttachmentConflictResolution.Throw:
-                    throw new InvalidOperationException($"An attachment with the name {attachment.Name} already exists in the PDF document.");
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(conflictResolution), conflictResolution, null);
-            }
-        }
-
-        document.AddAttachment(attachment);
     }
 
     static PdfDocument OpenPdfDocumentAsync(Stream stream, string? password)
@@ -255,4 +156,19 @@ public class FacturXDocumentBuilder
 
         return document;
     }
+}
+
+class FacturXDocumentBuildArgs
+{
+    public Stream? BasePdf { get; set; }
+    public string? BasePdfPassword { get; set; }
+    public bool BasePdfLeaveOpen { get; set; }
+    public Stream? Cii { get; set; }
+    public string? CiiAttachmentName { get; set; }
+    public bool CiiLeaveOpen { get; set; }
+    public Stream? Xmp { get; set; }
+    public bool XmpLeaveOpen { get; set; }
+    public Action<XmpMetadata>? PostProcessXmpMetadata { get; set; }
+    public List<(PdfAttachmentData Name, FacturXDocumentBuilderAttachmentConflictResolution ConflictResolution)> Attachments { get; set; } = [];
+    public ILogger? Logger { get; set; }
 }
