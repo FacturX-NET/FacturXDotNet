@@ -60,7 +60,6 @@ static class FacturXBuilderXmpMetadata
         string toolName = string.IsNullOrWhiteSpace(Version) ? "FacturX.NET ~dev" : $"FacturX.NET v{Version}";
         xmpMetadata.Basic.CreatorTool = toolName;
         xmpMetadata.Pdf.Producer = toolName;
-        xmpMetadata.DublinCore.Creator.Add(toolName);
 
         if (!args.XmpLeaveOpen)
         {

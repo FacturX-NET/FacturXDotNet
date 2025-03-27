@@ -149,9 +149,12 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
                     builder.PostProcessXmpMetadata(
                         metadata =>
                         {
-                            metadata.Basic ??= new XmpBasicMetadata();
-                            metadata.Basic.CreateDate ??= DateTimeOffset.Now;
-                            metadata.Basic.ModifyDate = DateTimeOffset.Now;
+                            metadata.DublinCore ??= new XmpDublinCoreMetadata();
+
+                            if (!string.IsNullOrWhiteSpace(options.Author))
+                            {
+                                metadata.DublinCore.Creator.Add(options.Author);
+                            }
                         }
                     );
 
