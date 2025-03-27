@@ -1,5 +1,19 @@
+# Getting started
+
+## Using NuGet
+
+```bash
+dotnet tool install --global FacturXDotNet.CLI --framework net8.0
 ```
-FacturX.NET CLI v0.1.0-alpha.4+82dc4ab997370e5b21e2a89d0357faa95c7bb8fe
+
+## Using binaries
+
+Download the binaries for your platform in the [latest release](https://github.com/FacturX-NET/FacturXDotNet/releases/latest).
+
+# Documentation
+
+```
+FacturX.NET CLI v0.2.1-alpha+790b140996d1c1bef17d6f725e0d7fd776df34b1
 Copyright © 2025 Ismail Bennani
 
 Usage:
@@ -14,10 +28,11 @@ Commands:
   validate <path>  Validates the content of a Factur-X PDF.
 ```
 
-# Generate
+
+## Generate
 
 ```
-FacturX.NET CLI v0.1.0-alpha.4+82dc4ab997370e5b21e2a89d0357faa95c7bb8fe
+FacturX.NET CLI v0.2.1-alpha+790b140996d1c1bef17d6f725e0d7fd776df34b1
 Copyright © 2025 Ismail Bennani
 
 Usage:
@@ -62,10 +77,10 @@ Result
 
 ```
 
-# Validate
+## Validate
 
 ```
-FacturX.NET CLI v0.1.0-alpha.4+82dc4ab997370e5b21e2a89d0357faa95c7bb8fe
+FacturX.NET CLI v0.2.1-alpha+790b140996d1c1bef17d6f725e0d7fd776df34b1
 Copyright © 2025 Ismail Bennani
 
 Usage:
@@ -100,10 +115,10 @@ Result
 ✔ Document profile: Minimum.
 ```
 
-# Extract
+## Extract
 
 ```
-FacturX.NET CLI v0.1.0-alpha.4+82dc4ab997370e5b21e2a89d0357faa95c7bb8fe
+FacturX.NET CLI v0.2.1-alpha+790b140996d1c1bef17d6f725e0d7fd776df34b1
 Copyright © 2025 Ismail Bennani
 
 Usage:
