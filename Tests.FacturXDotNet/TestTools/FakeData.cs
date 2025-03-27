@@ -17,11 +17,11 @@ static class FakeData
             Basic = new XmpBasicMetadata
             {
                 Identifier = [],
-                CreateDate = DateTime.MinValue,
+                CreateDate = DateTimeOffset.MinValue,
                 CreatorTool = string.Empty,
                 Label = string.Empty,
-                MetadataDate = DateTime.MinValue,
-                ModifyDate = DateTime.MinValue,
+                MetadataDate = DateTimeOffset.MinValue,
+                ModifyDate = DateTimeOffset.MinValue,
                 Rating = 0,
                 BaseUrl = string.Empty,
                 Nickname = string.Empty,

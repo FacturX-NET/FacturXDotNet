@@ -208,7 +208,7 @@ public class FacturXDocumentBuilder
         XmpMetadataWriter xmpWriter = new();
         await xmpWriter.WriteAsync(finalXmpStream, xmpMetadata);
 
-        ReplaceXmpMetadataOfPdfDocument.ReplaceXmpMetadata(pdfDocument, finalXmpStream.GetBuffer().AsSpan());
+        ReplaceXmpMetadataOfPdfDocument.ReplaceXmpMetadata(pdfDocument, finalXmpStream.GetBuffer().AsSpan(0, (int)finalXmpStream.Length));
     }
 
     void AddAttachment(PdfDocument document, PdfAttachmentData attachment, FacturXDocumentBuilderAttachmentConflictResolution conflictResolution)

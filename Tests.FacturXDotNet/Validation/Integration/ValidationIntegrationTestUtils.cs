@@ -36,11 +36,12 @@ static class ValidationIntegrationTestUtils
             builder.WithCrossIndustryInvoice(stream, leaveOpen: false);
         }
 
-        FacturXDocument invoice = await builder.BuildAsync();
-
         FacturXValidationResult result;
+
         try
         {
+            FacturXDocument invoice = await builder.BuildAsync();
+
             FacturXValidator validator = new();
             result = await validator.GetValidationResultAsync(invoice);
         }
