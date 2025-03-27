@@ -7,7 +7,6 @@ using FacturXDotNet.CLI.Validate;
 using FacturXDotNet.Generation;
 using FacturXDotNet.Generation.PDF;
 using FacturXDotNet.Models;
-using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Validation;
 using Humanizer;
 using Spectre.Console;
@@ -162,8 +161,6 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
                             pp.XmpMetadata(
                                 xmp =>
                                 {
-                                    xmp.DublinCore ??= new XmpDublinCoreMetadata();
-
                                     if (!string.IsNullOrWhiteSpace(options.Author))
                                     {
                                         xmp.DublinCore.Creator = [options.Author];
