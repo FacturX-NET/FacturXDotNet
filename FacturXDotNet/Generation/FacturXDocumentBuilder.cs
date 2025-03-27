@@ -1,7 +1,8 @@
 ﻿using FacturXDotNet.Extensions;
 using FacturXDotNet.Generation.PDF;
-using FacturXDotNet.Models.CII;
+using FacturXDotNet.Generation.XMP;
 using FacturXDotNet.Models.XMP;
+using FacturXDotNet.Parsing.XMP;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
@@ -20,6 +21,7 @@ public class FacturXDocumentBuilder
     bool _ciiLeaveOpen;
     Stream? _xmp;
     bool _xmpLeaveOpen;
+    Action<XmpMetadata>? _postProcessXmpMetadata;
     readonly List<(PdfAttachmentData Name, FacturXDocumentBuilderAttachmentConflictResolution ConflictResolution)> _attachments = [];
     ILogger? _logger;
 
@@ -60,7 +62,7 @@ public class FacturXDocumentBuilder
     ///     The data will be added as an attachment to the PDF document.
     /// </summary>
     /// <remarks>
-    ///     This method takes the raw CII data as a stream. It can be used to add data without having to parse it into a <see cref="CrossIndustryInvoice" /> object.
+    ///     This method takes the raw CII data as a stream.
     /// </remarks>
     /// <param name="ciiStream">The stream containing the Cross Industry Invoice data.</param>
     /// <param name="ciiAttachmentName">The name of the attachment.</param>
@@ -76,10 +78,8 @@ public class FacturXDocumentBuilder
 
     /// <summary>
     ///     Set the XMP metadata for the Factur-X document.
+    ///     The metadata will be added as-is to the PDF document. It will replace any existing metadata found in the document.
     /// </summary>
-    /// <remarks>
-    ///     This method takes the raw XMP metadata as a stream. It can be used to add data without having to parse it into a <see cref="XmpMetadata" /> object.
-    /// </remarks>
     /// <param name="xmpStream">The stream containing the XMP metadata.</param>
     /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
     /// <returns>The builder itself for chaining.</returns>
@@ -87,6 +87,18 @@ public class FacturXDocumentBuilder
     {
         _xmp = xmpStream;
         _xmpLeaveOpen = leaveOpen;
+        return this;
+    }
+
+    /// <summary>
+    ///     Post-process the XMP metadata after it has been added to the PDF document.
+    ///     The metadata is either provided as-is using <see cref="WithXmpMetadata" />, or a combination of the existing metadata of the base PDF and the CII data.
+    /// </summary>
+    /// <param name="postProcess">The action to perform on the XMP metadata.</param>
+    /// <returns>The builder itself for chaining.</returns>
+    public FacturXDocumentBuilder PostProcessXmpMetadata(Action<XmpMetadata>? postProcess)
+    {
+        _postProcessXmpMetadata = postProcess;
         return this;
     }
 
@@ -127,20 +139,9 @@ public class FacturXDocumentBuilder
             await _basePdf.DisposeAsync();
         }
 
-        if (_xmp is not null)
-        {
-            byte[] newMetadataBytes = new byte[(int)_xmp.Length];
-            await _xmp.ReadExactlyAsync(newMetadataBytes);
+        await AddXmpMetadataAsync(pdfDocument);
+        _logger?.LogInformation("Added XMP metadata to the PDF document.");
 
-            if (!_xmpLeaveOpen)
-            {
-                await _xmp.DisposeAsync();
-            }
-
-            ReplaceXmpMetadataOfPdfDocument.ReplaceXmpMetadata(pdfDocument, newMetadataBytes);
-
-            _logger?.LogInformation("Added XMP metadata to the PDF document.");
-        }
 
         if (_cii is not null)
         {
@@ -175,6 +176,39 @@ public class FacturXDocumentBuilder
         await pdfDocument.SaveAsync(resultStream);
 
         return FacturXDocument.LoadFromBuffer(resultStream.GetBuffer().AsMemory(0, (int)resultStream.Length));
+    }
+
+    async Task AddXmpMetadataAsync(PdfDocument pdfDocument)
+    {
+        Stream xmpStream;
+        if (_xmp is null)
+        {
+            ExtractXmpFromPdf extractor = new();
+            xmpStream = extractor.ExtractXmpMetadata(pdfDocument);
+
+            // ensure xmp stream is disposed
+            _xmpLeaveOpen = false;
+        }
+        else
+        {
+            xmpStream = _xmp;
+        }
+
+        XmpMetadataReader xmpReader = new();
+        XmpMetadata xmpMetadata = xmpReader.Read(xmpStream);
+
+        _postProcessXmpMetadata?.Invoke(xmpMetadata);
+
+        if (!_xmpLeaveOpen)
+        {
+            await xmpStream.DisposeAsync();
+        }
+
+        await using MemoryStream finalXmpStream = new();
+        XmpMetadataWriter xmpWriter = new();
+        await xmpWriter.WriteAsync(finalXmpStream, xmpMetadata);
+
+        ReplaceXmpMetadataOfPdfDocument.ReplaceXmpMetadata(pdfDocument, finalXmpStream.GetBuffer().AsSpan(0, (int)finalXmpStream.Length));
     }
 
     void AddAttachment(PdfDocument document, PdfAttachmentData attachment, FacturXDocumentBuilderAttachmentConflictResolution conflictResolution)

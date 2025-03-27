@@ -276,11 +276,11 @@ public class XmpMetadataReaderTest
               Basic = new XmpBasicMetadata
               {
                 Identifier = ["IDENTIFIER1", "IDENTIFIER2"],
-                CreateDate = new DateTime(1, 2, 3),
+                CreateDate = new DateTimeOffset(1, 2, 3, 0, 0, 0, TimeSpan.Zero),
                 CreatorTool = "CREATOR_TOOL",
                 Label = "LABEL",
-                MetadataDate = new DateTime(2, 3, 4),
-                ModifyDate = new DateTime(3, 4, 5),
+                MetadataDate = new DateTimeOffset(2, 3, 4, 0, 0, 0, TimeSpan.Zero),
+                ModifyDate = new DateTimeOffset(3, 4, 5, 0, 0, 0, TimeSpan.Zero),
                 Rating = 4.2,
                 BaseUrl = "BASE_URL",
                 Nickname = "NICKNAME",

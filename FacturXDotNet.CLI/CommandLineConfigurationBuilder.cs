@@ -2,6 +2,7 @@
 using System.CommandLine.Help;
 using System.Reflection;
 using FacturXDotNet.CLI.Extract;
+using FacturXDotNet.CLI.Generate;
 using FacturXDotNet.CLI.Validate;
 
 namespace FacturXDotNet.CLI;
@@ -10,7 +11,13 @@ public static class CommandLineConfigurationBuilder
 {
     public static CommandLineConfiguration Build()
     {
-        RootCommand rootCommand = new("facturx extract facture.pdf --cii --xmp");
+        RootCommand rootCommand = new(
+            """
+            facturx generate --pdf image.pdf --cii facture.xml --validate");
+            facturx validate facture.pdf"
+            facturx extract facture.pdf --cii --xmp"
+            """
+        );
 
         CommandLineConfiguration configuration = new(rootCommand)
         {
@@ -24,8 +31,9 @@ public static class CommandLineConfigurationBuilder
         rootCommand.Options.Remove(helpOption);
         rootCommand.Add(new HelpOption { Action = new HelpAction { Builder = helpBuilder } });
 
-        rootCommand.Add(new ExtractCommand().GetCommand());
+        rootCommand.Add(new GenerateCommand().GetCommand());
         rootCommand.Add(new ValidateCommand().GetCommand());
+        rootCommand.Add(new ExtractCommand().GetCommand());
 
         return configuration;
     }

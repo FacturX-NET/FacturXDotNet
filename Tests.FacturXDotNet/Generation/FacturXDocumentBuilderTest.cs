@@ -28,7 +28,13 @@ public class FacturXDocumentBuilderTest
     [TestMethod]
     public async Task ShouldBuildDocument_WithXmp()
     {
-        byte[] xmpContent = "xmp_content"u8.ToArray();
+        byte[] xmpContent = """
+                            ﻿<?xpacket begin='﻿' id='W5M0MpCehiHzreSzNTczkc9d'?>
+                            <x:xmpmeta xmlns:x="adobe:ns:meta/">
+                              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+                            </x:xmpmeta>
+                            <?xpacket end='w'?>
+                            """u8.ToArray();
         await using MemoryStream xmpContentStream = new(xmpContent);
 
         await using FileStream basePdf = File.OpenRead("TestFiles/blank.pdf");

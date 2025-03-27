@@ -16,51 +16,65 @@ public class FacturXCliExtractionTest
     [TestMethod]
     public async Task ShouldExtractCii()
     {
-        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--cii"]);
+        string path = TestUtils.DuplicateFileAtRandomLocation(FacturXPath);
+        string ciiPath = Path.Join(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + ".xml");
+
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", path, "--cii"]);
 
         result.Should().Be(0);
-        CompareXmlFiles("TestFiles/facturx.xml", ExpectedCiiPath);
-    }
-
-    [TestMethod]
-    public async Task ShouldFailToExtractCii_WhenNotInPdf()
-    {
-        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXWithCiiNameXRechnung, "--cii"]);
-        result.Should().Be(1);
+        CompareXmlFiles(ciiPath, ExpectedCiiPath);
     }
 
     [TestMethod]
     public async Task ShouldExtractCii_WithCustomName()
     {
-        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--cii", "custom_name.xml"]);
+        string customName = $"{Guid.CreateVersion7()}.xml";
+
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--cii", customName]);
 
         result.Should().Be(0);
-        CompareXmlFiles("custom_name.xml", ExpectedCiiPath);
+        CompareXmlFiles(customName, ExpectedCiiPath);
+    }
+
+    [TestMethod]
+    public async Task ShouldFailToExtractCii_WhenNotInPdf()
+    {
+        string customName = $"{Guid.CreateVersion7()}.xml";
+
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXWithCiiNameXRechnung, "--cii", customName]);
+        result.Should().Be(1);
     }
 
     [TestMethod]
     public async Task ShouldExtractXmp()
     {
-        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--xmp"]);
+        string path = TestUtils.DuplicateFileAtRandomLocation(FacturXPath);
+        string xmpPath = Path.Join(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + ".xmp");
+
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", path, "--xmp"]);
 
         result.Should().Be(0);
-        CompareXmlFiles("TestFiles/facturx.xmp", ExpectedXmpPath);
-    }
-
-    [TestMethod]
-    public async Task ShouldFailToExtractXmp_WhenNoXmpInPdf()
-    {
-        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXWithoutXmpPath, "--xmp"]);
-        result.Should().NotBe(0);
+        CompareXmlFiles(xmpPath, ExpectedXmpPath);
     }
 
     [TestMethod]
     public async Task ShouldExtractXmp_WithCustomName()
     {
-        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--xmp", "custom_name.xml"]);
+        string customName = $"{Guid.CreateVersion7()}.xmp";
+
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXPath, "--xmp", customName]);
 
         result.Should().Be(0);
-        CompareXmlFiles("custom_name.xml", ExpectedXmpPath);
+        CompareXmlFiles(customName, ExpectedXmpPath);
+    }
+
+    [TestMethod]
+    public async Task ShouldFailToExtractXmp_WhenNotInPdf()
+    {
+        string customName = $"{Guid.CreateVersion7()}.xmp";
+
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["extract", FacturXWithoutXmpPath, "--xmp", customName]);
+        result.Should().Be(1);
     }
 
     static void CompareXmlFiles(string filePath, string expectedFilePath)
