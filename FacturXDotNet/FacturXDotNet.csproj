@@ -18,8 +18,8 @@
         <Copyright>Copyright © $([System.DateTime]::Now.Year) $(Authors)</Copyright>
         <PackageIcon>logo_icon_128.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageProjectUrl>https://github.com/ismailbennani/FacturXDotNet</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/ismailbennani/FacturXDotNet</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/FacturX-NET/FacturXDotNet</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/FacturX-NET/FacturXDotNet</RepositoryUrl>
         <RepositoryType>github</RepositoryType>
     </PropertyGroup>
 

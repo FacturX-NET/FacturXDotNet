@@ -5,24 +5,24 @@
 [![NuGet - CLI](https://img.shields.io/nuget/v/FacturXDotNet.CLI?label=tool
 )](https://www.nuget.org/packages/FacturXDotNet.CLI/)
 
-[![Build & Test](https://github.com/ismailbennani/FacturXDotNet/actions/workflows/ci.yml/badge.svg)](https://github.com/ismailbennani/FacturXDotNet/actions/workflows/ci.yml)
-![Coverage](https://gist.githubusercontent.com/ismailbennani/39cc9832bf323ebb2e7c25a6f0e585b7/raw/dotnet-releaser-coverage-badge-ismailbennani-FacturXDotNet.svg)
+[![Build & Test](https://github.com/FacturX-NET/FacturXDotNet/actions/workflows/ci.yml/badge.svg)](https://github.com/FacturX-NET/FacturXDotNet/actions/workflows/ci.yml)
+![Coverage](https://gist.githubusercontent.com/FacturX-NET/39cc9832bf323ebb2e7c25a6f0e585b7/raw/dotnet-releaser-coverage-badge-FacturX-NET-FacturXDotNet.svg)
 
 > [!IMPORTANT]
 > **The library is still a work in progress. If you stumbled upon this somehow, you are lost!**
 
-The FacturX.NET library is a high-performance .NET library ([benchmarks](https://github.com/ismailbennani/FacturXDotNet/tree/master/Benchmark)) that provides support for the
+The FacturX.NET library is a high-performance .NET library ([benchmarks](https://github.com/FacturX-NET/FacturXDotNet/tree/master/Benchmark)) that provides support for the
 FacturX data formats, as defined by the [FNFE](https://fnfe-mpe.org/factur-x/) (also known as ZUGFeRD in Germany).
 
 These formats are the main formats used in the french and german electronic invoicing systems.
 
 It comes in multiple flavors:
 
-- a [CLI tool](https://github.com/ismailbennani/FacturXDotNet/tree/master/FacturXDotNet.CLI)
+- a [CLI tool](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.CLI)
 - a [desktop editor](#) (coming soon)
 - a [web API](#) (coming soon)
 - a [web app](#) (coming soon)
-- a [.NET library](https://github.com/ismailbennani/FacturXDotNet/tree/master/FacturXDotNet)
+- a [.NET library](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet)
 
 All these tools provide the same set of features.
 

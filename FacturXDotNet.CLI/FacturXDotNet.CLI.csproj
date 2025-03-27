@@ -22,8 +22,8 @@
         <ApplicationIcon>..\Assets\Logo\logo_icon.ico</ApplicationIcon>
         <PackageIcon>logo_icon_128.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageProjectUrl>https://github.com/ismailbennani/FacturXDotNet</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/ismailbennani/FacturXDotNet</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/FacturX-NET/FacturXDotNet</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/FacturX-NET/FacturXDotNet</RepositoryUrl>
         <RepositoryType>github</RepositoryType>
     </PropertyGroup>
 
