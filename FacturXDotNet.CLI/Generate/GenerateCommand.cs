@@ -146,15 +146,31 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
 
                     builder.WithBasePdfFile(options.BasePdf.FullName);
 
-                    builder.PostProcessXmpMetadata(
-                        metadata =>
+                    builder.PostProcess(
+                        pp =>
                         {
-                            metadata.DublinCore ??= new XmpDublinCoreMetadata();
+                            pp.PdfDocument(
+                                doc =>
+                                {
+                                    if (!string.IsNullOrWhiteSpace(options.Author))
+                                    {
+                                        doc.Info.Author = options.Author;
+                                    }
+                                }
+                            );
 
-                            if (!string.IsNullOrWhiteSpace(options.Author))
-                            {
-                                metadata.DublinCore.Creator = [options.Author];
-                            }
+                            pp.XmpMetadata(
+                                xmp =>
+                                {
+                                    xmp.DublinCore ??= new XmpDublinCoreMetadata();
+
+                                    if (!string.IsNullOrWhiteSpace(options.Author))
+                                    {
+                                        xmp.DublinCore.Creator = [options.Author];
+                                    }
+                                }
+                            );
+
                         }
                     );
 

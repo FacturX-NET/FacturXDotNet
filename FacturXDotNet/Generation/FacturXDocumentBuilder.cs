@@ -1,4 +1,5 @@
 ﻿using FacturXDotNet.Generation.Internals;
+using FacturXDotNet.Generation.Internals.PostProcess;
 using FacturXDotNet.Generation.PDF;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
@@ -85,9 +86,9 @@ public class FacturXDocumentBuilder
     /// </summary>
     /// <param name="postProcess">The action to perform on the XMP metadata.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder PostProcessXmpMetadata(Action<XmpMetadata>? postProcess)
+    public FacturXDocumentBuilder PostProcess(Action<FacturXBuilderPostProcess> postProcess)
     {
-        _args.PostProcessXmpMetadata = postProcess;
+        postProcess(_args.PostProcess);
         return this;
     }
 
@@ -130,14 +131,16 @@ public class FacturXDocumentBuilder
         XmpMetadata xmp = await FacturXBuilderXmpMetadata.AddXmpMetadataAsync(pdfDocument, cii, _args);
         FacturXBuilderAttachments.AddAttachments(pdfDocument, _args);
 
-        pdfDocument.Info.Title = xmp.DublinCore?.Title.FirstOrDefault() ?? pdfDocument.Info.Title;
-        pdfDocument.Info.Subject = xmp.DublinCore?.Description.FirstOrDefault() ?? pdfDocument.Info.Subject;
-        pdfDocument.Info.Creator = xmp.Pdf?.Producer ?? pdfDocument.Info.Creator;
+        pdfDocument.Info.Title = FirstString(xmp.DublinCore?.Title) ?? pdfDocument.Info.Title;
+        pdfDocument.Info.Subject = FirstString(xmp.DublinCore?.Description) ?? pdfDocument.Info.Subject;
         pdfDocument.Info.CreationDate = xmp.Basic?.CreateDate?.DateTime ?? pdfDocument.Info.CreationDate;
         pdfDocument.Info.ModificationDate = xmp.Basic?.ModifyDate?.DateTime ?? pdfDocument.Info.ModificationDate;
         pdfDocument.Info.Keywords = xmp.Pdf?.Keywords ?? pdfDocument.Info.Keywords;
-        pdfDocument.Info.Author = xmp.DublinCore?.Creator is not null ? string.Join(", ", xmp.DublinCore.Creator) : pdfDocument.Info.Author;
+        pdfDocument.Info.Author = JoinStrings(xmp.DublinCore?.Creator) ?? pdfDocument.Info.Author;
 
+        _args.PostProcess.ConfigurePdfDocument(pdfDocument);
+
+        pdfDocument.Info.Creator = xmp.Pdf?.Producer ?? pdfDocument.Info.Creator;
         pdfDocument.Options.FlateEncodeMode = PdfFlateEncodeMode.BestCompression;
         pdfDocument.Options.CompressContentStreams = true;
         pdfDocument.Options.NoCompression = false;
@@ -165,6 +168,11 @@ public class FacturXDocumentBuilder
 
         return document;
     }
+
+    static string? FirstString(IEnumerable<string>? parts) => parts?.FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
+
+    static string? JoinStrings(IEnumerable<string>? parts, string separator = ", ") =>
+        parts == null ? null : string.Join(separator, parts.Select(s => !string.IsNullOrWhiteSpace(s)));
 }
 
 class FacturXDocumentBuildArgs
@@ -177,7 +185,7 @@ class FacturXDocumentBuildArgs
     public bool CiiLeaveOpen { get; set; }
     public Stream? Xmp { get; set; }
     public bool XmpLeaveOpen { get; set; }
-    public Action<XmpMetadata>? PostProcessXmpMetadata { get; set; }
+    public FacturXBuilderPostProcess PostProcess { get; set; } = new();
     public List<(PdfAttachmentData Name, FacturXDocumentBuilderAttachmentConflictResolution ConflictResolution)> Attachments { get; set; } = [];
     public ILogger? Logger { get; set; }
 }

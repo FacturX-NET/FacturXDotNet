@@ -55,7 +55,7 @@ static class FacturXBuilderXmpMetadata
         xmpMetadata.FacturX.ConformanceLevel = cii.ExchangedDocumentContext?.GuidelineSpecifiedDocumentContextParameterId?.ToFacturXProfileOrNull()?.ToXmpFacturXConformanceLevel()
                                                ?? throw new InvalidOperationException("The CII document does not contain a valid GuidelineSpecifiedDocumentContextParameterId.");
 
-        args.PostProcessXmpMetadata?.Invoke(xmpMetadata);
+        args.PostProcess.ConfigureXmpMetadata(xmpMetadata);
 
         string toolName = string.IsNullOrWhiteSpace(Version) ? "FacturX.NET ~dev" : $"FacturX.NET v{Version}";
         xmpMetadata.Basic.CreatorTool = toolName;
