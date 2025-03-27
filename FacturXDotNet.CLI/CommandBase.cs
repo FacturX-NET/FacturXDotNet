@@ -45,8 +45,15 @@ abstract class CommandBase<TOptions>(string name, string description, IReadOnlyL
         command.Validators.Add(
             result =>
             {
-                TOptions opt = ParseOptions(result);
-                ValidateOptions(result, opt);
+                try
+                {
+                    TOptions opt = ParseOptions(result);
+                    ValidateOptions(result, opt);
+                }
+                catch (Exception exn)
+                {
+                    result.AddError(exn.Message);
+                }
             }
         );
 

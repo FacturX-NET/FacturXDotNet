@@ -1,6 +1,7 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.Diagnostics;
+using FacturXDotNet.CLI.Internals.Exceptions;
 using Humanizer;
 using Spectre.Console;
 
@@ -53,7 +54,7 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
     protected override ExtractCommandOptions ParseOptions(CommandResult result) =>
         new()
         {
-            Path = result.GetValue(PathArgument)!,
+            Path = result.GetValue(PathArgument) ?? throw new RequiredArgumentMissingException(PathArgument),
             Cii = result.GetResult(CiiOption) is not null ? result.GetValue(CiiOption) ?? "" : null,
             CiiAttachment = result.GetValue(CiiAttachmentOption),
             Xmp = result.GetResult(XmpOption) is not null ? result.GetValue(XmpOption) ?? "" : null

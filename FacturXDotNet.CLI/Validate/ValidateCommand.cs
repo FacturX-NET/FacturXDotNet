@@ -1,6 +1,7 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.Diagnostics;
+using FacturXDotNet.CLI.Internals.Exceptions;
 using FacturXDotNet.Models;
 using FacturXDotNet.Validation;
 using Humanizer;
@@ -54,7 +55,8 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         };
         TreatWarningsAsErrorsOption = new Option<bool>("--warnings-as-errors")
         {
-            Description = "Treat warnings as errors."
+            Description = "Treat warnings as errors.",
+            DefaultValueFactory = _ => false
         };
         ProfileOption = new Option<FacturXProfile>("--profile", "-p")
         {
@@ -70,7 +72,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
     protected override ValidateCommandOptions ParseOptions(CommandResult result) =>
         new()
         {
-            Path = result.GetValue(PathArgument)!,
+            Path = result.GetValue(PathArgument) ?? throw new RequiredArgumentMissingException(PathArgument),
             CiiAttachment = result.GetValue(CiiAttachmentOption),
             TreatWarningsAsErrors = result.GetValue(TreatWarningsAsErrorsOption),
             Profile = result.GetValue(ProfileOption),
@@ -106,6 +108,12 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
             throw new Exception("This will never happen.");
         }
 
+        FacturXValidationResult result = await ValidateAsync(facturX, options, cancellationToken);
+        return result.Success ? 0 : 1;
+    }
+
+    public static async Task<FacturXValidationResult> ValidateAsync(FacturXDocument document, ValidateCommandOptions options, CancellationToken cancellationToken)
+    {
         FacturXValidationOptions validationOptions = new()
         {
             TreatWarningsAsErrors = options.TreatWarningsAsErrors,
@@ -124,7 +132,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
                     sw.Start();
 
                     FacturXValidator validator = new(validationOptions);
-                    result = await validator.GetValidationResultAsync(facturX, options.CiiAttachment, cancellationToken: cancellationToken);
+                    result = await validator.GetValidationResultAsync(document, options.CiiAttachment, cancellationToken: cancellationToken);
 
                     sw.Stop();
 
@@ -133,9 +141,9 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
             );
 
         AnsiConsole.WriteLine();
-        ShowFinalResult(facturX, result);
+        ShowFinalResult(document, result);
 
-        return result.Success ? 0 : 1;
+        return result;
     }
 
     static void ShowOptions(ValidateCommandOptions options)
