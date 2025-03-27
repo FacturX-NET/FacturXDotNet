@@ -43,9 +43,9 @@ static class FacturXBuilderXmpMetadata
         xmpMetadata.Basic.MetadataDate = now;
         xmpMetadata.Pdf ??= new XmpPdfMetadata();
         xmpMetadata.DublinCore ??= new XmpDublinCoreMetadata();
-        xmpMetadata.DublinCore.Title.Add(ComputeTitle(cii));
-        xmpMetadata.DublinCore.Description.Add(ComputeDescription(cii));
-        xmpMetadata.DublinCore.Date.Add(now);
+        xmpMetadata.DublinCore.Title = [ComputeTitle(cii)];
+        xmpMetadata.DublinCore.Description = [ComputeDescription(cii)];
+        xmpMetadata.DublinCore.Date = [now];
         xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
         AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
         xmpMetadata.FacturX ??= new XmpFacturXMetadata();
