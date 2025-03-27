@@ -1,5 +1,6 @@
 ﻿using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
+using PdfSharp.Pdf.Filters;
 
 namespace FacturXDotNet.Generation.PDF;
 
@@ -19,8 +20,8 @@ static class ReplaceXmpMetadataOfPdfDocument
     /// <param name="newXmpMetadata">The new XMP metadata.</param>
     public static void ReplaceXmpMetadata(PdfDocument document, ReadOnlySpan<byte> newXmpMetadata)
     {
-        //FlateDecode flateDecode = new();
-        //byte[] encoded = flateDecode.Encode(newXmpMetadata, PdfFlateEncodeMode.BestCompression);
+        FlateDecode flateDecode = new();
+        byte[] encoded = flateDecode.Encode(newXmpMetadata.ToArray(), PdfFlateEncodeMode.BestCompression);
 
         PdfCatalog catalog = document.Internals.Catalog;
         PdfReference? metadataReference = catalog.Elements.GetReference("/Metadata");
@@ -30,14 +31,14 @@ static class ReplaceXmpMetadataOfPdfDocument
             document.Internals.RemoveObject(metadataDictionary);
         }
 
-        CreateMetadata(document, newXmpMetadata);
+        CreateMetadata(document, encoded);
     }
 
     static void CreateMetadata(PdfDocument document, ReadOnlySpan<byte> encodedMetadata)
     {
         PdfDictionary metadataDictionary = new();
         metadataDictionary.CreateStream(encodedMetadata.ToArray());
-        //metadataDictionary.Elements.Add("/Filter", new PdfName("/FlateDecode"));
+        metadataDictionary.Elements.Add("/Filter", new PdfName("/FlateDecode"));
         metadataDictionary.Elements.Add("/Type", new PdfName("/Metadata"));
         metadataDictionary.Elements.Add("/SubType", new PdfString("XML"));
         document.Internals.AddObject(metadataDictionary);

@@ -34,32 +34,38 @@ static class FacturXBuilderXmpMetadata
 
         DateTimeOffset now = DateTimeOffset.Now;
 
-        xmpMetadata.PdfAIdentification ??= new XmpPdfAIdentificationMetadata();
-        xmpMetadata.PdfAIdentification.Conformance ??= XmpPdfAConformanceLevel.B;
-        xmpMetadata.PdfAIdentification.Part ??= 3;
-        xmpMetadata.Basic ??= new XmpBasicMetadata();
-        xmpMetadata.Basic.CreateDate = now;
-        xmpMetadata.Basic.ModifyDate = now;
-        xmpMetadata.Basic.MetadataDate = now;
-        xmpMetadata.Pdf ??= new XmpPdfMetadata();
-        xmpMetadata.DublinCore ??= new XmpDublinCoreMetadata();
-        xmpMetadata.DublinCore.Title = [ComputeTitle(cii)];
-        xmpMetadata.DublinCore.Description = [ComputeDescription(cii)];
-        xmpMetadata.DublinCore.Date = [now];
-        xmpMetadata.DublinCore.Creator = GetIssuer(cii) is { } issuer ? [issuer] : xmpMetadata.DublinCore.Creator;
-        xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
-        AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
-        xmpMetadata.FacturX ??= new XmpFacturXMetadata();
-        xmpMetadata.FacturX.DocumentFileName = args.CiiAttachmentName;
-        xmpMetadata.FacturX.DocumentType = XmpFacturXDocumentType.Invoice;
-        xmpMetadata.FacturX.Version = "1.0";
-        xmpMetadata.FacturX.ConformanceLevel = cii.ExchangedDocumentContext?.GuidelineSpecifiedDocumentContextParameterId?.ToFacturXProfileOrNull()?.ToXmpFacturXConformanceLevel()
-                                               ?? throw new InvalidOperationException("The CII document does not contain a valid GuidelineSpecifiedDocumentContextParameterId.");
+        if (!args.DisableXmpMetadataAutoGeneration)
+        {
+            xmpMetadata.PdfAIdentification ??= new XmpPdfAIdentificationMetadata();
+            xmpMetadata.PdfAIdentification.Conformance ??= XmpPdfAConformanceLevel.B;
+            xmpMetadata.PdfAIdentification.Part ??= 3;
+            xmpMetadata.Basic ??= new XmpBasicMetadata();
+            xmpMetadata.Basic.CreateDate = now;
+            xmpMetadata.Basic.ModifyDate = now;
+            xmpMetadata.Basic.MetadataDate = now;
+            xmpMetadata.Pdf ??= new XmpPdfMetadata();
+            xmpMetadata.DublinCore ??= new XmpDublinCoreMetadata();
+            xmpMetadata.DublinCore.Title = [ComputeTitle(cii)];
+            xmpMetadata.DublinCore.Description = [ComputeDescription(cii)];
+            xmpMetadata.DublinCore.Date = [now];
+            xmpMetadata.DublinCore.Creator = GetIssuer(cii) is { } issuer ? [issuer] : xmpMetadata.DublinCore.Creator;
+            xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
+            AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
+            xmpMetadata.FacturX ??= new XmpFacturXMetadata();
+            xmpMetadata.FacturX.DocumentFileName = args.CiiAttachmentName;
+            xmpMetadata.FacturX.DocumentType = XmpFacturXDocumentType.Invoice;
+            xmpMetadata.FacturX.Version = "1.0";
+            xmpMetadata.FacturX.ConformanceLevel =
+                cii.ExchangedDocumentContext?.GuidelineSpecifiedDocumentContextParameterId?.ToFacturXProfileOrNull()?.ToXmpFacturXConformanceLevel()
+                ?? throw new InvalidOperationException("The CII document does not contain a valid GuidelineSpecifiedDocumentContextParameterId.");
+        }
 
         args.PostProcess.ConfigureXmpMetadata(xmpMetadata);
 
         string toolName = string.IsNullOrWhiteSpace(Version) ? "FacturX.NET ~dev" : $"FacturX.NET v{Version}";
+        xmpMetadata.Basic ??= new XmpBasicMetadata();
         xmpMetadata.Basic.CreatorTool = toolName;
+        xmpMetadata.Pdf ??= new XmpPdfMetadata();
         xmpMetadata.Pdf.Producer = toolName;
 
         if (!args.XmpLeaveOpen)

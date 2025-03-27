@@ -15,20 +15,20 @@ public class FullyDefinedXmpMetadata
     }
 
     /// <inheritdoc cref="XmpMetadata.PdfAIdentification" />
-    public XmpPdfAIdentificationMetadata PdfAIdentification => _metadata.PdfAIdentification!;
+    public XmpPdfAIdentificationMetadata PdfAIdentification => _metadata.PdfAIdentification ??= new XmpPdfAIdentificationMetadata();
 
     /// <inheritdoc cref="XmpMetadata.Basic" />
-    public XmpBasicMetadata Basic => _metadata.Basic!;
+    public XmpBasicMetadata Basic => _metadata.Basic ??= new XmpBasicMetadata();
 
     /// <inheritdoc cref="XmpMetadata.Pdf" />
-    public XmpPdfMetadata Pdf => _metadata.Pdf!;
+    public XmpPdfMetadata Pdf => _metadata.Pdf ??= new XmpPdfMetadata();
 
     /// <inheritdoc cref="XmpMetadata.DublinCore" />
-    public XmpDublinCoreMetadata DublinCore => _metadata.DublinCore!;
+    public XmpDublinCoreMetadata DublinCore => _metadata.DublinCore ??= new XmpDublinCoreMetadata();
 
     /// <inheritdoc cref="XmpMetadata.PdfAExtensions" />
-    public XmpPdfAExtensionsMetadata PdfAExtensions => _metadata.PdfAExtensions!;
+    public XmpPdfAExtensionsMetadata PdfAExtensions => _metadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
 
     /// <inheritdoc cref="XmpMetadata.FacturX" />
-    public XmpFacturXMetadata FacturX => _metadata.FacturX!;
+    public XmpFacturXMetadata FacturX => _metadata.FacturX ??= new XmpFacturXMetadata();
 }

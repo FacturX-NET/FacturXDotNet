@@ -26,7 +26,7 @@ public class FacturXDocumentBuilderTest
     }
 
     [TestMethod]
-    public async Task ShouldBuildDocument_WithXmp()
+    public async Task ShouldBuildDocument_WithXmp_AsIs()
     {
         byte[] xmpContent = """
                             ﻿<?xpacket begin='﻿' id='W5M0MpCehiHzreSzNTczkc9d'?>

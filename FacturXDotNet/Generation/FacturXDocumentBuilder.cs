@@ -68,7 +68,7 @@ public class FacturXDocumentBuilder
 
     /// <summary>
     ///     Set the XMP metadata for the Factur-X document.
-    ///     The metadata will be added as-is to the PDF document. It will replace any existing metadata found in the document.
+    ///     The metadata will be added as-is to the PDF document, it will replace any existing metadata found in the document.
     /// </summary>
     /// <param name="xmpStream">The stream containing the XMP metadata.</param>
     /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
@@ -77,6 +77,7 @@ public class FacturXDocumentBuilder
     {
         _args.Xmp = xmpStream;
         _args.XmpLeaveOpen = leaveOpen;
+        _args.DisableXmpMetadataAutoGeneration = true;
         return this;
     }
 
@@ -185,6 +186,7 @@ class FacturXDocumentBuildArgs
     public bool CiiLeaveOpen { get; set; }
     public Stream? Xmp { get; set; }
     public bool XmpLeaveOpen { get; set; }
+    public bool DisableXmpMetadataAutoGeneration { get; set; }
     public FacturXBuilderPostProcess PostProcess { get; set; } = new();
     public List<(PdfAttachmentData Name, FacturXDocumentBuilderAttachmentConflictResolution ConflictResolution)> Attachments { get; set; } = [];
     public ILogger? Logger { get; set; }
