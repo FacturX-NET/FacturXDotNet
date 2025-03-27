@@ -43,6 +43,8 @@ static class FacturXBuilderXmpMetadata
         xmpMetadata.Basic.MetadataDate = now;
         xmpMetadata.Pdf ??= new XmpPdfMetadata();
         xmpMetadata.DublinCore ??= new XmpDublinCoreMetadata();
+        xmpMetadata.DublinCore.Title.Add(ComputeTitle(cii));
+        xmpMetadata.DublinCore.Description.Add(ComputeDescription(cii));
         xmpMetadata.DublinCore.Date.Add(now);
         xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
         AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
@@ -58,6 +60,7 @@ static class FacturXBuilderXmpMetadata
         string toolName = string.IsNullOrWhiteSpace(Version) ? "FacturX.NET ~dev" : $"FacturX.NET v{Version}";
         xmpMetadata.Basic.CreatorTool = toolName;
         xmpMetadata.Pdf.Producer = toolName;
+        xmpMetadata.DublinCore.Creator.Add(toolName);
 
         if (!args.XmpLeaveOpen)
         {
@@ -124,4 +127,92 @@ static class FacturXBuilderXmpMetadata
             }
         );
     }
+
+    static string ComputeTitle(CrossIndustryInvoice cii)
+    {
+        string documentType = GetInvoiceType(cii);
+        return $"{documentType} {cii.ExchangedDocument?.Id} dated {cii.ExchangedDocument?.IssueDateTime?.ToString("d") ?? "???"}";
+    }
+
+    static string ComputeDescription(CrossIndustryInvoice cii)
+    {
+        string documentType = GetInvoiceType(cii);
+
+        string? issuer = cii.ExchangedDocument?.TypeCode switch
+        {
+            InvoiceTypeCode.SelfBilledInvoice or InvoiceTypeCode.SelfBilledCreditNote or InvoiceTypeCode.SelfBilledDebitNote => cii.SupplyChainTradeTransaction
+                ?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name,
+            _ => cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name
+        };
+
+        string? recipient = cii.ExchangedDocument?.TypeCode switch
+        {
+            InvoiceTypeCode.SelfBilledInvoice or InvoiceTypeCode.SelfBilledCreditNote or InvoiceTypeCode.SelfBilledDebitNote => cii.SupplyChainTradeTransaction
+                ?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name,
+            _ => cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name
+        };
+
+        return $"{documentType} {cii.ExchangedDocument?.Id} dated {cii.ExchangedDocument?.IssueDateTime?.ToString("d") ?? "???"} issued by {issuer} to {recipient}";
+    }
+
+    static string GetInvoiceType(CrossIndustryInvoice cii) =>
+        cii.ExchangedDocument?.TypeCode switch
+        {
+            InvoiceTypeCode.RequestForPayment => "Request for payment (71)",
+            InvoiceTypeCode.DebitNoteRelatedToGoodsOrServices => "Debit note related to goods or services (80)",
+            InvoiceTypeCode.CreditNoteRelatedToGoodsOrServices => "Credit note related to goods or services (81)",
+            InvoiceTypeCode.MeteredServicesInvoice => "Metered services invoice (82)",
+            InvoiceTypeCode.CreditNoteRelatedToFinancialAdjustments => "Credit note related to financial adjustments (83)",
+            InvoiceTypeCode.DebitNoteRelatedToFinancialAdjustments => "Debit note related to financial adjustments (84)",
+            InvoiceTypeCode.TaxNotification => "Tax notification (102)",
+            InvoiceTypeCode.InvoicingDataSheet => "Invoicing data sheet (130)",
+            InvoiceTypeCode.DirectPaymentValuation => "Direct payment valuation (202)",
+            InvoiceTypeCode.ProvisionalPaymentValuation => "Provisional payment valuation (203)",
+            InvoiceTypeCode.PaymentValuation => "Payment valuation (204)",
+            InvoiceTypeCode.InterimApplicationForPayment => "Interim application for payment (211)",
+            InvoiceTypeCode.FinalPaymentRequestBasedOnCompletionOfWork => "Final payment request based on completion of work (218)",
+            InvoiceTypeCode.PaymentRequestForCompletedUnits => "Payment request for completed units (219)",
+            InvoiceTypeCode.SelfBilledCreditNote => "Self billed credit note (261)",
+            InvoiceTypeCode.ConsolidatedCreditNoteGoodsAndServices => "Consolidated credit note - goods and services (262)",
+            InvoiceTypeCode.PriceVariationInvoice => "Price variation invoice (295)",
+            InvoiceTypeCode.CreditNoteForPriceVariation => "Credit note for price variation (296)",
+            InvoiceTypeCode.DelcredereCreditNote => "Delcredere credit note (308)",
+            InvoiceTypeCode.ProformaInvoice => "Proforma invoice (325)",
+            InvoiceTypeCode.PartialInvoice => "Partial invoice (326)",
+            InvoiceTypeCode.CommercialInvoiceWhichIncludesPackingList => "Commercial invoice which includes a packing list (331)",
+            InvoiceTypeCode.CommercialInvoice => "Commercial invoice (380)",
+            InvoiceTypeCode.CreditNote => "Credit note (381)",
+            InvoiceTypeCode.CommissionNote => "Commission note (382)",
+            InvoiceTypeCode.DebitNote => "Debit note (383)",
+            InvoiceTypeCode.CorrectedInvoice => "Corrected invoice (384)",
+            InvoiceTypeCode.ConsolidatedInvoice => "Consolidated invoice (385)",
+            InvoiceTypeCode.PrepaymentInvoice => "Prepayment invoice (386)",
+            InvoiceTypeCode.HireInvoice => "Hire invoice (387)",
+            InvoiceTypeCode.TaxInvoice => "Tax invoice (388)",
+            InvoiceTypeCode.SelfBilledInvoice => "Self-billed invoice (389)",
+            InvoiceTypeCode.DelcredereInvoice => "Delcredere invoice (390)",
+            InvoiceTypeCode.FactoredInvoice => "Factored invoice (393)",
+            InvoiceTypeCode.LeaseInvoice => "Lease invoice (394)",
+            InvoiceTypeCode.ConsignmentInvoice => "Consignment invoice (395)",
+            InvoiceTypeCode.FactoredCreditNote => "Factored credit note (396)",
+            InvoiceTypeCode.OcrPaymentCreditNote => "Optical Character Reading (OCR) payment credit note (420)",
+            InvoiceTypeCode.DebitAdvice => "Debit advice (456)",
+            InvoiceTypeCode.ReversalOfDebit => "Reversal of debit (457)",
+            InvoiceTypeCode.ReversalOfCredit => "Reversal of credit (458)",
+            InvoiceTypeCode.SelfBilledDebitNote => "Self billed debit note (527)",
+            InvoiceTypeCode.ForwardersCreditNote => "Forwarder's credit note (532)",
+            InvoiceTypeCode.ForwardersInvoiceDiscrepancyReport => "Forwarder's invoice discrepancy report (553)",
+            InvoiceTypeCode.InsurersInvoice => "Insurer's invoice (575)",
+            InvoiceTypeCode.ForwardersInvoice => "Forwarder's invoice (623)",
+            InvoiceTypeCode.PortChargesDocuments => "Port charges documents (633)",
+            InvoiceTypeCode.InvoiceInformationForAccountingPurposes => "Invoice information for accounting purposes (751)",
+            InvoiceTypeCode.FreightInvoice => "Freight invoice (780)",
+            InvoiceTypeCode.ClaimNotification => "Claim notification (817)",
+            InvoiceTypeCode.ConsularInvoice => "Consular invoice (870)",
+            InvoiceTypeCode.PartialConstructionInvoice => "Partial construction invoice (875)",
+            InvoiceTypeCode.PartialFinalConstructionInvoice => "Partial final construction invoice (876)",
+            InvoiceTypeCode.FinalConstructionInvoice => "Final construction invoice (877)",
+            InvoiceTypeCode.CustomsInvoice => "Customs invoice (935)",
+            null or _ => "Document"
+        };
 }
