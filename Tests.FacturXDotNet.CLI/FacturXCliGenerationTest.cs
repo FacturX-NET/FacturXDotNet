@@ -23,8 +23,7 @@ public class FacturXCliGenerationTest
     {
         string outputPath = $"{Guid.CreateVersion7()}.pdf";
 
-        int result = await CommandLineConfigurationBuilder.Build()
-            .InvokeAsync(["generate", "--pdf", "TestFiles/facturx_without_xmp.pdf", "--cii", "TestFiles/facturx.expected.xml", "-o", outputPath]);
+        int result = await CommandLineConfigurationBuilder.Build().InvokeAsync(["generate", "--pdf", "TestFiles/facturx.pdf", "--cii", "TestFiles/bad_cii.xml", "-o", outputPath]);
 
         result.Should().Be(1);
         File.Exists(outputPath).Should().BeFalse();
@@ -36,7 +35,7 @@ public class FacturXCliGenerationTest
         string outputPath = $"{Guid.CreateVersion7()}.pdf";
 
         int result = await CommandLineConfigurationBuilder.Build()
-            .InvokeAsync(["generate", "--pdf", "TestFiles/facturx_without_xmp.pdf", "--cii", "TestFiles/facturx.expected.xml", "--skip-validation", "-o", outputPath]);
+            .InvokeAsync(["generate", "--pdf", "TestFiles/facturx.pdf", "--cii", "TestFiles/bad_cii.xml", "--skip-validation", "-o", outputPath]);
 
         result.Should().Be(0);
         File.Exists(outputPath).Should().BeTrue();
