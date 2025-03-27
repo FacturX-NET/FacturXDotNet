@@ -5,8 +5,7 @@
 [![NuGet - CLI](https://img.shields.io/nuget/v/FacturXDotNet.CLI?label=tool
 )](https://www.nuget.org/packages/FacturXDotNet.CLI/)
 
-[![Build & Test](https://github.com/FacturX-NET/FacturXDotNet/actions/workflows/ci.yml/badge.svg)](https://github.com/FacturX-NET/FacturXDotNet/actions/workflows/ci.yml)
-![Coverage](https://gist.githubusercontent.com/FacturX-NET/39cc9832bf323ebb2e7c25a6f0e585b7/raw/dotnet-releaser-coverage-badge-FacturX-NET-FacturXDotNet.svg)
+[![Build & Test](https://github.com/FacturX-NET/FacturXDotNet/actions/workflows/ci-main.yml/badge.svg)](https://github.com/FacturX-NET/FacturXDotNet/actions/workflows/ci-main.yml)
 
 > [!IMPORTANT]
 > **The library is still a work in progress. If you stumbled upon this somehow, you are lost!**
