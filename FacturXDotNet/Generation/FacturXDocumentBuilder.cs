@@ -127,8 +127,16 @@ public class FacturXDocumentBuilder
         }
 
         CrossIndustryInvoice cii = await FacturXBuilderCrossIndustryInvoice.AddCrossIndustryInvoiceAttachmentAsync(pdfDocument, _args);
-        await FacturXBuilderXmpMetadata.AddXmpMetadataAsync(pdfDocument, cii, _args);
+        XmpMetadata xmp = await FacturXBuilderXmpMetadata.AddXmpMetadataAsync(pdfDocument, cii, _args);
         FacturXBuilderAttachments.AddAttachments(pdfDocument, _args);
+
+        pdfDocument.Info.Title = xmp.DublinCore?.Title.FirstOrDefault() ?? pdfDocument.Info.Title;
+        pdfDocument.Info.Subject = xmp.DublinCore?.Description.FirstOrDefault() ?? pdfDocument.Info.Subject;
+        pdfDocument.Info.Creator = xmp.Pdf?.Producer ?? pdfDocument.Info.Creator;
+        pdfDocument.Info.CreationDate = xmp.Basic?.CreateDate?.DateTime ?? pdfDocument.Info.CreationDate;
+        pdfDocument.Info.ModificationDate = xmp.Basic?.ModifyDate?.DateTime ?? pdfDocument.Info.ModificationDate;
+        pdfDocument.Info.Keywords = xmp.Pdf?.Keywords ?? pdfDocument.Info.Keywords;
+        pdfDocument.Info.Author = xmp.DublinCore?.Creator is not null ? string.Join(", ", xmp.DublinCore.Creator) : pdfDocument.Info.Author;
 
         pdfDocument.Options.FlateEncodeMode = PdfFlateEncodeMode.BestCompression;
         pdfDocument.Options.CompressContentStreams = true;

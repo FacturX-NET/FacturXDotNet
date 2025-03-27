@@ -13,7 +13,7 @@ static class FacturXBuilderXmpMetadata
 {
     static readonly string? Version = typeof(FacturXBuilderXmpMetadata).Assembly.GetName().Version?.ToString();
 
-    public static async Task AddXmpMetadataAsync(PdfDocument pdfDocument, CrossIndustryInvoice cii, FacturXDocumentBuildArgs args)
+    public static async Task<XmpMetadata> AddXmpMetadataAsync(PdfDocument pdfDocument, CrossIndustryInvoice cii, FacturXDocumentBuildArgs args)
     {
         Stream xmpStream;
         if (args.Xmp is null)
@@ -38,7 +38,7 @@ static class FacturXBuilderXmpMetadata
         xmpMetadata.PdfAIdentification.Conformance ??= XmpPdfAConformanceLevel.B;
         xmpMetadata.PdfAIdentification.Part ??= 3;
         xmpMetadata.Basic ??= new XmpBasicMetadata();
-        xmpMetadata.Basic.CreateDate ??= now;
+        xmpMetadata.Basic.CreateDate = now;
         xmpMetadata.Basic.ModifyDate = now;
         xmpMetadata.Basic.MetadataDate = now;
         xmpMetadata.Pdf ??= new XmpPdfMetadata();
@@ -72,6 +72,8 @@ static class FacturXBuilderXmpMetadata
 
         ReplaceXmpMetadataOfPdfDocument.ReplaceXmpMetadata(pdfDocument, finalXmpStream.GetBuffer().AsSpan(0, (int)finalXmpStream.Length));
         args.Logger?.LogInformation("Added XMP metadata to the PDF document.");
+
+        return xmpMetadata;
     }
 
     static void AddFacturXPdfAExtensionIfNecessary(XmpPdfAExtensionsMetadata extensions)
