@@ -15,27 +15,7 @@ static class FacturXDocumentBuilderAddXmpMetadataStep
 
     public static async Task<XmpMetadata> RunAsync(PdfDocument pdfDocument, CrossIndustryInvoice cii, FacturXDocumentBuildArgs args)
     {
-        Stream xmpStream;
-        if (args.Xmp is null)
-        {
-            ExtractXmpFromPdf extractor = new();
-            xmpStream = extractor.ExtractXmpMetadata(pdfDocument);
-
-            // ensure xmp stream is disposed
-            args.XmpLeaveOpen = false;
-        }
-        else
-        {
-            xmpStream = args.Xmp;
-        }
-
-        XmpMetadataReader xmpReader = new();
-        XmpMetadata xmpMetadata = xmpReader.Read(xmpStream);
-
-        if (!args.XmpLeaveOpen)
-        {
-            await xmpStream.DisposeAsync();
-        }
+        XmpMetadata xmpMetadata = await GetOrCreateBaseXmpMetadata(pdfDocument, args);
 
         DateTimeOffset now = DateTimeOffset.Now;
 
@@ -59,20 +39,6 @@ static class FacturXDocumentBuilderAddXmpMetadataStep
             xmpMetadata.Basic ??= new XmpBasicMetadata();
             xmpMetadata.Basic.CreateDate = now;
             xmpMetadata.Basic.ModifyDate = now;
-            xmpMetadata.Pdf ??= new XmpPdfMetadata();
-            xmpMetadata.Pdf.Keywords ??= JoinStrings(
-                "Factur-X",
-                GetInvoiceType(cii),
-                cii.ExchangedDocument?.Id,
-                cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name,
-                cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name
-            );
-            xmpMetadata.DublinCore ??= new XmpDublinCoreMetadata();
-            // Note: these values must be set by the user, they are not automatically generated
-            // xmpMetadata.DublinCore.Title = [ComputeTitle(cii)];
-            // xmpMetadata.DublinCore.Description = [ComputeDescription(cii)];
-            // xmpMetadata.DublinCore.Date = [now];
-            // xmpMetadata.DublinCore.Creator = GetIssuer(cii) is { } issuer ? [issuer] : xmpMetadata.DublinCore.Creator;
             xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
             AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
             xmpMetadata.FacturX ??= new XmpFacturXMetadata();
@@ -100,6 +66,22 @@ static class FacturXDocumentBuilderAddXmpMetadataStep
         args.Logger?.LogInformation("Added XMP metadata to the PDF document.");
 
         return xmpMetadata;
+    }
+
+    static async Task<XmpMetadata> GetOrCreateBaseXmpMetadata(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
+    {
+        if (args.Xmp is not null)
+        {
+            return await ReadXmpMetadataFromStream(args.Xmp, !args.XmpLeaveOpen);
+        }
+
+        ExtractXmpFromPdf extractor = new();
+        if (extractor.TryExtractXmpMetadata(pdfDocument, out Stream? xmpStream))
+        {
+            return await ReadXmpMetadataFromStream(xmpStream, true);
+        }
+
+        return new XmpMetadata();
     }
 
     static void AddFacturXPdfAExtensionIfNecessary(XmpPdfAExtensionsMetadata extensions)
@@ -153,18 +135,6 @@ static class FacturXDocumentBuilderAddXmpMetadataStep
                 ValueType = []
             }
         );
-    }
-
-    static string ComputeTitle(CrossIndustryInvoice cii) => $"{cii.ExchangedDocument?.Id} | {cii.ExchangedDocument?.IssueDateTime?.ToString("d")}";
-
-    static string ComputeDescription(CrossIndustryInvoice cii)
-    {
-        string documentType = GetInvoiceType(cii);
-
-        string? issuer = GetIssuer(cii);
-        string? recipient = GetRecipient(cii);
-
-        return $"{documentType} number {cii.ExchangedDocument?.Id} dated {cii.ExchangedDocument?.IssueDateTime?.ToString("d") ?? "???"} issued by {issuer} to {recipient}";
     }
 
     static string GetInvoiceType(CrossIndustryInvoice cii) =>
@@ -228,21 +198,21 @@ static class FacturXDocumentBuilderAddXmpMetadataStep
             null or _ => "Document"
         };
 
-    static string? GetIssuer(CrossIndustryInvoice cii) =>
-        cii.ExchangedDocument?.TypeCode switch
-        {
-            InvoiceTypeCode.SelfBilledInvoice or InvoiceTypeCode.SelfBilledCreditNote or InvoiceTypeCode.SelfBilledDebitNote => cii.SupplyChainTradeTransaction
-                ?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name,
-            _ => cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name
-        };
-
-    static string? GetRecipient(CrossIndustryInvoice cii) =>
-        cii.ExchangedDocument?.TypeCode switch
-        {
-            InvoiceTypeCode.SelfBilledInvoice or InvoiceTypeCode.SelfBilledCreditNote or InvoiceTypeCode.SelfBilledDebitNote => cii.SupplyChainTradeTransaction
-                ?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name,
-            _ => cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name
-        };
-
     static string JoinStrings(params IEnumerable<string?> parts) => string.Join(", ", parts.Where(s => !string.IsNullOrWhiteSpace(s)));
+
+    static async Task<XmpMetadata> ReadXmpMetadataFromStream(Stream stream, bool closeStream)
+    {
+        try
+        {
+            XmpMetadataReader xmpReader = new();
+            return xmpReader.Read(stream);
+        }
+        finally
+        {
+            if (closeStream)
+            {
+                await stream.DisposeAsync();
+            }
+        }
+    }
 }
