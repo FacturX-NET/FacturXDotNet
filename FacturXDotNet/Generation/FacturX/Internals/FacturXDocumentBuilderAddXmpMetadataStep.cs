@@ -32,13 +32,30 @@ static class FacturXDocumentBuilderAddXmpMetadataStep
         XmpMetadataReader xmpReader = new();
         XmpMetadata xmpMetadata = xmpReader.Read(xmpStream);
 
+        if (!args.XmpLeaveOpen)
+        {
+            await xmpStream.DisposeAsync();
+        }
+
         DateTimeOffset now = DateTimeOffset.Now;
 
         if (!args.DisableXmpMetadataAutoGeneration)
         {
+            // Note: some values are overwritten on purpose, they correspond to values that are the responsibility of the writer.
+            // For example
+            // - the PDF/A version must be 3 or higher
+            // - the FacturX DocumentFileName must be set to the name of the CII attachment
+            // - the FacturX ConformanceLevel must be set to the value of the GuidelineSpecifiedDocumentContextParameterId
+            // - ... 
+            //
+            // They can still be post processed by the user: it is a choice to give them more control. Changing these values is dangerous: it might make the document invalid
+            // with respect to the PDF/A standard.
+            //
+            // Finally, some values cannot be post-processed: for example the name of the creator tool (this lib)
+
             xmpMetadata.PdfAIdentification ??= new XmpPdfAIdentificationMetadata();
             xmpMetadata.PdfAIdentification.Conformance ??= XmpPdfAConformanceLevel.B;
-            xmpMetadata.PdfAIdentification.Part ??= 3;
+            xmpMetadata.PdfAIdentification.Part = 3;
             xmpMetadata.Basic ??= new XmpBasicMetadata();
             xmpMetadata.Basic.CreateDate = now;
             xmpMetadata.Basic.ModifyDate = now;
@@ -51,10 +68,13 @@ static class FacturXDocumentBuilderAddXmpMetadataStep
                 cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name
             );
             xmpMetadata.DublinCore ??= new XmpDublinCoreMetadata();
-            xmpMetadata.DublinCore.Title = [ComputeTitle(cii)];
-            xmpMetadata.DublinCore.Description = [ComputeDescription(cii)];
-            xmpMetadata.DublinCore.Date = [now];
-            xmpMetadata.DublinCore.Creator = GetIssuer(cii) is { } issuer ? [issuer] : xmpMetadata.DublinCore.Creator;
+            // Note: these values must be set by the user, they are not automatically generated
+            // xmpMetadata.DublinCore.Title = [ComputeTitle(cii)];
+            // xmpMetadata.DublinCore.Description = [ComputeDescription(cii)];
+            // xmpMetadata.DublinCore.Date = [now];
+            // xmpMetadata.DublinCore.Creator = GetIssuer(cii) is { } issuer ? [issuer] : xmpMetadata.DublinCore.Creator;
+            xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
+            AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
             xmpMetadata.FacturX ??= new XmpFacturXMetadata();
             xmpMetadata.FacturX.DocumentFileName = args.CiiAttachmentName;
             xmpMetadata.FacturX.DocumentType = XmpFacturXDocumentType.Invoice;
@@ -69,20 +89,8 @@ static class FacturXDocumentBuilderAddXmpMetadataStep
         string toolName = string.IsNullOrWhiteSpace(Version) ? "FacturX.NET ~dev" : $"FacturX.NET v{Version}";
         xmpMetadata.Basic ??= new XmpBasicMetadata();
         xmpMetadata.Basic.CreatorTool = toolName;
-        xmpMetadata.Basic.CreatorTool = toolName;
         xmpMetadata.Pdf ??= new XmpPdfMetadata();
         xmpMetadata.Pdf.Producer = toolName;
-
-        if (!args.DisableXmpMetadataAutoGeneration)
-        {
-            xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
-            AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
-        }
-
-        if (!args.XmpLeaveOpen)
-        {
-            await xmpStream.DisposeAsync();
-        }
 
         await using MemoryStream finalXmpStream = new();
         XmpMetadataWriter xmpWriter = new();
