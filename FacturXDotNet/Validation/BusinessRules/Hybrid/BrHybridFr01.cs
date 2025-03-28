@@ -12,7 +12,7 @@ public record BrHybridFr01() : HybridBusinessRule(
 )
 {
     /// <inheritdoc />
-    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) =>
+    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
         // TODO
         true;
 }

@@ -13,7 +13,7 @@ public record Br15InvoiceShallHaveAmountDueForPayment() : CrossIndustryInvoiceBu
 )
 {
     /// <inheritdoc />
-    public override bool Check(CrossIndustryInvoice? cii) =>
+    public override bool Check(CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
         cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.DuePayableAmount is not null
         && cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.DuePayableAmount != 0;
 }

@@ -9,5 +9,6 @@ namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 public record BrHybrid13() : HybridBusinessRule("BR-HYBRID-13", "The embedded file name SHALL be one of the values defined in the HybridDocumentFilename code list.")
 {
     /// <inheritdoc />
-    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) => ciiAttachmentName is "factur-x.xml" or "xrechnung.xml" or "order-x.xml";
+    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
+        ciiAttachmentName is "factur-x.xml" or "xrechnung.xml" or "order-x.xml";
 }

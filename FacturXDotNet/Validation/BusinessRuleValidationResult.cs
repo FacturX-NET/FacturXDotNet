@@ -8,11 +8,16 @@ namespace FacturXDotNet.Validation;
 /// <param name="Rule">The rule that was validated.</param>
 /// <param name="ExpectedStatus">The expected status of the rule.</param>
 /// <param name="Status">The actual status of the rule.</param>
-public readonly record struct BusinessRuleValidationResult(BusinessRule Rule, BusinessRuleExpectedValidationStatus ExpectedStatus, BusinessRuleValidationStatus Status)
+public readonly record struct BusinessRuleValidationResult(
+    BusinessRule Rule,
+    BusinessRuleExpectedValidationStatus ExpectedStatus,
+    BusinessRuleValidationStatus Status,
+    IReadOnlyList<BusinessRuleDetail> Details
+)
 {
     /// <summary>
     ///     Returns true if the validation has failed, i.e., the rule was not expected to fail, and it failed.
     /// </summary>
     public bool HasFailed =>
-        Rule.Severity is FacturXBusinessRuleSeverity.Fatal && ExpectedStatus is not BusinessRuleExpectedValidationStatus.Failure && Status is BusinessRuleValidationStatus.Failed;
+        Rule.Severity is BusinessRuleSeverity.Fatal && ExpectedStatus is not BusinessRuleExpectedValidationStatus.Failure && Status is BusinessRuleValidationStatus.Failed;
 }

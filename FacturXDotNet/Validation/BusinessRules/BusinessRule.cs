@@ -9,7 +9,7 @@ namespace FacturXDotNet.Validation.BusinessRules;
 /// <param name="Profiles">The profiles in which this rule should be enforced.</param>
 /// <param name="Description">A description of the rule.</param>
 /// <param name="Severity">The severity of the rule.</param>
-public abstract record BusinessRule(string Name, string Description, FacturXProfileFlags Profiles, FacturXBusinessRuleSeverity Severity)
+public abstract record BusinessRule(string Name, string Description, FacturXProfileFlags Profiles, BusinessRuleSeverity Severity)
 {
     /// <summary>
     ///     Formats the rule as a string.

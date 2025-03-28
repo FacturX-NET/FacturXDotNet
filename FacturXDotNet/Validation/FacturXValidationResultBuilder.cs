@@ -8,16 +8,18 @@ class FacturXValidationResultBuilder
     readonly List<BusinessRuleValidationResult> _results = [];
     FacturXProfile? _expectedProfile;
 
-    public FacturXValidationResultBuilder SetExpectedProfile(FacturXProfile profile)
-    {
-        _expectedProfile = profile;
-        return this;
-    }
+    public void SetExpectedProfile(FacturXProfile profile) => _expectedProfile = profile;
 
-    public FacturXValidationResultBuilder AddRuleStatus(BusinessRule rule, BusinessRuleExpectedValidationStatus expectedStatus, BusinessRuleValidationStatus status)
+    public BusinessRuleValidationResult AddRuleStatus(
+        BusinessRule rule,
+        BusinessRuleExpectedValidationStatus expectedStatus,
+        BusinessRuleValidationStatus status,
+        IReadOnlyList<BusinessRuleDetail> details
+    )
     {
-        _results.Add(new BusinessRuleValidationResult(rule, expectedStatus, status));
-        return this;
+        BusinessRuleValidationResult result = new(rule, expectedStatus, status, details);
+        _results.Add(result);
+        return result;
     }
 
     public FacturXValidationResult Build()

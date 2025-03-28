@@ -13,7 +13,7 @@ public record Br08InvoiceShallHaveSellerPostalAddress() : CrossIndustryInvoiceBu
 )
 {
     /// <inheritdoc />
-    public override bool Check(CrossIndustryInvoice? cii) =>
+    public override bool Check(CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
         // Nullability analysis should guarantee that this is always true, however it is still a BT so we check it anyway
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.PostalTradeAddress is not null;

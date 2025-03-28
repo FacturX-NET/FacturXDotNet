@@ -35,6 +35,13 @@ public class FacturXValidationOptions
     public ILogger? Logger { get; set; }
 
     /// <summary>
+    ///     The callback that should be called when a business rule validation result is available.
+    ///     These results will also be available in the final validation report, this callback can be used to display the results asap, e.g. in a UI.
+    ///     Note that this callback will be called for each rule, performance may be affected if the callback is slow.
+    /// </summary>
+    public Action<BusinessRuleValidationResult>? CheckCallback { get; set; }
+
+    /// <summary>
     ///     Skips all Cross-Industry Invoice business rules during validation.
     /// </summary>
     public void SkipCiiRules() => RulesToSkip.AddRange(CrossIndustryInvoiceBusinessRules.Rules.Select(r => r.Name));

@@ -14,6 +14,6 @@ public record Br09InvoiceShallHaveSellerPostalAddressWithCountryCode() : CrossIn
 )
 {
     /// <inheritdoc />
-    public override bool Check(CrossIndustryInvoice? cii) =>
+    public override bool Check(CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
         Iso31661CountryCodesUtils.IsValidCountryCode(cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.PostalTradeAddress?.CountryId);
 }

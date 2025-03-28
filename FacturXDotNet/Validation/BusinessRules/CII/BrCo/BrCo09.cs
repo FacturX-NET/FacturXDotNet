@@ -18,7 +18,7 @@ public record BrCo09() : CrossIndustryInvoiceBusinessRule(
 )
 {
     /// <inheritdoc />
-    public override bool Check(CrossIndustryInvoice? cii) =>
+    public override bool Check(CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
         // TODO: also check BT-63 and BT-48
         cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.SpecifiedTaxRegistration?.Id is not null
         && CheckPrefix(cii.SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement.SellerTradeParty.SpecifiedTaxRegistration.Id.AsSpan(0, 2));
