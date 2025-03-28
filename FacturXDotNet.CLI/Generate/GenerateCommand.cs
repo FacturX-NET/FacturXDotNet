@@ -111,14 +111,15 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
         {
             BasePdf = basePdf,
             Cii = result.GetValue(CiiOption) ?? throw new RequiredOptionMissingException(CiiOption),
-            CiiAttachmentName = result.GetValue(CiiAttachmentNameOption),
+            CiiAttachmentName = result.GetValue(CiiAttachmentNameOption) ?? DefaultCiiAttachment,
             Attachments = result.GetValue(AttachmentsOption) ?? [],
             Author = result.GetValue(AuthorOption),
             OutputPath = result.GetValue(OutputPathOption)?.FullName,
             SkipValidation = result.GetResult(SkipValidationOption) is not null && result.GetValue(SkipValidationOption),
             TreatWarningsAsErrors = result.GetValue(TreatWarningsAsErrorsOption),
             Profile = result.GetValue(ProfileOption),
-            RulesToSkip = result.GetValue(RulesToSkipOption)?.ToList() ?? []
+            RulesToSkip = result.GetValue(RulesToSkipOption)?.ToList() ?? [],
+            Verbosity = result.GetValue(GlobalOptions.VerbosityOption)
         };
     }
 
@@ -127,148 +128,27 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
         ShowOptions(options);
         AnsiConsole.WriteLine();
 
-        string ciiAttachmentName = options.CiiAttachmentName ?? DefaultCiiAttachment;
+        FacturXDocumentBuilder builder = await ConfigureFacturXDocumentAsync(options, cancellationToken);
+        FacturXDocument document = await GenerateFacturXDocumentAsync(builder);
 
-        FacturXDocumentBuilder? builder = null;
-        await AnsiConsole.Status()
-            .Spinner(Spinner.Known.Default)
-            .StartAsync(
-                "Reading input files...",
-                async ctx =>
-                {
-                    Stopwatch sw = new();
-                    sw.Start();
-
-                    builder = FacturXDocument.Create();
-
-                    ctx.Status($"Reading input files ({options.BasePdf.FullName})...");
-
-                    builder.WithBasePdfFile(options.BasePdf.FullName);
-
-                    builder.PostProcess(
-                        pp =>
-                        {
-                            pp.PdfDocument(
-                                doc =>
-                                {
-                                    if (!string.IsNullOrWhiteSpace(options.Author))
-                                    {
-                                        doc.Info.Author = options.Author;
-                                    }
-                                }
-                            );
-
-                            pp.XmpMetadata(
-                                xmp =>
-                                {
-                                    if (!string.IsNullOrWhiteSpace(options.Author))
-                                    {
-                                        xmp.DublinCore.Creator = [options.Author];
-                                    }
-                                }
-                            );
-
-                        }
-                    );
-
-                    ctx.Status($"Reading input files ({options.Cii.FullName})...");
-
-                    builder.WithCrossIndustryInvoiceFile(options.Cii.FullName, ciiAttachmentName);
-
-                    foreach (FileInfo attachment in options.Attachments)
-                    {
-                        ctx.Status($"Reading input files ({attachment.FullName})...");
-
-                        await using FileStream attachmentStream = attachment.OpenRead();
-                        byte[] attachmentContent = new byte[attachmentStream.Length];
-                        await attachmentStream.ReadExactlyAsync(attachmentContent, cancellationToken);
-
-                        builder.WithAttachment(new PdfAttachmentData(attachment.Name, attachmentContent));
-                    }
-
-                    sw.Stop();
-
-                    AnsiConsole.MarkupLine($":check_mark: The input files have been read in {sw.Elapsed.Humanize()}.");
-                }
-            );
-
-        if (builder is null)
-        {
-            throw new Exception("This will never happen.");
-        }
-
-        FacturXDocument? document = null;
-        await AnsiConsole.Status()
-            .Spinner(Spinner.Known.Default)
-            .StartAsync(
-                "Generating the Factur-X document...",
-                async _ =>
-                {
-                    Stopwatch sw = new();
-                    sw.Start();
-
-                    document = await builder.BuildAsync();
-
-                    sw.Stop();
-
-                    AnsiConsole.MarkupLine($":check_mark: The document has been generated in {sw.Elapsed.Humanize()}.");
-                }
-            );
-
-        if (document is null)
-        {
-            throw new Exception("This will never happen.");
-        }
-
-        bool generate;
+        bool export;
         if (options.SkipValidation)
         {
-            generate = true;
+            export = true;
         }
         else
         {
-            FacturXValidationResult result = await ValidateCommand.ValidateAsync(
-                document,
-                new ValidateCommandOptions
-                {
-                    CiiAttachment = ciiAttachmentName,
-                    TreatWarningsAsErrors = options.TreatWarningsAsErrors,
-                    Profile = options.Profile,
-                    RulesToSkip = options.RulesToSkip
-                },
-                cancellationToken
-            );
-
+            export = await ValidateFacturXDocumentAsync(document, options, cancellationToken);
             AnsiConsole.WriteLine();
-
-            generate = result.Success;
         }
 
-        if (!generate)
+        if (!export)
         {
             AnsiConsole.MarkupLine("[red]:cross_mark:[/] The document has not been exported.");
             return 1;
         }
 
-        string outputPath = options.OutputPath ?? ComputeDefaultOutputFileName(options.BasePdf);
-
-        await AnsiConsole.Status()
-            .Spinner(Spinner.Known.Default)
-            .StartAsync(
-                "Exporting the Factur-X document...",
-                async _ =>
-                {
-                    Stopwatch sw = new();
-                    sw.Start();
-
-                    await using FileStream outputFile = File.Open(outputPath, FileMode.Create);
-                    await document.ExportAsync(outputFile);
-
-                    sw.Stop();
-
-                    AnsiConsole.MarkupLine($":check_mark: The document has been exported to [bold]{outputPath}[/] in {sw.Elapsed.Humanize()}.");
-                }
-            );
+        await ExportFacturXDocumentAsync(document, options);
 
         return 0;
     }
@@ -311,11 +191,137 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
         AnsiConsole.Write(new Panel(panelContent).Header("Options").Border(BoxBorder.Rounded));
     }
 
+    static async Task<FacturXDocumentBuilder> ConfigureFacturXDocumentAsync(GenerateCommandOptions options, CancellationToken cancellationToken) =>
+        await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Default)
+            .StartAsync(
+                "Reading input files...",
+                async ctx =>
+                {
+                    Stopwatch sw = new();
+                    sw.Start();
+
+                    FacturXDocumentBuilder builder = FacturXDocument.Create();
+
+                    ctx.Status($"Reading input files ({options.BasePdf.FullName})...");
+
+                    builder.WithBasePdfFile(options.BasePdf.FullName);
+
+                    builder.PostProcess(
+                        pp =>
+                        {
+                            pp.PdfDocument(
+                                doc =>
+                                {
+                                    if (!string.IsNullOrWhiteSpace(options.Author))
+                                    {
+                                        doc.Info.Author = options.Author;
+                                    }
+                                }
+                            );
+
+                            pp.XmpMetadata(
+                                xmp =>
+                                {
+                                    if (!string.IsNullOrWhiteSpace(options.Author))
+                                    {
+                                        xmp.DublinCore.Creator = [options.Author];
+                                    }
+                                }
+                            );
+
+                        }
+                    );
+
+                    ctx.Status($"Reading input files ({options.Cii.FullName})...");
+
+                    builder.WithCrossIndustryInvoiceFile(options.Cii.FullName, options.CiiAttachmentName);
+
+                    foreach (FileInfo attachment in options.Attachments)
+                    {
+                        ctx.Status($"Reading input files ({attachment.FullName})...");
+
+                        await using FileStream attachmentStream = attachment.OpenRead();
+                        byte[] attachmentContent = new byte[attachmentStream.Length];
+                        await attachmentStream.ReadExactlyAsync(attachmentContent, cancellationToken);
+
+                        builder.WithAttachment(new PdfAttachmentData(attachment.Name, attachmentContent));
+                    }
+
+                    sw.Stop();
+
+                    AnsiConsole.MarkupLine($":check_mark: The input files have been read in {sw.Elapsed.Humanize()}.");
+
+                    return builder;
+                }
+            );
+
+    static async Task<FacturXDocument> GenerateFacturXDocumentAsync(FacturXDocumentBuilder builder) =>
+        await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Default)
+            .StartAsync(
+                "Generating the Factur-X document...",
+                async _ =>
+                {
+                    Stopwatch sw = new();
+                    sw.Start();
+
+                    FacturXDocument document1 = await builder.BuildAsync();
+
+                    sw.Stop();
+
+                    AnsiConsole.MarkupLine($":check_mark: The document has been generated in {sw.Elapsed.Humanize()}.");
+
+                    return document1;
+                }
+            );
+
     static string ComputeDefaultOutputFileName(FileInfo basePdf)
     {
         string? inputDirectory = Path.GetDirectoryName(basePdf.FullName);
         string inputName = Path.GetFileNameWithoutExtension(basePdf.FullName);
         return Path.Join(inputDirectory, $"{inputName}-facturx.pdf");
+    }
+
+    static async Task<bool> ValidateFacturXDocumentAsync(FacturXDocument document, GenerateCommandOptions options, CancellationToken cancellationToken)
+    {
+        FacturXValidationResult result = await ValidateCommand.ValidateAsync(
+            document,
+            new ValidateCommandOptions
+            {
+                CiiAttachment = options.CiiAttachmentName,
+                TreatWarningsAsErrors = options.TreatWarningsAsErrors,
+                Profile = options.Profile,
+                RulesToSkip = options.RulesToSkip,
+                Verbosity = options.Verbosity
+            },
+            cancellationToken
+        );
+
+        return result.Success;
+    }
+
+    static async Task ExportFacturXDocumentAsync(FacturXDocument document, GenerateCommandOptions options)
+    {
+        string outputPath = options.OutputPath ?? ComputeDefaultOutputFileName(options.BasePdf);
+
+        await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Default)
+            .StartAsync(
+                "Exporting the Factur-X document...",
+                async _ =>
+                {
+                    Stopwatch sw = new();
+                    sw.Start();
+
+                    await using FileStream outputFile = File.Open(outputPath, FileMode.Create);
+                    await document.ExportAsync(outputFile);
+
+                    sw.Stop();
+
+                    AnsiConsole.MarkupLine($":check_mark: The document has been exported to [bold]{outputPath}[/] in {sw.Elapsed.Humanize()}.");
+                }
+            );
     }
 }
 
@@ -334,7 +340,7 @@ public class GenerateCommandOptions
     /// <summary>
     ///     The name of the CII attachment.
     /// </summary>
-    public string? CiiAttachmentName { get; set; }
+    public string CiiAttachmentName { get; set; } = "factur-x.xml";
 
     /// <summary>
     ///     Additional files to attach to the result.
@@ -370,4 +376,9 @@ public class GenerateCommandOptions
     ///     The business rules that should be skipped during the validation of the final result.
     /// </summary>
     public List<string> RulesToSkip { get; set; } = [];
+
+    /// <summary>
+    ///     The verbosity level for the output.
+    /// </summary>
+    public Verbosity Verbosity { get; set; }
 }
