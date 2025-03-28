@@ -6,7 +6,8 @@ using FacturXDotNet.Parsing.XMP;
 using FacturXDotNet.Validation.BusinessRules;
 using FacturXDotNet.Validation.BusinessRules.CII;
 using FacturXDotNet.Validation.BusinessRules.Hybrid;
-using CrossIndustryInvoiceBusinessRule = FacturXDotNet.Validation.BusinessRules.CrossIndustryInvoiceBusinessRule;
+using FacturXDotNet.Validation.BusinessRules.Internals;
+using CrossIndustryInvoiceBusinessRule = FacturXDotNet.Validation.BusinessRules.CII.CrossIndustryInvoiceBusinessRule;
 
 namespace FacturXDotNet.Validation;
 
@@ -48,7 +49,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
         FacturXProfile profile = GetExpectedProfile(xmp, cii);
 
         IEnumerable<HybridBusinessRule> hybridRules = HybridBusinessRules.Rules
-            .Where(rule => rule.Severity is FacturXBusinessRuleSeverity.Fatal || rule.Severity is FacturXBusinessRuleSeverity.Warning && _options.TreatWarningsAsErrors)
+            .Where(rule => rule.Severity is BusinessRuleSeverity.Fatal || rule.Severity is BusinessRuleSeverity.Warning && _options.TreatWarningsAsErrors)
             .Where(rule => !ShouldSkipRule(rule));
         if (!hybridRules.All(rule => rule.Check(xmp, ciiAttachment.Name, cii)))
         {
@@ -160,12 +161,13 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
 
             if (ShouldSkipRule(rule))
             {
-                builder.AddRuleStatus(rule, expectation, BusinessRuleValidationStatus.Skipped);
+                builder.AddRuleStatus(rule, expectation, BusinessRuleValidationStatus.Skipped, []);
             }
             else
             {
-                BusinessRuleValidationStatus status = rule.Check(xmp, ciiAttachmentName, cii) ? BusinessRuleValidationStatus.Passed : BusinessRuleValidationStatus.Failed;
-                builder.AddRuleStatus(rule, expectation, status);
+                BusinessRuleDetailsLogger logger = new();
+                BusinessRuleValidationStatus status = rule.Check(xmp, ciiAttachmentName, cii, logger) ? BusinessRuleValidationStatus.Passed : BusinessRuleValidationStatus.Failed;
+                builder.AddRuleStatus(rule, expectation, status, logger.GetDetails());
             }
         }
     }
@@ -180,12 +182,13 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
 
             if (ShouldSkipRule(rule))
             {
-                builder.AddRuleStatus(rule, expectation, BusinessRuleValidationStatus.Skipped);
+                builder.AddRuleStatus(rule, expectation, BusinessRuleValidationStatus.Skipped, []);
             }
             else
             {
+                BusinessRuleDetailsLogger logger = new();
                 BusinessRuleValidationStatus status = rule.Check(cii) ? BusinessRuleValidationStatus.Passed : BusinessRuleValidationStatus.Failed;
-                builder.AddRuleStatus(rule, expectation, status);
+                builder.AddRuleStatus(rule, expectation, status, logger.GetDetails());
             }
         }
     }

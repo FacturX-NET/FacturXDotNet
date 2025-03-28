@@ -9,9 +9,9 @@ namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 public record BrHybrid01() : HybridBusinessRule(
     "BR-HYBRID-01",
     "A hybrid document consists of a machine readable interchange format on XML syntax and a human readable PDF envelope.",
-    FacturXBusinessRuleSeverity.Information
+    BusinessRuleSeverity.Information
 )
 {
     /// <inheritdoc />
-    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) => xmp is not null;
+    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) => xmp is not null;
 }

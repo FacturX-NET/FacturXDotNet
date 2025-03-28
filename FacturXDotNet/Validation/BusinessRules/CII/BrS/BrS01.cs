@@ -18,7 +18,7 @@ public record BrS01() : CrossIndustryInvoiceBusinessRule(
 )
 {
     /// <inheritdoc />
-    public override bool Check(CrossIndustryInvoice? cii) =>
+    public override bool Check(CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
         // TODO
         true;
 }

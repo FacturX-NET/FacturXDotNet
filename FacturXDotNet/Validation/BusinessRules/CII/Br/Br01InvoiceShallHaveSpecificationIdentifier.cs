@@ -13,7 +13,7 @@ public record Br01InvoiceShallHaveSpecificationIdentifier() : CrossIndustryInvoi
 )
 {
     /// <inheritdoc />
-    public override bool Check(CrossIndustryInvoice? cii) =>
+    public override bool Check(CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
         cii?.ExchangedDocumentContext?.GuidelineSpecifiedDocumentContextParameterId is not null
         && Enum.IsDefined(cii.ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId.Value);
 }

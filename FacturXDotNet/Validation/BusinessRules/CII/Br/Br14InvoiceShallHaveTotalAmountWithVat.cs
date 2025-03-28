@@ -13,7 +13,7 @@ public record Br14InvoiceShallHaveTotalAmountWithVat() : CrossIndustryInvoiceBus
 )
 {
     /// <inheritdoc />
-    public override bool Check(CrossIndustryInvoice? cii) =>
+    public override bool Check(CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
         cii?.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.GrandTotalAmount is not null
         && cii.SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount != 0;
 }

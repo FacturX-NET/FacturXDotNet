@@ -9,5 +9,5 @@ namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 public record Br02InvoiceShallHaveInvoiceNumber() : CrossIndustryInvoiceBusinessRule("BR-02", "An Invoice shall have an Invoice number (BT-1).", FacturXProfile.Minimum.AndHigher())
 {
     /// <inheritdoc />
-    public override bool Check(CrossIndustryInvoice? cii) => !string.IsNullOrWhiteSpace(cii?.ExchangedDocument?.Id);
+    public override bool Check(CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) => !string.IsNullOrWhiteSpace(cii?.ExchangedDocument?.Id);
 }

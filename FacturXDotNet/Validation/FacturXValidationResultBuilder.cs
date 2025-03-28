@@ -14,9 +14,14 @@ class FacturXValidationResultBuilder
         return this;
     }
 
-    public FacturXValidationResultBuilder AddRuleStatus(BusinessRule rule, BusinessRuleExpectedValidationStatus expectedStatus, BusinessRuleValidationStatus status)
+    public FacturXValidationResultBuilder AddRuleStatus(
+        BusinessRule rule,
+        BusinessRuleExpectedValidationStatus expectedStatus,
+        BusinessRuleValidationStatus status,
+        IReadOnlyList<BusinessRuleDetail> details
+    )
     {
-        _results.Add(new BusinessRuleValidationResult(rule, expectedStatus, status));
+        _results.Add(new BusinessRuleValidationResult(rule, expectedStatus, status, details));
         return this;
     }
 

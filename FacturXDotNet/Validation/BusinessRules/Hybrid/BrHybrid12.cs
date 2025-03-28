@@ -13,7 +13,7 @@ public record BrHybrid12() : HybridBusinessRule(
 )
 {
     /// <inheritdoc />
-    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii) =>
+    public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
         // TODO: extract the method of embedding the XML into the PDF 
         true;
 }

@@ -206,7 +206,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
             }
 
             foreach (BusinessRuleValidationResult rule in result.Rules.Where(
-                         r => r.Status is BusinessRuleValidationStatus.Failed && r.Rule.Severity is not FacturXBusinessRuleSeverity.Fatal
+                         r => r.Status is BusinessRuleValidationStatus.Failed && r.Rule.Severity is not BusinessRuleSeverity.Fatal
                      ))
             {
                 atLeastOne = true;
