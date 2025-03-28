@@ -134,8 +134,8 @@ public class FacturXDocumentBuilder
 
         pdfDocument.Info.Title = FirstString(xmp.DublinCore?.Title) ?? pdfDocument.Info.Title;
         pdfDocument.Info.Subject = FirstString(xmp.DublinCore?.Description) ?? pdfDocument.Info.Subject;
-        pdfDocument.Info.CreationDate = xmp.Basic?.CreateDate?.DateTime ?? pdfDocument.Info.CreationDate;
-        pdfDocument.Info.ModificationDate = xmp.Basic?.ModifyDate?.DateTime ?? pdfDocument.Info.ModificationDate;
+        pdfDocument.Info.CreationDate = xmp.Basic?.CreateDate?.LocalDateTime ?? pdfDocument.Info.CreationDate;
+        pdfDocument.Info.ModificationDate = xmp.Basic?.ModifyDate?.LocalDateTime ?? pdfDocument.Info.ModificationDate;
         pdfDocument.Info.Keywords = xmp.Pdf?.Keywords ?? pdfDocument.Info.Keywords;
         pdfDocument.Info.Author = JoinStrings(xmp.DublinCore?.Creator) ?? pdfDocument.Info.Author;
 
@@ -173,7 +173,7 @@ public class FacturXDocumentBuilder
     static string? FirstString(IEnumerable<string>? parts) => parts?.FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
 
     static string? JoinStrings(IEnumerable<string>? parts, string separator = ", ") =>
-        parts == null ? null : string.Join(separator, parts.Select(s => !string.IsNullOrWhiteSpace(s)));
+        parts == null ? null : string.Join(separator, parts.Where(s => !string.IsNullOrWhiteSpace(s)));
 }
 
 class FacturXDocumentBuildArgs

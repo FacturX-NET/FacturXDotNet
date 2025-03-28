@@ -49,8 +49,6 @@ static class FacturXBuilderXmpMetadata
             xmpMetadata.DublinCore.Description = [ComputeDescription(cii)];
             xmpMetadata.DublinCore.Date = [now];
             xmpMetadata.DublinCore.Creator = GetIssuer(cii) is { } issuer ? [issuer] : xmpMetadata.DublinCore.Creator;
-            xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
-            AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
             xmpMetadata.FacturX ??= new XmpFacturXMetadata();
             xmpMetadata.FacturX.DocumentFileName = args.CiiAttachmentName;
             xmpMetadata.FacturX.DocumentType = XmpFacturXDocumentType.Invoice;
@@ -67,6 +65,8 @@ static class FacturXBuilderXmpMetadata
         xmpMetadata.Basic.CreatorTool = toolName;
         xmpMetadata.Pdf ??= new XmpPdfMetadata();
         xmpMetadata.Pdf.Producer = toolName;
+        xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
+        AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
 
         if (!args.XmpLeaveOpen)
         {
