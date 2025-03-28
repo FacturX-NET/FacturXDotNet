@@ -7,7 +7,7 @@ namespace FacturXDotNet.Generation.PDF.Internals;
 /// <summary>
 ///     Replace the XMP metadata of a PDF document.
 /// </summary>
-static class ReplaceXmpMetadataOfPdfDocument
+static class ReplaceXmpMetadataOfPdfDocumentExtensions
 {
     /// <summary>
     ///     Replace the XMP metadata of a PDF document.
@@ -18,7 +18,7 @@ static class ReplaceXmpMetadataOfPdfDocument
     /// </remarks>
     /// <param name="document">The PDF document.</param>
     /// <param name="newXmpMetadata">The new XMP metadata.</param>
-    public static void ReplaceXmpMetadata(PdfDocument document, ReadOnlySpan<byte> newXmpMetadata)
+    public static void ReplaceXmpMetadata(this PdfDocument document, ReadOnlySpan<byte> newXmpMetadata)
     {
         FlateDecode flateDecode = new();
         byte[] encoded = flateDecode.Encode(newXmpMetadata.ToArray(), PdfFlateEncodeMode.BestCompression);

@@ -6,7 +6,7 @@ using PdfSharp.Pdf;
 
 namespace FacturXDotNet.Generation.FacturX.Internals;
 
-static class FacturXBuilderAttachments
+static class FacturXDocumentBuilderAddAttachmentsStep
 {
     public static void AddAttachments(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
     {

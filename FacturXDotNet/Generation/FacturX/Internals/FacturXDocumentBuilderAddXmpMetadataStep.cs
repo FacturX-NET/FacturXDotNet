@@ -9,9 +9,9 @@ using PdfSharp.Pdf;
 
 namespace FacturXDotNet.Generation.FacturX.Internals;
 
-static class FacturXBuilderXmpMetadata
+static class FacturXDocumentBuilderAddXmpMetadataStep
 {
-    static readonly string? Version = typeof(FacturXBuilderXmpMetadata).Assembly.GetName().Version?.ToString();
+    static readonly string? Version = typeof(FacturXDocumentBuilderAddXmpMetadataStep).Assembly.GetName().Version?.ToString();
 
     public static async Task<XmpMetadata> AddXmpMetadataAsync(PdfDocument pdfDocument, CrossIndustryInvoice cii, FacturXDocumentBuildArgs args)
     {
@@ -81,7 +81,7 @@ static class FacturXBuilderXmpMetadata
         XmpMetadataWriter xmpWriter = new();
         await xmpWriter.WriteAsync(finalXmpStream, xmpMetadata);
 
-        ReplaceXmpMetadataOfPdfDocument.ReplaceXmpMetadata(pdfDocument, finalXmpStream.GetBuffer().AsSpan(0, (int)finalXmpStream.Length));
+        pdfDocument.ReplaceXmpMetadata(finalXmpStream.GetBuffer().AsSpan(0, (int)finalXmpStream.Length));
         args.Logger?.LogInformation("Added XMP metadata to the PDF document.");
 
         return xmpMetadata;

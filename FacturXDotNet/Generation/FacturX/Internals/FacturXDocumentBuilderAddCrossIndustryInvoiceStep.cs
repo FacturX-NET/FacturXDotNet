@@ -7,7 +7,7 @@ using PdfSharp.Pdf;
 
 namespace FacturXDotNet.Generation.FacturX.Internals;
 
-static class FacturXBuilderCrossIndustryInvoice
+static class FacturXDocumentBuilderAddCrossIndustryInvoiceStep
 {
     public static async Task<CrossIndustryInvoice> AddCrossIndustryInvoiceAttachmentAsync(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
     {
@@ -25,7 +25,7 @@ static class FacturXBuilderCrossIndustryInvoice
         ciiAttachment.Relationship = AfRelationship.Alternative;
         ciiAttachment.MimeType = "application/xml";
 
-        FacturXBuilderAttachments.AddAttachment(pdfDocument, ciiAttachment, FacturXDocumentBuilderAttachmentConflictResolution.Overwrite, args);
+        FacturXDocumentBuilderAddAttachmentsStep.AddAttachment(pdfDocument, ciiAttachment, FacturXDocumentBuilderAttachmentConflictResolution.Overwrite, args);
         args.Logger?.LogInformation("Added CII attachment to the PDF document.");
 
         if (!args.CiiLeaveOpen)

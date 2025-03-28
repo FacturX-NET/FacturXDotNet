@@ -7,7 +7,7 @@ namespace FacturXDotNet.Generation.PDF.Internals;
 /// <summary>
 ///     Add an attachment to a PDF document.
 /// </summary>
-static class AddAttachmentToPdfDocument
+static class AddAttachmentToPdfDocumentExtensions
 {
     /// <summary>
     ///     Add an attachment to a PDF document.

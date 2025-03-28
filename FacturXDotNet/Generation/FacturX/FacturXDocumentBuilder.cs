@@ -1,5 +1,4 @@
 ﻿using FacturXDotNet.Generation.FacturX.Internals;
-using FacturXDotNet.Generation.FacturX.Internals.PostProcess;
 using FacturXDotNet.Generation.PDF;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
@@ -87,7 +86,7 @@ public class FacturXDocumentBuilder
     /// </summary>
     /// <param name="postProcess">The action to perform on the XMP metadata.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder PostProcess(Action<FacturXBuilderPostProcess> postProcess)
+    public FacturXDocumentBuilder PostProcess(Action<FacturXDocumentPostProcessOptions> postProcess)
     {
         postProcess(_args.PostProcess);
         return this;
@@ -128,9 +127,9 @@ public class FacturXDocumentBuilder
             await _args.BasePdf.DisposeAsync();
         }
 
-        CrossIndustryInvoice cii = await FacturXBuilderCrossIndustryInvoice.AddCrossIndustryInvoiceAttachmentAsync(pdfDocument, _args);
-        XmpMetadata xmp = await FacturXBuilderXmpMetadata.AddXmpMetadataAsync(pdfDocument, cii, _args);
-        FacturXBuilderAttachments.AddAttachments(pdfDocument, _args);
+        CrossIndustryInvoice cii = await FacturXDocumentBuilderAddCrossIndustryInvoiceStep.AddCrossIndustryInvoiceAttachmentAsync(pdfDocument, _args);
+        XmpMetadata xmp = await FacturXDocumentBuilderAddXmpMetadataStep.AddXmpMetadataAsync(pdfDocument, cii, _args);
+        FacturXDocumentBuilderAddAttachmentsStep.AddAttachments(pdfDocument, _args);
 
         pdfDocument.Info.Title = FirstString(xmp.DublinCore?.Title) ?? pdfDocument.Info.Title;
         pdfDocument.Info.Subject = FirstString(xmp.DublinCore?.Description) ?? pdfDocument.Info.Subject;
