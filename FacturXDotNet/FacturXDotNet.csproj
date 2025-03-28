@@ -10,7 +10,7 @@
         <Title>FacturX.NET</Title>
         <Product>FacturX.NET</Product>
         <Version>0.0.0.0</Version>
-        <Description>Extract, Validate and Create FacturX documents in .NET.</Description>
+        <Description>Work with FacturX documents in .NET</Description>
         <Authors>Ismail Bennani</Authors>
         <NeutralLanguage>en</NeutralLanguage>
         <PackageTags>facturx, cii, en16931, xmp, invoice</PackageTags>
