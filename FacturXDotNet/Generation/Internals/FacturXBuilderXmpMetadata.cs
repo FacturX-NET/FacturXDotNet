@@ -65,8 +65,12 @@ static class FacturXBuilderXmpMetadata
         xmpMetadata.Basic.CreatorTool = toolName;
         xmpMetadata.Pdf ??= new XmpPdfMetadata();
         xmpMetadata.Pdf.Producer = toolName;
-        xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
-        AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
+
+        if (!args.DisableXmpMetadataAutoGeneration)
+        {
+            xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
+            AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
+        }
 
         if (!args.XmpLeaveOpen)
         {
