@@ -8,6 +8,7 @@ namespace FacturXDotNet.Validation;
 /// <param name="Rule">The rule that was validated.</param>
 /// <param name="ExpectedStatus">The expected status of the rule.</param>
 /// <param name="Status">The actual status of the rule.</param>
+/// <param name="Details">The details of the validation.</param>
 public readonly record struct BusinessRuleValidationResult(
     BusinessRule Rule,
     BusinessRuleExpectedValidationStatus ExpectedStatus,
