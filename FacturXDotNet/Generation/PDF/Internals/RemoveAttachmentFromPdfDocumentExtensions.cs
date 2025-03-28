@@ -1,12 +1,12 @@
 ﻿using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 
-namespace FacturXDotNet.Generation.PDF;
+namespace FacturXDotNet.Generation.PDF.Internals;
 
 /// <summary>
 ///     Remove an attachment from a PDF document.
 /// </summary>
-static class RemoveAttachmentFromPdfDocument
+static class RemoveAttachmentFromPdfDocumentExtensions
 {
     /// <summary>
     ///     Remove an attachment from a PDF document.

@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.HighPerformance;
 using FacturXDotNet;
-using FacturXDotNet.Generation;
+using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Validation;
 using FluentAssertions;
 

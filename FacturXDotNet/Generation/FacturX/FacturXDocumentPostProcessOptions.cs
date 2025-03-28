@@ -2,12 +2,12 @@
 using FacturXDotNet.Models.XMP;
 using PdfSharp.Pdf;
 
-namespace FacturXDotNet.Generation.Internals.PostProcess;
+namespace FacturXDotNet.Generation.FacturX;
 
 /// <summary>
 ///     Builder for post-processing a Factur-X document.
 /// </summary>
-public class FacturXBuilderPostProcess
+public class FacturXDocumentPostProcessOptions
 {
     Action<PdfDocument>? _configurePdfDocument;
     Action<FullyDefinedXmpMetadata>? _configureXmp;
@@ -17,7 +17,7 @@ public class FacturXBuilderPostProcess
     /// </summary>
     /// <param name="configure">The action to configure the PDF document.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXBuilderPostProcess PdfDocument(Action<PdfDocument> configure)
+    public FacturXDocumentPostProcessOptions PdfDocument(Action<PdfDocument> configure)
     {
         _configurePdfDocument = configure;
         return this;
@@ -28,7 +28,7 @@ public class FacturXBuilderPostProcess
     /// </summary>
     /// <param name="configure">The action to configure the XMP metadata.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXBuilderPostProcess XmpMetadata(Action<FullyDefinedXmpMetadata> configure)
+    public FacturXDocumentPostProcessOptions XmpMetadata(Action<FullyDefinedXmpMetadata> configure)
     {
         _configureXmp = configure;
         return this;

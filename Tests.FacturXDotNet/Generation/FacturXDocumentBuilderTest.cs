@@ -1,6 +1,8 @@
 ﻿using FacturXDotNet;
+using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Generation.PDF;
 using FluentAssertions;
+using PdfSharp.Pdf;
 
 namespace Tests.FacturXDotNet.Generation;
 
@@ -10,12 +12,29 @@ public class FacturXDocumentBuilderTest
     [TestMethod]
     public async Task ShouldBuildDocument_WithProvidedCii()
     {
-        byte[] ciiContent = await File.ReadAllBytesAsync("TestFiles/cii.xml");
+        byte[] ciiContent = """
+                            <?xml version='1.0' encoding='UTF-8'?>
+                            <rsm:CrossIndustryInvoice xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
+                            xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+                            xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
+                            xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100"
+                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            </rsm:CrossIndustryInvoice>
+                            """u8.ToArray();
         await using MemoryStream ciiContentStream = new(ciiContent);
 
-        await using FileStream basePdf = File.OpenRead("TestFiles/blank.pdf");
+        PdfDocument blankPdf = new();
+        blankPdf.AddPage();
 
-        FacturXDocument newFacturXDocument = await FacturXDocument.Create().WithBasePdf(basePdf).WithCrossIndustryInvoice(ciiContentStream).BuildAsync();
+        await using MemoryStream blankPdfStream = new();
+        await blankPdf.SaveAsync(blankPdfStream);
+
+        FacturXDocument newFacturXDocument = await FacturXDocument.Create()
+            .WithBasePdf(blankPdfStream)
+            .WithCrossIndustryInvoice(ciiContentStream)
+            .WithXmpMetadataFile("TestFiles/xmp.xml")
+            .BuildAsync();
+
         CrossIndustryInvoiceAttachment? ciiAttachment = await newFacturXDocument.GetCrossIndustryInvoiceAttachmentAsync();
 
         ciiAttachment.Should().NotBeNull();
@@ -41,9 +60,18 @@ public class FacturXDocumentBuilderTest
                             """u8.ToArray();
         await using MemoryStream xmpContentStream = new(xmpContent);
 
-        await using FileStream basePdf = File.OpenRead("TestFiles/facturx.pdf");
+        PdfDocument blankPdf = new();
+        blankPdf.AddPage();
 
-        FacturXDocument newFacturXDocument = await FacturXDocument.Create().WithBasePdf(basePdf).WithXmpMetadata(xmpContentStream).BuildAsync();
+        await using MemoryStream blankPdfStream = new();
+        await blankPdf.SaveAsync(blankPdfStream);
+
+        FacturXDocument newFacturXDocument = await FacturXDocument.Create()
+            .WithBasePdf(blankPdfStream)
+            .WithCrossIndustryInvoiceFile("TestFiles/cii.xml")
+            .WithXmpMetadata(xmpContentStream)
+            .BuildAsync();
+
         await using Stream xmpStream = await newFacturXDocument.GetXmpMetadataStreamAsync();
         using StreamReader streamReader = new(xmpStream);
         string newDocumentXmpString = await streamReader.ReadToEndAsync();
@@ -59,9 +87,19 @@ public class FacturXDocumentBuilderTest
         const string attachmentName = "attachment.ext";
         PdfAttachmentData attachment = new(attachmentName, xmpContent);
 
-        await using FileStream basePdf = File.OpenRead("TestFiles/facturx.pdf");
+        PdfDocument blankPdf = new();
+        blankPdf.AddPage();
 
-        FacturXDocument newFacturXDocument = await FacturXDocument.Create().WithBasePdf(basePdf).WithAttachment(attachment).BuildAsync();
+        await using MemoryStream blankPdfStream = new();
+        await blankPdf.SaveAsync(blankPdfStream);
+
+        FacturXDocument newFacturXDocument = await FacturXDocument.Create()
+            .WithBasePdf(blankPdfStream)
+            .WithCrossIndustryInvoiceFile("TestFiles/cii.xml")
+            .WithXmpMetadataFile("TestFiles/xmp.xml")
+            .WithAttachment(attachment)
+            .BuildAsync();
+
         List<FacturXDocumentAttachment> newDocumentAttachments = await newFacturXDocument.GetAttachmentsAsync().ToListAsync();
         FacturXDocumentAttachment? newDocumentAttachment = newDocumentAttachments.SingleOrDefault(a => a.Name == attachmentName);
 

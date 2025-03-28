@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Xml;
+using FacturXDotNet.Generation.XMP.Internals;
 using FacturXDotNet.Models.XMP;
 
 namespace FacturXDotNet.Generation.XMP;

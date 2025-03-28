@@ -4,6 +4,7 @@ using System.Diagnostics;
 using FacturXDotNet.CLI.Internals.Exceptions;
 using FacturXDotNet.Models;
 using FacturXDotNet.Validation;
+using FacturXDotNet.Validation.BusinessRules;
 using Humanizer;
 using Spectre.Console;
 using Spectre.Console.Rendering;
@@ -76,7 +77,8 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
             CiiAttachment = result.GetValue(CiiAttachmentOption),
             TreatWarningsAsErrors = result.GetValue(TreatWarningsAsErrorsOption),
             Profile = result.GetValue(ProfileOption),
-            RulesToSkip = result.GetValue(RulesToSkipOption)?.ToList() ?? []
+            RulesToSkip = result.GetValue(RulesToSkipOption)?.ToList() ?? [],
+            Verbosity = result.GetValue(GlobalOptions.VerbosityOption)
         };
 
     protected override async Task<int> RunImplAsync(ValidateCommandOptions options, CancellationToken cancellationToken = default)
@@ -141,7 +143,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
             );
 
         AnsiConsole.WriteLine();
-        ShowFinalResult(document, result);
+        ShowFinalResult(document, result, options.Verbosity);
 
         return result;
     }
@@ -182,8 +184,41 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         AnsiConsole.Write(new Panel(panelContent).Header("Options").Border(BoxBorder.Rounded));
     }
 
-    static void ShowFinalResult(FacturXDocument document, FacturXValidationResult result)
+    static void ShowFinalResult(FacturXDocument _, FacturXValidationResult result, Verbosity verbosity)
     {
+        if (verbosity >= Verbosity.Detailed)
+        {
+            bool atLeastOne = false;
+
+            if (verbosity >= Verbosity.Diagnostic)
+            {
+                foreach (BusinessRuleValidationResult rule in result.Rules.Where(r => r.Status == BusinessRuleValidationStatus.Passed))
+                {
+                    atLeastOne = true;
+                    AnsiConsole.MarkupLineInterpolated($"[green]:check_mark:[/] {rule.Rule.Format()}");
+                }
+            }
+
+            foreach (BusinessRuleValidationResult rule in result.Rules.Where(r => r.HasFailed))
+            {
+                atLeastOne = true;
+                AnsiConsole.MarkupLineInterpolated($"[red]:cross_mark:[/] {rule.Rule.Format()}");
+            }
+
+            foreach (BusinessRuleValidationResult rule in result.Rules.Where(
+                         r => r.Status is BusinessRuleValidationStatus.Failed && r.Rule.Severity is not FacturXBusinessRuleSeverity.Fatal
+                     ))
+            {
+                atLeastOne = true;
+                AnsiConsole.MarkupLineInterpolated($"[darkorange]:warning:[/] {rule.Rule.Format()}");
+            }
+
+            if (atLeastOne)
+            {
+                AnsiConsole.WriteLine();
+            }
+        }
+
         FacturXProfile documentProfile = result.ExpectedProfile;
         FacturXProfile detectedProfile = result.ValidProfiles.GetMaxProfile();
         if (result.Success)
@@ -235,4 +270,9 @@ public class ValidateCommandOptions
     ///     The business rules that should be skipped.
     /// </summary>
     public List<string> RulesToSkip { get; set; } = [];
+
+    /// <summary>
+    ///     The verbosity level for the output.
+    /// </summary>
+    public Verbosity Verbosity { get; set; }
 }

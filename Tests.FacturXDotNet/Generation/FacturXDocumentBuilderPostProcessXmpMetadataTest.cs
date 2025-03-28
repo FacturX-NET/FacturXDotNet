@@ -132,6 +132,12 @@ public class FacturXDocumentBuilderPostProcessXmpMetadataTest
                                         Type = "SCHEMA1_VALUE_TYPE2_TYPE"
                                     }
                                 ]
+                            },
+                            // This schema is necessary in order to be able to read the FacturX Metadata, it tells the reader which prefix to look for
+                            new XmpPdfASchemaMetadata
+                            {
+                                NamespaceUri = "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#",
+                                Prefix = "fx"
                             }
                         ];
 
@@ -270,40 +276,7 @@ public class FacturXDocumentBuilderPostProcessXmpMetadataTest
                     new XmpPdfASchemaMetadata
                     {
                         NamespaceUri = "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#",
-                        Prefix = "fx",
-                        Property =
-                        [
-                            new XmpPdfAPropertyMetadata
-                            {
-                                Category = XmpPdfAPropertyCategory.External,
-                                Description = "The name of the embedded XML document",
-                                Name = "DocumentFileName",
-                                ValueType = "Text"
-                            },
-                            new XmpPdfAPropertyMetadata
-                            {
-                                Category = XmpPdfAPropertyCategory.External,
-                                Description = "The type of the hybrid document in capital letters, e.g. INVOICE or ORDER",
-                                Name = "DocumentType",
-                                ValueType = "Text"
-                            },
-                            new XmpPdfAPropertyMetadata
-                            {
-                                Category = XmpPdfAPropertyCategory.External,
-                                Description = "The actual version of the standard applying to the embedded XML document",
-                                Name = "Version",
-                                ValueType = "Text"
-                            },
-                            new XmpPdfAPropertyMetadata
-                            {
-                                Category = XmpPdfAPropertyCategory.External,
-                                Description = "The conformance level of the embedded XML document",
-                                Name = "ConformanceLevel",
-                                ValueType = "Text"
-                            }
-                        ],
-                        Schema = "Factur-X PDFA Extension Schema",
-                        ValueType = []
+                        Prefix = "fx"
                     }
                 ]
             );

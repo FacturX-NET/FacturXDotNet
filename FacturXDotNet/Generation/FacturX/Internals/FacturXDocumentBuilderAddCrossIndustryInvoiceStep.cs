@@ -1,15 +1,16 @@
-﻿using FacturXDotNet.Extensions;
+﻿using CommunityToolkit.HighPerformance;
+using FacturXDotNet.Extensions;
 using FacturXDotNet.Generation.PDF;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Parsing.CII;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 
-namespace FacturXDotNet.Generation.Internals;
+namespace FacturXDotNet.Generation.FacturX.Internals;
 
-static class FacturXBuilderCrossIndustryInvoice
+static class FacturXDocumentBuilderAddCrossIndustryInvoiceStep
 {
-    public static async Task<CrossIndustryInvoice> AddCrossIndustryInvoiceAttachmentAsync(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
+    public static async Task<CrossIndustryInvoice> RunAsync(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
     {
         CrossIndustryInvoiceReader ciiReader = new();
 
@@ -23,9 +24,9 @@ static class FacturXBuilderCrossIndustryInvoice
         PdfAttachmentData ciiAttachment = PdfAttachmentData.LoadFromStream(args.CiiAttachmentName, args.Cii);
         ciiAttachment.Description = "CII XML - FacturX";
         ciiAttachment.Relationship = AfRelationship.Alternative;
-        ciiAttachment.MimeType = "application/xml";
+        ciiAttachment.MimeType = "text/xml";
 
-        FacturXBuilderAttachments.AddAttachment(pdfDocument, ciiAttachment, FacturXDocumentBuilderAttachmentConflictResolution.Overwrite, args);
+        FacturXDocumentBuilderAddAttachmentsStep.AddAttachment(pdfDocument, ciiAttachment, FacturXDocumentBuilderAttachmentConflictResolution.Overwrite, args);
         args.Logger?.LogInformation("Added CII attachment to the PDF document.");
 
         if (!args.CiiLeaveOpen)
@@ -34,7 +35,7 @@ static class FacturXBuilderCrossIndustryInvoice
         }
 
         // create a new memory buffer in case the CII stream is not seekable
-        MemoryStream attachmentStream = new(ciiAttachment.Content);
+        await using Stream attachmentStream = ciiAttachment.Content.AsStream();
         CrossIndustryInvoice cii = ciiReader.Read(attachmentStream);
 
         return cii;

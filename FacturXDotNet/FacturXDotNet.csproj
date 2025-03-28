@@ -45,4 +45,11 @@
         <PackageReference Include="TurboXml" Version="2.0.2"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\sRGB2014.icc" />
+      <EmbeddedResource Include="Resources\sRGB2014.icc">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

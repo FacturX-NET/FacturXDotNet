@@ -1,13 +1,12 @@
 ﻿using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Filters;
 
-namespace FacturXDotNet.Generation.PDF;
+namespace FacturXDotNet.Generation.PDF.Internals;
 
 /// <summary>
 ///     Replace the XMP metadata of a PDF document.
 /// </summary>
-static class ReplaceXmpMetadataOfPdfDocument
+static class ReplaceXmpMetadataOfPdfDocumentExtensions
 {
     /// <summary>
     ///     Replace the XMP metadata of a PDF document.
@@ -18,11 +17,8 @@ static class ReplaceXmpMetadataOfPdfDocument
     /// </remarks>
     /// <param name="document">The PDF document.</param>
     /// <param name="newXmpMetadata">The new XMP metadata.</param>
-    public static void ReplaceXmpMetadata(PdfDocument document, ReadOnlySpan<byte> newXmpMetadata)
+    public static void ReplaceXmpMetadata(this PdfDocument document, ReadOnlySpan<byte> newXmpMetadata)
     {
-        FlateDecode flateDecode = new();
-        byte[] encoded = flateDecode.Encode(newXmpMetadata.ToArray(), PdfFlateEncodeMode.BestCompression);
-
         PdfCatalog catalog = document.Internals.Catalog;
         PdfReference? metadataReference = catalog.Elements.GetReference("/Metadata");
         if (metadataReference?.Value is PdfDictionary metadataDictionary)
@@ -31,17 +27,18 @@ static class ReplaceXmpMetadataOfPdfDocument
             document.Internals.RemoveObject(metadataDictionary);
         }
 
-        CreateMetadata(document, encoded);
+        CreateMetadata(document, newXmpMetadata);
     }
 
-    static void CreateMetadata(PdfDocument document, ReadOnlySpan<byte> encodedMetadata)
+    static void CreateMetadata(PdfDocument document, ReadOnlySpan<byte> metadata)
     {
+
         PdfDictionary metadataDictionary = new();
-        metadataDictionary.CreateStream(encodedMetadata.ToArray());
-        metadataDictionary.Elements.Add("/Filter", new PdfName("/FlateDecode"));
         metadataDictionary.Elements.Add("/Type", new PdfName("/Metadata"));
-        metadataDictionary.Elements.Add("/SubType", new PdfString("XML"));
+        metadataDictionary.Elements.Add("/Subtype", new PdfName("/XML"));
+        metadataDictionary.WriteFlateEncodedData(metadata);
+
         document.Internals.AddObject(metadataDictionary);
-        document.Internals.Catalog.Elements.Add("/Metadata", metadataDictionary);
+        document.Internals.Catalog.Elements.Add("/Metadata", metadataDictionary.ReferenceNotNull);
     }
 }

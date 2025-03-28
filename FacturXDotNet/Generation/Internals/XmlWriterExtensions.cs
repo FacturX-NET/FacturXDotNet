@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using FacturXDotNet.Models.CII;
 
-namespace FacturXDotNet.Generation.Extensions;
+namespace FacturXDotNet.Generation.Internals;
 
 static class XmlWriterExtensions
 {

@@ -1,13 +1,14 @@
 ﻿using FacturXDotNet.Extensions;
 using FacturXDotNet.Generation.PDF;
+using FacturXDotNet.Generation.PDF.Internals;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 
-namespace FacturXDotNet.Generation.Internals;
+namespace FacturXDotNet.Generation.FacturX.Internals;
 
-static class FacturXBuilderAttachments
+static class FacturXDocumentBuilderAddAttachmentsStep
 {
-    public static void AddAttachments(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
+    public static void Run(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
     {
         foreach ((PdfAttachmentData attachment, FacturXDocumentBuilderAttachmentConflictResolution conflictResolution) in args.Attachments)
         {
