@@ -47,7 +47,6 @@ public class FacturXDocumentBuilderAddOutputIntentsTest
         PdfDictionary? destOutputProfile = destOutputProfileRef.Value as PdfDictionary;
         destOutputProfile.Should().NotBeNull();
 
-        destOutputProfile.Elements.GetInteger("/N").Should().Be(3);
         destOutputProfile.Stream.Length.Should().BeGreaterThan(0);
         destOutputProfile.Stream.Value.Should().NotBeEmpty();
     }

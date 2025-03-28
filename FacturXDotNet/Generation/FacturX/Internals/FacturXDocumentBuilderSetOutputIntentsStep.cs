@@ -51,7 +51,6 @@ static class FacturXDocumentBuilderSetOutputIntentsStep
             document.Internals.AddObject(rgbProfile);
             outputIntent.Elements.Add("/DestOutputProfile", rgbProfile.ReferenceNotNull);
 
-            rgbProfile.Elements.Add("/N", new PdfInteger(3));
             await AddIccProfileStreamAsync(rgbProfile);
         }
     }
