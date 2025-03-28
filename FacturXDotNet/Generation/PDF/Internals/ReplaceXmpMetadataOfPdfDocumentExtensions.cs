@@ -1,4 +1,5 @@
-﻿using PdfSharp.Pdf;
+﻿using System.Security.Cryptography;
+using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 using PdfSharp.Pdf.Filters;
 
@@ -20,9 +21,6 @@ static class ReplaceXmpMetadataOfPdfDocumentExtensions
     /// <param name="newXmpMetadata">The new XMP metadata.</param>
     public static void ReplaceXmpMetadata(this PdfDocument document, ReadOnlySpan<byte> newXmpMetadata)
     {
-        FlateDecode flateDecode = new();
-        byte[] encoded = flateDecode.Encode(newXmpMetadata.ToArray(), PdfFlateEncodeMode.BestCompression);
-
         PdfCatalog catalog = document.Internals.Catalog;
         PdfReference? metadataReference = catalog.Elements.GetReference("/Metadata");
         if (metadataReference?.Value is PdfDictionary metadataDictionary)
@@ -31,17 +29,32 @@ static class ReplaceXmpMetadataOfPdfDocumentExtensions
             document.Internals.RemoveObject(metadataDictionary);
         }
 
-        CreateMetadata(document, encoded);
+        CreateMetadata(document, newXmpMetadata);
     }
 
-    static void CreateMetadata(PdfDocument document, ReadOnlySpan<byte> encodedMetadata)
+    static void CreateMetadata(PdfDocument document, ReadOnlySpan<byte> metadata)
     {
+        FlateDecode flateDecode = new();
+        byte[] encoded = flateDecode.Encode(metadata.ToArray(), PdfFlateEncodeMode.BestCompression);
+
         PdfDictionary metadataDictionary = new();
-        metadataDictionary.CreateStream(encodedMetadata.ToArray());
+        metadataDictionary.CreateStream(encoded.ToArray());
         metadataDictionary.Elements.Add("/Filter", new PdfName("/FlateDecode"));
         metadataDictionary.Elements.Add("/Type", new PdfName("/Metadata"));
         metadataDictionary.Elements.Add("/SubType", new PdfString("XML"));
+
+        PdfDictionary pdfStreamParams = new();
+        pdfStreamParams.Elements.Add("/CheckSum", new PdfString(ComputeChecksum(metadata)));
+        pdfStreamParams.Elements.Add("/Size", new PdfInteger(metadata.Length));
+        metadataDictionary.Elements.Add("/Params", pdfStreamParams);
+
         document.Internals.AddObject(metadataDictionary);
         document.Internals.Catalog.Elements.Add("/Metadata", metadataDictionary);
+    }
+
+    static string ComputeChecksum(ReadOnlySpan<byte> data)
+    {
+        byte[] contentHash = MD5.HashData(data);
+        return BitConverter.ToString(contentHash).Replace("-", "").ToLowerInvariant();
     }
 }

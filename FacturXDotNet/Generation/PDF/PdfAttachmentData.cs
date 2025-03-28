@@ -5,7 +5,7 @@
 /// </summary>
 /// <param name="name">The name of the file.</param>
 /// <param name="content">The content of the file.</param>
-public class PdfAttachmentData(string name, byte[] content)
+public class PdfAttachmentData(string name, ReadOnlyMemory<byte> content)
 {
     /// <summary>
     ///     The name of the file.
@@ -15,7 +15,7 @@ public class PdfAttachmentData(string name, byte[] content)
     /// <summary>
     ///     The content of the file.
     /// </summary>
-    public byte[] Content { get; } = content;
+    public ReadOnlyMemory<byte> Content { get; } = content;
 
     /// <summary>
     ///     The description of the file.

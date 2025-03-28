@@ -1,4 +1,5 @@
-﻿using FacturXDotNet.Extensions;
+﻿using CommunityToolkit.HighPerformance;
+using FacturXDotNet.Extensions;
 using FacturXDotNet.Generation.PDF;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Parsing.CII;
@@ -34,7 +35,7 @@ static class FacturXDocumentBuilderAddCrossIndustryInvoiceStep
         }
 
         // create a new memory buffer in case the CII stream is not seekable
-        MemoryStream attachmentStream = new(ciiAttachment.Content);
+        await using Stream attachmentStream = ciiAttachment.Content.AsStream();
         CrossIndustryInvoice cii = ciiReader.Read(attachmentStream);
 
         return cii;

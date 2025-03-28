@@ -21,7 +21,7 @@ static class AddAttachmentToPdfDocumentExtensions
     public static void AddAttachment(this PdfDocument document, PdfAttachmentData file)
     {
         FlateDecode flateDecode = new();
-        byte[] encoded = flateDecode.Encode(file.Content, PdfFlateEncodeMode.BestCompression);
+        byte[] encoded = flateDecode.Encode(file.Content.ToArray(), PdfFlateEncodeMode.BestCompression);
 
         PdfDictionary embeddedFileStreamDictionary = new();
         embeddedFileStreamDictionary.CreateStream(encoded);
@@ -83,9 +83,9 @@ static class AddAttachmentToPdfDocumentExtensions
         embeddedFileNames.Elements.Add(fileSpecificationDictionary.ReferenceNotNull);
     }
 
-    static string ComputeChecksum(byte[] data)
+    static string ComputeChecksum(ReadOnlyMemory<byte> data)
     {
-        byte[] contentHash = MD5.HashData(data);
+        byte[] contentHash = MD5.HashData(data.Span);
         return BitConverter.ToString(contentHash).Replace("-", "").ToLowerInvariant();
     }
 
