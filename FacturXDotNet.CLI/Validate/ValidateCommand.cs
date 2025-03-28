@@ -239,39 +239,6 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
 
     static void ShowFinalResult(FacturXDocument _, FacturXValidationResult result)
     {
-        if (verbosity >= Verbosity.Detailed)
-        {
-            bool atLeastOne = false;
-
-            if (verbosity >= Verbosity.Diagnostic)
-            {
-                foreach (BusinessRuleValidationResult rule in result.Rules.Where(r => r.Status == BusinessRuleValidationStatus.Passed))
-                {
-                    atLeastOne = true;
-                    AnsiConsole.MarkupLineInterpolated($"[green]:check_mark:[/] {rule.Rule.Format()}");
-                }
-            }
-
-            foreach (BusinessRuleValidationResult rule in result.Rules.Where(r => r.HasFailed))
-            {
-                atLeastOne = true;
-                AnsiConsole.MarkupLineInterpolated($"[red]:cross_mark:[/] {rule.Rule.Format()}");
-            }
-
-            foreach (BusinessRuleValidationResult rule in result.Rules.Where(
-                         r => r.Status is BusinessRuleValidationStatus.Failed && r.Rule.Severity is not FacturXBusinessRuleSeverity.Fatal
-                     ))
-            {
-                atLeastOne = true;
-                AnsiConsole.MarkupLineInterpolated($"[darkorange]:warning:[/] {rule.Rule.Format()}");
-            }
-
-            if (atLeastOne)
-            {
-                AnsiConsole.WriteLine();
-            }
-        }
-
         FacturXProfile documentProfile = result.ExpectedProfile;
         FacturXProfile detectedProfile = result.ValidProfiles.GetMaxProfile();
         if (result.Success)
