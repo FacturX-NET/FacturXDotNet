@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using CommunityToolkit.HighPerformance;
 using FacturXDotNet.Extensions;
-using FacturXDotNet.Generation;
+using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.XMP;
 using PdfSharp.Pdf;

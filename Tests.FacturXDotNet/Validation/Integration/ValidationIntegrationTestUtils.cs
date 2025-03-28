@@ -1,5 +1,5 @@
 ﻿using FacturXDotNet;
-using FacturXDotNet.Generation;
+using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Parsing.CII.Exceptions;
 using FacturXDotNet.Parsing.XMP.Exceptions;
 using FacturXDotNet.Validation;

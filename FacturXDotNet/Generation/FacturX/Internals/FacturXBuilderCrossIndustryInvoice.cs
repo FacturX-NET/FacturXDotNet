@@ -5,7 +5,7 @@ using FacturXDotNet.Parsing.CII;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 
-namespace FacturXDotNet.Generation.Internals;
+namespace FacturXDotNet.Generation.FacturX.Internals;
 
 static class FacturXBuilderCrossIndustryInvoice
 {

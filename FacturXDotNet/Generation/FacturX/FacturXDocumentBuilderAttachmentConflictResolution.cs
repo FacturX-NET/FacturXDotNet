@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Generation;
+﻿namespace FacturXDotNet.Generation.FacturX;
 
 /// <summary>
 ///     The action to take when an attachment with the same name already exists in the base document.

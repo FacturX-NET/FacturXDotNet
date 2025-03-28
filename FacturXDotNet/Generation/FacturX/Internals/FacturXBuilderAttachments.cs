@@ -1,9 +1,10 @@
 ﻿using FacturXDotNet.Extensions;
 using FacturXDotNet.Generation.PDF;
+using FacturXDotNet.Generation.PDF.Internals;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 
-namespace FacturXDotNet.Generation.Internals;
+namespace FacturXDotNet.Generation.FacturX.Internals;
 
 static class FacturXBuilderAttachments
 {

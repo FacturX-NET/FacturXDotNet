@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 using System.Xml;
-using FacturXDotNet.Generation.Extensions;
+using FacturXDotNet.Generation.Internals;
 using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.Generation.CII;

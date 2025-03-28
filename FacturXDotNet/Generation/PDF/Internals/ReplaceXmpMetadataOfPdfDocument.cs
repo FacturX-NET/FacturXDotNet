@@ -2,7 +2,7 @@
 using PdfSharp.Pdf.Advanced;
 using PdfSharp.Pdf.Filters;
 
-namespace FacturXDotNet.Generation.PDF;
+namespace FacturXDotNet.Generation.PDF.Internals;
 
 /// <summary>
 ///     Replace the XMP metadata of a PDF document.

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using FacturXDotNet.CLI.Internals;
 using FacturXDotNet.CLI.Internals.Exceptions;
 using FacturXDotNet.CLI.Validate;
-using FacturXDotNet.Generation;
+using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Generation.PDF;
 using FacturXDotNet.Models;
 using FacturXDotNet.Validation;

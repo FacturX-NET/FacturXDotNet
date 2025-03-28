@@ -1,5 +1,5 @@
-﻿using FacturXDotNet.Generation.Internals;
-using FacturXDotNet.Generation.Internals.PostProcess;
+﻿using FacturXDotNet.Generation.FacturX.Internals;
+using FacturXDotNet.Generation.FacturX.Internals.PostProcess;
 using FacturXDotNet.Generation.PDF;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 
-namespace FacturXDotNet.Generation;
+namespace FacturXDotNet.Generation.FacturX;
 
 /// <summary>
 /// </summary>
@@ -174,20 +174,4 @@ public class FacturXDocumentBuilder
 
     static string? JoinStrings(IEnumerable<string>? parts, string separator = ", ") =>
         parts == null ? null : string.Join(separator, parts.Where(s => !string.IsNullOrWhiteSpace(s)));
-}
-
-class FacturXDocumentBuildArgs
-{
-    public Stream? BasePdf { get; set; }
-    public string? BasePdfPassword { get; set; }
-    public bool BasePdfLeaveOpen { get; set; }
-    public Stream? Cii { get; set; }
-    public string CiiAttachmentName { get; set; } = "factur-x.xml";
-    public bool CiiLeaveOpen { get; set; }
-    public Stream? Xmp { get; set; }
-    public bool XmpLeaveOpen { get; set; }
-    public bool DisableXmpMetadataAutoGeneration { get; set; }
-    public FacturXBuilderPostProcess PostProcess { get; set; } = new();
-    public List<(PdfAttachmentData Name, FacturXDocumentBuilderAttachmentConflictResolution ConflictResolution)> Attachments { get; set; } = [];
-    public ILogger? Logger { get; set; }
 }

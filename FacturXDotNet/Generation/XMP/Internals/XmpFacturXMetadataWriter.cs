@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using FacturXDotNet.Models.XMP;
 
-namespace FacturXDotNet.Generation.XMP;
+namespace FacturXDotNet.Generation.XMP.Internals;
 
 class XmpFacturXMetadataWriter(XmpFacturXMetadataWriterOptions? options = null)
 {

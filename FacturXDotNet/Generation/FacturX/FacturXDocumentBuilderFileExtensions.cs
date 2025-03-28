@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Generation;
+﻿namespace FacturXDotNet.Generation.FacturX;
 
 /// <summary>
 ///     Extension methods related to using files with the <see cref="FacturXDocumentBuilder" />.

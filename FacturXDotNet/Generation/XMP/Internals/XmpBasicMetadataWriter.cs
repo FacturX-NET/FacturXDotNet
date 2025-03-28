@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using System.Xml;
-using FacturXDotNet.Generation.Extensions;
+using FacturXDotNet.Generation.Internals;
 using FacturXDotNet.Models.XMP;
 
-namespace FacturXDotNet.Generation.XMP;
+namespace FacturXDotNet.Generation.XMP.Internals;
 
 class XmpBasicMetadataWriter
 {

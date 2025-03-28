@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Generation.PDF;
+﻿using FacturXDotNet.Generation.PDF.Internals;
 using FacturXDotNet.Generation.XMP;
 using FacturXDotNet.Models;
 using FacturXDotNet.Models.CII;
@@ -7,7 +7,7 @@ using FacturXDotNet.Parsing.XMP;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 
-namespace FacturXDotNet.Generation.Internals;
+namespace FacturXDotNet.Generation.FacturX.Internals;
 
 static class FacturXBuilderXmpMetadata
 {

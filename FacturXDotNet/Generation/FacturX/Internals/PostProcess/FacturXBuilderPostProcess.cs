@@ -2,7 +2,7 @@
 using FacturXDotNet.Models.XMP;
 using PdfSharp.Pdf;
 
-namespace FacturXDotNet.Generation.Internals.PostProcess;
+namespace FacturXDotNet.Generation.FacturX.Internals.PostProcess;
 
 /// <summary>
 ///     Builder for post-processing a Factur-X document.
