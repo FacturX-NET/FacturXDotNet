@@ -24,7 +24,7 @@ static class FacturXDocumentBuilderAddCrossIndustryInvoiceStep
         PdfAttachmentData ciiAttachment = PdfAttachmentData.LoadFromStream(args.CiiAttachmentName, args.Cii);
         ciiAttachment.Description = "CII XML - FacturX";
         ciiAttachment.Relationship = AfRelationship.Alternative;
-        ciiAttachment.MimeType = "application/xml";
+        ciiAttachment.MimeType = "text/xml";
 
         FacturXDocumentBuilderAddAttachmentsStep.AddAttachment(pdfDocument, ciiAttachment, FacturXDocumentBuilderAttachmentConflictResolution.Overwrite, args);
         args.Logger?.LogInformation("Added CII attachment to the PDF document.");

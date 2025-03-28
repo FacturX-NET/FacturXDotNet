@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using PdfSharp.Pdf;
+﻿using PdfSharp.Pdf;
 
 namespace FacturXDotNet.Generation.PDF.Internals;
 
@@ -28,7 +27,7 @@ static class AddAttachmentToPdfDocumentExtensions
 
         PdfDictionary embeddedFileStreamDictionary = new();
         embeddedFileStreamDictionary.Elements.Add("/Type", new PdfName("/EmbeddedFile"));
-        embeddedFileStreamDictionary.Elements.Add("/Subtype", new PdfString(mimeType));
+        embeddedFileStreamDictionary.Elements.Add("/Subtype", new PdfName($"/{mimeType}"));
         embeddedFileStreamDictionary.WriteFlateEncodedData(
             file.Content.Span,
             p =>
@@ -47,7 +46,6 @@ static class AddAttachmentToPdfDocumentExtensions
         PdfDictionary fileSpecificationDictionary = new();
         fileSpecificationDictionary.Elements.Add("/AFRelationship", new PdfName(FormatRelationship(relationship)));
         fileSpecificationDictionary.Elements.Add("/Type", new PdfName("/Filespec"));
-        fileSpecificationDictionary.Elements.Add("/Subtype", new PdfString(mimeType));
         fileSpecificationDictionary.Elements.Add("/F", new PdfString(file.Name));
         fileSpecificationDictionary.Elements.Add("/UF", new PdfString(file.Name));
         fileSpecificationDictionary.Elements.Add("/EF", embeddedFileDictionary);
@@ -84,12 +82,6 @@ static class AddAttachmentToPdfDocumentExtensions
 
         embeddedFileNames.Elements.Add(new PdfString(file.Name));
         embeddedFileNames.Elements.Add(fileSpecificationDictionary.ReferenceNotNull);
-    }
-
-    static string ComputeChecksum(ReadOnlyMemory<byte> data)
-    {
-        byte[] contentHash = MD5.HashData(data.Span);
-        return BitConverter.ToString(contentHash).Replace("-", "").ToLowerInvariant();
     }
 
     static string FormatRelationship(AfRelationship relationship) =>
