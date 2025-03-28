@@ -35,7 +35,7 @@ static class ReplaceXmpMetadataOfPdfDocumentExtensions
 
         PdfDictionary metadataDictionary = new();
         metadataDictionary.Elements.Add("/Type", new PdfName("/Metadata"));
-        metadataDictionary.Elements.Add("/SubType", new PdfString("XML"));
+        metadataDictionary.Elements.Add("/Subtype", new PdfName("/XML"));
         metadataDictionary.WriteFlateEncodedData(metadata);
 
         document.Internals.AddObject(metadataDictionary);
