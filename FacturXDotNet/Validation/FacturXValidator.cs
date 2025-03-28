@@ -167,7 +167,8 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
             {
                 BusinessRuleDetailsLogger logger = new();
                 BusinessRuleValidationStatus status = rule.Check(xmp, ciiAttachmentName, cii, logger) ? BusinessRuleValidationStatus.Passed : BusinessRuleValidationStatus.Failed;
-                builder.AddRuleStatus(rule, expectation, status, logger.GetDetails());
+                BusinessRuleValidationResult result = builder.AddRuleStatus(rule, expectation, status, logger.GetDetails());
+                _options.CheckCallback?.Invoke(result);
             }
         }
     }
@@ -188,7 +189,8 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
             {
                 BusinessRuleDetailsLogger logger = new();
                 BusinessRuleValidationStatus status = rule.Check(cii) ? BusinessRuleValidationStatus.Passed : BusinessRuleValidationStatus.Failed;
-                builder.AddRuleStatus(rule, expectation, status, logger.GetDetails());
+                BusinessRuleValidationResult result = builder.AddRuleStatus(rule, expectation, status, logger.GetDetails());
+                _options.CheckCallback?.Invoke(result);
             }
         }
     }

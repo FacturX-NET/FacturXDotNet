@@ -86,8 +86,7 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         ShowOptions(options);
         AnsiConsole.WriteLine();
 
-        FacturXDocument? facturX = null;
-        await AnsiConsole.Status()
+        FacturXDocument facturX = await AnsiConsole.Status()
             .Spinner(Spinner.Known.Default)
             .StartAsync(
                 "Parsing...",
@@ -97,55 +96,17 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
                     sw.Start();
 
                     await using FileStream stream = options.Path.OpenRead();
-                    facturX = await FacturXDocument.LoadFromStream(stream, cancellationToken);
+                    FacturXDocument result = await FacturXDocument.LoadFromStream(stream, cancellationToken);
 
                     sw.Stop();
 
                     AnsiConsole.MarkupLine($":check_mark: The document has been parsed in {sw.Elapsed.Humanize()}.");
+                    return result;
                 }
             );
-
-        if (facturX is null)
-        {
-            throw new Exception("This will never happen.");
-        }
 
         FacturXValidationResult result = await ValidateAsync(facturX, options, cancellationToken);
         return result.Success ? 0 : 1;
-    }
-
-    public static async Task<FacturXValidationResult> ValidateAsync(FacturXDocument document, ValidateCommandOptions options, CancellationToken cancellationToken)
-    {
-        FacturXValidationOptions validationOptions = new()
-        {
-            TreatWarningsAsErrors = options.TreatWarningsAsErrors,
-            ProfileOverride = options.Profile
-        };
-        validationOptions.RulesToSkip.AddRange(options.RulesToSkip);
-
-        FacturXValidationResult result = default;
-        await AnsiConsole.Status()
-            .Spinner(Spinner.Known.Default)
-            .StartAsync(
-                "Validating...",
-                async _ =>
-                {
-                    Stopwatch sw = new();
-                    sw.Start();
-
-                    FacturXValidator validator = new(validationOptions);
-                    result = await validator.GetValidationResultAsync(document, options.CiiAttachment, cancellationToken: cancellationToken);
-
-                    sw.Stop();
-
-                    AnsiConsole.MarkupLine($":check_mark: The document has been checked in {sw.Elapsed.Humanize()}.");
-                }
-            );
-
-        AnsiConsole.WriteLine();
-        ShowFinalResult(document, result, options.Verbosity);
-
-        return result;
     }
 
     static void ShowOptions(ValidateCommandOptions options)
@@ -184,41 +145,100 @@ class ValidateCommand() : CommandBase<ValidateCommandOptions>(
         AnsiConsole.Write(new Panel(panelContent).Header("Options").Border(BoxBorder.Rounded));
     }
 
-    static void ShowFinalResult(FacturXDocument _, FacturXValidationResult result, Verbosity verbosity)
+    public static async Task<FacturXValidationResult> ValidateAsync(FacturXDocument document, ValidateCommandOptions options, CancellationToken cancellationToken)
     {
-        if (verbosity >= Verbosity.Detailed)
+        FacturXValidationOptions validationOptions = new()
         {
-            bool atLeastOne = false;
+            TreatWarningsAsErrors = options.TreatWarningsAsErrors,
+            ProfileOverride = options.Profile
+        };
+        validationOptions.RulesToSkip.AddRange(options.RulesToSkip);
 
-            if (verbosity >= Verbosity.Diagnostic)
+        FacturXValidationResult result;
+        if (options.Verbosity >= Verbosity.Detailed)
+        {
+            validationOptions.CheckCallback = ruleResult =>
             {
-                foreach (BusinessRuleValidationResult rule in result.Rules.Where(r => r.Status == BusinessRuleValidationStatus.Passed))
+                string icon = ruleResult.Status switch
                 {
-                    atLeastOne = true;
-                    AnsiConsole.MarkupLineInterpolated($"[green]:check_mark:[/] {rule.Rule.Format()}");
+                    BusinessRuleValidationStatus.Passed => ":check_mark:",
+                    BusinessRuleValidationStatus.Failed => ":cross_mark:",
+                    BusinessRuleValidationStatus.Skipped => "•",
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                string color = ruleResult.Status is BusinessRuleValidationStatus.Passed
+                    ? "green"
+                    : ruleResult.HasFailed
+                        ? "red"
+                        : "grey";
+
+                AnsiConsole.MarkupLine($"[{color}]{icon}[/] {ruleResult.Rule.Format().EscapeMarkup()}");
+
+                foreach (BusinessRuleDetail detail in ruleResult.Details)
+                {
+                    switch (detail.Severity)
+                    {
+                        case BusinessRuleDetailSeverity.Trace when options.Verbosity >= Verbosity.Diagnostic:
+                            AnsiConsole.MarkupLine($"  \u21b3 [grey]{detail.Message.EscapeMarkup()}[/]");
+                            break;
+                        case BusinessRuleDetailSeverity.Information:
+                            AnsiConsole.MarkupLine($"  \u21b3 {detail.Message.EscapeMarkup()}");
+                            break;
+                        case BusinessRuleDetailSeverity.Warning:
+                            AnsiConsole.MarkupLine($"  \u21b3 [darkorange]:warning:[/] {detail.Message.EscapeMarkup()}");
+                            break;
+                        case BusinessRuleDetailSeverity.Fatal:
+                            AnsiConsole.MarkupLine($"  \u21b3 [red]:cross_mark:[/] {detail.Message.EscapeMarkup()}");
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
-            }
+            };
 
-            foreach (BusinessRuleValidationResult rule in result.Rules.Where(r => r.HasFailed))
-            {
-                atLeastOne = true;
-                AnsiConsole.MarkupLineInterpolated($"[red]:cross_mark:[/] {rule.Rule.Format()}");
-            }
+            Stopwatch sw = new();
+            sw.Start();
 
-            foreach (BusinessRuleValidationResult rule in result.Rules.Where(
-                         r => r.Status is BusinessRuleValidationStatus.Failed && r.Rule.Severity is not BusinessRuleSeverity.Fatal
-                     ))
-            {
-                atLeastOne = true;
-                AnsiConsole.MarkupLineInterpolated($"[darkorange]:warning:[/] {rule.Rule.Format()}");
-            }
+            FacturXValidator validator = new(validationOptions);
+            result = await validator.GetValidationResultAsync(document, options.CiiAttachment, cancellationToken: cancellationToken);
 
-            if (atLeastOne)
-            {
-                AnsiConsole.WriteLine();
-            }
+            sw.Stop();
+
+            AnsiConsole.MarkupLine($":check_mark: The document has been checked in {sw.Elapsed.Humanize()}.");
+            AnsiConsole.WriteLine();
+        }
+        else
+        {
+            result = default;
+            await AnsiConsole.Status()
+                .Spinner(Spinner.Known.Default)
+                .StartAsync(
+                    "Validating...",
+                    async _ =>
+                    {
+
+                        Stopwatch sw = new();
+                        sw.Start();
+
+                        FacturXValidator validator = new(validationOptions);
+                        result = await validator.GetValidationResultAsync(document, options.CiiAttachment, cancellationToken: cancellationToken);
+
+                        sw.Stop();
+
+                        AnsiConsole.MarkupLine($":check_mark: The document has been checked in {sw.Elapsed.Humanize()}.");
+                        AnsiConsole.WriteLine();
+                    }
+                );
         }
 
+        ShowFinalResult(document, result);
+
+        return result;
+    }
+
+    static void ShowFinalResult(FacturXDocument _, FacturXValidationResult result)
+    {
         FacturXProfile documentProfile = result.ExpectedProfile;
         FacturXProfile detectedProfile = result.ValidProfiles.GetMaxProfile();
         if (result.Success)
