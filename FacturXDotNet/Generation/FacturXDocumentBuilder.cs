@@ -1,5 +1,7 @@
 ﻿using FacturXDotNet.Generation.Internals;
+using FacturXDotNet.Generation.Internals.PostProcess;
 using FacturXDotNet.Generation.PDF;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
@@ -59,14 +61,14 @@ public class FacturXDocumentBuilder
     public FacturXDocumentBuilder WithCrossIndustryInvoice(Stream ciiStream, string? ciiAttachmentName = null, bool leaveOpen = true)
     {
         _args.Cii = ciiStream;
-        _args.CiiAttachmentName = ciiAttachmentName;
+        _args.CiiAttachmentName = ciiAttachmentName ?? _args.CiiAttachmentName;
         _args.CiiLeaveOpen = leaveOpen;
         return this;
     }
 
     /// <summary>
     ///     Set the XMP metadata for the Factur-X document.
-    ///     The metadata will be added as-is to the PDF document. It will replace any existing metadata found in the document.
+    ///     The metadata will be added as-is to the PDF document, it will replace any existing metadata found in the document.
     /// </summary>
     /// <param name="xmpStream">The stream containing the XMP metadata.</param>
     /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
@@ -75,6 +77,7 @@ public class FacturXDocumentBuilder
     {
         _args.Xmp = xmpStream;
         _args.XmpLeaveOpen = leaveOpen;
+        _args.DisableXmpMetadataAutoGeneration = true;
         return this;
     }
 
@@ -84,9 +87,9 @@ public class FacturXDocumentBuilder
     /// </summary>
     /// <param name="postProcess">The action to perform on the XMP metadata.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder PostProcessXmpMetadata(Action<XmpMetadata>? postProcess)
+    public FacturXDocumentBuilder PostProcess(Action<FacturXBuilderPostProcess> postProcess)
     {
-        _args.PostProcessXmpMetadata = postProcess;
+        postProcess(_args.PostProcess);
         return this;
     }
 
@@ -125,10 +128,20 @@ public class FacturXDocumentBuilder
             await _args.BasePdf.DisposeAsync();
         }
 
-        await FacturXBuilderXmpMetadata.AddXmpMetadataAsync(pdfDocument, _args);
-        await FacturXBuilderCrossIndustryInvoice.AddCrossIndustryInvoiceAttachmentAsync(pdfDocument, _args);
+        CrossIndustryInvoice cii = await FacturXBuilderCrossIndustryInvoice.AddCrossIndustryInvoiceAttachmentAsync(pdfDocument, _args);
+        XmpMetadata xmp = await FacturXBuilderXmpMetadata.AddXmpMetadataAsync(pdfDocument, cii, _args);
         FacturXBuilderAttachments.AddAttachments(pdfDocument, _args);
 
+        pdfDocument.Info.Title = FirstString(xmp.DublinCore?.Title) ?? pdfDocument.Info.Title;
+        pdfDocument.Info.Subject = FirstString(xmp.DublinCore?.Description) ?? pdfDocument.Info.Subject;
+        pdfDocument.Info.CreationDate = xmp.Basic?.CreateDate?.LocalDateTime ?? pdfDocument.Info.CreationDate;
+        pdfDocument.Info.ModificationDate = xmp.Basic?.ModifyDate?.LocalDateTime ?? pdfDocument.Info.ModificationDate;
+        pdfDocument.Info.Keywords = xmp.Pdf?.Keywords ?? pdfDocument.Info.Keywords;
+        pdfDocument.Info.Author = JoinStrings(xmp.DublinCore?.Creator) ?? pdfDocument.Info.Author;
+
+        _args.PostProcess.ConfigurePdfDocument(pdfDocument);
+
+        pdfDocument.Info.Creator = xmp.Pdf?.Producer ?? pdfDocument.Info.Creator;
         pdfDocument.Options.FlateEncodeMode = PdfFlateEncodeMode.BestCompression;
         pdfDocument.Options.CompressContentStreams = true;
         pdfDocument.Options.NoCompression = false;
@@ -156,6 +169,11 @@ public class FacturXDocumentBuilder
 
         return document;
     }
+
+    static string? FirstString(IEnumerable<string>? parts) => parts?.FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
+
+    static string? JoinStrings(IEnumerable<string>? parts, string separator = ", ") =>
+        parts == null ? null : string.Join(separator, parts.Where(s => !string.IsNullOrWhiteSpace(s)));
 }
 
 class FacturXDocumentBuildArgs
@@ -164,11 +182,12 @@ class FacturXDocumentBuildArgs
     public string? BasePdfPassword { get; set; }
     public bool BasePdfLeaveOpen { get; set; }
     public Stream? Cii { get; set; }
-    public string? CiiAttachmentName { get; set; }
+    public string CiiAttachmentName { get; set; } = "factur-x.xml";
     public bool CiiLeaveOpen { get; set; }
     public Stream? Xmp { get; set; }
     public bool XmpLeaveOpen { get; set; }
-    public Action<XmpMetadata>? PostProcessXmpMetadata { get; set; }
+    public bool DisableXmpMetadataAutoGeneration { get; set; }
+    public FacturXBuilderPostProcess PostProcess { get; set; } = new();
     public List<(PdfAttachmentData Name, FacturXDocumentBuilderAttachmentConflictResolution ConflictResolution)> Attachments { get; set; } = [];
     public ILogger? Logger { get; set; }
 }

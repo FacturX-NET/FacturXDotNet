@@ -43,6 +43,7 @@ Options:
   --cii <path> (REQUIRED)                                                  The path to the CII file to use as structured data.
   --cii-name <name>                                                        The name of the CII attachment in the result. [default: factur-x.xml]
   --attach <path>                                                          Additional files to attach to the result.
+  --author <name>                                                          The name of the author of the document. This will be added to the metadata of the output file.
   -o, --output-path <path>                                                 The path to the output file.
   --skip-validation                                                        Do not validate the generated Factur-X PDF. [default: False]
   --warnings-as-errors                                                     Treat warnings as errors. [default: False]

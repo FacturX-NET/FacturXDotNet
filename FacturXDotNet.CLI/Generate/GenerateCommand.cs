@@ -23,6 +23,7 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
         CiiOption,
         CiiAttachmentNameOption,
         AttachmentsOption,
+        AuthorOption,
         OutputPathOption,
         SkipValidationOption,
         TreatWarningsAsErrorsOption,
@@ -37,6 +38,7 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
     static readonly Option<FileInfo> CiiOption;
     static readonly Option<string> CiiAttachmentNameOption;
     static readonly Option<IEnumerable<FileInfo>> AttachmentsOption;
+    static readonly Option<string> AuthorOption;
     static readonly Option<FileInfo> OutputPathOption;
     static readonly Option<bool> SkipValidationOption;
     static readonly Option<bool> TreatWarningsAsErrorsOption;
@@ -70,6 +72,11 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
             Description = "Additional files to attach to the result.",
             HelpName = "path",
             Validators = { Validators.FileExists }
+        };
+        AuthorOption = new Option<string>("--author")
+        {
+            Description = "The name of the author of the document. This will be added to the metadata of the output file.",
+            HelpName = "name"
         };
         OutputPathOption = new Option<FileInfo>("--output-path", "-o")
         {
@@ -106,6 +113,7 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
             Cii = result.GetValue(CiiOption) ?? throw new RequiredOptionMissingException(CiiOption),
             CiiAttachmentName = result.GetValue(CiiAttachmentNameOption),
             Attachments = result.GetValue(AttachmentsOption) ?? [],
+            Author = result.GetValue(AuthorOption),
             OutputPath = result.GetValue(OutputPathOption)?.FullName,
             SkipValidation = result.GetResult(SkipValidationOption) is not null && result.GetValue(SkipValidationOption),
             TreatWarningsAsErrors = result.GetValue(TreatWarningsAsErrorsOption),
@@ -136,6 +144,32 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
                     ctx.Status($"Reading input files ({options.BasePdf.FullName})...");
 
                     builder.WithBasePdfFile(options.BasePdf.FullName);
+
+                    builder.PostProcess(
+                        pp =>
+                        {
+                            pp.PdfDocument(
+                                doc =>
+                                {
+                                    if (!string.IsNullOrWhiteSpace(options.Author))
+                                    {
+                                        doc.Info.Author = options.Author;
+                                    }
+                                }
+                            );
+
+                            pp.XmpMetadata(
+                                xmp =>
+                                {
+                                    if (!string.IsNullOrWhiteSpace(options.Author))
+                                    {
+                                        xmp.DublinCore.Creator = [options.Author];
+                                    }
+                                }
+                            );
+
+                        }
+                    );
 
                     ctx.Status($"Reading input files ({options.Cii.FullName})...");
 
@@ -306,6 +340,11 @@ public class GenerateCommandOptions
     ///     Additional files to attach to the result.
     /// </summary>
     public IEnumerable<FileInfo> Attachments { get; set; } = null!;
+
+    /// <summary>
+    ///     The name of the author of the document.
+    /// </summary>
+    public string? Author { get; set; }
 
     /// <summary>
     ///     The path to the output file.

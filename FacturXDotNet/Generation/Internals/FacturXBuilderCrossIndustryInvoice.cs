@@ -1,4 +1,7 @@
-﻿using FacturXDotNet.Generation.PDF;
+﻿using FacturXDotNet.Extensions;
+using FacturXDotNet.Generation.PDF;
+using FacturXDotNet.Models.CII;
+using FacturXDotNet.Parsing.CII;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
 
@@ -6,26 +9,34 @@ namespace FacturXDotNet.Generation.Internals;
 
 static class FacturXBuilderCrossIndustryInvoice
 {
-    public static async Task AddCrossIndustryInvoiceAttachmentAsync(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
+    public static async Task<CrossIndustryInvoice> AddCrossIndustryInvoiceAttachmentAsync(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
     {
-        if (args.Cii is null)
+        CrossIndustryInvoiceReader ciiReader = new();
+
+        if (args.Cii == null)
         {
-            return;
+            // assume that there is already a CII attachment in the base PDF, and keep it as-is
+            await using Stream ciiStream = pdfDocument.ExtractAttachment(args.CiiAttachmentName);
+            return ciiReader.Read(ciiStream);
         }
 
-        string ciiAttachmentName = args.CiiAttachmentName ?? "factur-x.xml";
-
-        PdfAttachmentData ciiAttachment = PdfAttachmentData.LoadFromStream(ciiAttachmentName, args.Cii);
+        PdfAttachmentData ciiAttachment = PdfAttachmentData.LoadFromStream(args.CiiAttachmentName, args.Cii);
         ciiAttachment.Description = "CII XML - FacturX";
         ciiAttachment.Relationship = AfRelationship.Alternative;
         ciiAttachment.MimeType = "application/xml";
+
+        FacturXBuilderAttachments.AddAttachment(pdfDocument, ciiAttachment, FacturXDocumentBuilderAttachmentConflictResolution.Overwrite, args);
+        args.Logger?.LogInformation("Added CII attachment to the PDF document.");
 
         if (!args.CiiLeaveOpen)
         {
             await args.Cii.DisposeAsync();
         }
 
-        FacturXBuilderAttachments.AddAttachment(pdfDocument, ciiAttachment, FacturXDocumentBuilderAttachmentConflictResolution.Overwrite, args);
-        args.Logger?.LogInformation("Added CII attachment to the PDF document.");
+        // create a new memory buffer in case the CII stream is not seekable
+        MemoryStream attachmentStream = new(ciiAttachment.Content);
+        CrossIndustryInvoice cii = ciiReader.Read(attachmentStream);
+
+        return cii;
     }
 }
