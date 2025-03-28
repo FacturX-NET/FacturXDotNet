@@ -13,7 +13,7 @@
         <Title>FacturX.NET CLI</Title>
         <Product>FacturX.NET CLI</Product>
         <Version>0.0.0.0</Version>
-        <Description>Extract, Validate and Create FacturX documents.</Description>
+        <Description>Work with FacturX documents in .NET</Description>
         <Authors>Ismail Bennani</Authors>
         <NeutralLanguage>en</NeutralLanguage>
         <PackageTags>facturx, cii, en16931, xmp, invoice</PackageTags>
