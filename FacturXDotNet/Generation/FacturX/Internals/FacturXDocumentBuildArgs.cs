@@ -14,6 +14,7 @@ class FacturXDocumentBuildArgs
     public Stream? Xmp { get; set; }
     public bool XmpLeaveOpen { get; set; }
     public bool DisableXmpMetadataAutoGeneration { get; set; }
+    public bool OverwriteOutputIntents { get; set; }
     public FacturXDocumentPostProcessOptions PostProcess { get; set; } = new();
     public List<(PdfAttachmentData Name, FacturXDocumentBuilderAttachmentConflictResolution ConflictResolution)> Attachments { get; set; } = [];
     public ILogger? Logger { get; set; }

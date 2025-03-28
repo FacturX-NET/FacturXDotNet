@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using PdfSharp.Pdf;
-using PdfSharp.Pdf.Filters;
 
 namespace FacturXDotNet.Generation.PDF.Internals;
 
@@ -20,31 +19,35 @@ static class AddAttachmentToPdfDocumentExtensions
     /// <param name="file">The file to attach.</param>
     public static void AddAttachment(this PdfDocument document, PdfAttachmentData file)
     {
-        FlateDecode flateDecode = new();
-        byte[] encoded = flateDecode.Encode(file.Content.ToArray(), PdfFlateEncodeMode.BestCompression);
+        DateTime now = DateTime.Now;
+        string mimeType = file.MimeType ?? "application/octet-stream";
+        AfRelationship relationship = file.Relationship ?? AfRelationship.Unspecified;
+        DateTime creationDate = file.CreationDate ?? now;
+        DateTime modificationDate = file.ModificationDate ?? now;
+
 
         PdfDictionary embeddedFileStreamDictionary = new();
-        embeddedFileStreamDictionary.CreateStream(encoded);
-        embeddedFileStreamDictionary.Elements.Add("/Filter", new PdfName("/FlateDecode"));
         embeddedFileStreamDictionary.Elements.Add("/Type", new PdfName("/EmbeddedFile"));
-        embeddedFileStreamDictionary.Elements.Add("/SubType", new PdfString(file.MimeType ?? "application/octet-stream"));
-
-        PdfDictionary pdfStreamParams = new();
-        pdfStreamParams.Elements.Add("/CheckSum", new PdfString(ComputeChecksum(file.Content)));
-        pdfStreamParams.Elements.Add("/Size", new PdfInteger(file.Content.Length));
-        pdfStreamParams.Elements.Add("/CreationDate", new PdfString(FormatDate(file.CreationDate ?? DateTime.Now)));
-        pdfStreamParams.Elements.Add("/ModDate", new PdfString(FormatDate(file.ModificationDate ?? DateTime.Now)));
-        embeddedFileStreamDictionary.Elements.Add("/Params", pdfStreamParams);
+        embeddedFileStreamDictionary.Elements.Add("/Subtype", new PdfString(mimeType));
+        embeddedFileStreamDictionary.WriteFlateEncodedData(
+            file.Content.Span,
+            p =>
+            {
+                p.Elements.Add("/CreationDate", new PdfString(FormatDate(creationDate)));
+                p.Elements.Add("/ModDate", new PdfString(FormatDate(modificationDate)));
+            }
+        );
 
         document.Internals.AddObject(embeddedFileStreamDictionary);
 
         PdfDictionary embeddedFileDictionary = new();
-        embeddedFileDictionary.Elements.Add("/F", embeddedFileStreamDictionary.Reference);
-        embeddedFileDictionary.Elements.Add("/UF", embeddedFileStreamDictionary.Reference);
+        embeddedFileDictionary.Elements.Add("/F", embeddedFileStreamDictionary.ReferenceNotNull);
+        embeddedFileDictionary.Elements.Add("/UF", embeddedFileStreamDictionary.ReferenceNotNull);
 
         PdfDictionary fileSpecificationDictionary = new();
-        fileSpecificationDictionary.Elements.Add("/AFRelationship", new PdfName(FormatRelationship(file.Relationship ?? AfRelationship.Unspecified)));
+        fileSpecificationDictionary.Elements.Add("/AFRelationship", new PdfName(FormatRelationship(relationship)));
         fileSpecificationDictionary.Elements.Add("/Type", new PdfName("/Filespec"));
+        fileSpecificationDictionary.Elements.Add("/Subtype", new PdfString(mimeType));
         fileSpecificationDictionary.Elements.Add("/F", new PdfString(file.Name));
         fileSpecificationDictionary.Elements.Add("/UF", new PdfString(file.Name));
         fileSpecificationDictionary.Elements.Add("/EF", embeddedFileDictionary);
@@ -60,7 +63,7 @@ static class AddAttachmentToPdfDocumentExtensions
         {
             attachedFiles = new PdfArray(document);
             document.Internals.AddObject(attachedFiles);
-            document.Internals.Catalog.Elements.Add("/AF", attachedFiles.Reference);
+            document.Internals.Catalog.Elements.Add("/AF", attachedFiles.ReferenceNotNull);
         }
 
         attachedFiles.Elements.Add(fileSpecificationDictionary.ReferenceNotNull);

@@ -8,7 +8,7 @@ namespace FacturXDotNet.Generation.FacturX.Internals;
 
 static class FacturXDocumentBuilderAddAttachmentsStep
 {
-    public static void AddAttachments(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
+    public static void Run(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
     {
         foreach ((PdfAttachmentData attachment, FacturXDocumentBuilderAttachmentConflictResolution conflictResolution) in args.Attachments)
         {

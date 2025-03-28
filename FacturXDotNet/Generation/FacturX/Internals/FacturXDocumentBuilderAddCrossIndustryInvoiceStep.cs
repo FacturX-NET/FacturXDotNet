@@ -10,7 +10,7 @@ namespace FacturXDotNet.Generation.FacturX.Internals;
 
 static class FacturXDocumentBuilderAddCrossIndustryInvoiceStep
 {
-    public static async Task<CrossIndustryInvoice> AddCrossIndustryInvoiceAttachmentAsync(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
+    public static async Task<CrossIndustryInvoice> RunAsync(PdfDocument pdfDocument, FacturXDocumentBuildArgs args)
     {
         CrossIndustryInvoiceReader ciiReader = new();
 

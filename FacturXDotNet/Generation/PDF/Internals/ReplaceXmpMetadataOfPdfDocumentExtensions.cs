@@ -1,7 +1,5 @@
-﻿using System.Security.Cryptography;
-using PdfSharp.Pdf;
+﻿using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Filters;
 
 namespace FacturXDotNet.Generation.PDF.Internals;
 
@@ -34,27 +32,13 @@ static class ReplaceXmpMetadataOfPdfDocumentExtensions
 
     static void CreateMetadata(PdfDocument document, ReadOnlySpan<byte> metadata)
     {
-        FlateDecode flateDecode = new();
-        byte[] encoded = flateDecode.Encode(metadata.ToArray(), PdfFlateEncodeMode.BestCompression);
 
         PdfDictionary metadataDictionary = new();
-        metadataDictionary.CreateStream(encoded.ToArray());
-        metadataDictionary.Elements.Add("/Filter", new PdfName("/FlateDecode"));
         metadataDictionary.Elements.Add("/Type", new PdfName("/Metadata"));
         metadataDictionary.Elements.Add("/SubType", new PdfString("XML"));
-
-        PdfDictionary pdfStreamParams = new();
-        pdfStreamParams.Elements.Add("/CheckSum", new PdfString(ComputeChecksum(metadata)));
-        pdfStreamParams.Elements.Add("/Size", new PdfInteger(metadata.Length));
-        metadataDictionary.Elements.Add("/Params", pdfStreamParams);
+        metadataDictionary.WriteFlateEncodedData(metadata);
 
         document.Internals.AddObject(metadataDictionary);
-        document.Internals.Catalog.Elements.Add("/Metadata", metadataDictionary);
-    }
-
-    static string ComputeChecksum(ReadOnlySpan<byte> data)
-    {
-        byte[] contentHash = MD5.HashData(data);
-        return BitConverter.ToString(contentHash).Replace("-", "").ToLowerInvariant();
+        document.Internals.Catalog.Elements.Add("/Metadata", metadataDictionary.ReferenceNotNull);
     }
 }

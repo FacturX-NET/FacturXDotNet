@@ -127,9 +127,10 @@ public class FacturXDocumentBuilder
             await _args.BasePdf.DisposeAsync();
         }
 
-        CrossIndustryInvoice cii = await FacturXDocumentBuilderAddCrossIndustryInvoiceStep.AddCrossIndustryInvoiceAttachmentAsync(pdfDocument, _args);
-        XmpMetadata xmp = await FacturXDocumentBuilderAddXmpMetadataStep.AddXmpMetadataAsync(pdfDocument, cii, _args);
-        FacturXDocumentBuilderAddAttachmentsStep.AddAttachments(pdfDocument, _args);
+        CrossIndustryInvoice cii = await FacturXDocumentBuilderAddCrossIndustryInvoiceStep.RunAsync(pdfDocument, _args);
+        XmpMetadata xmp = await FacturXDocumentBuilderAddXmpMetadataStep.RunAsync(pdfDocument, cii, _args);
+        FacturXDocumentBuilderAddAttachmentsStep.Run(pdfDocument, _args);
+        await FacturXDocumentBuilderSetOutputIntentsStep.RunAsync(pdfDocument, _args);
 
         pdfDocument.Info.Title = FirstString(xmp.DublinCore?.Title) ?? pdfDocument.Info.Title;
         pdfDocument.Info.Subject = FirstString(xmp.DublinCore?.Description) ?? pdfDocument.Info.Subject;
@@ -147,6 +148,8 @@ public class FacturXDocumentBuilder
         pdfDocument.Options.EnableCcittCompressionForBilevelImages = true;
         pdfDocument.Options.UseFlateDecoderForJpegImages = PdfUseFlateDecoderForJpegImages.Automatic;
         pdfDocument.Options.AutomaticXmpGeneration = false;
+        pdfDocument.PageMode = PdfPageMode.UseAttachments;
+        pdfDocument.ViewerPreferences.DisplayDocTitle = true;
 
         await pdfDocument.SaveAsync(resultStream);
 
