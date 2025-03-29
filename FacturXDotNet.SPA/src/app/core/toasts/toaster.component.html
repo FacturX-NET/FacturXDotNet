@@ -1,0 +1,9 @@
+<div
+  class="toast-container position-fixed top-0 start-50 translate-middle-x p-3"
+  aria-live="assertive"
+  aria-atomic="true"
+>
+  @for (toast of currentToasts(); track toast.id) {
+    <app-toast [toast]="toast" (closed)="close(toast)"></app-toast>
+  }
+</div>

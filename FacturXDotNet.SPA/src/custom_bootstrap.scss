@@ -1,0 +1,20 @@
+// Palette
+$purple: #512bd4;
+$dark-purple: #0e193d;
+$black: #000000;
+$white: #ffffff;
+
+// Variable overrides first
+$prefix: "bs-";
+$primary: $purple;
+$secondary: $dark-purple;
+$light: $white;
+$dark: $black;
+$link-color: $purple;
+$nav-underline-link-active-color: $purple;
+$headings-color: $dark-purple;
+$enable-shadows: false;
+$font-size-base: 0.9rem;
+
+// Then import Bootstrap
+@import "../node_modules/bootstrap/scss/bootstrap";
