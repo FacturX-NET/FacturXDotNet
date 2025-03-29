@@ -1,0 +1,6 @@
+﻿services:
+  facturxdotnet.api:
+    image: facturxdotnet.api
+    build:
+      context: .
+      dockerfile: FacturXDotNet.API/Dockerfile

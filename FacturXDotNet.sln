@@ -18,6 +18,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "Benchmark\Benc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.FacturXDotNet.CLI", "Tests.FacturXDotNet.CLI\Tests.FacturXDotNet.CLI.csproj", "{F361AB6C-92FE-4C68-A256-7C6C57AADE64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacturXDotNet.API", "FacturXDotNet.API\FacturXDotNet.API.csproj", "{DDE283F3-F209-4892-A0B8-C2BCCF318757}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A170B47C-9588-4A6C-B6E8-9F69656AB659}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +51,10 @@ Global
 		{F361AB6C-92FE-4C68-A256-7C6C57AADE64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F361AB6C-92FE-4C68-A256-7C6C57AADE64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F361AB6C-92FE-4C68-A256-7C6C57AADE64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDE283F3-F209-4892-A0B8-C2BCCF318757}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDE283F3-F209-4892-A0B8-C2BCCF318757}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDE283F3-F209-4892-A0B8-C2BCCF318757}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDE283F3-F209-4892-A0B8-C2BCCF318757}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0C810A7D-6919-43FB-A6A8-7F23E67B3AD8} = {CDABEB8D-8E00-4A5A-B264-F36F006D4CF9}
@@ -51,5 +62,6 @@ Global
 		{801B25B9-F3D5-4390-8F9B-B6A3975D93A0} = {BE644AFE-05B3-427F-879C-F26E53EC40CB}
 		{55CD05D1-70D1-4EBB-80F8-53B3F14E7FF1} = {BF8377B7-38FC-4FAB-88D3-35130905D44E}
 		{F361AB6C-92FE-4C68-A256-7C6C57AADE64} = {BE644AFE-05B3-427F-879C-F26E53EC40CB}
+		{DDE283F3-F209-4892-A0B8-C2BCCF318757} = {CDABEB8D-8E00-4A5A-B264-F36F006D4CF9}
 	EndGlobalSection
 EndGlobal
