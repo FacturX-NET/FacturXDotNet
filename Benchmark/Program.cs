@@ -44,7 +44,18 @@ namespace Benchmark
             await using FileStream file = File.OpenRead(sourceFilePath);
 
             FacturXDocument document = await FacturXDocument.LoadFromFileAsync(GetSourceFilePath());
-            _ = document.GetCrossIndustryInvoiceAttachmentAsync();
+            CrossIndustryInvoiceAttachment attachmentAsync = (await document.GetCrossIndustryInvoiceAttachmentAsync())!;
+            _ = await attachmentAsync.GetCrossIndustryInvoiceAsync();
+        }
+
+        [Benchmark]
+        public async Task ExtractXmp()
+        {
+            string sourceFilePath = GetSourceFilePath();
+            await using FileStream file = File.OpenRead(sourceFilePath);
+
+            FacturXDocument document = await FacturXDocument.LoadFromFileAsync(GetSourceFilePath());
+            _ = document.GetXmpMetadataAsync();
         }
 
         [Benchmark]
