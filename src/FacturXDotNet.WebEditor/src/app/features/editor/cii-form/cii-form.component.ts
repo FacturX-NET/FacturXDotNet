@@ -16,14 +16,27 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
   template: `
     <form [formGroup]="form">
       <div class="pb-3">
-        <app-cii-form-exchanged-document-context
-          formGroupName="exchangedDocumentContext"
-          [verbosity]="verbosity()"
-          [disabled]="disabled()"
-        ></app-cii-form-exchanged-document-context>
+        <div class="mb-3">
+          <h6>BG-2 - EXCHANGE DOCUMENT CONTEXT</h6>
+          @if (showNormal()) {
+            <p class="form-text">A group of business terms providing information on the business process and rules applicable to the Invoice document.</p>
+          }
+        </div>
+        <div class="ps-5">
+          <app-cii-form-exchanged-document-context
+            formGroupName="exchangedDocumentContext"
+            [verbosity]="verbosity()"
+            [disabled]="disabled()"
+          ></app-cii-form-exchanged-document-context>
+        </div>
       </div>
       <div class="pb-3">
-        <app-cii-form-exchanged-document formGroupName="exchangedDocument" [verbosity]="verbosity()" [disabled]="disabled()"></app-cii-form-exchanged-document>
+        <div class="mb-3">
+          <h6>BT-1-00 - EXCHANGE DOCUMENT</h6>
+        </div>
+        <div class="ps-5">
+          <app-cii-form-exchanged-document formGroupName="exchangedDocument" [verbosity]="verbosity()" [disabled]="disabled()"></app-cii-form-exchanged-document>
+        </div>
       </div>
     </form>
   `,
