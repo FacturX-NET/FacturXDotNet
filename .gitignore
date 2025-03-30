@@ -1,8 +1,8 @@
-bin/
-obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
+**/bin/
+**/obj/
+**/packages/
+**/riderModule.iml
+**/_ReSharper.Caches/
 Ignore/
-artifacts-dotnet-releaser/
-TestResults/
+**/artifacts-dotnet-releaser/
+**/TestResults/
