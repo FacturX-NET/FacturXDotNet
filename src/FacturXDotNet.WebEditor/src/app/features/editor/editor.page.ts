@@ -1,9 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, inject, Signal, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './pdf-viewer.component';
 import { CiiFormComponent, CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-industry-invoice';
+import { EditorSettingsService } from './editor-settings.service';
 
 @Component({
   selector: 'app-editor',
@@ -63,28 +64,35 @@ import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-indust
 
       <main class="flex-grow-1 d-grid gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 overflow-hidden" style="grid-template-columns: 1fr 1fr">
         <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden">
-          <header class="d-flex align-items-center justify-content-between pt-3 px-3">
+          <header class="d-flex align-items-center gap-2 pt-3 px-3">
+            <h5 class="m-0">Cross-Industry Invoice</h5>
             <div class="dropdown">
-              <a href="javascript:void;" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="fs-5 fw-bold">Cross-Industry Invoice</span>
+              <a href="javascript:void;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false">
+                @if (ciiVerbosity() === 'minimal') {
+                  no details
+                } @else if (ciiVerbosity() === 'normal') {
+                  details
+                } @else if (ciiVerbosity() === 'detailed') {
+                  detailed
+                }
               </a>
               <ul class="dropdown-menu">
-                @if (verbosity() === 'minimal') {
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('normal')">Show details</a></li>
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('detailed')">Show all details</a></li>
-                } @else if (verbosity() === 'normal') {
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('minimal')">Hide details</a></li>
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('detailed')">Show more details</a></li>
-                } @else if (verbosity() === 'detailed') {
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('minimal')">Hide details</a></li>
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('normal')">Show less details</a></li>
+                @if (ciiVerbosity() === 'minimal') {
+                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('normal')">Show details</a></li>
+                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('detailed')">Show all details</a></li>
+                } @else if (ciiVerbosity() === 'normal') {
+                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('minimal')">Hide details</a></li>
+                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('detailed')">Show more details</a></li>
+                } @else if (ciiVerbosity() === 'detailed') {
+                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('minimal')">Hide details</a></li>
+                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('normal')">Show less details</a></li>
                 }
               </ul>
             </div>
           </header>
           <hr />
           <div class="flex-grow-1 overflow-auto px-3 pb-5">
-            <app-cii-form [(value)]="cii" [verbosity]="verbosity()"></app-cii-form>
+            <app-cii-form [(value)]="cii" [verbosity]="ciiVerbosity()"></app-cii-form>
           </div>
         </div>
         <div class="h-100 border">
@@ -103,6 +111,14 @@ import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-indust
 export class EditorPage {
   protected readonly environment = environment;
 
-  protected verbosity = signal<CrossIndustryInvoiceFormVerbosity>('normal');
+  protected ciiVerbosity: Signal<CrossIndustryInvoiceFormVerbosity>;
   protected cii: CrossIndustryInvoice = {};
+
+  constructor(private settingsService: EditorSettingsService) {
+    this.ciiVerbosity = computed(() => this.settingsService.settings().ciiFormVerbosity ?? 'normal');
+  }
+
+  protected setVerbosity(verbosity: CrossIndustryInvoiceFormVerbosity) {
+    this.settingsService.saveVerbosity(verbosity);
+  }
 }

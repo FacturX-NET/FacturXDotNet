@@ -25,9 +25,9 @@ import { VatOnlyTaxSchemeIdentifier } from '../../core/facturx-models/cii/vat-on
             <label class="form-label" for="businessProcessSpecifiedDocumentContextParameterId"> <span class="fw-semibold">BT-23</span> - Business process type </label>
             <input id="businessProcessSpecifiedDocumentContextParameterId" class="form-control" formControlName="businessProcessSpecifiedDocumentContextParameterId" />
             @if (showNormal()) {
-              <div id="businessProcessSpecifiedDocumentContextParameterIdHelp" class="form-text">
+              <p id="businessProcessSpecifiedDocumentContextParameterIdHelp" class="form-text">
                 Identifies the business process context in which the transaction appears, to enable the Buyer to process the Invoice in an appropriate way.
-              </div>
+              </p>
             }
           </div>
           <div class="mb-3">
@@ -41,13 +41,11 @@ import { VatOnlyTaxSchemeIdentifier } from '../../core/facturx-models/cii/vat-on
               <option value="extended">Extended</option>
             </select>
             @if (showNormal()) {
-              <div id="guidelineSpecifiedDocumentContextParameterIdHelp" class="form-text">
-                <p>
-                  An identification of the specification containing the total set of rules regarding semantic content, cardinalities and business rules to which the data contained
-                  in the instance document conforms.
-                </p>
-              </div>
-              <div id="guidelineSpecifiedDocumentContextParameterIdBusinessRules" class="form-text small">
+              <p id="guidelineSpecifiedDocumentContextParameterIdHelp" class="form-text">
+                An identification of the specification containing the total set of rules regarding semantic content, cardinalities and business rules to which the data contained in
+                the instance document conforms.
+              </p>
+              <div class="form-text small">
                 <div class="fw-semibold">Business Rules</div>
                 <ul>
                   <span class="fw-semibold">BR-1</span
@@ -56,11 +54,11 @@ import { VatOnlyTaxSchemeIdentifier } from '../../core/facturx-models/cii/vat-on
               </div>
             }
             @if (showDetailed()) {
-              <div id="guidelineSpecifiedDocumentContextParameterIdDetailedHelp" class="form-text small">
+              <p class="form-text small">
                 <i class="bi bi-info-circle"></i>
                 This identifies compliance or conformance to the specification. Conformant invoices specify: urn:cen.eu:en16931:2017. Invoices, compliant to a user specification
                 may identify that user specification here. No identification scheme is to be used.
-              </div>
+              </p>
             }
           </div>
         </div>
@@ -77,7 +75,7 @@ import { VatOnlyTaxSchemeIdentifier } from '../../core/facturx-models/cii/vat-on
               <div id="exchangeDocumentIdHelp" class="form-text">A unique identification of the Invoice.</div>
             }
             @if (showDetailed()) {
-              <div id="exchangeDocumentIdDetailedHelp" class="form-text">
+              <div class="form-text">
                 <p class="small">
                   <i class="bi bi-info-circle"></i>
                   The sequential number required in Article 226(2) of the directive 2006/112/EC, to uniquely identify the Invoice within the business context, time-frame, operating
@@ -92,9 +90,16 @@ import { VatOnlyTaxSchemeIdentifier } from '../../core/facturx-models/cii/vat-on
             <input id="typeCode" class="form-control" formControlName="typeCode" />
             @if (showNormal()) {
               <div id="typeCodeHelp" class="form-text">A code specifying the functional type of the Invoice.</div>
+              <div class="form-text small">
+                <div class="fw-semibold">Business Rules</div>
+                <ul>
+                  <span class="fw-semibold">BR-4</span
+                  >: An Invoice shall have an Invoice type code.
+                </ul>
+              </div>
             }
             @if (showDetailed()) {
-              <div id="typeCodeDetailedHelp" class="form-text">
+              <div class="form-text">
                 <p class="small">
                   <i class="bi bi-info-circle"></i>
                   Commercial invoices and credit notes are defined according the entries in UNTDID 1001. Other entries of UNTDID 1001 with specific invoices or credit notes may be
