@@ -1,11 +1,18 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { ControlContainer, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 
 @Component({
   selector: 'app-cii-form-exchanged-document-context',
   imports: [ReactiveFormsModule],
-  viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
+  viewProviders: [
+    {
+      provide: ControlContainer,
+      useFactory: () => {
+        return inject(ControlContainer, { skipSelf: true });
+      },
+    },
+  ],
   template: `
     <div [formGroupName]="formGroupName()">
       <div class="mb-3">
@@ -15,6 +22,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           Identifies the business process context in which the transaction appears, to enable the Buyer to process the Invoice in an appropriate way.
         </p>
       </div>
+
       <div class="mb-3">
         <label class="form-label text-truncate" for="guidelineSpecifiedDocumentContextParameterId"> <span class="fw-semibold">BT-24</span> - Specification identifier </label>
         <select id="guidelineSpecifiedDocumentContextParameterId" class="form-select" formControlName="guidelineSpecifiedDocumentContextParameterId">
@@ -29,7 +37,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           An identification of the specification containing the total set of rules regarding semantic content, cardinalities and business rules to which the data contained in the
           instance document conforms.
         </p>
-        @if (showNormal()) {
+        @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -38,7 +46,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
             </ul>
           </div>
         }
-        @if (showDetailed()) {
+        @if (showRemarks()) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>
             This identifies compliance or conformance to the specification. Conformant invoices specify: urn:cen.eu:en16931:2017. Invoices, compliant to a user specification may
@@ -54,7 +62,6 @@ export class CiiFormExchangedDocumentContextComponent {
   verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
   disabled = input<boolean>(false);
 
-  protected showMinimal = computed(() => this.verbosity() == 'minimal' || this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showNormal = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showDetailed = computed(() => this.verbosity() == 'detailed');
+  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
+  protected showRemarks = computed(() => this.verbosity() == 'detailed');
 }

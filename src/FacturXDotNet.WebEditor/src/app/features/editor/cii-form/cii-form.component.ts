@@ -17,9 +17,9 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
   imports: [ReactiveFormsModule, CollapseComponent, CiiFormExchangedDocumentContextComponent, CiiFormSupplyChainTradeTransactionComponent, CiiFormExchangedDocumentComponent],
   template: `
     <form [formGroup]="form">
-      <app-collapse #collapseExchangeDocumentContext>
+      <app-collapse id="exchange-document-context" #collapse>
         <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseExchangeDocumentContext.collapsed()) {
+          @if (collapse.collapsed()) {
             <i class="bi bi-plus fs-5"></i>
           } @else {
             <i class="bi bi-dash fs-5"></i>
@@ -38,9 +38,10 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
           </div>
         </div>
       </app-collapse>
-      <app-collapse #collapseExchangeDocumentContext>
+
+      <app-collapse id="exchange-document" #collapse>
         <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseExchangeDocumentContext.collapsed()) {
+          @if (collapse.collapsed()) {
             <i class="bi bi-plus fs-5"></i>
           } @else {
             <i class="bi bi-dash fs-5"></i>
@@ -50,14 +51,15 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
         </h6>
         <p class="form-text ps-4"></p>
         <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start" ngProjectAs="collapsible">
+          <div class="ps-3 border-start">
             <app-cii-form-exchanged-document formGroupName="exchangedDocument" [verbosity]="verbosity()" [disabled]="disabled()"></app-cii-form-exchanged-document>
           </div>
         </div>
       </app-collapse>
-      <app-collapse #collapseExchangeDocumentContext>
+
+      <app-collapse id="supply-chain-trade-transaction" #collapse>
         <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseExchangeDocumentContext.collapsed()) {
+          @if (collapse.collapsed()) {
             <i class="bi bi-plus fs-5"></i>
           } @else {
             <i class="bi bi-dash fs-5"></i>
@@ -67,7 +69,7 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
         </h6>
         <p class="form-text ps-4"></p>
         <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start" ngProjectAs="collapsible">
+          <div class="ps-3 border-start">
             <app-cii-form-supply-chain-trade-transaction
               formGroupName="supplyChainTradeTransaction"
               [verbosity]="verbosity()"
@@ -84,9 +86,8 @@ export class CiiFormComponent {
   verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
   disabled = input<boolean>(false);
 
-  protected showMinimal = computed(() => this.verbosity() == 'minimal' || this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showNormal = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showDetailed = computed(() => this.verbosity() == 'detailed');
+  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
+  protected showRemarks = computed(() => this.verbosity() == 'detailed');
 
   constructor() {
     effect(() => {

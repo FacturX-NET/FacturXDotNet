@@ -1,18 +1,25 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { ControlContainer, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 
 @Component({
   selector: 'app-cii-form-exchanged-document',
   imports: [ReactiveFormsModule],
-  viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
+  viewProviders: [
+    {
+      provide: ControlContainer,
+      useFactory: () => {
+        return inject(ControlContainer, { skipSelf: true });
+      },
+    },
+  ],
   template: `
     <div [formGroupName]="formGroupName()">
       <div class="mb-3">
         <label class="form-label text-truncate" for="exchangeDocumentId"> <span class="fw-semibold">BT-1</span> - Invoice number </label>
         <input id="exchangeDocumentId" class="form-control" formControlName="id" />
         <p id="exchangeDocumentIdHelp" class="form-text">A unique identification of the Invoice.</p>
-        @if (showNormal()) {
+        @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -21,7 +28,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
             </ul>
           </div>
         }
-        @if (showDetailed()) {
+        @if (showRemarks()) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>
             The sequential number required in Article 226(2) of the directive 2006/112/EC, to uniquely identify the Invoice within the business context, time-frame, operating
@@ -33,6 +40,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           </div>
         }
       </div>
+
       <div class="mb-3">
         <label class="form-label text-truncate" for="typeCode"> <span class="fw-semibold">BT-3</span> - Invoice type code </label>
         <select id="typeCode" class="form-select" formControlName="typeCode">
@@ -94,7 +102,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           <option value="935-customs-invoice">935 - Customs invoice</option>
         </select>
         <p id="typeCodeHelp" class="form-text">A code specifying the functional type of the Invoice.</p>
-        @if (showNormal()) {
+        @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -103,7 +111,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
             </ul>
           </div>
         }
-        @if (showDetailed()) {
+        @if (showRemarks()) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>
             Commercial invoices and credit notes are defined according the entries in UNTDID 1001. Other entries of UNTDID 1001 with specific invoices or credit notes may be used
@@ -124,6 +132,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           </div>
         }
       </div>
+
       <div class="mb-3">
         <div class="row">
           <div class="col">
@@ -138,7 +147,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           </div>
         </div>
         <p id="issueDateTimeHelp" class="form-text">The date when the Invoice was issued.</p>
-        @if (showNormal()) {
+        @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -147,7 +156,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
             </ul>
           </div>
         }
-        @if (showDetailed()) {
+        @if (showRemarks()) {
           <div class="alert alert-light small">
             <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
             The issue date must be before or equal to the deposit date.
@@ -162,7 +171,6 @@ export class CiiFormExchangedDocumentComponent {
   verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
   disabled = input<boolean>(false);
 
-  protected showMinimal = computed(() => this.verbosity() == 'minimal' || this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showNormal = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showDetailed = computed(() => this.verbosity() == 'detailed');
+  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
+  protected showRemarks = computed(() => this.verbosity() == 'detailed');
 }
