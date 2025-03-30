@@ -2,7 +2,7 @@ import { Component, computed, inject, Signal, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './pdf-viewer.component';
-import { CiiFormComponent, CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
+import { CiiFormComponent, CrossIndustryInvoiceFormVerbosity } from './cii-form/cii-form.component';
 import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-industry-invoice';
 import { EditorSettingsService } from './editor-settings.service';
 

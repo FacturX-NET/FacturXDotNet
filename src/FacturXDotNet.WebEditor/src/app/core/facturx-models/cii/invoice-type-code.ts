@@ -61,10 +61,10 @@ export type InvoiceTypeCode =
   | '457-reversal-of-debit'
   | '458-reversal-of-credit'
   | '527-self-billed-debit-note'
-  | "532-forwarder's-credit-note"
-  | "553-forwarder's-invoice-discrepancy-report"
-  | "575-insurer's-invoice"
-  | "623-forwarder's-invoice"
+  | '532-forwarders-credit-note'
+  | '553-forwarders-invoice-discrepancy-report'
+  | '575-insurers-invoice'
+  | '623-forwarders-invoice'
   | '633-port-charges-documents'
   | '751-invoice-information-for-accounting-purposes'
   | '780-freight-invoice'

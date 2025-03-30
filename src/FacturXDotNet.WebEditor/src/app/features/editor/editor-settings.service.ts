@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
+import { CrossIndustryInvoiceFormVerbosity } from './cii-form/cii-form.component';
 
 @Injectable({
   providedIn: 'root',
