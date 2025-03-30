@@ -1,3 +1,24 @@
+body {
+  --fx-purple: #512bd4;
+  --fx-purple-rgb: 81, 43, 212;
+  --fx-light-purple: #a62bd4;
+  --fx-light-purple-rgb: 166, 43, 212;
+  --fx-dark-purple: #0e193d;
+  --fx-dark-purple-rgb: 14, 25, 61;
+
+  --bs-primary: var(--fx-purple);
+  --bs-primary-rgb: var(--fx-purple-rgb);
+  --bs-secondary: var(--fx-dark-purple);
+  --bs-secondary-rgb: var(--fx-dark-purple-rgb);
+  --bs-link-color: var(--fx-purple);
+  --bs-link-color-rgb: var(--fx-purple-rgb);
+  --bs-link-hover-color: var(--fx-light-purple);
+  --bs-link-hover-color-rgb: var(--fx-light-purple-rgb);
+  --bs-nav-underline-link-active-color: var(--fx-purple);
+  --bs-headings-color: var(--fx-dark-purple);
+  --bs-link-decoration: none;
+}
+
 html,
 body {
   width: 100%;

@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-welcome',
   imports: [NgOptimizedImage],
   template: `
     <div class="w-100 min-h-100 bg-body-tertiary">
-      <div class="container p-lg-5 p-md-2">
+      <div class="container pt-lg-5 pt-md-2">
         <div class="bg-body py-lg-4 py-md-3 px-5 mx-auto">
           <div class="text-center mt-5">
             <img ngSrc="logo.png" width="369" height="92" alt="FacturX.NET Logo" />
@@ -60,17 +59,15 @@ import { environment } from '../../../environments/environment';
           </div>
         </div>
 
-        @if (environment.isUnsafeCloud) {
-          <div class="mx-auto my-2 p-2">
-            <div class="alert alert-light">
-              <i class="bi bi-exclamation-triangle-fill text-danger"></i> <strong class="text-danger"> Do not share sensitive data </strong><br />
-              This application (frontend and API) is hosted in a low-cost cloud environment. It is intended for demo purposes only and should be used solely for that purpose.
-              Although I do not store your data, or use your it for any purpose other than the application, the hosting environment is beyond my control.
-              <br />
-              Please consider <a href="#">using the application locally</a> or <a href="#">self-hosting it</a> for your organization.
-            </div>
+        <div class="mx-auto my-2 p-2">
+          <div class="alert alert-light">
+            <i class="bi bi-exclamation-triangle-fill text-danger"></i> <strong class="text-danger"> Do not share sensitive data </strong><br />
+            This application (frontend and API) is hosted in a low-cost cloud environment. It is intended for demo purposes only and should be used solely for that purpose.
+            Although I do not store your data, or use your it for any purpose other than the application, the hosting environment is beyond my control.
+            <br />
+            Please consider <a href="#">using the application locally</a> or <a href="#">self-hosting it</a> for your organization.
           </div>
-        }
+        </div>
 
         <div class="mx-auto pb-4 px-2 py-5">
           <div class="d-flex justify-content-evenly">
@@ -97,7 +94,7 @@ import { environment } from '../../../environments/environment';
             </div>
           </div>
           <div class="p-2 pt-5 text-center">
-            <strong>© 2025 Ismail Bennani</strong>, with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>.<br />
+            <strong>© 2025 Ismail Bennani</strong>, with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i><br />
             The tools are open source and under the MIT License, feel free to use, modify, and share.
           </div>
         </div>
@@ -106,6 +103,4 @@ import { environment } from '../../../environments/environment';
   `,
   styles: ``,
 })
-export class WelcomePage {
-  protected readonly environment = environment;
-}
+export class WelcomePage {}
