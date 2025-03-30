@@ -64,7 +64,7 @@ import { PdfViewerComponent } from './pdf-viewer.component';
       </div>
 
       <main class="bg-body-tertiary flex-grow-1 container-fluid">
-        <div class="h-100 row gap-3 px-3">
+        <div class="h-100 row gap-3 py-1 px-3">
           <div class="bg-body border rounded-3 col"></div>
           <div class="w-50 h-100">
             <app-pdf-viewer></app-pdf-viewer>
