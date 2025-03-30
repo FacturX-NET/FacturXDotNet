@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
+import { PdfViewerComponent } from './pdf-viewer.component';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, PdfViewerComponent],
   template: `
     <div class="w-100 h-100 d-flex flex-column overflow-hidden">
       <header class="text-bg-secondary d-flex align-items-center">
@@ -65,11 +66,13 @@ import { environment } from '../../../environments/environment';
       <main class="bg-body-tertiary flex-grow-1 container-fluid">
         <div class="h-100 row gap-3 px-3">
           <div class="bg-body border rounded-3 col"></div>
-          <div class="bg-body border rounded-3 col-3" style="min-width:750px"></div>
+          <div class="w-50 h-100">
+            <app-pdf-viewer></app-pdf-viewer>
+          </div>
         </div>
       </main>
 
-      <div class="bg-body-tertiary text-body-tertiary text-center">
+      <div class="bg-body-tertiary text-body-tertiary text-center px-4 text-truncate">
         <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and under the MIT
         License, feel free to use, modify, and share.
       </div>
