@@ -1,5 +1,5 @@
-import { Component, computed, effect, input, model, Signal } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, computed, effect, input, model } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { GuidelineSpecifiedDocumentContextParameterId } from '../../../core/facturx-models/cii/guideline-specified-document-context-parameter-id';
 import { InvoiceTypeCode } from '../../../core/facturx-models/cii/invoice-type-code';
 import { DateOnlyFormat } from '../../../core/facturx-models/cii/date-only-format';
@@ -7,40 +7,77 @@ import { CrossIndustryInvoice } from '../../../core/facturx-models/cii/cross-ind
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateOnly } from '../../../core/facturx-models/cii/date-only';
 import { VatOnlyTaxSchemeIdentifier } from '../../../core/facturx-models/cii/vat-only-tax-scheme-identifier';
+import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-document-context.component';
+import { CiiFormSupplyChainTradeTransactionComponent } from './cii-form-supply-chain-trade-transaction.component';
 import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document.component';
 
 @Component({
   selector: 'app-cii-form',
-  imports: [ReactiveFormsModule, CiiFormExchangedDocumentContextComponent, CiiFormExchangedDocumentComponent],
+  imports: [ReactiveFormsModule, CollapseComponent, CiiFormExchangedDocumentContextComponent, CiiFormSupplyChainTradeTransactionComponent, CiiFormExchangedDocumentComponent],
   template: `
     <form [formGroup]="form">
-      <div class="pb-3">
-        <div class="mb-3">
-          <h6>BG-2 - EXCHANGE DOCUMENT CONTEXT</h6>
-          @if (showNormal()) {
-            <p class="form-text">A group of business terms providing information on the business process and rules applicable to the Invoice document.</p>
+      <app-collapse #collapseExchangeDocumentContext>
+        <h6 class="m-0" ngProjectAs="trigger">
+          @if (collapseExchangeDocumentContext.collapsed()) {
+            <i class="bi bi-plus fs-5"></i>
+          } @else {
+            <i class="bi bi-dash fs-5"></i>
           }
+
+          BG-2 - EXCHANGE DOCUMENT CONTEXT
+        </h6>
+        <p class="form-text ps-4">A group of business terms providing information on the business process and rules applicable to the Invoice document.</p>
+        <div class="ps-4" ngProjectAs="collapsible">
+          <div class="ps-3 border-start">
+            <app-cii-form-exchanged-document-context
+              formGroupName="exchangedDocumentContext"
+              [verbosity]="verbosity()"
+              [disabled]="disabled()"
+            ></app-cii-form-exchanged-document-context>
+          </div>
         </div>
-        <div class="ps-5">
-          <app-cii-form-exchanged-document-context
-            formGroupName="exchangedDocumentContext"
-            [verbosity]="verbosity()"
-            [disabled]="disabled()"
-          ></app-cii-form-exchanged-document-context>
+      </app-collapse>
+      <app-collapse #collapseExchangeDocumentContext>
+        <h6 class="m-0" ngProjectAs="trigger">
+          @if (collapseExchangeDocumentContext.collapsed()) {
+            <i class="bi bi-plus fs-5"></i>
+          } @else {
+            <i class="bi bi-dash fs-5"></i>
+          }
+
+          BT-1-00 - EXCHANGE DOCUMENT
+        </h6>
+        <p class="form-text ps-4"></p>
+        <div class="ps-4" ngProjectAs="collapsible">
+          <div class="ps-3 border-start" ngProjectAs="collapsible">
+            <app-cii-form-exchanged-document formGroupName="exchangedDocument" [verbosity]="verbosity()" [disabled]="disabled()"></app-cii-form-exchanged-document>
+          </div>
         </div>
-      </div>
-      <div class="pb-3">
-        <div class="mb-3">
-          <h6>BT-1-00 - EXCHANGE DOCUMENT</h6>
+      </app-collapse>
+      <app-collapse #collapseExchangeDocumentContext>
+        <h6 class="m-0" ngProjectAs="trigger">
+          @if (collapseExchangeDocumentContext.collapsed()) {
+            <i class="bi bi-plus fs-5"></i>
+          } @else {
+            <i class="bi bi-dash fs-5"></i>
+          }
+
+          BG-25-00 - SUPPLY CHAIN TRADE TRANSACTION
+        </h6>
+        <p class="form-text ps-4"></p>
+        <div class="ps-4" ngProjectAs="collapsible">
+          <div class="ps-3 border-start" ngProjectAs="collapsible">
+            <app-cii-form-supply-chain-trade-transaction
+              formGroupName="supplyChainTradeTransaction"
+              [verbosity]="verbosity()"
+              [disabled]="disabled()"
+            ></app-cii-form-supply-chain-trade-transaction>
+          </div>
         </div>
-        <div class="ps-5">
-          <app-cii-form-exchanged-document formGroupName="exchangedDocument" [verbosity]="verbosity()" [disabled]="disabled()"></app-cii-form-exchanged-document>
-        </div>
-      </div>
+      </app-collapse>
     </form>
   `,
-  styles: ``,
 })
 export class CiiFormComponent {
   value = model.required<CrossIndustryInvoice>();

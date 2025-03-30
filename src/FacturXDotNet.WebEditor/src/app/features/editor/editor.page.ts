@@ -15,7 +15,7 @@ import { EditorSettingsService } from './editor-settings.service';
         <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
         <ul class="nav justify-content-center">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-4 text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">File</a>
+            <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">File</a>
             <ul class="dropdown-menu">
               <li>
                 <a class="dropdown-item" href="#">Create new document</a>
@@ -27,7 +27,7 @@ import { EditorSettingsService } from './editor-settings.service';
             </ul>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-4 text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">About</a>
+            <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">About</a>
             <ul class="dropdown-menu">
               @if (environment.isUnsafeCloudEnvironment) {
                 <li>
@@ -106,7 +106,6 @@ import { EditorSettingsService } from './editor-settings.service';
       </div>
     </div>
   `,
-  styles: ``,
 })
 export class EditorPage {
   protected readonly environment = environment;

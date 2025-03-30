@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { ControlContainer, FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ControlContainer, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 
 @Component({
@@ -11,8 +11,8 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
       <div class="mb-3">
         <label class="form-label text-truncate" for="exchangeDocumentId"> <span class="fw-semibold">BT-1</span> - Invoice number </label>
         <input id="exchangeDocumentId" class="form-control" formControlName="id" />
+        <p id="exchangeDocumentIdHelp" class="form-text">A unique identification of the Invoice.</p>
         @if (showNormal()) {
-          <p id="exchangeDocumentIdHelp" class="form-text">A unique identification of the Invoice.</p>
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -93,8 +93,8 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           <option value="877-final-construction-invoice">877 - Final construction invoice</option>
           <option value="935-customs-invoice">935 - Customs invoice</option>
         </select>
+        <p id="typeCodeHelp" class="form-text">A code specifying the functional type of the Invoice.</p>
         @if (showNormal()) {
-          <p id="typeCodeHelp" class="form-text">A code specifying the functional type of the Invoice.</p>
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -137,8 +137,8 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
             </select>
           </div>
         </div>
+        <p id="issueDateTimeHelp" class="form-text">The date when the Invoice was issued.</p>
         @if (showNormal()) {
-          <p id="issueDateTimeHelp" class="form-text">The date when the Invoice was issued.</p>
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>

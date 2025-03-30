@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { ControlContainer, FormGroupDirective, FormsModule, NgForm, NgModelGroup, ReactiveFormsModule } from '@angular/forms';
+import { ControlContainer, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 
 @Component({
@@ -11,11 +11,9 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
       <div class="mb-3">
         <label class="form-label text-truncate" for="businessProcessSpecifiedDocumentContextParameterId"> <span class="fw-semibold">BT-23</span> - Business process type </label>
         <input id="businessProcessSpecifiedDocumentContextParameterId" class="form-control" formControlName="businessProcessSpecifiedDocumentContextParameterId" />
-        @if (showNormal()) {
-          <p id="businessProcessSpecifiedDocumentContextParameterIdHelp" class="form-text">
-            Identifies the business process context in which the transaction appears, to enable the Buyer to process the Invoice in an appropriate way.
-          </p>
-        }
+        <p id="businessProcessSpecifiedDocumentContextParameterIdHelp" class="form-text">
+          Identifies the business process context in which the transaction appears, to enable the Buyer to process the Invoice in an appropriate way.
+        </p>
       </div>
       <div class="mb-3">
         <label class="form-label text-truncate" for="guidelineSpecifiedDocumentContextParameterId"> <span class="fw-semibold">BT-24</span> - Specification identifier </label>
@@ -27,11 +25,11 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           <option value="en16931">EN 16931</option>
           <option value="extended">Extended</option>
         </select>
+        <p id="guidelineSpecifiedDocumentContextParameterIdHelp" class="form-text">
+          An identification of the specification containing the total set of rules regarding semantic content, cardinalities and business rules to which the data contained in the
+          instance document conforms.
+        </p>
         @if (showNormal()) {
-          <p id="guidelineSpecifiedDocumentContextParameterIdHelp" class="form-text">
-            An identification of the specification containing the total set of rules regarding semantic content, cardinalities and business rules to which the data contained in the
-            instance document conforms.
-          </p>
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -50,7 +48,6 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
       </div>
     </div>
   `,
-  styles: ``,
 })
 export class CiiFormExchangedDocumentContextComponent {
   formGroupName = input.required<string>();
