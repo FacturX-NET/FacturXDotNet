@@ -22,11 +22,11 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
   template: `
     <div [formGroupName]="formGroupName()">
       <div>
-        <label class="form-label text-truncate" for="issuerAssignedId"> <span class="fw-semibold">BT-13</span> - Purchase order reference </label>
         <div class="editor__control">
+          <label class="form-label text-truncate" for="issuerAssignedId"> <span class="fw-semibold">BT-13</span> - Purchase order reference </label>
           <input id="issuerAssignedId" class="form-control" formControlName="issuerAssignedId" />
+          <p id="issuerAssignedIdHelp" class="form-text">An identifier of a referenced purchase order, issued by the Buyer.</p>
         </div>
-        <p id="issuerAssignedIdHelp" class="form-text">An identifier of a referenced purchase order, issued by the Buyer.</p>
         @if (showRemarks()) {
           <div class="alert alert-light small">
             <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>

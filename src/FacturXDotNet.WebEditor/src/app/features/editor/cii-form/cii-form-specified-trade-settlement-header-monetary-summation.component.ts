@@ -20,11 +20,11 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
   template: `
     <div [formGroupName]="formGroupName()">
       <div>
-        <label class="form-label text-truncate" for="taxBasisTotalAmount"> <span id="bt-5" class="fw-semibold">BT-109</span> - Total amount without VAT </label>
         <div class="editor__control">
-          <input id="taxBasisTotalAmount" class="form-control" formControlName="taxBasisTotalAmount" />
+          <label class="form-label text-truncate" for="taxBasisTotalAmount"> <span id="bt-5" class="fw-semibold">BT-109</span> - Total amount without VAT </label>
+          <input id="taxBasisTotalAmount" class="form-control" formControlName="taxBasisTotalAmount" placeholder="100.00" />
+          <p id="taxBasisTotalAmountHelp" class="form-text">The total amount of the Invoice without VAT.</p>
         </div>
-        <p id="taxBasisTotalAmountHelp" class="form-text">The total amount of the Invoice without VAT.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
@@ -59,7 +59,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
         <div class="col">
           <div class="editor__control">
             <label class="form-label text-truncate" for="taxTotalAmount"> <span id="BT-110" class="fw-semibold">BT-110</span> - Total VAT amount </label>
-            <input id="taxTotalAmount" class="form-control" formControlName="taxTotalAmount" />
+            <input id="taxTotalAmount" class="form-control" formControlName="taxTotalAmount" placeholder="4.90" />
             <p id="taxTotalAmountHelp" class="form-text">The total VAT amount for the Invoice.</p>
           </div>
           @if (showBusinessRules()) {
@@ -86,7 +86,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
         <div class="col">
           <div class="editor__control">
             <label class="form-label text-truncate" for="taxTotalAmountCurrencyId"> <span id="BT-110-1" class="fw-semibold">BT-110-1</span> - VAT currency </label>
-            <input id="taxTotalAmountCurrencyId" class="form-control" formControlName="taxTotalAmountCurrencyId" />
+            <input id="taxTotalAmountCurrencyId" class="form-control" formControlName="taxTotalAmountCurrencyId" placeholder="EUR" />
             <p id="taxTotalAmountCurrencyIdHelp" class="form-text"></p>
             @if (showRemarks()) {
               <div class="alert alert-light small">
@@ -99,11 +99,11 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
       </div>
 
       <div>
-        <label class="form-label text-truncate" for="grandTotalAmount"> <span id="bt-5" class="fw-semibold">BT-112</span> - Total amount with VAT </label>
         <div class="editor__control">
-          <input id="grandTotalAmount" class="form-control" formControlName="grandTotalAmount" />
+          <label class="form-label text-truncate" for="grandTotalAmount"> <span id="bt-5" class="fw-semibold">BT-112</span> - Total amount with VAT </label>
+          <input id="grandTotalAmount" class="form-control" formControlName="grandTotalAmount" placeholder="104.90" />
+          <p id="grandTotalAmountHelp" class="form-text">The total amount of the Invoice with VAT.</p>
         </div>
-        <p id="grandTotalAmountHelp" class="form-text">The total amount of the Invoice with VAT.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
@@ -138,11 +138,11 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
       </div>
 
       <div>
-        <label class="form-label text-truncate" for="duePayableAmount"> <span id="bt-5" class="fw-semibold">BT-115</span> - Amount due for payment </label>
         <div class="editor__control">
-          <input id="duePayableAmount" class="form-control" formControlName="duePayableAmount" />
+          <label class="form-label text-truncate" for="duePayableAmount"> <span id="bt-5" class="fw-semibold">BT-115</span> - Amount due for payment </label>
+          <input id="duePayableAmount" class="form-control" formControlName="duePayableAmount" placeholder="104.90" />
+          <p id="duePayableAmountHelp" class="form-text">The outstanding amount that is requested to be paid.</p>
         </div>
-        <p id="duePayableAmountHelp" class="form-text">The outstanding amount that is requested to be paid.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>

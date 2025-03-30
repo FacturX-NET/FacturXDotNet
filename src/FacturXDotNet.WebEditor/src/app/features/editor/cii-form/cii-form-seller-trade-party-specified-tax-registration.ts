@@ -19,7 +19,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
         <div class="col">
           <div class="editor__control">
             <label class="form-label text-truncate" for="sellerTaxId"> <span class="fw-semibold">BT-31</span> - Seller VAT identifier </label>
-            <input id="sellerTaxId" class="form-control" formControlName="id" />
+            <input id="sellerTaxId" class="form-control" formControlName="id" placeholder="FR11123456782" />
             <p id="sellerTaxIdHelp" class="form-text">The Seller's VAT identifier (also known as Seller VAT identification number).</p>
           </div>
           @if (showBusinessRules()) {

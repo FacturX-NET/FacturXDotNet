@@ -22,11 +22,11 @@ import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-fo
   template: `
     <div [formGroupName]="formGroupName()">
       <div>
-        <label class="form-label text-truncate" for="invoiceCurrencyCode"> <span id="bt-5" class="fw-semibold">BT-5</span> - Invoice currency code </label>
         <div class="editor__control">
-          <input id="invoiceCurrencyCode" class="form-control" formControlName="invoiceCurrencyCode" />
+          <label class="form-label text-truncate" for="invoiceCurrencyCode"> <span id="bt-5" class="fw-semibold">BT-5</span> - Invoice currency code </label>
+          <input id="invoiceCurrencyCode" class="form-control" formControlName="invoiceCurrencyCode" placeholder="EUR" />
+          <p id="invoiceCurrencyCodeHelp" class="form-text">The currency in which all Invoice amounts are given, except for the Total VAT amount in accounting currency.</p>
         </div>
-        <p id="invoiceCurrencyCodeHelp" class="form-text">The currency in which all Invoice amounts are given, except for the Total VAT amount in accounting currency.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>

@@ -16,11 +16,11 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
   template: `
     <div [formGroupName]="formGroupName()">
       <div>
-        <label class="form-label text-truncate" for="exchangeDocumentId"> <span class="fw-semibold">BT-1</span> - Invoice number </label>
         <div class="editor__control">
-          <input id="exchangeDocumentId" class="form-control" formControlName="id" />
+          <label class="form-label text-truncate" for="exchangeDocumentId"> <span class="fw-semibold">BT-1</span> - Invoice number </label>
+          <input id="exchangeDocumentId" class="form-control" formControlName="id" placeholder="F20250023" />
+          <p id="exchangeDocumentIdHelp" class="form-text">A unique identification of the Invoice.</p>
         </div>
-        <p id="exchangeDocumentIdHelp" class="form-text">A unique identification of the Invoice.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
@@ -43,8 +43,8 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
       </div>
 
       <div>
-        <label class="form-label text-truncate" for="typeCode"> <span class="fw-semibold">BT-3</span> - Invoice type code </label>
         <div class="editor__control">
+          <label class="form-label text-truncate" for="typeCode"> <span class="fw-semibold">BT-3</span> - Invoice type code </label>
           <select id="typeCode" class="form-select" formControlName="typeCode">
             <option value="" class="text-body-tertiary" selected>Choose a type</option>
             <option value="71-request-for-payment">71 - Request for payment</option>
@@ -103,8 +103,8 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
             <option value="877-final-construction-invoice">877 - Final construction invoice</option>
             <option value="935-customs-invoice">935 - Customs invoice</option>
           </select>
+          <p id="typeCodeHelp" class="form-text">A code specifying the functional type of the Invoice.</p>
         </div>
-        <p id="typeCodeHelp" class="form-text">A code specifying the functional type of the Invoice.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
@@ -139,7 +139,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
         <div>
           <div class="editor__control">
             <label class="form-label text-truncate" for="issueDateTime"> <span class="fw-semibold">BT-2</span> - Invoice issue date </label>
-            <input id="issueDateTime" class="form-control" formControlName="issueDateTime" />
+            <input id="issueDateTime" class="form-control" formControlName="issueDateTime" placeholder="2022-01-31" />
             <p id="issueDateTimeHelp" class="form-text">The date when the Invoice was issued.</p>
           </div>
           @if (showBusinessRules()) {

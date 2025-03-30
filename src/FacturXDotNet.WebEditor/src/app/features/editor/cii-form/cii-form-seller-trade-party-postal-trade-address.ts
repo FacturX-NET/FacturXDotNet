@@ -16,11 +16,11 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
   template: `
     <div [formGroupName]="formGroupName()">
       <div class="mb-3">
-        <label class="form-label text-truncate" for="sellerAddressCountryId"> <span class="fw-semibold">BT-40</span> - Seller country code </label>
         <div class="editor__control">
-          <input id="sellerAddressCountryId" class="form-control" formControlName="countryId" />
+          <label class="form-label text-truncate" for="sellerAddressCountryId"> <span class="fw-semibold">BT-40</span> - Seller country code </label>
+          <input id="sellerAddressCountryId" class="form-control" formControlName="countryId" placeholder="FR" />
+          <p id="sellerAddressCountryIdHelp" class="form-text">A code that identifies the country.</p>
         </div>
-        <p id="sellerAddressCountryIdHelp" class="form-text">A code that identifies the country.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>

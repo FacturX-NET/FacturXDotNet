@@ -28,11 +28,11 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
   template: `
     <div [formGroupName]="formGroupName()">
       <div>
-        <label class="form-label text-truncate" for="buyerReference"> <span class="fw-semibold">BT-10</span> - Buyer reference </label>
         <div class="editor__control">
-          <input id="buyerReference" class="form-control" formControlName="buyerReference" />
+          <label class="form-label text-truncate" for="buyerReference"> <span class="fw-semibold">BT-10</span> - Buyer reference </label>
+          <input id="buyerReference" class="form-control" formControlName="buyerReference" placeholder="SERVEXEC" />
+          <p id="buyerReferenceHelp" class="form-text">An identifier assigned by the Buyer used for internal routing purposes.</p>
         </div>
-        <p id="buyerReferenceHelp" class="form-text">An identifier assigned by the Buyer used for internal routing purposes.</p>
         @if (showRemarks()) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>

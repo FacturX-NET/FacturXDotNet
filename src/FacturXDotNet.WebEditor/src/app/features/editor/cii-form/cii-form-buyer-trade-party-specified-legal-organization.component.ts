@@ -17,11 +17,11 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
     <div [formGroupName]="formGroupName()">
       <div class="row">
         <div class="col">
-          <label class="form-label text-truncate" for="buyerLegalId"> <span class="fw-semibold">BT-47</span> - Buyer legal registration identifier </label>
           <div class="editor__control">
-            <input id="buyerLegalId" class="form-control" formControlName="id" />
+            <label class="form-label text-truncate" for="buyerLegalId"> <span class="fw-semibold">BT-47</span> - Buyer legal registration identifier </label>
+            <input id="buyerLegalId" class="form-control" formControlName="id" placeholder="987654321" />
+            <p id="buyerLegalIdHelp" class="form-text">An identifier issued by an official registrar that identifies the Buyer as a legal entity or person.</p>
           </div>
-          <p id="buyerLegalIdHelp" class="form-text">An identifier issued by an official registrar that identifies the Buyer as a legal entity or person.</p>
           @if (showRemarks()) {
             <div class="alert alert-light small">
               <i class="bi bi-info-circle"></i>
@@ -35,11 +35,11 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
         </div>
 
         <div class="col">
-          <label class="form-label text-truncate" for="buyerLegalIdScheme"> <span class="fw-semibold">BT-47-1</span> - Scheme identifier </label>
           <div class="editor__control">
-            <input id="buyerLegalIdScheme" class="form-control" formControlName="idSchemeId" />
+            <label class="form-label text-truncate" for="buyerLegalIdScheme"> <span class="fw-semibold">BT-47-1</span> - Scheme identifier </label>
+            <input id="buyerLegalIdScheme" class="form-control" formControlName="idSchemeId" placeholder="0002" />
+            <p id="buyerLegalIdSchemeHelp" class="form-text">The identification scheme identifier of the Buyer legal registration identifier.</p>
           </div>
-          <p id="buyerLegalIdSchemeHelp" class="form-text">The identification scheme identifier of the Buyer legal registration identifier.</p>
           @if (showRemarks()) {
             <div class="alert alert-light small">
               <i class="bi bi-info-circle"></i>

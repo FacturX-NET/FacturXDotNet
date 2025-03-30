@@ -147,11 +147,11 @@ export class CiiFormComponent {
       applicableHeaderTradeSettlement: new FormGroup({
         invoiceCurrencyCode: new FormControl<string>('', { nonNullable: true }),
         specifiedTradeSettlementHeaderMonetarySummation: new FormGroup({
-          taxBasisTotalAmount: new FormControl<number>(0, { nonNullable: true }),
-          taxTotalAmount: new FormControl<number>(0, { nonNullable: true }),
+          taxBasisTotalAmount: new FormControl<number | undefined>(undefined, { nonNullable: true }),
+          taxTotalAmount: new FormControl<number | undefined>(undefined, { nonNullable: true }),
           taxTotalAmountCurrencyId: new FormControl<string>('', { nonNullable: true }),
-          grandTotalAmount: new FormControl<number>(0, { nonNullable: true }),
-          duePayableAmount: new FormControl<number>(0, { nonNullable: true }),
+          grandTotalAmount: new FormControl<number | undefined>(undefined, { nonNullable: true }),
+          duePayableAmount: new FormControl<number | undefined>(undefined, { nonNullable: true }),
         }),
       }),
     }),

@@ -20,7 +20,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           <div class="mb-3">
             <div class="editor__control">
               <label class="form-label text-truncate" for="sellerLegalId"> <span class="fw-semibold">BT-30</span> - Seller legal registration identifier </label>
-              <input id="sellerLegalId" class="form-control" formControlName="id" />
+              <input id="sellerLegalId" class="form-control" formControlName="id" placeholder="123456782" />
               <p id="sellerLegalIdHelp" class="form-text">An identifier issued by an official registrar that identifies the Seller as a legal entity or person.</p>
             </div>
             @if (showBusinessRules()) {
@@ -40,7 +40,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           <div class="mb-3">
             <div class="editor__control">
               <label class="form-label text-truncate" for="sellerLegalIdScheme"> <span class="fw-semibold">BT-30-1</span> - Scheme identifier </label>
-              <input id="sellerLegalIdScheme" class="form-control" formControlName="idSchemeId" />
+              <input id="sellerLegalIdScheme" class="form-control" formControlName="idSchemeId" placeholder="0002" />
               <p id="sellerLegalIdSchemeHelp" class="form-text">The identification scheme identifier of the Seller legal registration identifier.</p>
             </div>
             @if (showRemarks()) {
