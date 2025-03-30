@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "facturxdotnet-spa": {
+    "facturxdotnet-webeditor": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -18,7 +18,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/facturxdotnet-spa",
+            "outputPath": "dist/facturxdotnet-webeditor",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [],
@@ -66,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "facturxdotnet-spa:build:production"
+              "buildTarget": "facturxdotnet-webeditor:build:production"
             },
             "development": {
-              "buildTarget": "facturxdotnet-spa:build:development"
+              "buildTarget": "facturxdotnet-webeditor:build:development"
             }
           },
           "defaultConfiguration": "development"
