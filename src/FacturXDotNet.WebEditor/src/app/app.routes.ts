@@ -1,9 +1,9 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
 export const routes: Routes = [
   {
     path: 'welcome',
-    loadChildren: () => import('./features/welcome/welcome.routes').then((m) => m.routes),
+    loadChildren: () => import('./features/welcome/welcome.routes').then(m => m.routes),
   },
   {
     path: '',

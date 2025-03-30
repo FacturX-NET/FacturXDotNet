@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
+import {Component} from '@angular/core';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-welcome',
@@ -103,4 +103,5 @@ import { NgOptimizedImage } from '@angular/common';
   `,
   styles: ``,
 })
-export class WelcomePage {}
+export class WelcomePage {
+}

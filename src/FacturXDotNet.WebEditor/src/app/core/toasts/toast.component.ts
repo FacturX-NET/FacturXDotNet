@@ -1,8 +1,8 @@
-import { Component, ElementRef, input, output, viewChild } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { Toast } from 'bootstrap';
-import { fromEvent, of, switchMap, take, tap } from 'rxjs';
-import { ToastInstance } from './toast.service';
+import {Component, ElementRef, input, output, viewChild} from '@angular/core';
+import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
+import {Toast} from 'bootstrap';
+import {fromEvent, of, switchMap, take, tap} from 'rxjs';
+import {ToastInstance} from './toast.service';
 
 @Component({
   selector: 'app-toast',
@@ -19,7 +19,7 @@ export class ToastComponent {
   constructor() {
     toObservable(this.toastElt)
       .pipe(
-        switchMap((toastElt) => {
+        switchMap(toastElt => {
           if (toastElt == undefined) {
             return of({});
           }

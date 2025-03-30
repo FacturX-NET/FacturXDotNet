@@ -1,19 +1,19 @@
-import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
   private counter = 0;
+  private toastsSubject = new Subject<ToastInstance>();
 
   public get toasts(): Observable<ToastInstance> {
     return this.toastsSubject;
   }
-  private toastsSubject = new Subject<ToastInstance>();
 
   show(toast: Toast) {
-    this.toastsSubject.next({ ...toast, id: this.counter++ });
+    this.toastsSubject.next({...toast, id: this.counter++});
   }
 }
 
