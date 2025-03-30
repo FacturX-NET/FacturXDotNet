@@ -24,7 +24,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\Assets\Logo\logo_icon_128.png">
+        <None Include="..\..\assets\Logo\logo_icon_128.png">
             <Pack>True</Pack>
             <PackagePath>/</PackagePath>
             <Link>logo_icon_128.png</Link>
