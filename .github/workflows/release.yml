@@ -41,4 +41,5 @@ jobs:
         shell: bash
         run: |
           dotnet tool install --global dotnet-releaser
+          cd src
           dotnet-releaser run --nuget-token "${{ secrets.NUGET_KEY }}" --github-token "${{ secrets.GITHUB_TOKEN }}" --skip-app-packages-for-build-only dotnet-releaser.toml
