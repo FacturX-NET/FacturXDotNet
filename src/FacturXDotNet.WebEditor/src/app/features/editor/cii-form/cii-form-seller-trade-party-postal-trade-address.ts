@@ -23,8 +23,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-9</span
-              >: The Seller postal address (BG-5) shall contain a Seller country code.
+              <li><span class="fw-semibold">BR-9</span>: The Seller postal address (BG-5) shall contain a Seller country code.</li>
             </ul>
           </div>
         }

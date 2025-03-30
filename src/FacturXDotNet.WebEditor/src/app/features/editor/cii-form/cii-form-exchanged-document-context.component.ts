@@ -41,8 +41,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-1</span
-              >: An Invoice shall have a Specification identifier.
+              <li><span class="fw-semibold">BR-1</span>: An Invoice shall have a Specification identifier.</li>
             </ul>
           </div>
         }

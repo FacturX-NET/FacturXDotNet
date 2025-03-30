@@ -33,9 +33,10 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-CO-9</span
-              >: The Seller VAT identifier, the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) shall have a prefix in accordance with ISO
-              code ISO 3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix ‘EL’.
+              <li>
+                <span class="fw-semibold">BR-CO-9</span>: The Seller VAT identifier, the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) shall
+                have a prefix in accordance with ISO code ISO 3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix ‘EL’.
+              </li>
             </ul>
             <ul>
               <span class="fw-semibold">BR-CO-26</span

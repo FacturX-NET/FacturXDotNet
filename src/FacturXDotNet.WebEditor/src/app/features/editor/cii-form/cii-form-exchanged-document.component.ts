@@ -23,8 +23,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-2</span
-              >: An Invoice shall have an Invoice number.
+              <li><span class="fw-semibold">BR-2</span>: An Invoice shall have an Invoice number.</li>
             </ul>
           </div>
         }
@@ -106,8 +105,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-4</span
-              >: An Invoice shall have an Invoice type code.
+              <li><span class="fw-semibold">BR-4</span>: An Invoice shall have an Invoice type code.</li>
             </ul>
           </div>
         }
@@ -151,8 +149,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-3</span
-              >: An Invoice shall have an Invoice issue date.
+              <li><span class="fw-semibold">BR-3</span>: An Invoice shall have an Invoice issue date.</li>
             </ul>
           </div>
         }

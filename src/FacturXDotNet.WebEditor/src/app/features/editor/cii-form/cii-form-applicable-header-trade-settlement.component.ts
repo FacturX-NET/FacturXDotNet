@@ -29,8 +29,7 @@ import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-fo
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-5</span
-              >: An Invoice shall have an Invoice currency code.
+              <li><span class="fw-semibold">BR-5</span>: An Invoice shall have an Invoice currency code.</li>
             </ul>
           </div>
         }

@@ -29,8 +29,7 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-7</span
-              >: An Invoice shall contain the Buyer name.
+              <li><span class="fw-semibold">BR-7</span>: An Invoice shall contain the Buyer name.</li>
             </ul>
           </div>
         }

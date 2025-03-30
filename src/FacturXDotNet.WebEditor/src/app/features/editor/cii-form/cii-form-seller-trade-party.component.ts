@@ -36,8 +36,7 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-6</span
-              >: An Invoice shall contain the Seller name.
+              <li><span class="fw-semibold">BR-6</span>: An Invoice shall contain the Seller name.</li>
             </ul>
           </div>
         }
@@ -80,8 +79,7 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
           <div class="form-text ps-4">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-8</span
-              >: An Invoice shall contain the Seller postal address.
+              <li><span class="fw-semibold">BR-8</span>: An Invoice shall contain the Seller postal address.</li>
             </ul>
           </div>
         }

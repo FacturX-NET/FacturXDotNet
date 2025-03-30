@@ -23,9 +23,10 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <span class="fw-semibold">BR-CO-26</span
-              >: In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller VAT
-              identifier (BT-31) shall be present.
+              <li>
+                <span class="fw-semibold">BR-CO-26</span>: In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration
+                identifier (BT-30) and/or the Seller VAT identifier (BT-31) shall be present.
+              </li>
             </ul>
           </div>
         }
