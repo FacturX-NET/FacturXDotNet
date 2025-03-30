@@ -1,11 +1,14 @@
 ﻿using CommunityToolkit.HighPerformance;
 using FacturXDotNet.Generation.FacturX;
+using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
 
 namespace FacturXDotNet.API.Features.Generate;
 
 static class GenerateController
 {
-    public static void MapGenerateEndpoints(this IEndpointRouteBuilder app) =>
+    public static void MapGenerateEndpoints(this IEndpointRouteBuilder app)
+    {
         app.MapPost(
                 "/generate",
                 async (IFormFile pdf, IFormFile crossIndustryInvoice) =>
@@ -33,4 +36,20 @@ static class GenerateController
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
+
+        app.MapPost("/generate/structured", async (GenerateFacturXRequest request) => { throw new NotImplementedException(); })
+            .WithSummary("Generate from structured data")
+            .WithDescription("Generate a FacturX document from a PDF file, the XMP metadata and the Cross-Industry Invoice data.")
+            .Produces<IFormFile>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .DisableAntiforgery();
+    }
+
+    public class GenerateFacturXRequest
+    {
+        public string PdfFileBase64 { get; set; } = string.Empty;
+        public XmpMetadata XmpMetadata { get; set; }
+        public CrossIndustryInvoice CrossIndustryInvoice { get; set; }
+    }
 }
