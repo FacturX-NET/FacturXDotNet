@@ -51,7 +51,7 @@ export interface SpecifiedTradeSettlementHeaderMonetarySummation {
    * @CiiXmlPath /rsm:CrossIndustryInvoice/rsm:SupplyChainTradeTransaction/ram:ApplicableHeaderTradeSettlement/ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount/@currencyID
    * @Profile MINIMUM
    */
-  taxTotalAmountCurrencyId?: number;
+  taxTotalAmountCurrencyId?: string;
 
   /**
    * **Invoice total amount with VAT** - The total amount of the Invoice with VAT.
