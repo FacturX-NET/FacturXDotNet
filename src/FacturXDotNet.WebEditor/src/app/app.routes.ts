@@ -2,13 +2,13 @@ import {Routes} from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'welcome',
-    loadChildren: () => import('./features/welcome/welcome.routes').then(m => m.routes),
+    path: 'editor',
+    loadChildren: () => import('./features/editor/editor.routes').then(m => m.routes),
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'welcome',
+    redirectTo: 'editor',
   },
   {
     path: '**',

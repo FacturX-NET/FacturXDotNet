@@ -1,3 +1,6 @@
-import {Environment} from './environment.types';
+import { Environment } from './environment.types';
 
-export const environment: Environment = {isUnsafeCloud: true};
+export const environment: Environment = {
+  version: '',
+  showDoNotShareSensitiveDataWarning: false,
+};

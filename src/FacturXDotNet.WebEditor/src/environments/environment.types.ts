@@ -1,3 +1,4 @@
 export interface Environment {
-  isUnsafeCloud?: boolean;
+  version: string;
+  isUnsafeCloudEnvironment?: boolean;
 }
