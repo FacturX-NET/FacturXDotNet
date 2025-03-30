@@ -64,35 +64,39 @@ import { EditorSettingsService } from './editor-settings.service';
 
       <main class="flex-grow-1 d-grid gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 overflow-hidden" style="grid-template-columns: 1fr 1fr">
         <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden">
-          <header class="d-flex align-items-center gap-2 pt-3 px-3">
-            <h5 class="m-0">Cross-Industry Invoice</h5>
-            <div class="dropdown">
-              <a href="javascript:void;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false">
-                @if (ciiVerbosity() === 'minimal') {
-                  no details
-                } @else if (ciiVerbosity() === 'normal') {
-                  details
-                } @else if (ciiVerbosity() === 'detailed') {
-                  detailed
-                }
-              </a>
-              <ul class="dropdown-menu">
-                @if (ciiVerbosity() === 'minimal') {
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('normal')">Show details</a></li>
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('detailed')">Show all details</a></li>
-                } @else if (ciiVerbosity() === 'normal') {
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('minimal')">Hide details</a></li>
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('detailed')">Show more details</a></li>
-                } @else if (ciiVerbosity() === 'detailed') {
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('minimal')">Hide details</a></li>
-                  <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('normal')">Show less details</a></li>
-                }
-              </ul>
+          <header>
+            <div class="container d-flex align-items-center gap-2 pt-3">
+              <h5 class="m-0">Cross-Industry Invoice</h5>
+              <div class="dropdown">
+                <a href="javascript:void;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false">
+                  @if (ciiVerbosity() === 'minimal') {
+                    no details
+                  } @else if (ciiVerbosity() === 'normal') {
+                    details
+                  } @else if (ciiVerbosity() === 'detailed') {
+                    detailed
+                  }
+                </a>
+                <ul class="dropdown-menu">
+                  @if (ciiVerbosity() === 'minimal') {
+                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('normal')">Show details</a></li>
+                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('detailed')">Show all details</a></li>
+                  } @else if (ciiVerbosity() === 'normal') {
+                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('minimal')">Hide details</a></li>
+                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('detailed')">Show more details</a></li>
+                  } @else if (ciiVerbosity() === 'detailed') {
+                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('minimal')">Hide details</a></li>
+                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('normal')">Show less details</a></li>
+                  }
+                </ul>
+              </div>
             </div>
           </header>
           <hr />
-          <div class="flex-grow-1 overflow-auto px-3 pb-5">
-            <app-cii-form [(value)]="cii" [verbosity]="ciiVerbosity()"></app-cii-form>
+          <div class="flex-grow-1 overflow-auto pb-5">
+            <div class="container">
+              <app-cii-form [(value)]="cii" [verbosity]="ciiVerbosity()"></app-cii-form>
+            </div>
           </div>
         </div>
         <div class="h-100 border">

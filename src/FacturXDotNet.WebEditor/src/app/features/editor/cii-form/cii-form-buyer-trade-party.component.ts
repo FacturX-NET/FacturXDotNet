@@ -10,14 +10,7 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
 
 @Component({
   selector: 'app-cii-form-buyer-trade-party',
-  imports: [
-    ReactiveFormsModule,
-    CollapseComponent,
-    CiiFormSellerTradePartySpecifiedLegalOrganizationComponent,
-    CiiFormSellerTradePartyPostalTradeAddress,
-    CiiFormSellerTradePartySpecifiedTaxRegistration,
-    CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent,
-  ],
+  imports: [ReactiveFormsModule, CollapseComponent, CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -29,9 +22,9 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
   template: `
     <div [formGroupName]="formGroupName()">
       <div class="mb-3">
-        <label class="form-label text-truncate" for="name"> <span class="fw-semibold">BT-44</span> - Buyer name </label>
-        <input id="name" class="form-control" formControlName="name" />
-        <p id="nameHelp" class="form-text">The full name of the Buyer.</p>
+        <label class="form-label text-truncate" for="buyerName"> <span class="fw-semibold">BT-44</span> - Buyer name </label>
+        <input id="buyerName" class="form-control" formControlName="name" />
+        <p id="buyerNameHelp" class="form-text">The full name of the Buyer.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>

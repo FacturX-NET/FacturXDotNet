@@ -28,8 +28,8 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
         @if (showRemarks()) {
           <div class="alert alert-light small">
             <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
-            For the public sector, this is the "Engagement Juridique" (Legal Commitment). It is mandatory for some buyers. You should refer to the ChorusPro Directory /// to
-            identify these public entity buyers that make it mandatory.
+            For the public sector, this is the "Engagement Juridique" (Legal Commitment). It is mandatory for some buyers. You should refer to the ChorusPro Directory to identify
+            these public entity buyers that make it mandatory.
           </div>
         }
       </div>
