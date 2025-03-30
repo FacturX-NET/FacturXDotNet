@@ -9,8 +9,8 @@ import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-indust
   selector: 'app-editor',
   imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent],
   template: `
-    <div class="w-100 h-100 d-flex flex-column overflow-hidden">
-      <header class="text-bg-secondary d-flex align-items-center">
+    <div class="w-100 h-100 bg-body-tertiary d-flex flex-column gap-2 overflow-hidden">
+      <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
         <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
         <ul class="nav justify-content-center">
           <li class="nav-item dropdown">
@@ -50,7 +50,7 @@ import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-indust
         </div>
       </header>
 
-      <div class="bg-body-tertiary d-flex gap-2 px-4 pt-2 small" [class.invisible]="!environment.isUnsafeCloudEnvironment">
+      <div class="flex-shrink-0 d-flex gap-2 px-4 small" [class.invisible]="!environment.isUnsafeCloudEnvironment">
         <div class="text-truncate">
           <span class="text-danger fw-semibold"><i class="bi bi-exclamation-triangle-fill "></i> Do not share sensitive data </span>
           This application is hosted in an unsafe cloud environment. Although I do not store your data, or use your it for any purpose other than the application, the hosting
@@ -61,8 +61,8 @@ import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-indust
         </div>
       </div>
 
-      <main class="bg-body-tertiary flex-grow-1 d-grid gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 pt-2 overflow-hidden" style="grid-template-columns: 1fr 1fr">
-        <div class="h-100 bg-body border rounded-3 d-flex flex-column">
+      <main class="flex-grow-1 d-grid gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 overflow-hidden" style="grid-template-columns: 1fr 1fr">
+        <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden">
           <header class="d-flex align-items-center justify-content-between pt-3 px-3">
             <div class="dropdown">
               <a href="javascript:void;" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -71,17 +71,19 @@ import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-indust
               <ul class="dropdown-menu">
                 @if (verbosity() === 'minimal') {
                   <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('normal')">Show details</a></li>
+                  <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('detailed')">Show all details</a></li>
                 } @else if (verbosity() === 'normal') {
                   <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('minimal')">Hide details</a></li>
                   <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('detailed')">Show more details</a></li>
                 } @else if (verbosity() === 'detailed') {
+                  <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('minimal')">Hide details</a></li>
                   <li><a class="dropdown-item" href="javascript:void;" (click)="verbosity.set('normal')">Show less details</a></li>
                 }
               </ul>
             </div>
           </header>
           <hr />
-          <div class="flex-grow-1 overflow-auto px-3">
+          <div class="flex-grow-1 overflow-auto px-3 pb-5">
             <app-cii-form [(value)]="cii" [verbosity]="verbosity()"></app-cii-form>
           </div>
         </div>
@@ -90,7 +92,7 @@ import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-indust
         </div>
       </main>
 
-      <div class="bg-body-tertiary text-body-tertiary text-center px-4 text-truncate">
+      <div class="flex-shrink-0 text-body-tertiary text-center px-4 text-truncate">
         <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and under the MIT
         License, feel free to use, modify, and share.
       </div>
