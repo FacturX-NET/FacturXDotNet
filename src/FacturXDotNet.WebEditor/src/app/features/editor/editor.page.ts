@@ -54,7 +54,7 @@ import { PdfViewerComponent } from './pdf-viewer.component';
 
       <div class="bg-body-tertiary d-flex gap-2 px-4 small" [class.invisible]="!environment.isUnsafeCloudEnvironment">
         <div class="text-truncate">
-          <span class="text-danger"><i class="bi bi-exclamation-triangle-fill "></i> <strong> Do not share sensitive data </strong></span>
+          <span class="text-danger fw-semibold"><i class="bi bi-exclamation-triangle-fill "></i> Do not share sensitive data </span>
           This application is hosted in an unsafe cloud environment. Although I do not store your data, or use your it for any purpose other than the application, the hosting
           environment is beyond my control.
         </div>
