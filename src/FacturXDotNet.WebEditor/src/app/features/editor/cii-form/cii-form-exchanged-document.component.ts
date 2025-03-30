@@ -140,7 +140,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
             <input id="issueDateTime" class="form-control" formControlName="issueDateTime" />
           </div>
           <div class="col-5">
-            <label class="form-label text-truncate" for="issueDateTimeFormat"> <span class="fw-semibold">BT-2-0</span> - Format </label>
+            <label class="form-label text-truncate" for="issueDateTimeFormat"> Format </label>
             <select id="issueDateTimeFormat" class="form-select" formControlName="issueDateTimeFormat">
               <option value="102-date-only" selected>102 - Date only</option>
             </select>

@@ -17,9 +17,9 @@ import { CollapseComponent } from '../../../core/collapse/collapse.component';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-collapse id="header-trade-agreement" #collapse>
+      <app-collapse id="header-trade-agreement" #collapseHeaderTradeAgreement>
         <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapse.collapsed()) {
+          @if (collapseHeaderTradeAgreement.collapsed()) {
             <i class="bi bi-plus fs-5"></i>
           } @else {
             <i class="bi bi-dash fs-5"></i>

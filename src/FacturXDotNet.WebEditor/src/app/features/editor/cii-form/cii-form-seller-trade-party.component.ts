@@ -5,10 +5,17 @@ import { CiiFormApplicableHeaderTradeAgreementComponent } from './cii-form-appli
 import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormSellerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-seller-trade-party-specified-legal-organization.component';
 import { CiiFormSellerTradePartyPostalTradeAddress } from './cii-form-seller-trade-party-postal-trade-address';
+import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-seller-trade-party-specified-tax-registration';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party',
-  imports: [ReactiveFormsModule, CollapseComponent, CiiFormSellerTradePartySpecifiedLegalOrganizationComponent, CiiFormSellerTradePartyPostalTradeAddress],
+  imports: [
+    ReactiveFormsModule,
+    CollapseComponent,
+    CiiFormSellerTradePartySpecifiedLegalOrganizationComponent,
+    CiiFormSellerTradePartyPostalTradeAddress,
+    CiiFormSellerTradePartySpecifiedTaxRegistration,
+  ],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -36,9 +43,9 @@ import { CiiFormSellerTradePartyPostalTradeAddress } from './cii-form-seller-tra
         }
       </div>
 
-      <app-collapse id="seller-legal-organization" #collapse>
+      <app-collapse id="seller-legal-organization" #collapseSellerLegalOrganization>
         <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapse.collapsed()) {
+          @if (collapseSellerLegalOrganization.collapsed()) {
             <i class="bi bi-plus fs-5"></i>
           } @else {
             <i class="bi bi-dash fs-5"></i>
@@ -58,9 +65,9 @@ import { CiiFormSellerTradePartyPostalTradeAddress } from './cii-form-seller-tra
         </div>
       </app-collapse>
 
-      <app-collapse id="seller-postal-address" #collapse>
+      <app-collapse id="seller-postal-address" #collapseSellerPostalAddress>
         <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapse.collapsed()) {
+          @if (collapseSellerPostalAddress.collapsed()) {
             <i class="bi bi-plus fs-5"></i>
           } @else {
             <i class="bi bi-dash fs-5"></i>
@@ -94,6 +101,28 @@ import { CiiFormSellerTradePartyPostalTradeAddress } from './cii-form-seller-tra
               [verbosity]="verbosity()"
               [disabled]="disabled()"
             ></app-cii-form-seller-trade-party-postal-trade-address>
+          </div>
+        </div>
+      </app-collapse>
+
+      <app-collapse id="seller-vat-identifier" #collapseSellerVatIdentifier>
+        <h6 class="m-0" ngProjectAs="trigger">
+          @if (collapseSellerVatIdentifier.collapsed()) {
+            <i class="bi bi-plus fs-5"></i>
+          } @else {
+            <i class="bi bi-dash fs-5"></i>
+          }
+
+          BT-31-00 - SELLER VAT IDENTIFIER
+        </h6>
+        <p class="form-text ps-4">Detailed information on tax information of the seller.</p>
+        <div class="ps-4" ngProjectAs="collapsible">
+          <div class="ps-3 border-start">
+            <app-cii-form-seller-trade-party-specified-tax-registration
+              formGroupName="specifiedTaxRegistration"
+              [verbosity]="verbosity()"
+              [disabled]="disabled()"
+            ></app-cii-form-seller-trade-party-specified-tax-registration>
           </div>
         </div>
       </app-collapse>

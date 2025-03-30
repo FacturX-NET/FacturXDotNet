@@ -3,10 +3,20 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 import { ControlContainer, FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.component';
+import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.component';
+import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-agreement',
-  imports: [ReactiveFormsModule, CollapseComponent, CiiFormSellerTradePartyComponent],
+  imports: [
+    ReactiveFormsModule,
+    CollapseComponent,
+    CiiFormSellerTradePartyComponent,
+    CiiFormBuyerTradePartyComponent,
+    CiiFormBuyerTradePartyComponent,
+    CiiFormBuyerTradePartyComponent,
+    CiiFormBuyerOrderReferencedDocumentComponent,
+  ],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -33,9 +43,9 @@ import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.
         }
       </div>
 
-      <app-collapse id="seller" #collapse>
+      <app-collapse id="seller" #collapseSeller>
         <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapse.collapsed()) {
+          @if (collapseSeller.collapsed()) {
             <i class="bi bi-plus fs-5"></i>
           } @else {
             <i class="bi bi-dash fs-5"></i>
@@ -47,6 +57,46 @@ import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
             <app-cii-form-seller-trade-party formGroupName="sellerTradeParty" [verbosity]="verbosity()" [disabled]="disabled()"></app-cii-form-seller-trade-party>
+          </div>
+        </div>
+      </app-collapse>
+
+      <app-collapse id="seller" #collapseBuyer>
+        <h6 class="m-0" ngProjectAs="trigger">
+          @if (collapseBuyer.collapsed()) {
+            <i class="bi bi-plus fs-5"></i>
+          } @else {
+            <i class="bi bi-dash fs-5"></i>
+          }
+
+          BG-7 - BUYER
+        </h6>
+        <p class="form-text ps-4">A group of business terms providing information about the Buyer.</p>
+        <div class="ps-4" ngProjectAs="collapsible">
+          <div class="ps-3 border-start">
+            <app-cii-form-buyer-trade-party formGroupName="buyerTradeParty" [verbosity]="verbosity()" [disabled]="disabled()"></app-cii-form-buyer-trade-party>
+          </div>
+        </div>
+      </app-collapse>
+
+      <app-collapse id="seller" #collapseBuyerOrderReferencedDocument>
+        <h6 class="m-0" ngProjectAs="trigger">
+          @if (collapseBuyerOrderReferencedDocument.collapsed()) {
+            <i class="bi bi-plus fs-5"></i>
+          } @else {
+            <i class="bi bi-dash fs-5"></i>
+          }
+
+          BT-13-00 - PURCHASE ORDER REFERENCE
+        </h6>
+        <p class="form-text ps-4"></p>
+        <div class="ps-4" ngProjectAs="collapsible">
+          <div class="ps-3 border-start">
+            <app-cii-form-buyer-order-referenced-document
+              formGroupName="buyerOrderReferencedDocument"
+              [verbosity]="verbosity()"
+              [disabled]="disabled()"
+            ></app-cii-form-buyer-order-referenced-document>
           </div>
         </div>
       </app-collapse>

@@ -17,9 +17,9 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
   imports: [ReactiveFormsModule, CollapseComponent, CiiFormExchangedDocumentContextComponent, CiiFormSupplyChainTradeTransactionComponent, CiiFormExchangedDocumentComponent],
   template: `
     <form [formGroup]="form">
-      <app-collapse id="exchange-document-context" #collapse>
+      <app-collapse id="exchanged-document-context" #collapseExchangedDocumentContext>
         <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapse.collapsed()) {
+          @if (collapseExchangedDocumentContext.collapsed()) {
             <i class="bi bi-plus fs-5"></i>
           } @else {
             <i class="bi bi-dash fs-5"></i>
@@ -39,9 +39,9 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
         </div>
       </app-collapse>
 
-      <app-collapse id="exchange-document" #collapse>
+      <app-collapse id="exchanged-document" #collapsedExchangeDocument>
         <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapse.collapsed()) {
+          @if (collapsedExchangeDocument.collapsed()) {
             <i class="bi bi-plus fs-5"></i>
           } @else {
             <i class="bi bi-dash fs-5"></i>
@@ -57,9 +57,9 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
         </div>
       </app-collapse>
 
-      <app-collapse id="supply-chain-trade-transaction" #collapse>
+      <app-collapse id="supply-chain-trade-transaction" #collapseSupplyChainTradeTransaction>
         <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapse.collapsed()) {
+          @if (collapseSupplyChainTradeTransaction.collapsed()) {
             <i class="bi bi-plus fs-5"></i>
           } @else {
             <i class="bi bi-dash fs-5"></i>
