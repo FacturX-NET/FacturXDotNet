@@ -139,7 +139,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
         <div>
           <div class="editor__control">
             <label class="form-label text-truncate" for="issueDateTime"> <span class="fw-semibold">BT-2</span> - Invoice issue date </label>
-            <input id="issueDateTime" class="form-control" formControlName="issueDateTime" placeholder="2022-01-31" />
+            <input id="issueDateTime" class="form-control" formControlName="issueDateTime" type="date" />
             <p id="issueDateTimeHelp" class="form-text">The date when the Invoice was issued.</p>
           </div>
           @if (showBusinessRules()) {
