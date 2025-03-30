@@ -81,14 +81,18 @@ import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-appl
         </h6>
         <p class="form-text ps-4">A group of business terms to specify a direct debit.</p>
         @if (showRemarks()) {
-          <div class="alert alert-light small">
-            <i class="bi bi-info-circle"></i>
-            This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with
-            the rules of the SEPA or other direct debit scheme.
+          <div class="ps-4">
+            <div class="alert alert-light small">
+              <i class="bi bi-info-circle"></i>
+              This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with
+              the rules of the SEPA or other direct debit scheme.
+            </div>
           </div>
-          <div class="alert alert-light small">
-            <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
-            Not used.
+          <div class="ps-4">
+            <div class="alert alert-light small">
+              <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
+              Not used.
+            </div>
           </div>
         }
         <div class="ps-4" ngProjectAs="collapsible">

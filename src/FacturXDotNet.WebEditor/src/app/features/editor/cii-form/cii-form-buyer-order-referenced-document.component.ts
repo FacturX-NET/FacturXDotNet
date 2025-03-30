@@ -21,9 +21,11 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <div class="mb-3">
+      <div>
         <label class="form-label text-truncate" for="issuerAssignedId"> <span class="fw-semibold">BT-13</span> - Purchase order reference </label>
-        <input id="issuerAssignedId" class="form-control" formControlName="issuerAssignedId" />
+        <div class="editor__control">
+          <input id="issuerAssignedId" class="form-control" formControlName="issuerAssignedId" />
+        </div>
         <p id="issuerAssignedIdHelp" class="form-text">An identifier of a referenced purchase order, issued by the Buyer.</p>
         @if (showRemarks()) {
           <div class="alert alert-light small">

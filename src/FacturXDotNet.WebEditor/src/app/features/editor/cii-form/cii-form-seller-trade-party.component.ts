@@ -28,7 +28,9 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
     <div [formGroupName]="formGroupName()">
       <div class="mb-3">
         <label class="form-label text-truncate" for="sellerName"> <span class="fw-semibold">BT-27</span> - Seller name </label>
-        <input id="sellerName" class="form-control" formControlName="name" />
+        <div class="editor__control">
+          <input id="sellerName" class="form-control" formControlName="name" />
+        </div>
         <p id="sellerNameHelp" class="form-text">
           The full formal name by which the Seller is registered in the national registry of legal entities or as a Taxable person or otherwise trades as a person or persons.
         </p>

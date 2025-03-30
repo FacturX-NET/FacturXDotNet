@@ -21,9 +21,11 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <div class="mb-3">
+      <div>
         <label class="form-label text-truncate" for="buyerName"> <span class="fw-semibold">BT-44</span> - Buyer name </label>
-        <input id="buyerName" class="form-control" formControlName="name" />
+        <div class="editor__control">
+          <input id="buyerName" class="form-control" formControlName="name" />
+        </div>
         <p id="buyerNameHelp" class="form-text">The full name of the Buyer.</p>
         @if (showBusinessRules()) {
           <div class="form-text">

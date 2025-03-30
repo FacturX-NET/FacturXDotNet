@@ -17,7 +17,9 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
     <div [formGroupName]="formGroupName()">
       <div class="mb-3">
         <label class="form-label text-truncate" for="sellerAddressCountryId"> <span class="fw-semibold">BT-40</span> - Seller country code </label>
-        <input id="sellerAddressCountryId" class="form-control" formControlName="countryId" />
+        <div class="editor__control">
+          <input id="sellerAddressCountryId" class="form-control" formControlName="countryId" />
+        </div>
         <p id="sellerAddressCountryIdHelp" class="form-text">A code that identifies the country.</p>
         @if (showBusinessRules()) {
           <div class="form-text">

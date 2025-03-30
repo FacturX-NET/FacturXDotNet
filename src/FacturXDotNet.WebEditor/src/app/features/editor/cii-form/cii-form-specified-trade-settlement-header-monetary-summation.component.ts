@@ -19,9 +19,11 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <div class="mb-3">
+      <div>
         <label class="form-label text-truncate" for="taxBasisTotalAmount"> <span id="bt-5" class="fw-semibold">BT-109</span> - Total amount without VAT </label>
-        <input id="taxBasisTotalAmount" class="form-control" formControlName="taxBasisTotalAmount" />
+        <div class="editor__control">
+          <input id="taxBasisTotalAmount" class="form-control" formControlName="taxBasisTotalAmount" />
+        </div>
         <p id="taxBasisTotalAmountHelp" class="form-text">The total amount of the Invoice without VAT.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
@@ -53,47 +55,54 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
         }
       </div>
 
-      <div class="mb-3">
-        <div class="row">
-          <div class="col">
-            <label class="form-label text-truncate" for="taxTotalAmount"> <span id="bt-5" class="fw-semibold">BT-110</span> - Total VAT amount </label>
+      <div class="row">
+        <div class="col">
+          <div class="editor__control">
+            <label class="form-label text-truncate" for="taxTotalAmount"> <span id="BT-110" class="fw-semibold">BT-110</span> - Total VAT amount </label>
             <input id="taxTotalAmount" class="form-control" formControlName="taxTotalAmount" />
+            <p id="taxTotalAmountHelp" class="form-text">The total VAT amount for the Invoice.</p>
           </div>
-          <div class="col-4">
-            <label class="form-label text-truncate" for="taxTotalAmountCurrencyId"> Currency </label>
+          @if (showBusinessRules()) {
+            <div class="form-text">
+              <div class="fw-semibold">Business Rules</div>
+              <ul>
+                <li>
+                  <span class="fw-semibold">BR-CO-14</span>:
+                  <div class="d-flex flex-wrap">
+                    <div class="text-nowrap"><code>Invoice total VAT amount (BT-110)</code></div>
+                    <div class="text-nowrap"><code>= ∑ VAT category tax amount (BT-117)</code></div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          }
+          @if (showRemarks()) {
+            <div class="alert alert-light small">
+              <i class="bi bi-info-circle"></i>
+              The Invoice total VAT amount is the sum of all VAT category tax amounts.
+            </div>
+          }
+        </div>
+        <div class="col">
+          <div class="editor__control">
+            <label class="form-label text-truncate" for="taxTotalAmountCurrencyId"> <span id="BT-110-1" class="fw-semibold">BT-110-1</span> - VAT currency </label>
             <input id="taxTotalAmountCurrencyId" class="form-control" formControlName="taxTotalAmountCurrencyId" />
+            <p id="taxTotalAmountCurrencyIdHelp" class="form-text"></p>
+            @if (showRemarks()) {
+              <div class="alert alert-light small">
+                <i class="bi bi-info-circle"></i>
+                The currency is mandatory to differentiate between VAT amount and VAT amount in accounting currency.
+              </div>
+            }
           </div>
         </div>
-        <p id="taxTotalAmountHelp" class="form-text">The total VAT amount for the Invoice.</p>
-        @if (showBusinessRules()) {
-          <div class="form-text">
-            <div class="fw-semibold">Business Rules</div>
-            <ul>
-              <li>
-                <span class="fw-semibold">BR-CO-14</span>:
-                <div class="d-flex flex-wrap">
-                  <div class="text-nowrap"><code>Invoice total VAT amount (BT-110)</code></div>
-                  <div class="text-nowrap"><code>= ∑ VAT category tax amount (BT-117)</code></div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        }
-        @if (showRemarks()) {
-          <div class="alert alert-light small">
-            <i class="bi bi-info-circle"></i>
-            The Invoice total VAT amount is the sum of all VAT category tax amounts.
-          </div>
-          <div class="alert alert-light small">
-            <i class="bi bi-info-circle"></i>
-            The currency is mandatory to differentiate between VAT amount and VAT amount in accounting currency.
-          </div>
-        }
       </div>
 
-      <div class="mb-3">
+      <div>
         <label class="form-label text-truncate" for="grandTotalAmount"> <span id="bt-5" class="fw-semibold">BT-112</span> - Total amount with VAT </label>
-        <input id="grandTotalAmount" class="form-control" formControlName="grandTotalAmount" />
+        <div class="editor__control">
+          <input id="grandTotalAmount" class="form-control" formControlName="grandTotalAmount" />
+        </div>
         <p id="grandTotalAmountHelp" class="form-text">The total amount of the Invoice with VAT.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
@@ -128,9 +137,11 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
         }
       </div>
 
-      <div class="mb-3">
+      <div>
         <label class="form-label text-truncate" for="duePayableAmount"> <span id="bt-5" class="fw-semibold">BT-115</span> - Amount due for payment </label>
-        <input id="duePayableAmount" class="form-control" formControlName="duePayableAmount" />
+        <div class="editor__control">
+          <input id="duePayableAmount" class="form-control" formControlName="duePayableAmount" />
+        </div>
         <p id="duePayableAmountHelp" class="form-text">The outstanding amount that is requested to be paid.</p>
         @if (showBusinessRules()) {
           <div class="form-text">
