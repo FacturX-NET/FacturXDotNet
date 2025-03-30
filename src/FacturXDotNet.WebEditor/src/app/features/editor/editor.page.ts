@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './pdf-viewer.component';
+import { CiiFormComponent } from './cii-form.component';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent],
+  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent],
   template: `
     <div class="w-100 h-100 d-flex flex-column overflow-hidden">
       <header class="text-bg-secondary d-flex align-items-center">
@@ -65,7 +66,9 @@ import { PdfViewerComponent } from './pdf-viewer.component';
 
       <main class="bg-body-tertiary flex-grow-1 container-fluid">
         <div class="h-100 row gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 py-1">
-          <div class="bg-body border rounded-3 col"></div>
+          <div class="bg-body border rounded-3 col">
+            <app-cii-form></app-cii-form>
+          </div>
           <div class="col-6 h-100 p-0 border">
             <app-pdf-viewer></app-pdf-viewer>
           </div>
