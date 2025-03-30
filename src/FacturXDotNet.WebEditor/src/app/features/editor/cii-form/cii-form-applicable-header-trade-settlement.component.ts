@@ -10,7 +10,7 @@ import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-fo
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-settlement',
-  imports: [ReactiveFormsModule, CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent, CollapseComponent, CiiFormSpecifiedTradeSettlementHeaderMonetarySummation],
+  imports: [ReactiveFormsModule, CollapseComponent, CiiFormSpecifiedTradeSettlementHeaderMonetarySummation],
   viewProviders: [
     {
       provide: ControlContainer,
