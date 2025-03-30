@@ -1,0 +1,913 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "FacturXDotNet.API | v1",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5295"
+    }
+  ],
+  "paths": {
+    "/generate": {
+      "post": {
+        "tags": [
+          "FacturXDotNet.API"
+        ],
+        "summary": "Generate from files",
+        "description": "Generate a FacturX document from a PDF file and a Cross-Industry Invoice XML file.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "pdf",
+                  "crossIndustryInvoice"
+                ],
+                "type": "object",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "pdf": {
+                        "$ref": "#/components/schemas/IFormFile"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "crossIndustryInvoice": {
+                        "$ref": "#/components/schemas/IFormFile"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IFormFile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/generate/structured": {
+      "post": {
+        "tags": [
+          "FacturXDotNet.API"
+        ],
+        "summary": "Generate from structured data",
+        "description": "Generate a FacturX document from a PDF file, the XMP metadata and the Cross-Industry Invoice data.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateFacturXRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IFormFile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApplicableHeaderTradeAgreement": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "buyerReference": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "sellerTradeParty": {
+            "$ref": "#/components/schemas/SellerTradeParty"
+          },
+          "buyerTradeParty": {
+            "$ref": "#/components/schemas/BuyerTradeParty"
+          },
+          "buyerOrderReferencedDocument": {
+            "$ref": "#/components/schemas/BuyerOrderReferencedDocument"
+          }
+        }
+      },
+      "ApplicableHeaderTradeDelivery": {
+        "type": [
+          "null",
+          "object"
+        ]
+      },
+      "ApplicableHeaderTradeSettlement": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "invoiceCurrencyCode": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "specifiedTradeSettlementHeaderMonetarySummation": {
+            "$ref": "#/components/schemas/SpecifiedTradeSettlementHeaderMonetarySummation"
+          }
+        }
+      },
+      "BuyerOrderReferencedDocument": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "issuerAssignedId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "BuyerTradeParty": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "specifiedLegalOrganization": {
+            "$ref": "#/components/schemas/BuyerTradePartySpecifiedLegalOrganization"
+          }
+        }
+      },
+      "BuyerTradePartySpecifiedLegalOrganization": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "id": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "idSchemeId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "CrossIndustryInvoice": {
+        "type": "object",
+        "properties": {
+          "exchangedDocumentContext": {
+            "$ref": "#/components/schemas/ExchangedDocumentContext"
+          },
+          "exchangedDocument": {
+            "$ref": "#/components/schemas/ExchangedDocument"
+          },
+          "supplyChainTradeTransaction": {
+            "$ref": "#/components/schemas/SupplyChainTradeTransaction"
+          }
+        }
+      },
+      "ExchangedDocument": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "id": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "typeCode": {
+            "$ref": "#/components/schemas/NullableOfInvoiceTypeCode"
+          },
+          "issueDateTime": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "issueDateTimeFormat": {
+            "$ref": "#/components/schemas/NullableOfDateOnlyFormat"
+          }
+        }
+      },
+      "ExchangedDocumentContext": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "businessProcessSpecifiedDocumentContextParameterId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "guidelineSpecifiedDocumentContextParameterId": {
+            "$ref": "#/components/schemas/NullableOfGuidelineSpecifiedDocumentContextParameterId"
+          }
+        }
+      },
+      "GenerateFacturXRequest": {
+        "type": "object",
+        "properties": {
+          "pdfFileBase64": {
+            "type": "string"
+          },
+          "xmpMetadata": {
+            "$ref": "#/components/schemas/XmpMetadata"
+          },
+          "crossIndustryInvoice": {
+            "$ref": "#/components/schemas/CrossIndustryInvoice"
+          }
+        }
+      },
+      "IFormFile": {
+        "type": "string",
+        "format": "binary"
+      },
+      "NullableOfDateOnlyFormat": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "NullableOfGuidelineSpecifiedDocumentContextParameterId": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "NullableOfInvoiceTypeCode": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "NullableOfVatOnlyTaxSchemeIdentifier": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "NullableOfXmpFacturXConformanceLevel": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "NullableOfXmpFacturXDocumentType": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "NullableOfXmpPdfAConformanceLevel": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "NullableOfXmpPdfAPropertyCategory": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "NullableOfXmpThumbnailFormat": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "SellerTradeParty": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "specifiedLegalOrganization": {
+            "$ref": "#/components/schemas/SellerTradePartySpecifiedLegalOrganization"
+          },
+          "postalTradeAddress": {
+            "$ref": "#/components/schemas/SellerTradePartyPostalTradeAddress"
+          },
+          "specifiedTaxRegistration": {
+            "$ref": "#/components/schemas/SellerTradePartySpecifiedTaxRegistration"
+          }
+        }
+      },
+      "SellerTradePartyPostalTradeAddress": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "countryId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SellerTradePartySpecifiedLegalOrganization": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "id": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "idSchemeId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SellerTradePartySpecifiedTaxRegistration": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "id": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "idSchemeId": {
+            "$ref": "#/components/schemas/NullableOfVatOnlyTaxSchemeIdentifier"
+          }
+        }
+      },
+      "SpecifiedTradeSettlementHeaderMonetarySummation": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "taxBasisTotalAmount": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "taxTotalAmount": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "taxTotalAmountCurrencyId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "grandTotalAmount": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "duePayableAmount": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          }
+        }
+      },
+      "SupplyChainTradeTransaction": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "applicableHeaderTradeAgreement": {
+            "$ref": "#/components/schemas/ApplicableHeaderTradeAgreement"
+          },
+          "applicableHeaderTradeDelivery": {
+            "$ref": "#/components/schemas/ApplicableHeaderTradeDelivery"
+          },
+          "applicableHeaderTradeSettlement": {
+            "$ref": "#/components/schemas/ApplicableHeaderTradeSettlement"
+          }
+        }
+      },
+      "XmpBasicMetadata": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "identifier": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "creatorTool": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "label": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "metadataDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "modifyDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "rating": {
+            "type": "number",
+            "format": "double"
+          },
+          "baseUrl": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "nickname": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "thumbnails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/XmpThumbnail"
+            }
+          }
+        }
+      },
+      "XmpDublinCoreMetadata": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "contributor": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "coverage": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "creator": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "date": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "description": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "format": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "identifier": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "language": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "publisher": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "relation": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rights": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "source": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "subject": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "XmpFacturXMetadata": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "documentFileName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "documentType": {
+            "$ref": "#/components/schemas/NullableOfXmpFacturXDocumentType"
+          },
+          "version": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "conformanceLevel": {
+            "$ref": "#/components/schemas/NullableOfXmpFacturXConformanceLevel"
+          }
+        }
+      },
+      "XmpMetadata": {
+        "type": "object",
+        "properties": {
+          "pdfAIdentification": {
+            "$ref": "#/components/schemas/XmpPdfAIdentificationMetadata"
+          },
+          "basic": {
+            "$ref": "#/components/schemas/XmpBasicMetadata"
+          },
+          "pdf": {
+            "$ref": "#/components/schemas/XmpPdfMetadata"
+          },
+          "dublinCore": {
+            "$ref": "#/components/schemas/XmpDublinCoreMetadata"
+          },
+          "pdfAExtensions": {
+            "$ref": "#/components/schemas/XmpPdfAExtensionsMetadata"
+          },
+          "facturX": {
+            "$ref": "#/components/schemas/XmpFacturXMetadata"
+          }
+        }
+      },
+      "XmpPdfAExtensionsMetadata": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "schemas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/XmpPdfASchemaMetadata"
+            }
+          }
+        }
+      },
+      "XmpPdfAFieldMetadata": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "valueType": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "XmpPdfAIdentificationMetadata": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "amendment": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "conformance": {
+            "$ref": "#/components/schemas/NullableOfXmpPdfAConformanceLevel"
+          },
+          "part": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "XmpPdfAPropertyMetadata": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/NullableOfXmpPdfAPropertyCategory"
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "valueType": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "XmpPdfASchemaMetadata": {
+        "type": "object",
+        "properties": {
+          "namespaceUri": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "prefix": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "property": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/XmpPdfAPropertyMetadata"
+            }
+          },
+          "schema": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "valueType": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/XmpPdfATypeMetadata"
+            }
+          }
+        }
+      },
+      "XmpPdfATypeMetadata": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "field": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/XmpPdfAFieldMetadata"
+            }
+          },
+          "namespaceUri": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "prefix": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "XmpPdfMetadata": {
+        "type": [
+          "null",
+          "object"
+        ],
+        "properties": {
+          "keywords": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "pdfVersion": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "producer": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "trapped": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          }
+        }
+      },
+      "XmpThumbnail": {
+        "type": "object",
+        "properties": {
+          "format": {
+            "$ref": "#/components/schemas/NullableOfXmpThumbnailFormat"
+          },
+          "height": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "width": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          },
+          "image": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "FacturXDotNet.API"
+    }
+  ]
+}
