@@ -5,6 +5,7 @@ import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.component';
 import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.component';
 import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-delivery',
@@ -21,9 +22,5 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
 })
 export class CiiFormApplicableHeaderTradeDeliveryComponent {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

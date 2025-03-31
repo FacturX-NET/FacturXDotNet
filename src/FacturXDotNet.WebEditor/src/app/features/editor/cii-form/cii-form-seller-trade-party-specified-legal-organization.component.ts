@@ -1,6 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-specified-legal-organization',
@@ -23,7 +24,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
               <input id="sellerLegalId" class="form-control" formControlName="id" placeholder="123456782" />
               <p id="sellerLegalIdHelp" class="form-text">An identifier issued by an official registrar that identifies the Seller as a legal entity or person.</p>
             </div>
-            @if (showBusinessRules()) {
+            @if (settings()?.showBusinessRules === true) {
               <div class="form-text">
                 <div class="fw-semibold">Business Rules</div>
                 <ul>
@@ -43,7 +44,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
               <input id="sellerLegalIdScheme" class="form-control" formControlName="idSchemeId" placeholder="0002" />
               <p id="sellerLegalIdSchemeHelp" class="form-text">The identification scheme identifier of the Seller legal registration identifier.</p>
             </div>
-            @if (showRemarks()) {
+            @if (settings()?.showRemarks === true) {
               <div class="alert alert-light small">
                 <i class="bi bi-info-circle"></i>
                 If used, the identification scheme shall be chosen from the entries of the list published by the ISO/IEC 6523 maintenance agency. For a SIREN or a SIRET, the value
@@ -59,9 +60,5 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
 })
 export class CiiFormSellerTradePartySpecifiedLegalOrganizationComponent {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

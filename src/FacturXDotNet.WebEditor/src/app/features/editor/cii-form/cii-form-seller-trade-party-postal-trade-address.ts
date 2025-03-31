@@ -1,6 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-postal-trade-address',
@@ -21,7 +22,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           <input id="sellerAddressCountryId" class="form-control" formControlName="countryId" placeholder="FR" />
           <p id="sellerAddressCountryIdHelp" class="form-text">A code that identifies the country.</p>
         </div>
-        @if (showBusinessRules()) {
+        @if (settings()?.showBusinessRules === true) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -29,7 +30,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
             </ul>
           </div>
         }
-        @if (showRemarks()) {
+        @if (settings()?.showRemarks === true) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>
             If no tax representative is specified, this is the country where VAT is liable. The lists of valid countries are registered with the ISO 3166-1 Maintenance agency,
@@ -43,9 +44,5 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
 })
 export class CiiFormSellerTradePartyPostalTradeAddress {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

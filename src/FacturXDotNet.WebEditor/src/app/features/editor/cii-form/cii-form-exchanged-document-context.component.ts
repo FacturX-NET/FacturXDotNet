@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject, input } from '@angular/core';
 import { ControlContainer, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-exchanged-document-context',
@@ -46,7 +47,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
             instance document conforms.
           </p>
         </div>
-        @if (showBusinessRules()) {
+        @if (settings()?.showBusinessRules === true) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -54,7 +55,7 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
             </ul>
           </div>
         }
-        @if (showRemarks()) {
+        @if (settings()?.showRemarks === true) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>
             This identifies compliance or conformance to the specification. Conformant invoices specify: urn:cen.eu:en16931:2017. Invoices, compliant to a user specification may
@@ -67,9 +68,5 @@ import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 })
 export class CiiFormExchangedDocumentContextComponent {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

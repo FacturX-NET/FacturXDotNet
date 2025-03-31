@@ -5,6 +5,7 @@ import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.component';
 import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.component';
 import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-specified-trade-settlement-header-monetary-summation',
@@ -25,7 +26,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
           <input id="taxBasisTotalAmount" class="form-control" formControlName="taxBasisTotalAmount" placeholder="100.00" />
           <p id="taxBasisTotalAmountHelp" class="form-text">The total amount of the Invoice without VAT.</p>
         </div>
-        @if (showBusinessRules()) {
+        @if (settings()?.showBusinessRules === true) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -47,7 +48,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
             </ul>
           </div>
         }
-        @if (showRemarks()) {
+        @if (settings()?.showRemarks === true) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>
             The Invoice total amount without VAT is the Sum of Invoice line net amount minus Sum of allowances on document level plus Sum of charges on document level.
@@ -62,7 +63,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
             <input id="taxTotalAmount" class="form-control" formControlName="taxTotalAmount" placeholder="4.90" />
             <p id="taxTotalAmountHelp" class="form-text">The total VAT amount for the Invoice.</p>
           </div>
-          @if (showBusinessRules()) {
+          @if (settings()?.showBusinessRules === true) {
             <div class="form-text">
               <div class="fw-semibold">Business Rules</div>
               <ul>
@@ -76,7 +77,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
               </ul>
             </div>
           }
-          @if (showRemarks()) {
+          @if (settings()?.showRemarks === true) {
             <div class="alert alert-light small">
               <i class="bi bi-info-circle"></i>
               The Invoice total VAT amount is the sum of all VAT category tax amounts.
@@ -88,7 +89,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
             <label class="form-label text-truncate" for="taxTotalAmountCurrencyId"> <span id="BT-110-1" class="fw-semibold">BT-110-1</span> - VAT currency </label>
             <input id="taxTotalAmountCurrencyId" class="form-control" formControlName="taxTotalAmountCurrencyId" placeholder="EUR" />
             <p id="taxTotalAmountCurrencyIdHelp" class="form-text"></p>
-            @if (showRemarks()) {
+            @if (settings()?.showRemarks === true) {
               <div class="alert alert-light small">
                 <i class="bi bi-info-circle"></i>
                 The currency is mandatory to differentiate between VAT amount and VAT amount in accounting currency.
@@ -104,7 +105,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
           <input id="grandTotalAmount" class="form-control" formControlName="grandTotalAmount" placeholder="104.90" />
           <p id="grandTotalAmountHelp" class="form-text">The total amount of the Invoice with VAT.</p>
         </div>
-        @if (showBusinessRules()) {
+        @if (settings()?.showBusinessRules === true) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -129,7 +130,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
             </ul>
           </div>
         }
-        @if (showRemarks()) {
+        @if (settings()?.showRemarks === true) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>
             The Invoice total amount with VAT is the Invoice total amount without VAT plus the Invoice total VAT amount.
@@ -143,7 +144,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
           <input id="duePayableAmount" class="form-control" formControlName="duePayableAmount" placeholder="104.90" />
           <p id="duePayableAmountHelp" class="form-text">The outstanding amount that is requested to be paid.</p>
         </div>
-        @if (showBusinessRules()) {
+        @if (settings()?.showBusinessRules === true) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -165,7 +166,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
             </ul>
           </div>
         }
-        @if (showRemarks()) {
+        @if (settings()?.showRemarks === true) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>
             This amount is the Invoice total amount with VAT minus the paid amount that has been paid in advance. The amount is zero in case of a fully paid Invoice. The amount may
@@ -178,9 +179,5 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
 })
 export class CiiFormSpecifiedTradeSettlementHeaderMonetarySummation {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

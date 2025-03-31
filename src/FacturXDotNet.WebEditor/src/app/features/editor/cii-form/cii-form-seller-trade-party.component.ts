@@ -6,6 +6,7 @@ import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormSellerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-seller-trade-party-specified-legal-organization.component';
 import { CiiFormSellerTradePartyPostalTradeAddress } from './cii-form-seller-trade-party-postal-trade-address';
 import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-seller-trade-party-specified-tax-registration';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party',
@@ -34,7 +35,7 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
             The full formal name by which the Seller is registered in the national registry of legal entities or as a Taxable person or otherwise trades as a person or persons.
           </p>
         </div>
-        @if (showBusinessRules()) {
+        @if (settings()?.showBusinessRules === true) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -59,8 +60,7 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
           <div class="ps-3 border-start">
             <app-cii-form-seller-trade-party-specified-legal-organization
               formGroupName="specifiedLegalOrganization"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
+              [settings]="settings()"
             ></app-cii-form-seller-trade-party-specified-legal-organization>
           </div>
         </div>
@@ -77,7 +77,7 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
           BG-5 - SELLER POSTAL ADDRESS
         </h6>
         <p class="form-text ps-4">A group of business terms providing information about the address of the Seller.</p>
-        @if (showBusinessRules()) {
+        @if (settings()?.showBusinessRules === true) {
           <div class="form-text ps-4">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -85,7 +85,7 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
             </ul>
           </div>
         }
-        @if (showRemarks()) {
+        @if (settings()?.showRemarks === true) {
           <div class="ps-4">
             <div class="alert alert-light small">
               <i class="bi bi-info-circle"></i>
@@ -96,11 +96,7 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
         }
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
-            <app-cii-form-seller-trade-party-postal-trade-address
-              formGroupName="postalTradeAddress"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
-            ></app-cii-form-seller-trade-party-postal-trade-address>
+            <app-cii-form-seller-trade-party-postal-trade-address formGroupName="postalTradeAddress" [settings]="settings()"></app-cii-form-seller-trade-party-postal-trade-address>
           </div>
         </div>
       </app-collapse>
@@ -120,8 +116,7 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
           <div class="ps-3 border-start">
             <app-cii-form-seller-trade-party-specified-tax-registration
               formGroupName="specifiedTaxRegistration"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
+              [settings]="settings()"
             ></app-cii-form-seller-trade-party-specified-tax-registration>
           </div>
         </div>
@@ -132,9 +127,5 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
 })
 export class CiiFormSellerTradePartyComponent {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

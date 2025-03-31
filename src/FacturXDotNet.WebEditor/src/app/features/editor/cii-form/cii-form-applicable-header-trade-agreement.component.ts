@@ -5,6 +5,7 @@ import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.component';
 import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.component';
 import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-agreement',
@@ -33,11 +34,13 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
           <input id="buyerReference" class="form-control" formControlName="buyerReference" placeholder="SERVEXEC" />
           <p id="buyerReferenceHelp" class="form-text">An identifier assigned by the Buyer used for internal routing purposes.</p>
         </div>
-        @if (showRemarks()) {
+        @if (settings()?.showRemarks === true) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>
             The identifier is defined by the Buyer (e.g. contact ID, department, office id, project code), but provided by the Seller in the Invoice.
           </div>
+        }
+        @if (settings()?.showChorusProRemarks === true) {
           <div class="alert alert-light small">
             <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
             The invoice number is limited to 20 characters.
@@ -58,7 +61,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
         <p class="form-text ps-4">A group of business terms providing information about the Seller.</p>
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
-            <app-cii-form-seller-trade-party formGroupName="sellerTradeParty" [verbosity]="verbosity()" [disabled]="disabled()"></app-cii-form-seller-trade-party>
+            <app-cii-form-seller-trade-party formGroupName="sellerTradeParty" [settings]="settings()"></app-cii-form-seller-trade-party>
           </div>
         </div>
       </app-collapse>
@@ -76,7 +79,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
         <p class="form-text ps-4">A group of business terms providing information about the Buyer.</p>
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
-            <app-cii-form-buyer-trade-party formGroupName="buyerTradeParty" [verbosity]="verbosity()" [disabled]="disabled()"></app-cii-form-buyer-trade-party>
+            <app-cii-form-buyer-trade-party formGroupName="buyerTradeParty" [settings]="settings()"></app-cii-form-buyer-trade-party>
           </div>
         </div>
       </app-collapse>
@@ -94,11 +97,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
         <p class="form-text ps-4"></p>
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
-            <app-cii-form-buyer-order-referenced-document
-              formGroupName="buyerOrderReferencedDocument"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
-            ></app-cii-form-buyer-order-referenced-document>
+            <app-cii-form-buyer-order-referenced-document formGroupName="buyerOrderReferencedDocument" [settings]="settings()"></app-cii-form-buyer-order-referenced-document>
           </div>
         </div>
       </app-collapse>
@@ -107,9 +106,5 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
 })
 export class CiiFormApplicableHeaderTradeAgreementComponent {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

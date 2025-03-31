@@ -5,6 +5,7 @@ import { CiiFormApplicableHeaderTradeAgreementComponent } from './cii-form-appli
 import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormApplicableHeaderTradeDeliveryComponent } from './cii-form-applicable-header-trade-delivery.component';
 import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-applicable-header-trade-settlement.component';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-supply-chain-trade-transaction',
@@ -38,11 +39,7 @@ import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-appl
         <p class="form-text ps-4"></p>
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
-            <app-cii-form-applicable-header-trade-agreement
-              formGroupName="applicableHeaderTradeAgreement"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
-            ></app-cii-form-applicable-header-trade-agreement>
+            <app-cii-form-applicable-header-trade-agreement formGroupName="applicableHeaderTradeAgreement" [settings]="settings()"></app-cii-form-applicable-header-trade-agreement>
           </div>
         </div>
       </app-collapse>
@@ -60,11 +57,7 @@ import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-appl
         <p class="form-text ps-4">A group of business terms providing information about where and when the goods and services invoiced are delivered.</p>
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
-            <app-cii-form-applicable-header-trade-delivery
-              formGroupName="applicableHeaderTradeDelivery"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
-            ></app-cii-form-applicable-header-trade-delivery>
+            <app-cii-form-applicable-header-trade-delivery formGroupName="applicableHeaderTradeDelivery" [settings]="settings()"></app-cii-form-applicable-header-trade-delivery>
           </div>
         </div>
       </app-collapse>
@@ -80,7 +73,7 @@ import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-appl
           BG-19 - HEADER TRADE SETTLEMENT DIRECT DEBIT
         </h6>
         <p class="form-text ps-4">A group of business terms to specify a direct debit.</p>
-        @if (showRemarks()) {
+        @if (settings()?.showRemarks === true) {
           <div class="ps-4">
             <div class="alert alert-light small">
               <i class="bi bi-info-circle"></i>
@@ -88,6 +81,8 @@ import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-appl
               the rules of the SEPA or other direct debit scheme.
             </div>
           </div>
+        }
+        @if (settings()?.showChorusProRemarks === true) {
           <div class="ps-4">
             <div class="alert alert-light small">
               <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
@@ -99,8 +94,7 @@ import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-appl
           <div class="ps-3 border-start">
             <app-cii-form-applicable-header-trade-settlement
               formGroupName="applicableHeaderTradeSettlement"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
+              [settings]="settings()"
             ></app-cii-form-applicable-header-trade-settlement>
           </div>
         </div>
@@ -110,9 +104,5 @@ import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-appl
 })
 export class CiiFormSupplyChainTradeTransactionComponent {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

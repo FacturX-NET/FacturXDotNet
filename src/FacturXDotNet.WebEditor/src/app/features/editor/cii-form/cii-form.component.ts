@@ -11,6 +11,7 @@ import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-document-context.component';
 import { CiiFormSupplyChainTradeTransactionComponent } from './cii-form-supply-chain-trade-transaction.component';
 import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document.component';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form',
@@ -30,11 +31,7 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
         <p class="form-text ps-4">A group of business terms providing information on the business process and rules applicable to the Invoice document.</p>
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
-            <app-cii-form-exchanged-document-context
-              formGroupName="exchangedDocumentContext"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
-            ></app-cii-form-exchanged-document-context>
+            <app-cii-form-exchanged-document-context formGroupName="exchangedDocumentContext" [settings]="settings()"></app-cii-form-exchanged-document-context>
           </div>
         </div>
       </app-collapse>
@@ -52,7 +49,7 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
         <p class="form-text ps-4"></p>
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
-            <app-cii-form-exchanged-document formGroupName="exchangedDocument" [verbosity]="verbosity()" [disabled]="disabled()"></app-cii-form-exchanged-document>
+            <app-cii-form-exchanged-document formGroupName="exchangedDocument" [settings]="settings()"></app-cii-form-exchanged-document>
           </div>
         </div>
       </app-collapse>
@@ -70,11 +67,7 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
         <p class="form-text ps-4"></p>
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
-            <app-cii-form-supply-chain-trade-transaction
-              formGroupName="supplyChainTradeTransaction"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
-            ></app-cii-form-supply-chain-trade-transaction>
+            <app-cii-form-supply-chain-trade-transaction formGroupName="supplyChainTradeTransaction" [settings]="settings()"></app-cii-form-supply-chain-trade-transaction>
           </div>
         </div>
       </app-collapse>
@@ -83,11 +76,8 @@ import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document
 })
 export class CiiFormComponent {
   value = model.required<CrossIndustryInvoice>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
+  disabled = input<boolean>();
 
   constructor() {
     effect(() => {

@@ -13,9 +13,23 @@ export class EditorSettingsService {
     this.settings.set(this.loadSettings());
   }
 
-  saveVerbosity(verbosity: CrossIndustryInvoiceFormVerbosity) {
+  saveShowBusinessRules(value: boolean) {
     const settings = this.settings();
-    const newSettings: EditorSettings = { ...settings, ciiFormVerbosity: verbosity };
+    const newSettings: EditorSettings = { ...settings, showBusinessRules: value };
+    this.saveSettings(newSettings);
+    this.settings.set(newSettings);
+  }
+
+  saveShowRemarks(value: boolean) {
+    const settings = this.settings();
+    const newSettings: EditorSettings = { ...settings, showRemarks: value };
+    this.saveSettings(newSettings);
+    this.settings.set(newSettings);
+  }
+
+  saveShowChorusProRemarks(value: boolean) {
+    const settings = this.settings();
+    const newSettings: EditorSettings = { ...settings, showChorusProRemarks: value };
     this.saveSettings(newSettings);
     this.settings.set(newSettings);
   }
@@ -32,5 +46,7 @@ export class EditorSettingsService {
 }
 
 export interface EditorSettings {
-  readonly ciiFormVerbosity?: CrossIndustryInvoiceFormVerbosity;
+  readonly showBusinessRules?: boolean;
+  readonly showRemarks?: boolean;
+  readonly showChorusProRemarks?: boolean;
 }

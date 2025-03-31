@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './pdf-viewer.component';
 import { CiiFormComponent, CrossIndustryInvoiceFormVerbosity } from './cii-form/cii-form.component';
 import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-industry-invoice';
-import { EditorSettingsService } from './editor-settings.service';
+import { EditorSettings, EditorSettingsService } from './editor-settings.service';
 
 @Component({
   selector: 'app-editor',
@@ -68,26 +68,38 @@ import { EditorSettingsService } from './editor-settings.service';
             <div class="container d-flex align-items-center gap-2 pt-3">
               <h5 class="m-0">Cross-Industry Invoice</h5>
               <div class="dropdown">
-                <a href="javascript:void;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false">
-                  @if (ciiVerbosity() === 'minimal') {
-                    no details
-                  } @else if (ciiVerbosity() === 'normal') {
-                    details
-                  } @else if (ciiVerbosity() === 'detailed') {
-                    detailed
-                  }
-                </a>
+                <a href="javascript:void;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false"> details </a>
                 <ul class="dropdown-menu">
-                  @if (ciiVerbosity() === 'minimal') {
-                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('normal')">Show details</a></li>
-                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('detailed')">Show all details</a></li>
-                  } @else if (ciiVerbosity() === 'normal') {
-                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('minimal')">Hide details</a></li>
-                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('detailed')">Show more details</a></li>
-                  } @else if (ciiVerbosity() === 'detailed') {
-                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('minimal')">Hide details</a></li>
-                    <li><a class="dropdown-item" href="javascript:void;" (click)="setVerbosity('normal')">Show less details</a></li>
-                  }
+                  <li>
+                    <a class="dropdown-item" href="javascript:void;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings()?.showBusinessRules !== true">
+                      @if (settings()?.showBusinessRules === true) {
+                        <i class="bi bi-eye"></i>
+                      } @else {
+                        <i class="bi bi-eye-slash"></i>
+                      }
+                      Business Rules
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void;" (click)="toggleRemarks()" [class.text-body-tertiary]="settings()?.showRemarks !== true">
+                      @if (settings()?.showRemarks === true) {
+                        <i class="bi bi-eye"></i>
+                      } @else {
+                        <i class="bi bi-eye-slash"></i>
+                      }
+                      Remarks
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void;" (click)="toggleChorusProRemarks()" [class.text-body-tertiary]="settings()?.showChorusProRemarks !== true">
+                      @if (settings()?.showChorusProRemarks === true) {
+                        <i class="bi bi-eye"></i>
+                      } @else {
+                        <i class="bi bi-eye-slash"></i>
+                      }
+                      Chorus Pro Remarks
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -95,7 +107,7 @@ import { EditorSettingsService } from './editor-settings.service';
           <hr />
           <div class="flex-grow-1 overflow-auto pb-5">
             <div class="container">
-              <app-cii-form [(value)]="cii" [verbosity]="ciiVerbosity()"></app-cii-form>
+              <app-cii-form [(value)]="cii" [settings]="settings()"></app-cii-form>
             </div>
           </div>
         </div>
@@ -114,14 +126,25 @@ import { EditorSettingsService } from './editor-settings.service';
 export class EditorPage {
   protected readonly environment = environment;
 
-  protected ciiVerbosity: Signal<CrossIndustryInvoiceFormVerbosity>;
+  protected settings: Signal<EditorSettings>;
   protected cii: CrossIndustryInvoice = {};
 
   constructor(private settingsService: EditorSettingsService) {
-    this.ciiVerbosity = computed(() => this.settingsService.settings().ciiFormVerbosity ?? 'normal');
+    this.settings = this.settingsService.settings;
   }
 
-  protected setVerbosity(verbosity: CrossIndustryInvoiceFormVerbosity) {
-    this.settingsService.saveVerbosity(verbosity);
+  protected toggleBusinessRules() {
+    const currentValue = this.settings()?.showBusinessRules == true;
+    this.settingsService.saveShowBusinessRules(!currentValue);
+  }
+
+  protected toggleRemarks() {
+    const currentValue = this.settings()?.showRemarks == true;
+    this.settingsService.saveShowRemarks(!currentValue);
+  }
+
+  protected toggleChorusProRemarks() {
+    const currentValue = this.settings()?.showChorusProRemarks == true;
+    this.settingsService.saveShowChorusProRemarks(!currentValue);
   }
 }

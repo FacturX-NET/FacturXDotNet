@@ -7,6 +7,7 @@ import { CiiFormSellerTradePartySpecifiedLegalOrganizationComponent } from './ci
 import { CiiFormSellerTradePartyPostalTradeAddress } from './cii-form-seller-trade-party-postal-trade-address';
 import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-seller-trade-party-specified-tax-registration';
 import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-buyer-trade-party-specified-legal-organization.component';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-buyer-trade-party',
@@ -27,7 +28,7 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
           <input id="buyerName" class="form-control" formControlName="name" placeholder="LE CLIENT" />
           <p id="buyerNameHelp" class="form-text">The full name of the Buyer.</p>
         </div>
-        @if (showBusinessRules()) {
+        @if (settings()?.showBusinessRules === true) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -52,8 +53,7 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
           <div class="ps-3 border-start">
             <app-cii-form-buyer-trade-party-specified-legal-organization
               formGroupName="specifiedLegalOrganization"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
+              [settings]="settings()"
             ></app-cii-form-buyer-trade-party-specified-legal-organization>
           </div>
         </div>
@@ -64,9 +64,5 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
 })
 export class CiiFormBuyerTradePartyComponent {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

@@ -7,6 +7,7 @@ import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.co
 import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';
 import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-buyer-trade-party-specified-legal-organization.component';
 import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-form-specified-trade-settlement-header-monetary-summation.component';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-settlement',
@@ -27,7 +28,7 @@ import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-fo
           <input id="invoiceCurrencyCode" class="form-control" formControlName="invoiceCurrencyCode" placeholder="EUR" />
           <p id="invoiceCurrencyCodeHelp" class="form-text">The currency in which all Invoice amounts are given, except for the Total VAT amount in accounting currency.</p>
         </div>
-        @if (showBusinessRules()) {
+        @if (settings()?.showBusinessRules === true) {
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
@@ -35,12 +36,14 @@ import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-fo
             </ul>
           </div>
         }
-        @if (showRemarks()) {
+        @if (settings()?.showRemarks === true) {
           <div class="alert alert-light small">
             <i class="bi bi-info-circle"></i>
             Only one currency shall be used in the Invoice, except for the Total VAT amount in accounting currency (BT-111) in accordance with article 230 of Directive 2006/112/EC
             on VAT. The lists of valid currencies are registered with the ISO 4217 Maintenance Agency "Codes for the representation of currencies and funds".
           </div>
+        }
+        @if (settings()?.showChorusProRemarks === true) {
           <div class="alert alert-light small">
             <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
             Invoices and credit notes or Chorus Pro are mono-currencies only.
@@ -59,24 +62,29 @@ import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-fo
           BG-22 - DOCUMENT TOTALS
         </h6>
         <p class="form-text ps-4">A group of business terms providing the monetary totals for the Invoice.</p>
-        @if (showRemarks()) {
-          <div class="alert alert-light small">
-            <i class="bi bi-info-circle"></i>
-            This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with
-            the rules of the SEPA or other direct debit scheme.
+        @if (settings()?.showRemarks === true) {
+          <div class="ps-4">
+            <div class="alert alert-light small">
+              <i class="bi bi-info-circle"></i>
+              This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with
+              the rules of the SEPA or other direct debit scheme.
+            </div>
           </div>
-          <div class="alert alert-light small">
-            <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
-            Amounts in an invoice are expressed by a figure on 19 positions. They can not have more than two decimals. The separator is
-            <code>.</code> (dot).
+        }
+        @if (settings()?.showChorusProRemarks === true) {
+          <div class="ps-4">
+            <div class="alert alert-light small">
+              <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
+              Amounts in an invoice are expressed by a figure on 19 positions. They can not have more than two decimals. The separator is
+              <code>.</code> (dot).
+            </div>
           </div>
         }
         <div class="ps-4" ngProjectAs="collapsible">
           <div class="ps-3 border-start">
             <app-cii-form-specified-trade-settlement-header-monetary-summation
               formGroupName="specifiedTradeSettlementHeaderMonetarySummation"
-              [verbosity]="verbosity()"
-              [disabled]="disabled()"
+              [settings]="settings()"
             ></app-cii-form-specified-trade-settlement-header-monetary-summation>
           </div>
         </div>
@@ -86,9 +94,5 @@ import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-fo
 })
 export class CiiFormApplicableHeaderTradeSettlementComponent {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

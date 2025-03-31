@@ -1,6 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-buyer-trade-party-specified-legal-organization',
@@ -22,11 +23,13 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
             <input id="buyerLegalId" class="form-control" formControlName="id" placeholder="987654321" />
             <p id="buyerLegalIdHelp" class="form-text">An identifier issued by an official registrar that identifies the Buyer as a legal entity or person.</p>
           </div>
-          @if (showRemarks()) {
+          @if (settings()?.showRemarks === true) {
             <div class="alert alert-light small">
               <i class="bi bi-info-circle"></i>
               If no identification scheme is specified, it should be known by Buyer and Seller, e.g. the identifier that is exclusively used in the applicable legal environment.
             </div>
+          }
+          @if (settings()?.showChorusProRemarks === true) {
             <div class="alert alert-light small">
               <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
               The identifier of the buyer (public entity) is mandatory and is always a SIRET number.
@@ -40,7 +43,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
             <input id="buyerLegalIdScheme" class="form-control" formControlName="idSchemeId" placeholder="0002" />
             <p id="buyerLegalIdSchemeHelp" class="form-text">The identification scheme identifier of the Buyer legal registration identifier.</p>
           </div>
-          @if (showRemarks()) {
+          @if (settings()?.showRemarks === true) {
             <div class="alert alert-light small">
               <i class="bi bi-info-circle"></i>
               If used, the identification scheme shall be chosen from the entries of the list published by the ISO 6523 maintenance agency. For a SIREN or a SIRET, the value of
@@ -55,9 +58,5 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
 })
 export class CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }

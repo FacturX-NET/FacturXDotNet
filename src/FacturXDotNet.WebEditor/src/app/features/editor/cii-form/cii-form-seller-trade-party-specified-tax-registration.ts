@@ -1,6 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-specified-tax-registration',
@@ -22,7 +23,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
             <input id="sellerTaxId" class="form-control" formControlName="id" placeholder="FR11123456782" />
             <p id="sellerTaxIdHelp" class="form-text">The Seller's VAT identifier (also known as Seller VAT identification number).</p>
           </div>
-          @if (showBusinessRules()) {
+          @if (settings()?.showBusinessRules === true) {
             <div class="form-text">
               <div class="fw-semibold">Business Rules</div>
               <ul>
@@ -38,7 +39,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
               </ul>
             </div>
           }
-          @if (showRemarks()) {
+          @if (settings()?.showRemarks === true) {
             <div class="alert alert-light small">
               <i class="bi bi-info-circle"></i>
               VAT number prefixed by a country code. A VAT registered Supplier shall include his VAT ID, except when he uses a tax representative.
@@ -53,7 +54,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
             </select>
             <p id="sellerTaxIdSchemeHelp" class="form-text">Scheme identifier for supplier VAT identifier.</p>
           </div>
-          @if (showRemarks()) {
+          @if (settings()?.showRemarks === true) {
             <div class="alert alert-light small">
               <i class="bi bi-info-circle"></i>
               Value = VA
@@ -67,9 +68,5 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
 })
 export class CiiFormSellerTradePartySpecifiedTaxRegistration {
   formGroupName = input.required<string>();
-  verbosity = input<CrossIndustryInvoiceFormVerbosity>('normal');
-  disabled = input<boolean>(false);
-
-  protected showBusinessRules = computed(() => this.verbosity() == 'normal' || this.verbosity() == 'detailed');
-  protected showRemarks = computed(() => this.verbosity() == 'detailed');
+  settings = input<EditorSettings>();
 }
