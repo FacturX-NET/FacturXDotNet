@@ -33,6 +33,13 @@ export class EditorSettingsService {
     this.settings.set(newSettings);
   }
 
+  saveRightPaneWidth(value: number) {
+    const settings = this.settings();
+    const newSettings: EditorSettings = { ...settings, rightPaneWidth: value };
+    this.saveSettings(newSettings);
+    this.settings.set(newSettings);
+  }
+
   private saveSettings(settings: EditorSettings): void {
     const jsonSettings = JSON.stringify(settings);
     localStorage.setItem(this.localStorageKey, jsonSettings);
@@ -48,4 +55,5 @@ export interface EditorSettings {
   readonly showBusinessRules?: boolean;
   readonly showRemarks?: boolean;
   readonly showChorusProRemarks?: boolean;
+  readonly rightPaneWidth?: number;
 }

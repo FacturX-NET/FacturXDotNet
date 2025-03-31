@@ -1,5 +1,5 @@
-import { Component, Signal } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
+import { Component, computed, HostListener, signal, Signal } from '@angular/core';
+import { NgOptimizedImage, NgStyle } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './pdf-viewer.component';
 import { CiiFormComponent } from './cii-form/cii-form.component';
@@ -9,7 +9,7 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent],
+  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent, NgStyle],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column gap-2">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
@@ -63,8 +63,8 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
         </div>
       </div>
 
-      <main class="editor__main-grid flex-grow-1 gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 overflow-hidden">
-        <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden">
+      <main class="flex-grow-1 d-flex px-1 px-md-2 px-lg-3 overflow-hidden">
+        <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden" [ngStyle]="{ 'width.px': leftColumnWidth() }">
           <header class="border-bottom d-flex">
             <div class="d-none d-xl-block col-3"><!--spacer--></div>
             <div class="navbar navbar-expand-xl">
@@ -142,8 +142,9 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
             </div>
           </div>
         </div>
-        <div class="h-100 border">
-          <app-pdf-viewer />
+        <a href="javascript:void(0)" style="width: {{ resizeHandleWidth }}px; cursor: col-resize;" (mousedown)="dragStart($event)" (touchstart)="dragStart($event)"> </a>
+        <div class="h-100 border" [ngStyle]="{ 'width.px': rightColumnWidth() }">
+          <app-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
         </div>
       </main>
 
@@ -156,12 +157,83 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
 })
 export class EditorPage {
   protected readonly environment = environment;
+  protected resizeHandleWidth = 16;
 
   protected settings: Signal<EditorSettings>;
+  protected totalWidth = signal<number>(0);
+  protected leftColumnWidth: Signal<number>;
+  protected rightColumnWidth: Signal<number>;
+  protected disablePointerEvents = signal<boolean>(false);
   protected cii: CrossIndustryInvoice = {};
+
+  private resizing = false;
 
   constructor(private settingsService: EditorSettingsService) {
     this.settings = this.settingsService.settings;
+    this.leftColumnWidth = computed(() => this.totalWidth() - this.rightColumnWidth() - this.resizeHandleWidth);
+    this.rightColumnWidth = computed(() => this.settings().rightPaneWidth ?? 0);
+    this.updateWidth(window.innerWidth);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  resize(event: Event) {
+    const target = event.target as Window;
+    const width = target?.innerWidth ?? 0;
+    this.updateWidth(width);
+  }
+
+  @HostListener('window:mousemove', ['$event'])
+  mousemove(event: Event) {
+    if (this.resizing) {
+      event.preventDefault();
+      this.drag(event);
+    }
+  }
+
+  @HostListener('window:touchmove', ['$event'])
+  touchmove(event: Event) {
+    if (this.resizing) {
+      event.preventDefault();
+      this.drag(event);
+    }
+  }
+
+  @HostListener('window:mouseup', ['$event'])
+  mouseup(event: Event) {
+    if (this.resizing) {
+      event.preventDefault();
+      this.dragEnd();
+    }
+  }
+
+  @HostListener('window:touchend', ['$event'])
+  touchend(event: Event) {
+    if (this.resizing) {
+      event.preventDefault();
+      this.dragEnd();
+    }
+  }
+
+  protected dragStart(event: Event) {
+    event.preventDefault();
+    this.resizing = true;
+    this.disablePointerEvents.set(true);
+  }
+
+  protected drag(event: Event) {
+    event.preventDefault();
+
+    if (this.resizing) {
+      const width = this.totalWidth();
+      const x = event.type === 'mousemove' ? (event as MouseEvent).clientX : (event as TouchEvent).touches[0].clientX;
+      this.settingsService.saveRightPaneWidth(width - x - this.resizeHandleWidth / 2);
+    }
+  }
+
+  protected dragEnd(event?: Event) {
+    event?.preventDefault();
+    this.resizing = false;
+    this.disablePointerEvents.set(false);
   }
 
   protected toggleBusinessRules() {
@@ -177,5 +249,12 @@ export class EditorPage {
   protected toggleChorusProRemarks() {
     const currentValue = this.settings()?.showChorusProRemarks == true;
     this.settingsService.saveShowChorusProRemarks(!currentValue);
+  }
+
+  private updateWidth(width: number) {
+    this.totalWidth.set(width);
+    if (this.rightColumnWidth() === 0) {
+      this.settingsService.saveRightPaneWidth(width / 2);
+    }
   }
 }
