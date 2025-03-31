@@ -38,7 +38,7 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <h6 id="BT-47-00" class="m-0">BT-47-00 - BUYER LEGAL REGISTRATION IDENTIFIER</h6>
+      <h6 id="BT-47-00" class="m-0" tabindex="-1">BT-47-00 - BUYER LEGAL REGISTRATION IDENTIFIER</h6>
       <p class="form-text ps-4">Details about the organization.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">

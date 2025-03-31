@@ -76,10 +76,10 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
                 </div>
                 <h5 class="navbar-brand m-0">Cross-Industry Invoice</h5>
                 <div class="dropdown">
-                  <a href="javascript:void;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false"> details </a>
+                  <a href="javascript:void 0;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false"> details </a>
                   <ul class="dropdown-menu">
                     <li>
-                      <a class="dropdown-item" href="javascript:void;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings()?.showBusinessRules !== true">
+                      <a class="dropdown-item" href="javascript:void 0;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings()?.showBusinessRules !== true">
                         @if (settings()?.showBusinessRules === true) {
                           <i class="bi bi-eye"></i>
                         } @else {
@@ -89,7 +89,7 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="javascript:void;" (click)="toggleRemarks()" [class.text-body-tertiary]="settings()?.showRemarks !== true">
+                      <a class="dropdown-item" href="javascript:void 0;" (click)="toggleRemarks()" [class.text-body-tertiary]="settings()?.showRemarks !== true">
                         @if (settings()?.showRemarks === true) {
                           <i class="bi bi-eye"></i>
                         } @else {
@@ -99,7 +99,7 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="javascript:void;" (click)="toggleChorusProRemarks()" [class.text-body-tertiary]="settings()?.showChorusProRemarks !== true">
+                      <a class="dropdown-item" href="javascript:void 0;" (click)="toggleChorusProRemarks()" [class.text-body-tertiary]="settings()?.showChorusProRemarks !== true">
                         @if (settings()?.showChorusProRemarks === true) {
                           <i class="bi bi-eye"></i>
                         } @else {

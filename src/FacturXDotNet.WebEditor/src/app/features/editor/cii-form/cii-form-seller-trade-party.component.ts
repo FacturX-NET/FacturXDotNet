@@ -45,7 +45,7 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <h6 id="BT-30-00" class="m-0">BT-30-00 - SELLER LEGAL ORGANIZATION</h6>
+      <h6 id="BT-30-00" class="m-0" tabindex="-1">BT-30-00 - SELLER LEGAL ORGANIZATION</h6>
       <p class="form-text ps-4">Details about the organization.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">
@@ -56,7 +56,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 id="BG-5" class="m-0">BG-5 - SELLER POSTAL ADDRESS</h6>
+      <h6 id="BG-5" class="m-0" tabindex="-1">BG-5 - SELLER POSTAL ADDRESS</h6>
       <p class="form-text ps-4">A group of business terms providing information about the address of the Seller.</p>
       @if (settings()?.showBusinessRules === true) {
         <div class="form-text ps-4">
@@ -81,7 +81,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 id="BT-31-00" class="m-0">BT-31-00 - SELLER VAT IDENTIFIER</h6>
+      <h6 id="BT-31-00" class="m-0" tabindex="-1">BT-31-00 - SELLER VAT IDENTIFIER</h6>
       <p class="form-text ps-4">Detailed information on tax information of the seller.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">
