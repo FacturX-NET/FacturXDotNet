@@ -121,22 +121,22 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
                 <h5 class="offcanvas-title" id="ciiSummaryTitle">Summary</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
               </div>
-              <div class="d-none d-xl-block">
-                <h6>Summary</h6>
-              </div>
-              <div class="offcanvas-body small">
-                <app-cii-summary [value]="cii" />
+              <div class="offcanvas-body justify-content-end small">
+                <div>
+                  <h6 class="d-none d-xl-block">Summary</h6>
+                  <app-cii-summary [value]="cii" />
+                </div>
               </div>
             </div>
             <div
               id="editor__cii-form"
-              class="h-100 position-relative overflow-y-auto pt-3 pb-5"
+              class="flex-grow-1 h-100 position-relative overflow-y-auto pt-3 pb-5"
               data-bs-spy="scroll"
               data-bs-target="#editor__cii-summary-content"
               data-bs-smooth-scroll="true"
               tabindex="0"
             >
-              <div class="container">
+              <div class="container ms-0">
                 <app-cii-form [(value)]="cii" [settings]="settings()" />
               </div>
             </div>
