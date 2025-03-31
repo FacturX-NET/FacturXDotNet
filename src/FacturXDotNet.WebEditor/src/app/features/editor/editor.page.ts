@@ -5,12 +5,13 @@ import { PdfViewerComponent } from './pdf-viewer.component';
 import { CiiFormComponent, CrossIndustryInvoiceFormVerbosity } from './cii-form/cii-form.component';
 import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-industry-invoice';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
+import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent],
+  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent],
   template: `
-    <div class="w-100 h-100 bg-body-tertiary d-flex flex-column gap-2 overflow-hidden">
+    <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column gap-2 overflow-hidden">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
         <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
         <ul class="nav justify-content-center">
@@ -62,57 +63,78 @@ import { EditorSettings, EditorSettingsService } from './editor-settings.service
         </div>
       </div>
 
-      <main class="flex-grow-1 d-grid gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 overflow-hidden" style="grid-template-columns: 1fr 1fr">
+      <main class="editor__main-grid flex-grow-1 d-grid gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 overflow-hidden">
         <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden">
-          <header>
-            <div class="container d-flex align-items-center gap-2 pt-3">
-              <h5 class="m-0">Cross-Industry Invoice</h5>
-              <div class="dropdown">
-                <a href="javascript:void;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false"> details </a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item" href="javascript:void;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings()?.showBusinessRules !== true">
-                      @if (settings()?.showBusinessRules === true) {
-                        <i class="bi bi-eye"></i>
-                      } @else {
-                        <i class="bi bi-eye-slash"></i>
-                      }
-                      Business Rules
-                    </a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="javascript:void;" (click)="toggleRemarks()" [class.text-body-tertiary]="settings()?.showRemarks !== true">
-                      @if (settings()?.showRemarks === true) {
-                        <i class="bi bi-eye"></i>
-                      } @else {
-                        <i class="bi bi-eye-slash"></i>
-                      }
-                      Remarks
-                    </a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="javascript:void;" (click)="toggleChorusProRemarks()" [class.text-body-tertiary]="settings()?.showChorusProRemarks !== true">
-                      @if (settings()?.showChorusProRemarks === true) {
-                        <i class="bi bi-eye"></i>
-                      } @else {
-                        <i class="bi bi-eye-slash"></i>
-                      }
-                      Chorus Pro Remarks
-                    </a>
-                  </li>
-                </ul>
+          <header class="border-bottom mb-3 d-flex">
+            <div class="col-3"><!--spacer--></div>
+            <div class="navbar navbar-expand-xl">
+              <div class="container justify-content-start gap-3">
+                <div class="d-block d-xl-none">
+                  <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#summary">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                </div>
+                <h5 class="navbar-brand m-0">Cross-Industry Invoice</h5>
+                <div class="dropdown">
+                  <a href="javascript:void;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false"> details </a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a class="dropdown-item" href="javascript:void;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings()?.showBusinessRules !== true">
+                        @if (settings()?.showBusinessRules === true) {
+                          <i class="bi bi-eye"></i>
+                        } @else {
+                          <i class="bi bi-eye-slash"></i>
+                        }
+                        Business Rules
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="javascript:void;" (click)="toggleRemarks()" [class.text-body-tertiary]="settings()?.showRemarks !== true">
+                        @if (settings()?.showRemarks === true) {
+                          <i class="bi bi-eye"></i>
+                        } @else {
+                          <i class="bi bi-eye-slash"></i>
+                        }
+                        Remarks
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="javascript:void;" (click)="toggleChorusProRemarks()" [class.text-body-tertiary]="settings()?.showChorusProRemarks !== true">
+                        @if (settings()?.showChorusProRemarks === true) {
+                          <i class="bi bi-eye"></i>
+                        } @else {
+                          <i class="bi bi-eye-slash"></i>
+                        }
+                        Chorus Pro Remarks
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </header>
-          <hr />
-          <div class="flex-grow-1 overflow-auto pb-5">
-            <div class="container">
-              <app-cii-form [(value)]="cii" [settings]="settings()"></app-cii-form>
+          <div class="flex-grow-1 overflow-hidden d-flex gap-4">
+            <div id="summary" class="col-3 offcanvas-xl offcanvas-start overflow-auto ps-xl-3" tabindex="-1" aria-labelledby="summaryTitle">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="#summaryTitle">Summary</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#summary" aria-label="Close"></button>
+              </div>
+              <div class="d-none d-xl-block">
+                <h6>Summary</h6>
+              </div>
+              <div class="offcanvas-body small" id="cii-summary">
+                <app-cii-summary [value]="cii" />
+              </div>
+            </div>
+            <div class="overflow-auto pb-5">
+              <div class="container" data-bs-spy="scroll" data-bs-target="#cii-summary" data-bs-smooth-scroll="true" tabindex="0">
+                <app-cii-form [(value)]="cii" [settings]="settings()" />
+              </div>
             </div>
           </div>
         </div>
         <div class="h-100 border">
-          <app-pdf-viewer></app-pdf-viewer>
+          <app-pdf-viewer />
         </div>
       </main>
 

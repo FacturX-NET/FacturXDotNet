@@ -1,3 +1,7 @@
+.editor__main-grid {
+  grid-template-columns: 2fr 1fr;
+}
+
 .editor__control {
   max-width: 420px;
 }

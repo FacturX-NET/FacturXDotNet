@@ -45,7 +45,7 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <h6 class="m-0">BT-30-00 - SELLER LEGAL ORGANIZATION</h6>
+      <h6 id="BT-30-00" class="m-0">BT-30-00 - SELLER LEGAL ORGANIZATION</h6>
       <p class="form-text ps-4">Details about the organization.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">
@@ -81,7 +81,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 class="m-0">BT-31-00 - SELLER VAT IDENTIFIER</h6>
+      <h6 id="BT-31-00" class="m-0">BT-31-00 - SELLER VAT IDENTIFIER</h6>
       <p class="form-text ps-4">Detailed information on tax information of the seller.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">

@@ -26,7 +26,7 @@ import { EditorSettings } from '../editor-settings.service';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <h6 class="m-0">BT-10-00 - HEADER TRADE AGREEMENT</h6>
+      <h6 id="BT-10-00" class="m-0">BT-10-00 - HEADER TRADE AGREEMENT</h6>
       <p class="form-text ps-4"></p>
       <div class="ps-4">
         <div class="ps-3 border-start">

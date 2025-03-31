@@ -64,7 +64,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 class="m-0">BT-13-00 - PURCHASE ORDER REFERENCE</h6>
+      <h6 id="BT-13-00" class="m-0">BT-13-00 - PURCHASE ORDER REFERENCE</h6>
       <p class="form-text ps-4"></p>
       <div class="ps-4">
         <div class="ps-3 border-start">
