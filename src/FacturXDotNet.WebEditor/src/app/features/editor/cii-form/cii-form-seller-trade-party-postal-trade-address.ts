@@ -26,7 +26,7 @@ import { EditorSettings } from '../editor-settings.service';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <li><span class="fw-semibold">BR-9</span>: The Seller postal address (BG-5) shall contain a Seller country code.</li>
+              <li><span id="BR-9" class="fw-semibold">BR-9</span>: The Seller postal address (BG-5) shall contain a Seller country code.</li>
             </ul>
           </div>
         }

@@ -30,9 +30,9 @@ import { EditorSettings } from '../editor-settings.service';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <li><span class="fw-semibold">BR-13</span>: An Invoice shall have the Invoice total amount without VAT.</li>
+              <li><span id="BR-13" class="fw-semibold">BR-13</span>: An Invoice shall have the Invoice total amount without VAT.</li>
               <li>
-                <span class="fw-semibold">BR-CO-13</span>:
+                <span id="BR-CO-13" class="fw-semibold">BR-CO-13</span>:
                 <div class="d-flex column-gap-2 flex-wrap">
                   <div class="text-nowrap"><code>Invoice total amount without VAT (BT-109)</code></div>
                   <div class="d-flex column-gap-2">
@@ -68,7 +68,7 @@ import { EditorSettings } from '../editor-settings.service';
               <div class="fw-semibold">Business Rules</div>
               <ul>
                 <li>
-                  <span class="fw-semibold">BR-CO-14</span>:
+                  <span id="BR-CO-14" class="fw-semibold">BR-CO-14</span>:
                   <div class="d-flex flex-wrap">
                     <div class="text-nowrap"><code>Invoice total VAT amount (BT-110)</code></div>
                     <div class="text-nowrap"><code>= ∑ VAT category tax amount (BT-117)</code></div>
@@ -109,9 +109,9 @@ import { EditorSettings } from '../editor-settings.service';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <li><span class="fw-semibold">BR-14</span>: An Invoice shall have the Invoice total amount with VAT (BT-112).</li>
+              <li><span id="BR-14" class="fw-semibold">BR-14</span>: An Invoice shall have the Invoice total amount with VAT (BT-112).</li>
               <li>
-                <span class="fw-semibold">BR-CO-15</span>:
+                <span id="BR-CO-15" class="fw-semibold">BR-CO-15</span>:
                 <div class="d-flex column-gap-2 flex-wrap">
                   <div class="text-nowrap"><code>Invoice total amount with VAT (BT-112)</code></div>
                   <div class="d-flex column-gap-2">
@@ -124,8 +124,8 @@ import { EditorSettings } from '../editor-settings.service';
                 </div>
               </li>
               <li>
-                <span class="fw-semibold">BR-FXEXT-CO-15</span>: For EXTENDED profile only, BR-CO-15 is replaced by BR-FXEXT-CO-15, which add a tolerance of 0,01 euro per line,
-                document level charge and allowance in calculation.
+                <span id="BR-FXEXT-CO-15" class="fw-semibold">BR-FXEXT-CO-15</span>: For EXTENDED profile only, BR-CO-15 is replaced by BR-FXEXT-CO-15, which add a tolerance of
+                0,01 euro per line, document level charge and allowance in calculation.
               </li>
             </ul>
           </div>
@@ -148,9 +148,9 @@ import { EditorSettings } from '../editor-settings.service';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <li><span class="fw-semibold">BR-15</span>: An Invoice shall have the Amount due for payment.</li>
+              <li><span id="BR-15" class="fw-semibold">BR-15</span>: An Invoice shall have the Amount due for payment.</li>
               <li>
-                <span class="fw-semibold">BR-CO-16</span>:
+                <span id="BR-CO-16" class="fw-semibold">BR-CO-16</span>:
                 <div class="d-flex column-gap-2 flex-wrap">
                   <div><code>Amount due for payment (BT-115)</code></div>
                   <div class="d-flex column-gap-2">

@@ -55,7 +55,7 @@ import { EditorSettings } from '../editor-settings.service';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <li><span class="fw-semibold">BR-1</span>: An Invoice shall have a Specification identifier.</li>
+              <li><span id="BR-1" class="fw-semibold">BR-1</span>: An Invoice shall have a Specification identifier.</li>
             </ul>
           </div>
         }

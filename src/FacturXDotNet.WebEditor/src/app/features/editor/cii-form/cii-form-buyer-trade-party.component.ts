@@ -32,7 +32,7 @@ import { EditorSettings } from '../editor-settings.service';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <li><span class="fw-semibold">BR-7</span>: An Invoice shall contain the Buyer name.</li>
+              <li><span id="BR-7" class="fw-semibold">BR-7</span>: An Invoice shall contain the Buyer name.</li>
             </ul>
           </div>
         }

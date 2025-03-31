@@ -32,7 +32,7 @@ import { EditorSettings } from '../editor-settings.service';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <li><span class="fw-semibold">BR-5</span>: An Invoice shall have an Invoice currency code.</li>
+              <li><span id="BR-5" class="fw-semibold">BR-5</span>: An Invoice shall have an Invoice currency code.</li>
             </ul>
           </div>
         }

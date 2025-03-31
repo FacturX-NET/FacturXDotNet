@@ -28,12 +28,13 @@ import { EditorSettings } from '../editor-settings.service';
               <div class="fw-semibold">Business Rules</div>
               <ul>
                 <li>
-                  <span class="fw-semibold">BR-CO-9</span>: The Seller VAT identifier, the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48)
-                  shall have a prefix in accordance with ISO code ISO 3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix ‘EL’.
+                  <span id="BR-CO-9" class="fw-semibold">BR-CO-9</span>: The Seller VAT identifier, the Seller tax representative VAT identifier (BT-63) and the Buyer VAT
+                  identifier (BT-48) shall have a prefix in accordance with ISO code ISO 3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may
+                  use the prefix ‘EL’.
                 </li>
               </ul>
               <ul>
-                <span class="fw-semibold">BR-CO-26</span
+                <span id="BR-CO-26" class="fw-semibold">BR-CO-26</span
                 >: In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller
                 VAT identifier shall be present.
               </ul>

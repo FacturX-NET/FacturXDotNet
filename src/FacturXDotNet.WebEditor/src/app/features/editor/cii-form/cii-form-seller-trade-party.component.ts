@@ -39,7 +39,7 @@ import { EditorSettings } from '../editor-settings.service';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <li><span class="fw-semibold">BR-6</span>: An Invoice shall contain the Seller name.</li>
+              <li><span id="BR-6" class="fw-semibold">BR-6</span>: An Invoice shall contain the Seller name.</li>
             </ul>
           </div>
         }
@@ -62,7 +62,7 @@ import { EditorSettings } from '../editor-settings.service';
         <div class="form-text ps-4">
           <div class="fw-semibold">Business Rules</div>
           <ul>
-            <li><span class="fw-semibold">BR-8</span>: An Invoice shall contain the Seller postal address.</li>
+            <li><span id="BR-8" class="fw-semibold">BR-8</span>: An Invoice shall contain the Seller postal address.</li>
           </ul>
         </div>
       }

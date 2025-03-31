@@ -26,7 +26,7 @@ import { EditorSettings } from '../editor-settings.service';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <li><span class="fw-semibold">BR-2</span>: An Invoice shall have an Invoice number.</li>
+              <li><span id="BR-2" class="fw-semibold">BR-2</span>: An Invoice shall have an Invoice number.</li>
             </ul>
           </div>
         }
@@ -112,7 +112,7 @@ import { EditorSettings } from '../editor-settings.service';
           <div class="form-text">
             <div class="fw-semibold">Business Rules</div>
             <ul>
-              <li><span class="fw-semibold">BR-4</span>: An Invoice shall have an Invoice type code.</li>
+              <li><span id="BR-4" class="fw-semibold">BR-4</span>: An Invoice shall have an Invoice type code.</li>
             </ul>
           </div>
         }
@@ -151,7 +151,7 @@ import { EditorSettings } from '../editor-settings.service';
             <div class="form-text">
               <div class="fw-semibold">Business Rules</div>
               <ul>
-                <li><span class="fw-semibold">BR-3</span>: An Invoice shall have an Invoice issue date.</li>
+                <li><span id="BR-3" class="fw-semibold">BR-3</span>: An Invoice shall have an Invoice issue date.</li>
               </ul>
             </div>
           }
