@@ -18,7 +18,7 @@ import { EditorSettings } from '../editor-settings.service';
     <div [formGroupName]="formGroupName()">
       <div class="mb-3">
         <div class="editor__control">
-          <label class="form-label text-truncate" for="sellerAddressCountryId"> <span class="fw-semibold">BT-40</span> - Seller country code </label>
+          <label class="form-label text-truncate" for="sellerAddressCountryId"> <span id="BT-40" class="fw-semibold">BT-40</span> - Seller country code </label>
           <input id="sellerAddressCountryId" class="form-control" formControlName="countryId" placeholder="FR" />
           <p id="sellerAddressCountryIdHelp" class="form-text">A code that identifies the country.</p>
         </div>

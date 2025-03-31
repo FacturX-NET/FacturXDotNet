@@ -18,7 +18,9 @@ import { EditorSettings } from '../editor-settings.service';
     <div [formGroupName]="formGroupName()">
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="businessProcessSpecifiedDocumentContextParameterId"> <span class="fw-semibold">BT-23</span> - Business process type </label>
+          <label class="form-label text-truncate" for="businessProcessSpecifiedDocumentContextParameterId">
+            <span id="BT-23" class="fw-semibold">BT-23</span> - Business process type
+          </label>
           <input
             id="businessProcessSpecifiedDocumentContextParameterId"
             class="form-control"
@@ -33,7 +35,9 @@ import { EditorSettings } from '../editor-settings.service';
 
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="guidelineSpecifiedDocumentContextParameterId"> <span class="fw-semibold">BT-24</span> - Specification identifier </label>
+          <label class="form-label text-truncate" for="guidelineSpecifiedDocumentContextParameterId">
+            <span id="BT-24" class="fw-semibold">BT-24</span> - Specification identifier
+          </label>
           <select id="guidelineSpecifiedDocumentContextParameterId" class="form-select" formControlName="guidelineSpecifiedDocumentContextParameterId">
             <option value="" class="text-body-tertiary" selected>Choose a profile</option>
             <option value="minimum">Minimum</option>

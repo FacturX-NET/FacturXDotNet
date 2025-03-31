@@ -19,7 +19,7 @@ import { EditorSettings } from '../editor-settings.service';
       <div class="row">
         <div class="col">
           <div class="editor__control">
-            <label class="form-label text-truncate" for="buyerLegalId"> <span class="fw-semibold">BT-47</span> - Buyer legal registration identifier </label>
+            <label class="form-label text-truncate" for="buyerLegalId"> <span id="BT-47" class="fw-semibold">BT-47</span> - Buyer legal registration identifier </label>
             <input id="buyerLegalId" class="form-control" formControlName="id" placeholder="987654321" />
             <p id="buyerLegalIdHelp" class="form-text">An identifier issued by an official registrar that identifies the Buyer as a legal entity or person.</p>
           </div>
@@ -39,7 +39,7 @@ import { EditorSettings } from '../editor-settings.service';
 
         <div class="col">
           <div class="editor__control">
-            <label class="form-label text-truncate" for="buyerLegalIdScheme"> <span class="fw-semibold">BT-47-1</span> - Scheme identifier </label>
+            <label class="form-label text-truncate" for="buyerLegalIdScheme"> <span id="BT-47-1" class="fw-semibold">BT-47-1</span> - Scheme identifier </label>
             <input id="buyerLegalIdScheme" class="form-control" formControlName="idSchemeId" placeholder="0002" />
             <p id="buyerLegalIdSchemeHelp" class="form-text">The identification scheme identifier of the Buyer legal registration identifier.</p>
           </div>

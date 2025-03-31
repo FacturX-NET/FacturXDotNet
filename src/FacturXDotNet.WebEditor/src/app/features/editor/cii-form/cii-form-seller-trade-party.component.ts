@@ -29,7 +29,7 @@ import { EditorSettings } from '../editor-settings.service';
     <div [formGroupName]="formGroupName()">
       <div class="mb-3">
         <div class="editor__control">
-          <label class="form-label text-truncate" for="sellerName"> <span class="fw-semibold">BT-27</span> - Seller name </label>
+          <label class="form-label text-truncate" for="sellerName"> <span id="BT-27" class="fw-semibold">BT-27</span> - Seller name </label>
           <input id="sellerName" class="form-control" formControlName="name" placeholder="LE FOURNISSEUR" />
           <p id="sellerNameHelp" class="form-text">
             The full formal name by which the Seller is registered in the national registry of legal entities or as a Taxable person or otherwise trades as a person or persons.
@@ -56,7 +56,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 class="m-0">BG-5 - SELLER POSTAL ADDRESS</h6>
+      <h6 id="BG-5" class="m-0">BG-5 - SELLER POSTAL ADDRESS</h6>
       <p class="form-text ps-4">A group of business terms providing information about the address of the Seller.</p>
       @if (settings()?.showBusinessRules === true) {
         <div class="form-text ps-4">

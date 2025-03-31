@@ -24,7 +24,7 @@ import { EditorSettings } from '../editor-settings.service';
     <div [formGroupName]="formGroupName()">
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="invoiceCurrencyCode"> <span id="bt-5" class="fw-semibold">BT-5</span> - Invoice currency code </label>
+          <label class="form-label text-truncate" for="invoiceCurrencyCode"> <span id="BT-5" class="fw-semibold">BT-5</span> - Invoice currency code </label>
           <input id="invoiceCurrencyCode" class="form-control" formControlName="invoiceCurrencyCode" placeholder="EUR" />
           <p id="invoiceCurrencyCodeHelp" class="form-text">The currency in which all Invoice amounts are given, except for the Total VAT amount in accounting currency.</p>
         </div>
@@ -51,7 +51,7 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <h6 class="m-0">BG-22 - DOCUMENT TOTALS</h6>
+      <h6 id="BG-22" class="m-0">BG-22 - DOCUMENT TOTALS</h6>
       <p class="form-text ps-4">A group of business terms providing the monetary totals for the Invoice.</p>
       @if (settings()?.showRemarks === true) {
         <div class="ps-4">

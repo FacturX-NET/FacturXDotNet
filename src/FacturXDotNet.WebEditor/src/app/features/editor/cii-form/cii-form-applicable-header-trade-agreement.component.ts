@@ -30,7 +30,7 @@ import { EditorSettings } from '../editor-settings.service';
     <div [formGroupName]="formGroupName()">
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="buyerReference"> <span class="fw-semibold">BT-10</span> - Buyer reference </label>
+          <label class="form-label text-truncate" for="buyerReference"> <span id="BT-10" class="fw-semibold">BT-10</span> - Buyer reference </label>
           <input id="buyerReference" class="form-control" formControlName="buyerReference" placeholder="SERVEXEC" />
           <p id="buyerReferenceHelp" class="form-text">An identifier assigned by the Buyer used for internal routing purposes.</p>
         </div>
@@ -48,7 +48,7 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <h6 class="m-0">BG-4 - SELLER</h6>
+      <h6 id="BG-4" class="m-0">BG-4 - SELLER</h6>
       <p class="form-text ps-4">A group of business terms providing information about the Seller.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">
@@ -56,7 +56,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 class="m-0">BG-7 - BUYER</h6>
+      <h6 id="BG-7" class="m-0">BG-7 - BUYER</h6>
       <p class="form-text ps-4">A group of business terms providing information about the Buyer.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">

@@ -18,7 +18,7 @@ import { EditorSettings } from '../editor-settings.service';
   imports: [ReactiveFormsModule, CollapseComponent, CiiFormExchangedDocumentContextComponent, CiiFormSupplyChainTradeTransactionComponent, CiiFormExchangedDocumentComponent],
   template: `
     <form [formGroup]="form">
-      <h6 class="m-0">BG-2 - EXCHANGE DOCUMENT CONTEXT</h6>
+      <h6 id="BG-2" class="m-0">BG-2 - EXCHANGE DOCUMENT CONTEXT</h6>
       <p class="form-text ps-4">A group of business terms providing information on the business process and rules applicable to the Invoice document.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">
@@ -34,7 +34,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 class="m-0">BG-25-00 - SUPPLY CHAIN TRADE TRANSACTION</h6>
+      <h6 id="BG-25-00" class="m-0">BG-25-00 - SUPPLY CHAIN TRADE TRANSACTION</h6>
       <p class="form-text ps-4"></p>
       <div class="ps-4">
         <div class="ps-3 border-start">

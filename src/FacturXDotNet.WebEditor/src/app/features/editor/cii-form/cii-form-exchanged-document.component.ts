@@ -18,7 +18,7 @@ import { EditorSettings } from '../editor-settings.service';
     <div [formGroupName]="formGroupName()">
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="exchangeDocumentId"> <span class="fw-semibold">BT-1</span> - Invoice number </label>
+          <label class="form-label text-truncate" for="exchangeDocumentId"> <span id="BT-1" class="fw-semibold">BT-1</span> - Invoice number </label>
           <input id="exchangeDocumentId" class="form-control" formControlName="id" placeholder="F20250023" />
           <p id="exchangeDocumentIdHelp" class="form-text">A unique identification of the Invoice.</p>
         </div>
@@ -47,7 +47,7 @@ import { EditorSettings } from '../editor-settings.service';
 
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="typeCode"> <span class="fw-semibold">BT-3</span> - Invoice type code </label>
+          <label class="form-label text-truncate" for="typeCode"> <span id="BT-3" class="fw-semibold">BT-3</span> - Invoice type code </label>
           <select id="typeCode" class="form-select" formControlName="typeCode">
             <option value="" class="text-body-tertiary" selected>Choose a type</option>
             <option value="71-request-for-payment">71 - Request for payment</option>
@@ -143,7 +143,7 @@ import { EditorSettings } from '../editor-settings.service';
       <div class="d-flex flex-wrap column-gap-4">
         <div>
           <div class="editor__control">
-            <label class="form-label text-truncate" for="issueDateTime"> <span class="fw-semibold">BT-2</span> - Invoice issue date </label>
+            <label class="form-label text-truncate" for="issueDateTime"> <span id="BT-2" class="fw-semibold">BT-2</span> - Invoice issue date </label>
             <input id="issueDateTime" class="form-control" formControlName="issueDateTime" type="date" />
             <p id="issueDateTimeHelp" class="form-text">The date when the Invoice was issued.</p>
           </div>
@@ -165,7 +165,7 @@ import { EditorSettings } from '../editor-settings.service';
 
         <div>
           <div class="editor__control">
-            <label class="form-label text-truncate" for="issueDateTimeFormat"> <span class="fw-semibold">BT-2-0</span> - Date, format </label>
+            <label class="form-label text-truncate" for="issueDateTimeFormat"> <span id="BT-2-0" class="fw-semibold">BT-2-0</span> - Date, format </label>
             <select id="issueDateTimeFormat" class="form-select" formControlName="issueDateTimeFormat">
               <option value="102-date-only" selected>102 - Date only</option>
             </select>

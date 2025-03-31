@@ -22,7 +22,7 @@ import { EditorSettings } from '../editor-settings.service';
     <div [formGroupName]="formGroupName()">
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="taxBasisTotalAmount"> <span id="bt-5" class="fw-semibold">BT-109</span> - Total amount without VAT </label>
+          <label class="form-label text-truncate" for="taxBasisTotalAmount"> <span id="BT-109" class="fw-semibold">BT-109</span> - Total amount without VAT </label>
           <input id="taxBasisTotalAmount" class="form-control" formControlName="taxBasisTotalAmount" placeholder="100.00" />
           <p id="taxBasisTotalAmountHelp" class="form-text">The total amount of the Invoice without VAT.</p>
         </div>
@@ -101,7 +101,7 @@ import { EditorSettings } from '../editor-settings.service';
 
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="grandTotalAmount"> <span id="bt-5" class="fw-semibold">BT-112</span> - Total amount with VAT </label>
+          <label class="form-label text-truncate" for="grandTotalAmount"> <span id="BT-112" class="fw-semibold">BT-112</span> - Total amount with VAT </label>
           <input id="grandTotalAmount" class="form-control" formControlName="grandTotalAmount" placeholder="104.90" />
           <p id="grandTotalAmountHelp" class="form-text">The total amount of the Invoice with VAT.</p>
         </div>
@@ -140,7 +140,7 @@ import { EditorSettings } from '../editor-settings.service';
 
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="duePayableAmount"> <span id="bt-5" class="fw-semibold">BT-115</span> - Amount due for payment </label>
+          <label class="form-label text-truncate" for="duePayableAmount"> <span id="BT-115" class="fw-semibold">BT-115</span> - Amount due for payment </label>
           <input id="duePayableAmount" class="form-control" formControlName="duePayableAmount" placeholder="104.90" />
           <p id="duePayableAmountHelp" class="form-text">The outstanding amount that is requested to be paid.</p>
         </div>

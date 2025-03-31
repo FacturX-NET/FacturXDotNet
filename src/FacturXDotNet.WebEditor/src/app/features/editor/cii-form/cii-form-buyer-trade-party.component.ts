@@ -24,7 +24,7 @@ import { EditorSettings } from '../editor-settings.service';
     <div [formGroupName]="formGroupName()">
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="buyerName"> <span class="fw-semibold">BT-44</span> - Buyer name </label>
+          <label class="form-label text-truncate" for="buyerName"> <span id="BT-44" class="fw-semibold">BT-44</span> - Buyer name </label>
           <input id="buyerName" class="form-control" formControlName="name" placeholder="LE CLIENT" />
           <p id="buyerNameHelp" class="form-text">The full name of the Buyer.</p>
         </div>

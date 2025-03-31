@@ -24,7 +24,7 @@ import { EditorSettings } from '../editor-settings.service';
     <div [formGroupName]="formGroupName()">
       <div>
         <div class="editor__control">
-          <label class="form-label text-truncate" for="issuerAssignedId"> <span class="fw-semibold">BT-13</span> - Purchase order reference </label>
+          <label class="form-label text-truncate" for="issuerAssignedId"> <span id="BT-13" class="fw-semibold">BT-13</span> - Purchase order reference </label>
           <input id="issuerAssignedId" class="form-control" formControlName="issuerAssignedId" />
           <p id="issuerAssignedIdHelp" class="form-text">An identifier of a referenced purchase order, issued by the Buyer.</p>
         </div>

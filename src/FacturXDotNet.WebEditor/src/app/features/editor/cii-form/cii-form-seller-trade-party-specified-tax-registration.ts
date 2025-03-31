@@ -19,7 +19,7 @@ import { EditorSettings } from '../editor-settings.service';
       <div class="row">
         <div class="col">
           <div class="editor__control">
-            <label class="form-label text-truncate" for="sellerTaxId"> <span class="fw-semibold">BT-31</span> - Seller VAT identifier </label>
+            <label class="form-label text-truncate" for="sellerTaxId"> <span id="BT-31" class="fw-semibold">BT-31</span> - Seller VAT identifier </label>
             <input id="sellerTaxId" class="form-control" formControlName="id" placeholder="FR11123456782" />
             <p id="sellerTaxIdHelp" class="form-text">The Seller's VAT identifier (also known as Seller VAT identification number).</p>
           </div>
@@ -48,7 +48,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
         <div class="col">
           <div class="editor__control">
-            <label class="form-label text-truncate" for="sellerTaxIdScheme"> <span class="fw-semibold">BT-31-0</span> - Tax Scheme identifier</label>
+            <label class="form-label text-truncate" for="sellerTaxIdScheme"> <span id="BT-31-0" class="fw-semibold">BT-31-0</span> - Tax Scheme identifier</label>
             <select id="sellerTaxIdScheme" class="form-select" formControlName="idSchemeId">
               <option value="vat" selected>VAT</option>
             </select>

@@ -34,7 +34,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 class="m-0">BG-13-00 - DELIVERY INFORMATION</h6>
+      <h6 id="BG-13-00" class="m-0">BG-13-00 - DELIVERY INFORMATION</h6>
       <p class="form-text ps-4">A group of business terms providing information about where and when the goods and services invoiced are delivered.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">
@@ -42,7 +42,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 class="m-0">BG-19 - HEADER TRADE SETTLEMENT DIRECT DEBIT</h6>
+      <h6 id="BG-19" class="m-0">BG-19 - HEADER TRADE SETTLEMENT DIRECT DEBIT</h6>
       <p class="form-text ps-4">A group of business terms to specify a direct debit.</p>
       @if (settings()?.showRemarks === true) {
         <div class="ps-4">
