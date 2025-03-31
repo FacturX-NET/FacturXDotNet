@@ -8,13 +8,13 @@ import { ScrollToDirective } from '../../../core/directives/scroll-to.directive'
   imports: [ScrollToDirective],
   template: `
     <div class="nav-item d-flex gap-2 text-truncate">
-      <a [scrollTo]="'#' + node().code">
+      <a [scrollTo]="'#' + node().code" data-bs-dismiss="offcanvas" data-bs-target="#cii-summary">
         <span class="fw-semibold"> {{ node().code }} </span> - {{ node().name }}
       </a>
     </div>
     @if (collapsed() !== true) {
       @if (node().children; as children) {
-        <div class="ps-2">
+        <div class="border-start ps-2">
           @for (child of node().children; track child.code) {
             <app-cii-summary-node [node]="child" />
           }

@@ -11,7 +11,7 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
   selector: 'app-editor',
   imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent],
   template: `
-    <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column gap-2 overflow-hidden">
+    <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column gap-2">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
         <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
         <ul class="nav justify-content-center">
@@ -63,14 +63,14 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
         </div>
       </div>
 
-      <main class="editor__main-grid flex-grow-1 d-grid gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 overflow-hidden">
+      <main class="editor__main-grid flex-grow-1 gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 overflow-hidden">
         <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden">
           <header class="border-bottom mb-3 d-flex">
-            <div class="col-3"><!--spacer--></div>
+            <div class="d-none d-xl-block col-3"><!--spacer--></div>
             <div class="navbar navbar-expand-xl">
               <div class="container justify-content-start gap-3">
                 <div class="d-block d-xl-none">
-                  <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#summary">
+                  <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#cii-summary">
                     <span class="navbar-toggler-icon"></span>
                   </button>
                 </div>
@@ -114,15 +114,15 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
             </div>
           </header>
           <div class="flex-grow-1 overflow-hidden d-flex gap-4">
-            <div id="summary" class="col-3 offcanvas-xl offcanvas-start overflow-auto ps-xl-3" tabindex="-1" aria-labelledby="summaryTitle">
+            <div id="cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-auto ps-xl-3" tabindex="-1" aria-labelledby="summaryTitle">
               <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="#summaryTitle">Summary</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#summary" aria-label="Close"></button>
+                <h5 class="offcanvas-title" id="#cii-summaryTitle">Summary</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#cii-summary" aria-label="Close"></button>
               </div>
               <div class="d-none d-xl-block">
                 <h6>Summary</h6>
               </div>
-              <div class="offcanvas-body small" id="cii-summary">
+              <div class="offcanvas-body small">
                 <app-cii-summary [value]="cii" />
               </div>
             </div>
