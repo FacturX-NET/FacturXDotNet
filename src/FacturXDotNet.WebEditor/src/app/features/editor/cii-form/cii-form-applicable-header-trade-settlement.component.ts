@@ -50,7 +50,7 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <h6 id="BG-22" class="m-0" tabindex="-1">BG-22 - DOCUMENT TOTALS</h6>
+      <h6 id="BG-22" class="m-0">BG-22 - DOCUMENT TOTALS</h6>
       <p class="form-text ps-4">A group of business terms providing the monetary totals for the Invoice.</p>
       @if (settings()?.showRemarks === true) {
         <div class="ps-4">

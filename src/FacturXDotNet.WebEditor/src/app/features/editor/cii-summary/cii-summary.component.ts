@@ -6,9 +6,11 @@ import { CiiSummaryNodeComponent } from './cii-summary-node.component';
   selector: 'app-cii-summary',
   imports: [CiiSummaryNodeComponent],
   template: `
-    @for (node of menus; track node.code) {
-      <app-cii-summary-node [node]="node" />
-    }
+    <div id="editor__cii-summary-content">
+      @for (node of menus; track node.code) {
+        <app-cii-summary-node [node]="node" />
+      }
+    </div>
   `,
 })
 export class CiiSummaryComponent {

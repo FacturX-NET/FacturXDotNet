@@ -1,17 +1,21 @@
-import { Directive, ElementRef, HostListener, input } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostListener, input, OnInit } from '@angular/core';
 
 @Directive({
   selector: '[scrollTo]',
 })
-export class ScrollToDirective {
+export class ScrollToDirective implements AfterViewInit {
   scrollTo = input.required<string>();
 
-  constructor(elt: ElementRef) {
-    elt.nativeElement.href = 'javascript:void 0;';
+  constructor(private elt: ElementRef) {}
+
+  ngAfterViewInit() {
+    this.elt.nativeElement.href = this.scrollTo();
   }
 
-  @HostListener('click')
-  onClick() {
+  @HostListener('click', ['$event'])
+  onClick(evt: MouseEvent) {
+    evt.preventDefault();
+
     const targetElement = document.querySelector(this.scrollTo()) as HTMLElement;
     if (targetElement === undefined || targetElement === null) {
       return;

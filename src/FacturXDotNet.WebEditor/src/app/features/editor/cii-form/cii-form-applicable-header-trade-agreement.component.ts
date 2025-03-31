@@ -46,7 +46,7 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <h6 id="BG-4" class="m-0" tabindex="-1">BG-4 - SELLER</h6>
+      <h6 id="BG-4" class="m-0">BG-4 - SELLER</h6>
       <p class="form-text ps-4">A group of business terms providing information about the Seller.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">
@@ -54,7 +54,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 id="BG-7" class="m-0" tabindex="-1">BG-7 - BUYER</h6>
+      <h6 id="BG-7" class="m-0">BG-7 - BUYER</h6>
       <p class="form-text ps-4">A group of business terms providing information about the Buyer.</p>
       <div class="ps-4">
         <div class="ps-3 border-start">
@@ -62,7 +62,7 @@ import { EditorSettings } from '../editor-settings.service';
         </div>
       </div>
 
-      <h6 id="BT-13-00" class="m-0" tabindex="-1">BT-13-00 - PURCHASE ORDER REFERENCE</h6>
+      <h6 id="BT-13-00" class="m-0">BT-13-00 - PURCHASE ORDER REFERENCE</h6>
       <p class="form-text ps-4"></p>
       <div class="ps-4">
         <div class="ps-3 border-start">

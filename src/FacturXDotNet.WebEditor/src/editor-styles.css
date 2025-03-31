@@ -11,3 +11,7 @@
   border: 2px solid var(--bs-primary);
   border-radius: 0.5rem;
 }
+
+.nav-link.active {
+  font-weight: bold;
+}

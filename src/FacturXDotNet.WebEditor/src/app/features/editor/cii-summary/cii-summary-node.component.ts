@@ -7,25 +7,18 @@ import { ScrollToDirective } from '../../../core/directives/scroll-to.directive'
   selector: 'app-cii-summary-node',
   imports: [ScrollToDirective],
   template: `
-    <div class="nav-item d-flex gap-2 text-truncate">
-      <a [scrollTo]="'#' + node().code" data-bs-dismiss="offcanvas" data-bs-target="#cii-summary">
-        <span class="fw-semibold"> {{ node().code }} </span> - {{ node().name }}
-      </a>
-    </div>
-    @if (collapsed() !== true) {
-      @if (node().children; as children) {
-        <div class="border-start ps-2">
+    <a class="text-truncate" [scrollTo]="'#' + node().code" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary">
+      <span class="fw-semibold"> {{ node().code }} </span> - {{ node().name }}
+    </a>
+    <div class="border-start ps-2">
+      @if (collapsed() !== true) {
+        @if (node().children; as children) {
           @for (child of node().children; track child.code) {
             <app-cii-summary-node [node]="child" />
           }
-        </div>
+        }
       }
-    }
-  `,
-  styles: `
-    a.active {
-      font-weight: bold;
-    }
+    </div>
   `,
 })
 export class CiiSummaryNodeComponent {

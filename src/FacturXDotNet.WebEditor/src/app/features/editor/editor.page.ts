@@ -1,4 +1,4 @@
-import { Component, computed, inject, Signal, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, Signal, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './pdf-viewer.component';
@@ -6,6 +6,7 @@ import { CiiFormComponent, CrossIndustryInvoiceFormVerbosity } from './cii-form/
 import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-industry-invoice';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
 import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
+import { ScrollSpy } from 'bootstrap';
 
 @Component({
   selector: 'app-editor',
@@ -65,12 +66,12 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
 
       <main class="editor__main-grid flex-grow-1 gap-1 gap-md-2 gap-lg-3 px-1 px-md-2 px-lg-3 overflow-hidden">
         <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden">
-          <header class="border-bottom mb-3 d-flex">
+          <header class="border-bottom d-flex">
             <div class="d-none d-xl-block col-3"><!--spacer--></div>
             <div class="navbar navbar-expand-xl">
               <div class="container justify-content-start gap-3">
                 <div class="d-block d-xl-none">
-                  <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#cii-summary">
+                  <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary">
                     <span class="navbar-toggler-icon"></span>
                   </button>
                 </div>
@@ -113,11 +114,11 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
               </div>
             </div>
           </header>
-          <div class="flex-grow-1 overflow-hidden d-flex gap-4">
-            <div id="cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-auto ps-xl-3" tabindex="-1" aria-labelledby="summaryTitle">
+          <div class="flex-grow-1 overflow-hidden d-flex column-gap-4">
+            <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
               <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="#cii-summaryTitle">Summary</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#cii-summary" aria-label="Close"></button>
+                <h5 class="offcanvas-title" id="ciiSummaryTitle">Summary</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
               </div>
               <div class="d-none d-xl-block">
                 <h6>Summary</h6>
@@ -126,8 +127,15 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
                 <app-cii-summary [value]="cii" />
               </div>
             </div>
-            <div class="overflow-auto pb-5">
-              <div class="container" data-bs-spy="scroll" data-bs-target="#cii-summary" data-bs-smooth-scroll="true" tabindex="0">
+            <div
+              id="editor__cii-form"
+              class="h-100 position-relative overflow-y-auto pt-3 pb-5"
+              data-bs-spy="scroll"
+              data-bs-target="#editor__cii-summary-content"
+              data-bs-smooth-scroll="true"
+              tabindex="0"
+            >
+              <div class="container">
                 <app-cii-form [(value)]="cii" [settings]="settings()" />
               </div>
             </div>
