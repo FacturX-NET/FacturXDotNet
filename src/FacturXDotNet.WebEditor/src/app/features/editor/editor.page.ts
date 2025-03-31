@@ -6,10 +6,11 @@ import { CiiFormComponent } from './cii-form/cii-form.component';
 import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-industry-invoice';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
 import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
+import { EditorDetailsDropdownComponent } from './editor-details-dropdown.component';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent, NgStyle],
+  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent, NgStyle, EditorDetailsDropdownComponent],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column gap-2">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
@@ -75,43 +76,7 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
                   </button>
                 </div>
                 <h5 class="navbar-brand m-0">Cross-Industry Invoice</h5>
-                @if (settings(); as settings) {
-                  <div class="dropdown">
-                    <a href="javascript:void 0;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false"> details </a>
-                    <ul class="dropdown-menu">
-                      <li>
-                        <a class="dropdown-item" href="javascript:void 0;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings.showBusinessRules !== true">
-                          @if (settings.showBusinessRules === true) {
-                            <i class="bi bi-eye"></i>
-                          } @else {
-                            <i class="bi bi-eye-slash"></i>
-                          }
-                          Business Rules
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="javascript:void 0;" (click)="toggleRemarks()" [class.text-body-tertiary]="settings.showRemarks !== true">
-                          @if (settings.showRemarks === true) {
-                            <i class="bi bi-eye"></i>
-                          } @else {
-                            <i class="bi bi-eye-slash"></i>
-                          }
-                          Remarks
-                        </a>
-                      </li>
-                      <li>
-                        <a class="dropdown-item" href="javascript:void 0;" (click)="toggleChorusProRemarks()" [class.text-body-tertiary]="settings.showChorusProRemarks !== true">
-                          @if (settings.showChorusProRemarks === true) {
-                            <i class="bi bi-eye"></i>
-                          } @else {
-                            <i class="bi bi-eye-slash"></i>
-                          }
-                          Chorus Pro Remarks
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                }
+                <app-editor-details-dropdown />
               </div>
             </div>
           </header>
@@ -234,21 +199,6 @@ export class EditorPage {
     event?.preventDefault();
     this.resizing = false;
     this.disablePointerEvents.set(false);
-  }
-
-  protected toggleBusinessRules() {
-    const currentValue = this.settings()?.showBusinessRules == true;
-    this.settingsService.saveShowBusinessRules(!currentValue);
-  }
-
-  protected toggleRemarks() {
-    const currentValue = this.settings()?.showRemarks == true;
-    this.settingsService.saveShowRemarks(!currentValue);
-  }
-
-  protected toggleChorusProRemarks() {
-    const currentValue = this.settings()?.showChorusProRemarks == true;
-    this.settingsService.saveShowChorusProRemarks(!currentValue);
   }
 
   private updateWidth(width: number) {
