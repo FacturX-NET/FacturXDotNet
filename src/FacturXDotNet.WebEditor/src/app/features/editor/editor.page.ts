@@ -116,13 +116,13 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
             </div>
           </header>
           <div class="flex-grow-1 overflow-hidden d-flex column-gap-4">
-            <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
+            <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
               <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="ciiSummaryTitle">Summary</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
               </div>
               <div class="offcanvas-body justify-content-end small">
-                <div>
+                <div class="overflow-x-hidden">
                   <h6 class="d-none d-xl-block">Summary</h6>
                   <app-cii-summary [value]="cii" />
                 </div>

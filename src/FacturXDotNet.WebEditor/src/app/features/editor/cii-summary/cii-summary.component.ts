@@ -28,6 +28,7 @@ export class CiiSummaryComponent {
         {
           code: 'BT-24',
           name: 'Specification identifier',
+          businessRules: ['BR-1'],
         },
       ],
     },
@@ -38,14 +39,17 @@ export class CiiSummaryComponent {
         {
           code: 'BT-1',
           name: 'Invoice number',
+          businessRules: ['BR-2'],
         },
         {
           code: 'BT-3',
           name: 'Invoice type code',
+          businessRules: ['BR-4'],
         },
         {
           code: 'BT-2',
           name: 'Invoice issue date',
+          businessRules: ['BR-3'],
           children: [
             {
               code: 'BT-2-0',
@@ -74,6 +78,7 @@ export class CiiSummaryComponent {
                 {
                   code: 'BT-27',
                   name: 'Seller name',
+                  businessRules: ['BR-6'],
                 },
                 {
                   code: 'BT-30-00',
@@ -82,6 +87,7 @@ export class CiiSummaryComponent {
                     {
                       code: 'BT-30',
                       name: 'Seller legal registration identifier',
+                      businessRules: ['BR-CO-26'],
                       children: [
                         {
                           code: 'BT-30-1',
@@ -94,10 +100,12 @@ export class CiiSummaryComponent {
                 {
                   code: 'BG-5',
                   name: 'SELLER POSTAL ADDRESS',
+                  businessRules: ['BR-8'],
                   children: [
                     {
                       code: 'BT-40',
                       name: 'Seller country code',
+                      businessRules: ['BR-9'],
                     },
                   ],
                 },
@@ -108,6 +116,7 @@ export class CiiSummaryComponent {
                     {
                       code: 'BT-31',
                       name: 'Seller VAT identifier',
+                      businessRules: ['BR-CO-9', 'BR-CO-26'],
                       children: [
                         {
                           code: 'BT-31-0',
@@ -126,6 +135,7 @@ export class CiiSummaryComponent {
                 {
                   code: 'BT-44',
                   name: 'Buyer name',
+                  businessRules: ['BR-7'],
                 },
                 {
                   code: 'BT-47-00',
@@ -168,6 +178,7 @@ export class CiiSummaryComponent {
             {
               code: 'BT-5',
               name: 'Invoice currency code',
+              businessRules: ['BR-5'],
             },
             {
               code: 'BG-22',
@@ -176,10 +187,12 @@ export class CiiSummaryComponent {
                 {
                   code: 'BT-109',
                   name: 'Total amount without VAT',
+                  businessRules: ['BR-13', 'BR-CO-13'],
                 },
                 {
                   code: 'BT-110',
                   name: 'Total VAT amount',
+                  businessRules: ['BR-CO-14'],
                   children: [
                     {
                       code: 'BT-110-1',
@@ -190,10 +203,12 @@ export class CiiSummaryComponent {
                 {
                   code: 'BT-112',
                   name: 'Total amount with VAT',
+                  businessRules: ['BR-14', 'BR-CO-15', 'BR-FXEXT-CO-15'],
                 },
                 {
                   code: 'BT-115',
                   name: 'Amount due for payment',
+                  businessRules: ['BR-15', 'BR-CO-16'],
                 },
               ],
             },
@@ -207,5 +222,6 @@ export class CiiSummaryComponent {
 export interface CiiSummaryNode {
   code: string;
   name: string;
+  businessRules?: string[];
   children?: CiiSummaryNode[];
 }

@@ -34,7 +34,7 @@ input.ng-invalid.ng-touched {
 }
 
 a.hoverlink:not(:hover) {
-  color: var(--bs-body-color);
+  color: unset;
 }
 
 a.hoverlink.text-tertiary:not(:hover) {

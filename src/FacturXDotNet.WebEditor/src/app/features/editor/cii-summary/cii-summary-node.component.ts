@@ -6,15 +6,29 @@ import { ScrollToDirective } from '../../../core/directives/scroll-to.directive'
   selector: 'app-cii-summary-node',
   imports: [ScrollToDirective],
   template: `
-    <a class="text-truncate" [scrollTo]="'#' + node().code" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary">
-      <span class="fw-semibold"> {{ node().code }} </span> - {{ node().name }}
-    </a>
-    <div class="border-start ps-2">
-      @if (collapsed() !== true) {
-        @if (node().children; as children) {
-          @for (child of node().children; track child.code) {
-            <app-cii-summary-node [node]="child" />
+    <div class="text-truncate">
+      <a [scrollTo]="'#' + node().code" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary">
+        <span class="fw-semibold"> {{ node().code }} </span> - {{ node().name }}
+      </a>
+      @if (node().businessRules; as businessRules) {
+        <span class="text-body-tertiary" style="font-size: smaller">
+          (
+          @for (rule of businessRules; track rule) {
+            @if (!$last) {
+              <a [scrollTo]="'#' + rule" class="hoverlink">{{ rule }}</a
+              >,
+            } @else {
+              <a [scrollTo]="'#' + rule" class="hoverlink">{{ rule }}</a>
+            }
           }
+          )
+        </span>
+      }
+    </div>
+    <div class="border-start ps-2">
+      @if (node().children; as children) {
+        @for (child of node().children; track child.code) {
+          <app-cii-summary-node [node]="child" />
         }
       }
     </div>
@@ -22,41 +36,4 @@ import { ScrollToDirective } from '../../../core/directives/scroll-to.directive'
 })
 export class CiiSummaryNodeComponent {
   node = input.required<CiiSummaryNode>();
-  collapsed = model<boolean | undefined>(undefined);
-
-  constructor() {
-    effect(() => {
-      const node = this.node();
-      const collapsed = untracked(() => this.collapsed());
-
-      if (collapsed === undefined) {
-        const collapsedState = this.loadState(node);
-        if (collapsedState) {
-          this.collapsed.set(true);
-        } else {
-          this.collapsed.set(false);
-        }
-      }
-    });
-  }
-
-  toggle() {
-    const node = this.node();
-
-    const newState = !this.collapsed();
-    this.saveState(node, newState);
-    this.collapsed.set(newState);
-  }
-
-  private loadState(node: CiiSummaryNode): boolean {
-    const key = 'collapsed-' + node.code;
-    const stateString = localStorage.getItem(key);
-    return stateString == 'true';
-  }
-
-  private saveState(node: CiiSummaryNode, collapsed: boolean): void {
-    const key = 'collapsed-' + node.code;
-    const stateString = collapsed ? 'true' : 'false';
-    localStorage.setItem(key, stateString);
-  }
 }
