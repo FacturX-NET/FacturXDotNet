@@ -1,7 +1,6 @@
 import { Component, computed, effect, inject, input } from '@angular/core';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 import { ControlContainer, FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.component';
 import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.component';
 import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';

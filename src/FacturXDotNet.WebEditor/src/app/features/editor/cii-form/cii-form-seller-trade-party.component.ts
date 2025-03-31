@@ -2,7 +2,6 @@ import { Component, computed, effect, inject, input } from '@angular/core';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 import { ControlContainer, FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CiiFormApplicableHeaderTradeAgreementComponent } from './cii-form-applicable-header-trade-agreement.component';
-import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormSellerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-seller-trade-party-specified-legal-organization.component';
 import { CiiFormSellerTradePartyPostalTradeAddress } from './cii-form-seller-trade-party-postal-trade-address';
 import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-seller-trade-party-specified-tax-registration';
@@ -12,7 +11,6 @@ import { EditorSettings } from '../editor-settings.service';
   selector: 'app-cii-form-seller-trade-party',
   imports: [
     ReactiveFormsModule,
-    CollapseComponent,
     CiiFormSellerTradePartySpecifiedLegalOrganizationComponent,
     CiiFormSellerTradePartyPostalTradeAddress,
     CiiFormSellerTradePartySpecifiedTaxRegistration,

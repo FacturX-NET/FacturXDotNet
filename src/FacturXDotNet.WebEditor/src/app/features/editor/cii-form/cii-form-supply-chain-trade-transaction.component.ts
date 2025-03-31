@@ -2,20 +2,13 @@ import { Component, computed, effect, inject, input } from '@angular/core';
 import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
 import { ControlContainer, FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CiiFormApplicableHeaderTradeAgreementComponent } from './cii-form-applicable-header-trade-agreement.component';
-import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormApplicableHeaderTradeDeliveryComponent } from './cii-form-applicable-header-trade-delivery.component';
 import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-applicable-header-trade-settlement.component';
 import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form-supply-chain-trade-transaction',
-  imports: [
-    ReactiveFormsModule,
-    CiiFormApplicableHeaderTradeAgreementComponent,
-    CollapseComponent,
-    CiiFormApplicableHeaderTradeDeliveryComponent,
-    CiiFormApplicableHeaderTradeSettlementComponent,
-  ],
+  imports: [ReactiveFormsModule, CiiFormApplicableHeaderTradeAgreementComponent, CiiFormApplicableHeaderTradeDeliveryComponent, CiiFormApplicableHeaderTradeSettlementComponent],
   viewProviders: [
     {
       provide: ControlContainer,

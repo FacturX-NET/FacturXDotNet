@@ -7,7 +7,6 @@ import { CrossIndustryInvoice } from '../../../core/facturx-models/cii/cross-ind
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateOnly } from '../../../core/facturx-models/cii/date-only';
 import { VatOnlyTaxSchemeIdentifier } from '../../../core/facturx-models/cii/vat-only-tax-scheme-identifier';
-import { CollapseComponent } from '../../../core/collapse/collapse.component';
 import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-document-context.component';
 import { CiiFormSupplyChainTradeTransactionComponent } from './cii-form-supply-chain-trade-transaction.component';
 import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document.component';
@@ -15,7 +14,7 @@ import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-form',
-  imports: [ReactiveFormsModule, CollapseComponent, CiiFormExchangedDocumentContextComponent, CiiFormSupplyChainTradeTransactionComponent, CiiFormExchangedDocumentComponent],
+  imports: [ReactiveFormsModule, CiiFormExchangedDocumentContextComponent, CiiFormSupplyChainTradeTransactionComponent, CiiFormExchangedDocumentComponent],
   template: `
     <form [formGroup]="form">
       <h6 id="BG-2" class="m-0" tabindex="-1">BG-2 - EXCHANGED DOCUMENT CONTEXT</h6>
