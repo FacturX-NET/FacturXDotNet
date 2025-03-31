@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, HostListener, input, OnInit } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostListener, input } from '@angular/core';
 
 @Directive({
   selector: '[scrollTo]',

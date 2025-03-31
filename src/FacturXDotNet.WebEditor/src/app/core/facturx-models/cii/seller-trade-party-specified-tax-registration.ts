@@ -1,4 +1,4 @@
-import {VatOnlyTaxSchemeIdentifier} from "./vat-only-tax-scheme-identifier";
+import { VatOnlyTaxSchemeIdentifier } from './vat-only-tax-scheme-identifier';
 
 /**
  * **SELLER VAT IDENTIFIER** - Detailed information on tax information of the seller

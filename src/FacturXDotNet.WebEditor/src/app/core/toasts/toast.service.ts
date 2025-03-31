@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +13,7 @@ export class ToastService {
   }
 
   show(toast: Toast) {
-    this.toastsSubject.next({...toast, id: this.counter++});
+    this.toastsSubject.next({ ...toast, id: this.counter++ });
   }
 }
 

@@ -1,10 +1,5 @@
-import { Component, computed, effect, inject, input } from '@angular/core';
-import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
-import { ControlContainer, FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.component';
-import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.component';
-import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';
-import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-buyer-trade-party-specified-legal-organization.component';
+import { Component, inject, input } from '@angular/core';
+import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-form-specified-trade-settlement-header-monetary-summation.component';
 import { EditorSettings } from '../editor-settings.service';
 

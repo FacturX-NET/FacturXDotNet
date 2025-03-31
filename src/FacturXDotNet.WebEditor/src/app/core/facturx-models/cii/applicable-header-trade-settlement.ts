@@ -1,4 +1,4 @@
-import {SpecifiedTradeSettlementHeaderMonetarySummation} from "./specified-trade-settlement-header-monetary-summation";
+import { SpecifiedTradeSettlementHeaderMonetarySummation } from './specified-trade-settlement-header-monetary-summation';
 
 /**
  * **HEADER TRADE SETTLEMENT DIRECT DEBIT** - A group of business terms to specify a direct debit.

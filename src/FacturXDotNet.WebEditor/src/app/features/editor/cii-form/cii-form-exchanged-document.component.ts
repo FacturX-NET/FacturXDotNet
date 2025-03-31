@@ -1,6 +1,5 @@
-import { Component, computed, effect, inject, input } from '@angular/core';
-import { ControlContainer, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
-import { CrossIndustryInvoiceFormVerbosity } from './cii-form.component';
+import { Component, inject, input } from '@angular/core';
+import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../editor-settings.service';
 
 @Component({

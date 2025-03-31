@@ -1,12 +1,11 @@
-import { Component, computed, inject, OnInit, Signal, signal } from '@angular/core';
+import { Component, Signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './pdf-viewer.component';
-import { CiiFormComponent, CrossIndustryInvoiceFormVerbosity } from './cii-form/cii-form.component';
+import { CiiFormComponent } from './cii-form/cii-form.component';
 import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-industry-invoice';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
 import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
-import { ScrollSpy } from 'bootstrap';
 
 @Component({
   selector: 'app-editor',
@@ -76,41 +75,43 @@ import { ScrollSpy } from 'bootstrap';
                   </button>
                 </div>
                 <h5 class="navbar-brand m-0">Cross-Industry Invoice</h5>
-                <div class="dropdown">
-                  <a href="javascript:void 0;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false"> details </a>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <a class="dropdown-item" href="javascript:void 0;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings()?.showBusinessRules !== true">
-                        @if (settings()?.showBusinessRules === true) {
-                          <i class="bi bi-eye"></i>
-                        } @else {
-                          <i class="bi bi-eye-slash"></i>
-                        }
-                        Business Rules
-                      </a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="javascript:void 0;" (click)="toggleRemarks()" [class.text-body-tertiary]="settings()?.showRemarks !== true">
-                        @if (settings()?.showRemarks === true) {
-                          <i class="bi bi-eye"></i>
-                        } @else {
-                          <i class="bi bi-eye-slash"></i>
-                        }
-                        Remarks
-                      </a>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="javascript:void 0;" (click)="toggleChorusProRemarks()" [class.text-body-tertiary]="settings()?.showChorusProRemarks !== true">
-                        @if (settings()?.showChorusProRemarks === true) {
-                          <i class="bi bi-eye"></i>
-                        } @else {
-                          <i class="bi bi-eye-slash"></i>
-                        }
-                        Chorus Pro Remarks
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                @if (settings(); as settings) {
+                  <div class="dropdown">
+                    <a href="javascript:void 0;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false"> details </a>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="javascript:void 0;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings.showBusinessRules !== true">
+                          @if (settings.showBusinessRules === true) {
+                            <i class="bi bi-eye"></i>
+                          } @else {
+                            <i class="bi bi-eye-slash"></i>
+                          }
+                          Business Rules
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="javascript:void 0;" (click)="toggleRemarks()" [class.text-body-tertiary]="settings.showRemarks !== true">
+                          @if (settings.showRemarks === true) {
+                            <i class="bi bi-eye"></i>
+                          } @else {
+                            <i class="bi bi-eye-slash"></i>
+                          }
+                          Remarks
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="javascript:void 0;" (click)="toggleChorusProRemarks()" [class.text-body-tertiary]="settings.showChorusProRemarks !== true">
+                          @if (settings.showChorusProRemarks === true) {
+                            <i class="bi bi-eye"></i>
+                          } @else {
+                            <i class="bi bi-eye-slash"></i>
+                          }
+                          Chorus Pro Remarks
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                }
               </div>
             </div>
           </header>

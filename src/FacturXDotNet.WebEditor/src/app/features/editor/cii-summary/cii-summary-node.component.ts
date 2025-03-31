@@ -1,6 +1,5 @@
-import { Component, computed, effect, input, model, untracked } from '@angular/core';
+import { Component, effect, input, model, untracked } from '@angular/core';
 import { CiiSummaryNode } from './cii-summary.component';
-import { Collapse } from 'bootstrap';
 import { ScrollToDirective } from '../../../core/directives/scroll-to.directive';
 
 @Component({

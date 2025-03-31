@@ -1,9 +1,9 @@
-import {Routes} from '@angular/router';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
     path: 'editor',
-    loadChildren: () => import('./features/editor/editor.routes').then(m => m.routes),
+    loadChildren: () => import('./features/editor/editor.routes').then((m) => m.routes),
   },
   {
     path: '',

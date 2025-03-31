@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {ToasterComponent} from './core/toasts/toaster.component';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { ToasterComponent } from './core/toasts/toaster.component';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +9,4 @@ import {ToasterComponent} from './core/toasts/toaster.component';
     <app-toaster></app-toaster>`,
   styles: [],
 })
-export class AppComponent {
-}
+export class AppComponent {}
