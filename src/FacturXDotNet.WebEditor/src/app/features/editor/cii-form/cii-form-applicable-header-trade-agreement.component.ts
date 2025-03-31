@@ -48,59 +48,29 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <app-collapse id="seller" #collapseSeller>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseSeller.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BG-4 - SELLER
-        </h6>
-        <p class="form-text ps-4">A group of business terms providing information about the Seller.</p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-seller-trade-party formGroupName="sellerTradeParty" [settings]="settings()"></app-cii-form-seller-trade-party>
-          </div>
+      <h6 class="m-0">BG-4 - SELLER</h6>
+      <p class="form-text ps-4">A group of business terms providing information about the Seller.</p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-seller-trade-party formGroupName="sellerTradeParty" [settings]="settings()"></app-cii-form-seller-trade-party>
         </div>
-      </app-collapse>
+      </div>
 
-      <app-collapse id="seller" #collapseBuyer>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseBuyer.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BG-7 - BUYER
-        </h6>
-        <p class="form-text ps-4">A group of business terms providing information about the Buyer.</p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-buyer-trade-party formGroupName="buyerTradeParty" [settings]="settings()"></app-cii-form-buyer-trade-party>
-          </div>
+      <h6 class="m-0">BG-7 - BUYER</h6>
+      <p class="form-text ps-4">A group of business terms providing information about the Buyer.</p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-buyer-trade-party formGroupName="buyerTradeParty" [settings]="settings()"></app-cii-form-buyer-trade-party>
         </div>
-      </app-collapse>
+      </div>
 
-      <app-collapse id="seller" #collapseBuyerOrderReferencedDocument>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseBuyerOrderReferencedDocument.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BT-13-00 - PURCHASE ORDER REFERENCE
-        </h6>
-        <p class="form-text ps-4"></p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-buyer-order-referenced-document formGroupName="buyerOrderReferencedDocument" [settings]="settings()"></app-cii-form-buyer-order-referenced-document>
-          </div>
+      <h6 class="m-0">BT-13-00 - PURCHASE ORDER REFERENCE</h6>
+      <p class="form-text ps-4"></p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-buyer-order-referenced-document formGroupName="buyerOrderReferencedDocument" [settings]="settings()"></app-cii-form-buyer-order-referenced-document>
         </div>
-      </app-collapse>
+      </div>
     </div>
   `,
 })

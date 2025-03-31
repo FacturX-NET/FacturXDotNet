@@ -38,26 +38,16 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <app-collapse id="seller-legal-organization" #collapseSellerLegalOrganization>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseSellerLegalOrganization.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BT-47-00 - BUYER LEGAL REGISTRATION IDENTIFIER
-        </h6>
-        <p class="form-text ps-4">Details about the organization.</p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-buyer-trade-party-specified-legal-organization
-              formGroupName="specifiedLegalOrganization"
-              [settings]="settings()"
-            ></app-cii-form-buyer-trade-party-specified-legal-organization>
-          </div>
+      <h6 class="m-0">BT-47-00 - BUYER LEGAL REGISTRATION IDENTIFIER</h6>
+      <p class="form-text ps-4">Details about the organization.</p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-buyer-trade-party-specified-legal-organization
+            formGroupName="specifiedLegalOrganization"
+            [settings]="settings()"
+          ></app-cii-form-buyer-trade-party-specified-legal-organization>
         </div>
-      </app-collapse>
+      </div>
     </div>
   `,
   styles: ``,

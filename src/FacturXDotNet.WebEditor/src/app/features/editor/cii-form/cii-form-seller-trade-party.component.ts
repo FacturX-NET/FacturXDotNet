@@ -45,82 +45,52 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <app-collapse id="seller-legal-organization" #collapseSellerLegalOrganization>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseSellerLegalOrganization.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
+      <h6 class="m-0">BT-30-00 - SELLER LEGAL ORGANIZATION</h6>
+      <p class="form-text ps-4">Details about the organization.</p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-seller-trade-party-specified-legal-organization
+            formGroupName="specifiedLegalOrganization"
+            [settings]="settings()"
+          ></app-cii-form-seller-trade-party-specified-legal-organization>
+        </div>
+      </div>
 
-          BT-30-00 - SELLER LEGAL ORGANIZATION
-        </h6>
-        <p class="form-text ps-4">Details about the organization.</p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-seller-trade-party-specified-legal-organization
-              formGroupName="specifiedLegalOrganization"
-              [settings]="settings()"
-            ></app-cii-form-seller-trade-party-specified-legal-organization>
+      <h6 class="m-0">BG-5 - SELLER POSTAL ADDRESS</h6>
+      <p class="form-text ps-4">A group of business terms providing information about the address of the Seller.</p>
+      @if (settings()?.showBusinessRules === true) {
+        <div class="form-text ps-4">
+          <div class="fw-semibold">Business Rules</div>
+          <ul>
+            <li><span class="fw-semibold">BR-8</span>: An Invoice shall contain the Seller postal address.</li>
+          </ul>
+        </div>
+      }
+      @if (settings()?.showRemarks === true) {
+        <div class="ps-4">
+          <div class="alert alert-light small">
+            <i class="bi bi-info-circle"></i>
+            Sufficient components of the address are to be filled in order to comply to legal requirements. Like any address, the fields necessary to define the address must
+            appear. The country code is mandatory.
           </div>
         </div>
-      </app-collapse>
-
-      <app-collapse id="seller-postal-address" #collapseSellerPostalAddress>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseSellerPostalAddress.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BG-5 - SELLER POSTAL ADDRESS
-        </h6>
-        <p class="form-text ps-4">A group of business terms providing information about the address of the Seller.</p>
-        @if (settings()?.showBusinessRules === true) {
-          <div class="form-text ps-4">
-            <div class="fw-semibold">Business Rules</div>
-            <ul>
-              <li><span class="fw-semibold">BR-8</span>: An Invoice shall contain the Seller postal address.</li>
-            </ul>
-          </div>
-        }
-        @if (settings()?.showRemarks === true) {
-          <div class="ps-4">
-            <div class="alert alert-light small">
-              <i class="bi bi-info-circle"></i>
-              Sufficient components of the address are to be filled in order to comply to legal requirements. Like any address, the fields necessary to define the address must
-              appear. The country code is mandatory.
-            </div>
-          </div>
-        }
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-seller-trade-party-postal-trade-address formGroupName="postalTradeAddress" [settings]="settings()"></app-cii-form-seller-trade-party-postal-trade-address>
-          </div>
+      }
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-seller-trade-party-postal-trade-address formGroupName="postalTradeAddress" [settings]="settings()"></app-cii-form-seller-trade-party-postal-trade-address>
         </div>
-      </app-collapse>
+      </div>
 
-      <app-collapse id="seller-vat-identifier" #collapseSellerVatIdentifier>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseSellerVatIdentifier.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BT-31-00 - SELLER VAT IDENTIFIER
-        </h6>
-        <p class="form-text ps-4">Detailed information on tax information of the seller.</p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-seller-trade-party-specified-tax-registration
-              formGroupName="specifiedTaxRegistration"
-              [settings]="settings()"
-            ></app-cii-form-seller-trade-party-specified-tax-registration>
-          </div>
+      <h6 class="m-0">BT-31-00 - SELLER VAT IDENTIFIER</h6>
+      <p class="form-text ps-4">Detailed information on tax information of the seller.</p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-seller-trade-party-specified-tax-registration
+            formGroupName="specifiedTaxRegistration"
+            [settings]="settings()"
+          ></app-cii-form-seller-trade-party-specified-tax-registration>
         </div>
-      </app-collapse>
+      </div>
     </div>
   `,
   styles: ``,

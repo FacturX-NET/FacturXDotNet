@@ -18,59 +18,29 @@ import { EditorSettings } from '../editor-settings.service';
   imports: [ReactiveFormsModule, CollapseComponent, CiiFormExchangedDocumentContextComponent, CiiFormSupplyChainTradeTransactionComponent, CiiFormExchangedDocumentComponent],
   template: `
     <form [formGroup]="form">
-      <app-collapse id="exchanged-document-context" #collapseExchangedDocumentContext>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseExchangedDocumentContext.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BG-2 - EXCHANGE DOCUMENT CONTEXT
-        </h6>
-        <p class="form-text ps-4">A group of business terms providing information on the business process and rules applicable to the Invoice document.</p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-exchanged-document-context formGroupName="exchangedDocumentContext" [settings]="settings()"></app-cii-form-exchanged-document-context>
-          </div>
+      <h6 class="m-0">BG-2 - EXCHANGE DOCUMENT CONTEXT</h6>
+      <p class="form-text ps-4">A group of business terms providing information on the business process and rules applicable to the Invoice document.</p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-exchanged-document-context formGroupName="exchangedDocumentContext" [settings]="settings()"></app-cii-form-exchanged-document-context>
         </div>
-      </app-collapse>
+      </div>
 
-      <app-collapse id="exchanged-document" #collapsedExchangeDocument>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapsedExchangeDocument.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BT-1-00 - EXCHANGE DOCUMENT
-        </h6>
-        <p class="form-text ps-4"></p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-exchanged-document formGroupName="exchangedDocument" [settings]="settings()"></app-cii-form-exchanged-document>
-          </div>
+      <h6 class="m-0">BT-1-00 - EXCHANGE DOCUMENT</h6>
+      <p class="form-text ps-4"></p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-exchanged-document formGroupName="exchangedDocument" [settings]="settings()"></app-cii-form-exchanged-document>
         </div>
-      </app-collapse>
+      </div>
 
-      <app-collapse id="supply-chain-trade-transaction" #collapseSupplyChainTradeTransaction>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseSupplyChainTradeTransaction.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BG-25-00 - SUPPLY CHAIN TRADE TRANSACTION
-        </h6>
-        <p class="form-text ps-4"></p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-supply-chain-trade-transaction formGroupName="supplyChainTradeTransaction" [settings]="settings()"></app-cii-form-supply-chain-trade-transaction>
-          </div>
+      <h6 class="m-0">BG-25-00 - SUPPLY CHAIN TRADE TRANSACTION</h6>
+      <p class="form-text ps-4"></p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-supply-chain-trade-transaction formGroupName="supplyChainTradeTransaction" [settings]="settings()"></app-cii-form-supply-chain-trade-transaction>
         </div>
-      </app-collapse>
+      </div>
     </form>
   `,
 })

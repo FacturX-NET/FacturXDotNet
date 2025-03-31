@@ -51,44 +51,34 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <app-collapse id="seller-legal-organization" #collapseSellerLegalOrganization>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseSellerLegalOrganization.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BG-22 - DOCUMENT TOTALS
-        </h6>
-        <p class="form-text ps-4">A group of business terms providing the monetary totals for the Invoice.</p>
-        @if (settings()?.showRemarks === true) {
-          <div class="ps-4">
-            <div class="alert alert-light small">
-              <i class="bi bi-info-circle"></i>
-              This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with
-              the rules of the SEPA or other direct debit scheme.
-            </div>
-          </div>
-        }
-        @if (settings()?.showChorusProRemarks === true) {
-          <div class="ps-4">
-            <div class="alert alert-light small">
-              <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
-              Amounts in an invoice are expressed by a figure on 19 positions. They can not have more than two decimals. The separator is
-              <code>.</code> (dot).
-            </div>
-          </div>
-        }
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-specified-trade-settlement-header-monetary-summation
-              formGroupName="specifiedTradeSettlementHeaderMonetarySummation"
-              [settings]="settings()"
-            ></app-cii-form-specified-trade-settlement-header-monetary-summation>
+      <h6 class="m-0">BG-22 - DOCUMENT TOTALS</h6>
+      <p class="form-text ps-4">A group of business terms providing the monetary totals for the Invoice.</p>
+      @if (settings()?.showRemarks === true) {
+        <div class="ps-4">
+          <div class="alert alert-light small">
+            <i class="bi bi-info-circle"></i>
+            This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with
+            the rules of the SEPA or other direct debit scheme.
           </div>
         </div>
-      </app-collapse>
+      }
+      @if (settings()?.showChorusProRemarks === true) {
+        <div class="ps-4">
+          <div class="alert alert-light small">
+            <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
+            Amounts in an invoice are expressed by a figure on 19 positions. They can not have more than two decimals. The separator is
+            <code>.</code> (dot).
+          </div>
+        </div>
+      }
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-specified-trade-settlement-header-monetary-summation
+            formGroupName="specifiedTradeSettlementHeaderMonetarySummation"
+            [settings]="settings()"
+          ></app-cii-form-specified-trade-settlement-header-monetary-summation>
+        </div>
+      </div>
     </div>
   `,
 })

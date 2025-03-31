@@ -26,79 +26,49 @@ import { EditorSettings } from '../editor-settings.service';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-collapse id="header-trade-agreement" #collapseHeaderTradeAgreement>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseHeaderTradeAgreement.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
+      <h6 class="m-0">BT-10-00 - HEADER TRADE AGREEMENT</h6>
+      <p class="form-text ps-4"></p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-applicable-header-trade-agreement formGroupName="applicableHeaderTradeAgreement" [settings]="settings()"></app-cii-form-applicable-header-trade-agreement>
+        </div>
+      </div>
 
-          BT-10-00 - HEADER TRADE AGREEMENT
-        </h6>
-        <p class="form-text ps-4"></p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-applicable-header-trade-agreement formGroupName="applicableHeaderTradeAgreement" [settings]="settings()"></app-cii-form-applicable-header-trade-agreement>
+      <h6 class="m-0">BG-13-00 - DELIVERY INFORMATION</h6>
+      <p class="form-text ps-4">A group of business terms providing information about where and when the goods and services invoiced are delivered.</p>
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-applicable-header-trade-delivery formGroupName="applicableHeaderTradeDelivery" [settings]="settings()"></app-cii-form-applicable-header-trade-delivery>
+        </div>
+      </div>
+
+      <h6 class="m-0">BG-19 - HEADER TRADE SETTLEMENT DIRECT DEBIT</h6>
+      <p class="form-text ps-4">A group of business terms to specify a direct debit.</p>
+      @if (settings()?.showRemarks === true) {
+        <div class="ps-4">
+          <div class="alert alert-light small">
+            <i class="bi bi-info-circle"></i>
+            This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with
+            the rules of the SEPA or other direct debit scheme.
           </div>
         </div>
-      </app-collapse>
-
-      <app-collapse id="header-trade-delivery" #collapseHeaderTradeDelivery>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseHeaderTradeDelivery.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BG-13-00 - DELIVERY INFORMATION
-        </h6>
-        <p class="form-text ps-4">A group of business terms providing information about where and when the goods and services invoiced are delivered.</p>
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-applicable-header-trade-delivery formGroupName="applicableHeaderTradeDelivery" [settings]="settings()"></app-cii-form-applicable-header-trade-delivery>
+      }
+      @if (settings()?.showChorusProRemarks === true) {
+        <div class="ps-4">
+          <div class="alert alert-light small">
+            <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
+            Not used.
           </div>
         </div>
-      </app-collapse>
-
-      <app-collapse id="header-trade-settlement" #collapseHeaderTradeSettlement>
-        <h6 class="m-0" ngProjectAs="trigger">
-          @if (collapseHeaderTradeSettlement.collapsed()) {
-            <i class="bi bi-plus fs-5"></i>
-          } @else {
-            <i class="bi bi-dash fs-5"></i>
-          }
-
-          BG-19 - HEADER TRADE SETTLEMENT DIRECT DEBIT
-        </h6>
-        <p class="form-text ps-4">A group of business terms to specify a direct debit.</p>
-        @if (settings()?.showRemarks === true) {
-          <div class="ps-4">
-            <div class="alert alert-light small">
-              <i class="bi bi-info-circle"></i>
-              This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with
-              the rules of the SEPA or other direct debit scheme.
-            </div>
-          </div>
-        }
-        @if (settings()?.showChorusProRemarks === true) {
-          <div class="ps-4">
-            <div class="alert alert-light small">
-              <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
-              Not used.
-            </div>
-          </div>
-        }
-        <div class="ps-4" ngProjectAs="collapsible">
-          <div class="ps-3 border-start">
-            <app-cii-form-applicable-header-trade-settlement
-              formGroupName="applicableHeaderTradeSettlement"
-              [settings]="settings()"
-            ></app-cii-form-applicable-header-trade-settlement>
-          </div>
+      }
+      <div class="ps-4">
+        <div class="ps-3 border-start">
+          <app-cii-form-applicable-header-trade-settlement
+            formGroupName="applicableHeaderTradeSettlement"
+            [settings]="settings()"
+          ></app-cii-form-applicable-header-trade-settlement>
         </div>
-      </app-collapse>
+      </div>
     </div>
   `,
 })
