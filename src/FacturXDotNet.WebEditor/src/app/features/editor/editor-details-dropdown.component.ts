@@ -7,8 +7,8 @@ import { EditorSettings, EditorSettingsService } from './editor-settings.service
   template: `
     @if (settings(); as settings) {
       <div class="dropdown">
-        <a href="javascript:void 0;" class="dropdown-toggle small" data-bs-toggle="dropdown" aria-expanded="false"> details </a>
-        <ul class="dropdown-menu">
+        <button href="javascript:void 0;" class="btn btn-outline-secondary small" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-eye"></i></button>
+        <ul class="dropdown-menu dropdown-menu-end">
           <li>
             <a class="dropdown-item" href="javascript:void 0;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings.showBusinessRules !== true">
               @if (settings.showBusinessRules === true) {

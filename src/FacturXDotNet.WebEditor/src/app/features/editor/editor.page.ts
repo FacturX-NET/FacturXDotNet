@@ -70,7 +70,7 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
         <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden" [ngStyle]="{ 'width.px': leftColumnWidth() }">
           <header class="border-bottom d-flex">
             <div class="d-none d-xl-block col-3"><!--spacer--></div>
-            <div class="navbar navbar-expand-xl">
+            <div class="navbar navbar-expand-xl flex-grow-1">
               <div class="container justify-content-start gap-3">
                 <div class="d-block d-xl-none">
                   <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary">
@@ -78,6 +78,7 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
                   </button>
                 </div>
                 <h5 class="navbar-brand m-0">Cross-Industry Invoice</h5>
+                <div class="flex-grow-1"><!--spacer--></div>
                 <app-editor-details-dropdown />
               </div>
             </div>
