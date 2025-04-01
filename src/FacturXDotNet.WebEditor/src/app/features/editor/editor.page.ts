@@ -12,7 +12,7 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
   selector: 'app-editor',
   imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent, NgStyle, EditorDetailsDropdownComponent],
   template: `
-    <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column gap-2">
+    <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
         <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
         <ul class="nav justify-content-center">
@@ -53,18 +53,7 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
         </div>
       </header>
 
-      <div class="flex-shrink-0 d-flex gap-2 px-4 small" [class.invisible]="!environment.isUnsafeCloudEnvironment">
-        <div class="text-truncate">
-          <span class="text-danger fw-semibold"><i class="bi bi-exclamation-triangle-fill "></i> Do not share sensitive data </span>
-          This application is hosted in an unsafe cloud environment. Although I do not store your data, or use your it for any purpose other than the application, the hosting
-          environment is beyond my control.
-        </div>
-        <div class="text-nowrap">
-          <a href="#">About self-hosting...</a>
-        </div>
-      </div>
-
-      <main class="flex-grow-1 d-flex px-1 px-md-2 px-lg-3 overflow-hidden">
+      <main class="flex-grow-1 d-flex px-1 px-md-2 px-lg-3 pt-2 overflow-hidden">
         <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden" [ngStyle]="{ 'width.px': leftColumnWidth() }">
           <header class="border-bottom d-flex">
             <div class="d-none d-xl-block col-3"><!--spacer--></div>
@@ -113,7 +102,18 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
         </div>
       </main>
 
-      <div class="flex-shrink-0 text-body-tertiary text-center px-4 text-truncate">
+      <div class="flex-shrink-0 d-flex justify-content-center gap-2 px-4 small" [class.d-none]="!environment.isUnsafeCloudEnvironment">
+        <div class="text-truncate">
+          <span class="text-danger fw-semibold"><i class="bi bi-exclamation-triangle-fill "></i> Do not share sensitive data </span>
+          This application is hosted in an unsafe cloud environment. Although I do not store your data, or use your it for any purpose other than the application, the hosting
+          environment is beyond my control.
+        </div>
+        <div class="text-nowrap">
+          <a href="#">About self-hosting...</a>
+        </div>
+      </div>
+
+      <div class="flex-shrink-0 text-body-tertiary text-center px-4 text-truncate small">
         <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and under the MIT
         License, feel free to use, modify, and share.
       </div>
