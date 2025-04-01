@@ -1,16 +1,19 @@
-import { Component, input, signal, TemplateRef } from '@angular/core';
+import { Component, computed, contentChildren, effect, inject, input, signal, TemplateRef, viewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../editor-settings.service';
 import { NgTemplateOutlet } from '@angular/common';
 import { BusinessRuleTemplate } from './business-rule-template';
+import { CiiFormRemarkComponent } from './cii-form-remark.component';
+import { CiiFormControlComponent } from './cii-form-control.component';
+import { CiiFormHighlightService } from '../services/cii-form-highlight.service';
 
 @Component({
   selector: 'app-cii-form-parent-container',
-  imports: [ReactiveFormsModule, NgTemplateOutlet],
+  imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent],
   template: `
-    <h6 [id]="term()" class="m-0" [class.text-primary]="isContentHighlighted()">{{ term() }} - {{ name() }}</h6>
+    <h6 [id]="term()" class="m-0" [class.text-primary]="isHighlighted()">{{ term() }} - {{ name() }}</h6>
 
-    <div class="ps-3 border-start border-2" [class.border-primary]="isContentHighlighted()" (mouseenter)="highlightContent(true)" (mouseleave)="highlightContent(false)">
+    <div class="ps-3 border-start border-2" [class.border-primary]="isHighlighted()" (mouseenter)="highlight(true)" (mouseleave)="highlight(false)">
       <div class="form-text">
         @if (description(); as description) {
           <ng-container [ngTemplateOutlet]="description"></ng-container>
@@ -41,10 +44,9 @@ import { BusinessRuleTemplate } from './business-rule-template';
           @if (remarks.length > 0 && settings.showRemarks) {
             <div [id]="term() + '-remarks'">
               @for (remark of remarks; track remark) {
-                <div class="alert alert-light small" [class.border-primary]="isContentHighlighted()">
-                  <i class="bi bi-info-circle pe-1"></i>
+                <app-cii-form-remark [highlight]="isHighlighted()">
                   <ng-container [ngTemplateOutlet]="remark"></ng-container>
-                </div>
+                </app-cii-form-remark>
               }
             </div>
           }
@@ -54,10 +56,9 @@ import { BusinessRuleTemplate } from './business-rule-template';
           @if (chorusProRemarks.length > 0 && settings.showChorusProRemarks) {
             <div [id]="term() + '-cpro-remarks'">
               @for (chorusProRemark of chorusProRemarks; track chorusProRemark) {
-                <div class="alert alert-light small" [class.border-primary]="isContentHighlighted()">
-                  <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
+                <app-cii-form-remark title="CHORUSPRO" [highlight]="isHighlighted()">
                   <ng-container [ngTemplateOutlet]="chorusProRemark"></ng-container>
-                </div>
+                </app-cii-form-remark>
               }
             </div>
           }
@@ -78,9 +79,10 @@ export class CiiFormParentContainerComponent {
   chorusProRemarks = input<TemplateRef<any>[]>();
   settings = input<EditorSettings>();
 
-  public isContentHighlighted = signal<boolean>(false);
+  private highlightService = inject(CiiFormHighlightService);
+  protected isHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());
 
-  protected highlightContent(highlight: boolean) {
-    this.isContentHighlighted.set(highlight);
+  protected highlight(value: boolean) {
+    this.highlightService.highlightTerm(this.term(), value);
   }
 }

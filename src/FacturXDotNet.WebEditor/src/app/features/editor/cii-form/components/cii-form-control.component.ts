@@ -1,16 +1,18 @@
-import { Component, computed, input, signal, TemplateRef } from '@angular/core';
+import { Component, computed, inject, input, signal, TemplateRef } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../editor-settings.service';
 import { NgTemplateOutlet } from '@angular/common';
 import { BusinessRuleTemplate } from './business-rule-template';
+import { CiiFormRemarkComponent } from './cii-form-remark.component';
+import { CiiFormHighlightService } from '../services/cii-form-highlight.service';
 
 @Component({
   selector: 'app-cii-form-control',
-  imports: [ReactiveFormsModule, NgTemplateOutlet],
+  imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent],
   template: `
-    <div (mouseenter)="highlightContent(true)" (mouseleave)="highlightContent(false)">
+    <div class="overflow-hidden" (mouseenter)="highlight(true)" (mouseleave)="highlight(false)">
       <div class="editor__control">
-        <label [id]="id()" class="form-label text-truncate" [class.text-primary]="isContentHighlighted()" [for]="controlId()">
+        <label [id]="id()" class="form-label text-truncate" [class.text-primary]="isHighlighted()" [for]="controlId()">
           <span class="fw-semibold">{{ term() }}</span> - {{ name() }}
         </label>
 
@@ -47,10 +49,9 @@ import { BusinessRuleTemplate } from './business-rule-template';
           @if (remarks.length > 0 && settings.showRemarks) {
             <div [id]="term() + '-remarks'">
               @for (remark of remarks; track remark) {
-                <div class="alert alert-light small" [class.border-primary]="isContentHighlighted()">
-                  <i class="bi bi-info-circle pe-1"></i>
+                <app-cii-form-remark [highlight]="isHighlighted()">
                   <ng-container [ngTemplateOutlet]="remark"></ng-container>
-                </div>
+                </app-cii-form-remark>
               }
             </div>
           }
@@ -60,10 +61,9 @@ import { BusinessRuleTemplate } from './business-rule-template';
           @if (chorusProRemarks.length > 0 && settings.showChorusProRemarks) {
             <div [id]="term() + '-cpro-remarks'">
               @for (chorusProRemark of chorusProRemarks; track chorusProRemark) {
-                <div class="alert alert-light small" [class.border-primary]="isContentHighlighted()">
-                  <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
+                <app-cii-form-remark title="CHORUSPRO" [highlight]="isHighlighted()">
                   <ng-container [ngTemplateOutlet]="chorusProRemark"></ng-container>
-                </div>
+                </app-cii-form-remark>
               }
             </div>
           }
@@ -89,9 +89,11 @@ export class CiiFormControlComponent {
   public id = computed(() => this.term());
   public controlId = computed(() => this.term() + '-control');
   public controlHelpId = computed(() => this.term() + '-control-help');
-  public isContentHighlighted = signal<boolean>(false);
 
-  protected highlightContent(highlight: boolean) {
-    this.isContentHighlighted.set(highlight);
+  private highlightService = inject(CiiFormHighlightService);
+  protected isHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());
+
+  protected highlight(value: boolean) {
+    this.highlightService.highlightTerm(this.term(), value);
   }
 }
