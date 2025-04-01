@@ -1,13 +1,23 @@
 body {
   --fx-purple: #512bd4;
   --fx-purple-rgb: 81, 43, 212;
-  --fx-light-purple: #a62bd4;
-  --fx-light-purple-rgb: 166, 43, 212;
+  --fx-purple-subtle: #eee6fa;
+  --fx-purple-subtle-rgb: 238, 230, 250;
+  --fx-purple-less-subtle: #d1c3f3;
+  --fx-purple-less-subtle-rgb: 209, 195, 243;
+  --fx-light-purple: #a42bd4;
+  --fx-light-purple-rgb: 164, 43, 212;
   --fx-dark-purple: #0e193d;
   --fx-dark-purple-rgb: 14, 25, 61;
 
+  --bs-body-color: var(--fx-dark-purple);
+  --bs-body-color-rgb: var(--fx-dark-purple-rgb);
   --bs-primary: var(--fx-purple);
   --bs-primary-rgb: var(--fx-purple-rgb);
+  --bs-primary-bg-subtle: var(--fx-purple-subtle);
+  --bs-primary-bg-subtle-rgb: var(--fx-purple-subtle-rgb);
+  --bs-primary-border-subtle: var(--fx-purple-less-subtle);
+  --bs-primary-border-subtle-rgb: var(--fx-purple-less-subtle-rgb);
   --bs-secondary: var(--fx-dark-purple);
   --bs-secondary-rgb: var(--fx-dark-purple-rgb);
   --bs-link-color: var(--fx-purple);

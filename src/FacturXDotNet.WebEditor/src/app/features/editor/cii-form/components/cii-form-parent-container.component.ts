@@ -41,7 +41,7 @@ import { BusinessRuleTemplate } from './business-rule-template';
           @if (remarks.length > 0 && settings.showRemarks) {
             <div [id]="term() + '-remarks'">
               @for (remark of remarks; track remark) {
-                <div class="alert alert-light small">
+                <div class="alert alert-light small" [class.border-primary]="isContentHighlighted()">
                   <i class="bi bi-info-circle pe-1"></i>
                   <ng-container [ngTemplateOutlet]="remark"></ng-container>
                 </div>
@@ -54,7 +54,7 @@ import { BusinessRuleTemplate } from './business-rule-template';
           @if (chorusProRemarks.length > 0 && settings.showChorusProRemarks) {
             <div [id]="term() + '-cpro-remarks'">
               @for (chorusProRemark of chorusProRemarks; track chorusProRemark) {
-                <div class="alert alert-light small">
+                <div class="alert alert-light small" [class.border-primary]="isContentHighlighted()">
                   <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
                   <ng-container [ngTemplateOutlet]="chorusProRemark"></ng-container>
                 </div>
@@ -78,7 +78,7 @@ export class CiiFormParentContainerComponent {
   chorusProRemarks = input<TemplateRef<any>[]>();
   settings = input<EditorSettings>();
 
-  protected isContentHighlighted = signal<boolean>(false);
+  public isContentHighlighted = signal<boolean>(false);
 
   protected highlightContent(highlight: boolean) {
     this.isContentHighlighted.set(highlight);

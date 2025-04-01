@@ -66,7 +66,7 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
         </div>
       </header>
 
-      <main class="flex-grow-1 d-flex px-1 px-md-2 px-lg-3 pt-2 overflow-hidden">
+      <main class="flex-grow-1 d-flex px-1 px-md-2 px-lg-3 pt-3 pb-1 overflow-hidden">
         <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden" [ngStyle]="{ 'width.px': leftColumnWidth() }">
           <header class="border-bottom d-flex">
             <div class="d-none d-xl-block col-3"><!--spacer--></div>
