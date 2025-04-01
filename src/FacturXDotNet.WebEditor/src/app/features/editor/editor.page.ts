@@ -20,11 +20,27 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
             <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">File</a>
             <ul class="dropdown-menu">
               <li>
-                <a class="dropdown-item" href="#">Create new document</a>
-                <a class="dropdown-item" href="#">Import FacturX document</a>
-                <hr />
-                <a class="dropdown-item" href="#">Save FacturX as...</a>
-                <a class="dropdown-item" href="#">Save Cross-Industry Invoice as...</a>
+                <a class="dropdown-item" href="#">Create blank FacturX document</a>
+                <a class="dropdown-item" href="#">Open FacturX document</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">Import</a>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" href="#">Import Cross-Industry Invoice data</a>
+                <a class="dropdown-item" href="#">Import PDF image</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">Export</a>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" href="#">Download FacturX document</a>
+                <a class="dropdown-item" href="#">Download Cross-Industry Invoice XML file</a>
+                <a class="dropdown-item" href="#">Download PDF file</a>
               </li>
             </ul>
           </li>
@@ -43,9 +59,6 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
           </li>
         </ul>
         <div class="flex-grow-1"></div>
-        <div class="px-4">
-          {{ environment.version }}
-        </div>
         <div class="px-4">
           <a href="https://github.com/FacturX-NET/FacturXDotNet" class="text-light">
             <i class="bi bi-github fs-4"></i>
