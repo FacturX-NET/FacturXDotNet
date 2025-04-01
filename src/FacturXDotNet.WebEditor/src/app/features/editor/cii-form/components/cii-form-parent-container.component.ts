@@ -2,14 +2,14 @@ import { Component, computed, contentChildren, effect, inject, input, signal, Te
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../editor-settings.service';
 import { NgTemplateOutlet } from '@angular/common';
-import { BusinessRuleTemplate } from './business-rule-template';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
 import { CiiFormControlComponent } from './cii-form-control.component';
-import { CiiFormHighlightService } from '../services/cii-form-highlight.service';
+import { CiiFormHighlightTermService } from '../services/cii-form-highlight-term.service';
+import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
 
 @Component({
   selector: 'app-cii-form-parent-container',
-  imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent],
+  imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
   template: `
     <h6 [id]="term()" class="m-0" [class.text-primary]="isHighlighted()">{{ term() }} - {{ name() }}</h6>
 
@@ -25,17 +25,8 @@ import { CiiFormHighlightService } from '../services/cii-form-highlight.service'
       @if (settings(); as settings) {
         @if (settings?.showBusinessRules === true) {
           @if (businessRules(); as businessRules) {
-            <div class="form-text">
-              <div class="fw-semibold">Business Rules</div>
-              <ul>
-                @for (rule of businessRules; track rule.id) {
-                  <li>
-                    <span [id]="rule.id" class="fw-semibold">{{ rule.id }}</span
-                    >:
-                    <ng-container [ngTemplateOutlet]="rule.template"></ng-container>
-                  </li>
-                }
-              </ul>
+            <div [id]="term() + '-rules'">
+              <app-cii-form-business-rules [businessRules]="businessRules"></app-cii-form-business-rules>
             </div>
           }
         }
@@ -79,7 +70,7 @@ export class CiiFormParentContainerComponent {
   chorusProRemarks = input<TemplateRef<any>[]>();
   settings = input<EditorSettings>();
 
-  private highlightService = inject(CiiFormHighlightService);
+  private highlightService = inject(CiiFormHighlightTermService);
   protected isHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());
 
   protected highlight(value: boolean) {

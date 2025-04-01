@@ -2,15 +2,15 @@ import { Component, computed, inject, input, signal, TemplateRef } from '@angula
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../editor-settings.service';
 import { NgTemplateOutlet } from '@angular/common';
-import { BusinessRuleTemplate } from './business-rule-template';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
-import { CiiFormHighlightService } from '../services/cii-form-highlight.service';
+import { CiiFormHighlightTermService } from '../services/cii-form-highlight-term.service';
+import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
 
 @Component({
   selector: 'app-cii-form-control',
-  imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent],
+  imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
   template: `
-    <div class="overflow-hidden px-1" (mouseenter)="highlight(true)" (mouseleave)="highlight(false)">
+    <div class="overflow-hidden px-1" (mouseenter)="highlightTerm(true)" (mouseleave)="highlightTerm(false)">
       <div class="editor__control">
         <label [id]="id()" class="form-label text-truncate" [class.text-primary]="isHighlighted()" [for]="controlId()">
           <span class="fw-semibold">{{ term() }}</span> - {{ name() }}
@@ -30,18 +30,7 @@ import { CiiFormHighlightService } from '../services/cii-form-highlight.service'
       @if (settings(); as settings) {
         @if (settings?.showBusinessRules === true) {
           @if (businessRules(); as businessRules) {
-            <div class="form-text">
-              <div class="fw-semibold">Business Rules</div>
-              <ul>
-                @for (rule of businessRules; track rule.id) {
-                  <li>
-                    <span [id]="rule.id" class="fw-semibold">{{ rule.id }}</span
-                    >:
-                    <ng-container [ngTemplateOutlet]="rule.template"></ng-container>
-                  </li>
-                }
-              </ul>
-            </div>
+            <app-cii-form-business-rules [businessRules]="businessRules"></app-cii-form-business-rules>
           }
         }
 
@@ -90,10 +79,10 @@ export class CiiFormControlComponent {
   public controlId = computed(() => this.term() + '-control');
   public controlHelpId = computed(() => this.term() + '-control-help');
 
-  private highlightService = inject(CiiFormHighlightService);
+  private highlightService = inject(CiiFormHighlightTermService);
   protected isHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());
 
-  protected highlight(value: boolean) {
+  protected highlightTerm(value: boolean) {
     this.highlightService.highlightTerm(this.term(), value);
   }
 }

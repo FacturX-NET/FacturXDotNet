@@ -2,7 +2,8 @@ import { Component, computed, inject, input } from '@angular/core';
 import { CiiSummaryNode } from './cii-summary.component';
 import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
 import { EditorSettings } from '../editor-settings.service';
-import { CiiFormHighlightService } from '../cii-form/services/cii-form-highlight.service';
+import { CiiFormHighlightTermService } from '../cii-form/services/cii-form-highlight-term.service';
+import { CiiFormHighlightBusinessRuleService } from '../cii-form/services/cii-form-highlight-business-rule.service';
 
 @Component({
   selector: 'app-cii-summary-node',
@@ -10,17 +11,17 @@ import { CiiFormHighlightService } from '../cii-form/services/cii-form-highlight
   template: `
     <div class="text-truncate d-flex gap-1">
       @if (node().disabled) {
-        <span [class.fw-bold]="isHighlighted()" (mouseenter)="this.highlight(true)" (mouseleave)="this.highlight(false)">
+        <span [class.fw-bold]="isNodeHighlighted()" (mouseenter)="this.highlightTerm(true)" (mouseleave)="this.highlightTerm(false)">
           <span class="fw-semibold"> {{ node().term }} </span> - {{ node().name }}
         </span>
       } @else {
         <a
           [scrollTo]="node().term"
-          [class.fw-bold]="isHighlighted()"
+          [class.fw-bold]="isNodeHighlighted()"
           data-bs-dismiss="offcanvas"
           data-bs-target="#editor__cii-summary"
-          (mouseenter)="this.highlight(true)"
-          (mouseleave)="this.highlight(false)"
+          (mouseenter)="this.highlightTerm(true)"
+          (mouseleave)="this.highlightTerm(false)"
         >
           <span class="fw-semibold"> {{ node().term }} </span> - {{ node().name }}
         </a>
@@ -31,7 +32,14 @@ import { CiiFormHighlightService } from '../cii-form/services/cii-form-highlight
           @if (settings.showBusinessRules) {
             @if (node().businessRules; as businessRules) {
               @for (rule of businessRules; track rule) {
-                <a [scrollTo]="rule" class="hoverlink">{{ rule }}</a>
+                <a
+                  [scrollTo]="rule"
+                  class="hoverlink"
+                  [class.fw-bold]="highlightedBusinessRule() === rule"
+                  (mouseenter)="highlightBusinessRule(rule, true)"
+                  (mouseleave)="highlightBusinessRule(rule, false)"
+                  >{{ rule }}</a
+                >
               }
             }
           }
@@ -59,10 +67,17 @@ export class CiiSummaryNodeComponent {
   node = input.required<CiiSummaryNode>();
   settings = input.required<EditorSettings>();
 
-  private highlightService = inject(CiiFormHighlightService);
-  protected isHighlighted = computed(() => this.highlightService.highlightedTerm() === this.node().term);
+  private highlightTermService = inject(CiiFormHighlightTermService);
+  protected isNodeHighlighted = computed(() => this.highlightTermService.highlightedTerm() === this.node().term);
 
-  protected highlight(value: boolean) {
-    this.highlightService.highlightTerm(this.node().term, value);
+  private highlightBusinessRuleService = inject(CiiFormHighlightBusinessRuleService);
+  protected highlightedBusinessRule = this.highlightBusinessRuleService.highlightedBusinessRule;
+
+  protected highlightTerm(value: boolean) {
+    this.highlightTermService.highlightTerm(this.node().term, value);
+  }
+
+  protected highlightBusinessRule(rule: string, value: boolean) {
+    this.highlightBusinessRuleService.highlightBusinessRule(rule, value);
   }
 }
