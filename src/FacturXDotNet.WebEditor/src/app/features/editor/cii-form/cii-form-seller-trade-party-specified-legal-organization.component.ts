@@ -2,10 +2,11 @@ import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../editor-settings.service';
 import { CiiFormControlComponent } from './components/cii-form-control.component';
+import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-specified-legal-organization',
-  imports: [ReactiveFormsModule, CiiFormControlComponent],
+  imports: [ReactiveFormsModule, CiiFormControlComponent, ScrollToDirective],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -28,8 +29,8 @@ import { CiiFormControlComponent } from './components/cii-form-control.component
           >
             <ng-template #bt30Description> An identifier issued by an official registrar that identifies the Seller as a legal entity or person. </ng-template>
             <ng-template #brCo26>
-              In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller VAT
-              identifier (BT-31) shall be present.
+              In order for the buyer to automatically identify a supplier, the <a [scrollTo]="'BT-29'">Seller identifier (BT-29)</a>, the
+              <a [scrollTo]="'BT-30'">Seller legal registration identifier (BT-30)</a> and/or the <a [scrollTo]="'BT-31'">Seller VAT identifier (BT-31)</a> shall be present.
             </ng-template>
 
             <input [id]="bt30Control.controlId()" class="form-control" formControlName="id" placeholder="123456782" />

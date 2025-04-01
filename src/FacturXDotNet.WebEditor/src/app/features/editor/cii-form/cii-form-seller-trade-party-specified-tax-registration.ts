@@ -2,10 +2,11 @@ import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../editor-settings.service';
 import { CiiFormControlComponent } from './components/cii-form-control.component';
+import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-specified-tax-registration',
-  imports: [ReactiveFormsModule, CiiFormControlComponent],
+  imports: [ReactiveFormsModule, CiiFormControlComponent, ScrollToDirective],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -32,12 +33,13 @@ import { CiiFormControlComponent } from './components/cii-form-control.component
           >
             <ng-template #bt31Description>The Seller's VAT identifier (also known as Seller VAT identification number).</ng-template>
             <ng-template #brCo9>
-              The Seller VAT identifier, the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) shall have a prefix in accordance with ISO code
-              ISO 3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix ‘EL’.
+              The Seller VAT identifier, the <a [scrollTo]="'BT-63'">Seller tax representative VAT identifier (BT-63)</a> and the
+              <a [scrollTo]="'BT-48'">Buyer VAT identifier (BT-48)</a> shall have a prefix in accordance with ISO code ISO 3166-1 alpha-2 by which the country of issue may be
+              identified. Nevertheless, Greece may use the prefix ‘EL’.
             </ng-template>
             <ng-template #brCo26>
-              In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller VAT
-              identifier shall be present.
+              In order for the buyer to automatically identify a supplier, the <a [scrollTo]="'BT-29'">Seller identifier (BT-29)</a>, the
+              <a [scrollTo]="'BT-30'">Seller legal registration identifier (BT-30)</a> and/or the Seller VAT identifier shall be present.
             </ng-template>
             <ng-template #bt31Remark>
               VAT number prefixed by a country code. A VAT registered Supplier shall include his VAT ID, except when he uses a tax representative.

@@ -91,14 +91,14 @@ import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
         [businessRules]="[
           { id: 'BR-14', template: br14 },
           { id: 'BR-CO-15', template: brCo15 },
-          { id: 'BR-FEXT-CO-15', template: brFextCo15 },
+          { id: 'BR-FXEXT-CO-15', template: brFxextCo15 },
         ]"
         [remarks]="[bt112Remark]"
         [settings]="settings()"
         #bt112Control
       >
         <ng-template #bt112Description>The total amount of the Invoice with VAT.</ng-template>
-        <ng-template #br14> An Invoice shall have the Invoice total amount with VAT (BT-112).</ng-template>
+        <ng-template #br14> An Invoice shall have the <a [scrollTo]="'BT-112'">Invoice total amount with VAT (BT-112)</a>.</ng-template>
         <ng-template #brCo15>
           <math>
             <mrow>
@@ -110,8 +110,9 @@ import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
             </mrow>
           </math>
         </ng-template>
-        <ng-template #brFextCo15>
-          For EXTENDED profile only, BR-CO-15 is replaced by BR-FXEXT-CO-15, which add a tolerance of 0,01 euro per line, document level charge and allowance in calculation.
+        <ng-template #brFxextCo15>
+          For EXTENDED profile only, <a [scrollTo]="'BR-CO-15'">BR-CO-15</a> is replaced by <a [scrollTo]="'BR-FXEXT-CO-15'">BR-FXEXT-CO-15</a>, which add a tolerance of 0,01 euro
+          per line, document level charge and allowance in calculation.
         </ng-template>
         <ng-template #bt112Remark> The Invoice total amount with VAT is the Invoice total amount without VAT plus the Invoice total VAT amount.</ng-template>
 
