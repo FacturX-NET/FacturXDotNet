@@ -22,6 +22,7 @@ export class CiiSummaryComponent {
     {
       code: 'BG-2',
       name: 'EXCHANGE DOCUMENT CONTEXT',
+      disabled: true,
       children: [
         {
           code: 'BT-23',
@@ -38,6 +39,7 @@ export class CiiSummaryComponent {
     {
       code: 'BT-1-00',
       name: 'EXCHANGED DOCUMENT',
+      disabled: true,
       children: [
         {
           code: 'BT-1',
@@ -70,10 +72,12 @@ export class CiiSummaryComponent {
     {
       code: 'BG-25-00',
       name: 'SUPPLY CHAIN TRADE TRANSACTION',
+      disabled: true,
       children: [
         {
           code: 'BT-10-00',
           name: 'HEADER TRADE AGREEMENT',
+          disabled: true,
           children: [
             {
               code: 'BT-10',
@@ -84,6 +88,7 @@ export class CiiSummaryComponent {
             {
               code: 'BG-4',
               name: 'SELLER',
+              disabled: true,
               children: [
                 {
                   code: 'BT-27',
@@ -93,6 +98,7 @@ export class CiiSummaryComponent {
                 {
                   code: 'BT-30-00',
                   name: 'SELLER LEGAL ORGANIZATION',
+                  disabled: true,
                   children: [
                     {
                       code: 'BT-30',
@@ -111,6 +117,7 @@ export class CiiSummaryComponent {
                 {
                   code: 'BG-5',
                   name: 'SELLER POSTAL ADDRESS',
+                  disabled: true,
                   businessRules: ['BR-8'],
                   hasRemarks: true,
                   children: [
@@ -125,6 +132,7 @@ export class CiiSummaryComponent {
                 {
                   code: 'BT-31-00',
                   name: 'SELLER VAT IDENTIFIER',
+                  disabled: true,
                   children: [
                     {
                       code: 'BT-31',
@@ -146,6 +154,7 @@ export class CiiSummaryComponent {
             {
               code: 'BG-7',
               name: 'BUYER',
+              disabled: true,
               children: [
                 {
                   code: 'BT-44',
@@ -155,6 +164,7 @@ export class CiiSummaryComponent {
                 {
                   code: 'BT-47-00',
                   name: 'BUYER LEGAL REGISTRATION IDENTIFIER',
+                  disabled: true,
                   children: [
                     {
                       code: 'BT-47',
@@ -176,6 +186,7 @@ export class CiiSummaryComponent {
             {
               code: 'BT-13-00',
               name: 'PURCHASE ORDER REFERENCE',
+              disabled: true,
               children: [
                 {
                   code: 'BT-13',
@@ -189,10 +200,12 @@ export class CiiSummaryComponent {
         {
           code: 'BG-13-00',
           name: 'DELIVERY INFORMATION',
+          disabled: true,
         },
         {
           code: 'BG-19',
           name: 'HEADER TRADE SETTLEMENT DIRECT DEBIT',
+          disabled: true,
           hasRemarks: true,
           hasChorusProRemarks: true,
           children: [
@@ -206,6 +219,7 @@ export class CiiSummaryComponent {
             {
               code: 'BG-22',
               name: 'DOCUMENT TOTALS',
+              disabled: true,
               hasRemarks: true,
               hasChorusProRemarks: true,
               children: [
@@ -252,6 +266,7 @@ export class CiiSummaryComponent {
 export interface CiiSummaryNode {
   code: string;
   name: string;
+  disabled?: boolean;
   businessRules?: string[];
   hasRemarks?: boolean;
   hasChorusProRemarks?: boolean;

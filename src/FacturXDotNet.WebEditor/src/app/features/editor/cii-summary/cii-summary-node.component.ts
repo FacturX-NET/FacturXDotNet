@@ -8,9 +8,13 @@ import { EditorSettings } from '../editor-settings.service';
   imports: [ScrollToDirective],
   template: `
     <div class="text-truncate d-flex gap-1">
-      <a [scrollTo]="'#' + node().code" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary">
+      @if (node().disabled) {
         <span class="fw-semibold"> {{ node().code }} </span> - {{ node().name }}
-      </a>
+      } @else {
+        <a [scrollTo]="'#' + node().code" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary">
+          <span class="fw-semibold"> {{ node().code }} </span> - {{ node().name }}
+        </a>
+      }
 
       @if (settings(); as settings) {
         <div class="text-body-tertiary d-flex align-items-center gap-1" style="font-size: smaller">
