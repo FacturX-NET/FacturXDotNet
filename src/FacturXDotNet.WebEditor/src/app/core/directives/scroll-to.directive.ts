@@ -1,4 +1,5 @@
-import { AfterViewInit, Directive, ElementRef, HostListener, input } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostListener, inject, input } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Directive({
   selector: '[scrollTo]',
@@ -6,20 +7,25 @@ import { AfterViewInit, Directive, ElementRef, HostListener, input } from '@angu
 export class ScrollToDirective implements AfterViewInit {
   scrollTo = input.required<string>();
 
-  constructor(private elt: ElementRef) {}
+  private elt = inject(ElementRef);
+  private router = inject(Router);
 
   ngAfterViewInit() {
-    this.elt.nativeElement.href = this.scrollTo();
+    this.elt.nativeElement.href = '#' + this.scrollTo();
   }
 
   @HostListener('click', ['$event'])
   onClick(evt: MouseEvent) {
     evt.preventDefault();
 
-    const targetElement = document.querySelector(this.scrollTo()) as HTMLElement;
+    const scrollTo = '#' + this.scrollTo();
+
+    const targetElement = document.querySelector(scrollTo) as HTMLElement;
     if (targetElement === undefined || targetElement === null) {
       return;
     }
+
+    this.router.navigateByUrl(scrollTo, { replaceUrl: true }).then();
 
     const closestLabel = targetElement.closest('label') as HTMLElement;
     if (closestLabel !== undefined && closestLabel !== null) {

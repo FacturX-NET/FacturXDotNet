@@ -11,7 +11,7 @@ import { EditorSettings } from '../editor-settings.service';
       @if (node().disabled) {
         <span class="fw-semibold"> {{ node().code }} </span> - {{ node().name }}
       } @else {
-        <a [scrollTo]="'#' + node().code" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary">
+        <a [scrollTo]="node().code" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary">
           <span class="fw-semibold"> {{ node().code }} </span> - {{ node().name }}
         </a>
       }
@@ -21,17 +21,17 @@ import { EditorSettings } from '../editor-settings.service';
           @if (settings.showBusinessRules) {
             @if (node().businessRules; as businessRules) {
               @for (rule of businessRules; track rule) {
-                <a [scrollTo]="'#' + rule" class="hoverlink">{{ rule }}</a>
+                <a [scrollTo]="rule" class="hoverlink">{{ rule }}</a>
               }
             }
           }
 
           @if (node().hasRemarks && settings.showRemarks) {
-            <a [scrollTo]="'#' + node().code + '-remarks'" class="hoverlink"><i class="bi bi-info-circle"></i></a>
+            <a [scrollTo]="node().code + '-remarks'" class="hoverlink"><i class="bi bi-info-circle"></i></a>
           }
 
           @if (node().hasChorusProRemarks && settings.showChorusProRemarks) {
-            <a [scrollTo]="'#' + node().code + '-cpro-remarks'" class="hoverlink">CPRO</a>
+            <a [scrollTo]="node().code + '-cpro-remarks'" class="hoverlink">CPRO</a>
           }
         </div>
       }
