@@ -6,6 +6,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
 import { EditorSettings } from '../editor-settings.service';
 import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-document-context.component';
 import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
+import { CiiFormControlComponent } from './components/cii-form-control.component';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-agreement',
@@ -17,6 +18,7 @@ import { CiiFormParentContainerComponent } from './components/cii-form-parent-co
     CiiFormBuyerTradePartyComponent,
     CiiFormBuyerOrderReferencedDocumentComponent,
     CiiFormParentContainerComponent,
+    CiiFormControlComponent,
   ],
   viewProviders: [
     {
@@ -28,25 +30,21 @@ import { CiiFormParentContainerComponent } from './components/cii-form-parent-co
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <div>
-        <div class="editor__control">
-          <label class="form-label text-truncate" for="buyerReference"> <span id="BT-10" class="fw-semibold">BT-10</span> - Buyer reference </label>
-          <input id="buyerReference" class="form-control" formControlName="buyerReference" placeholder="SERVEXEC" />
-          <p id="buyerReferenceHelp" class="form-text">An identifier assigned by the Buyer used for internal routing purposes.</p>
-        </div>
-        @if (settings()?.showRemarks === true) {
-          <div class="alert alert-light small">
-            <i class="bi bi-info-circle"></i>
-            The identifier is defined by the Buyer (e.g. contact ID, department, office id, project code), but provided by the Seller in the Invoice.
-          </div>
-        }
-        @if (settings()?.showChorusProRemarks === true) {
-          <div class="alert alert-light small">
-            <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
-            The invoice number is limited to 20 characters.
-          </div>
-        }
-      </div>
+      <app-cii-form-control
+        term="BT-10"
+        name="Buyer reference"
+        [description]="description"
+        [remarks]="[remark]"
+        [chorusProRemarks]="[chorusProRemark]"
+        [settings]="settings()"
+        #control
+      >
+        <ng-template #description>An identifier assigned by the Buyer used for internal routing purposes.</ng-template>
+        <ng-template #remark>The identifier is defined by the Buyer (e.g. contact ID, department, office id, project code), but provided by the Seller in the Invoice.</ng-template>
+        <ng-template #chorusProRemark>The invoice number is limited to 20 characters.</ng-template>
+
+        <input [id]="control.controlId()" class="form-control" formControlName="buyerReference" placeholder="SERVEXEC" />
+      </app-cii-form-control>
 
       <app-cii-form-parent-container term="BG-4" name="SELLER" [description]="description" [settings]="settings()">
         <ng-template #description>A group of business terms providing information about the Seller.</ng-template>

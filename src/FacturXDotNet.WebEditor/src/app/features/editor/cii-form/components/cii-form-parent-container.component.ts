@@ -1,7 +1,8 @@
 import { Component, input, signal, TemplateRef } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
+import { EditorSettings } from '../../editor-settings.service';
 import { NgTemplateOutlet } from '@angular/common';
+import { BusinessRuleTemplate } from './business-rule-template';
 
 @Component({
   selector: 'app-cii-form-parent-container',
@@ -38,7 +39,7 @@ import { NgTemplateOutlet } from '@angular/common';
 
         @if (remarks(); as remarks) {
           @if (remarks.length > 0 && settings.showRemarks) {
-            <div [id]="term() + '-remark'">
+            <div [id]="term() + '-remarks'">
               @for (remark of remarks; track remark) {
                 <div class="alert alert-light small">
                   <i class="bi bi-info-circle pe-1"></i>
@@ -51,7 +52,7 @@ import { NgTemplateOutlet } from '@angular/common';
 
         @if (chorusProRemarks(); as chorusProRemarks) {
           @if (chorusProRemarks.length > 0 && settings.showChorusProRemarks) {
-            <div [id]="term() + '-cpro-remark'">
+            <div [id]="term() + '-cpro-remarks'">
               @for (chorusProRemark of chorusProRemarks; track chorusProRemark) {
                 <div class="alert alert-light small">
                   <div class="fw-semibold"><i class="bi bi-info-circle"></i> CHORUSPRO</div>
@@ -82,9 +83,4 @@ export class CiiFormParentContainerComponent {
   protected highlightContent(highlight: boolean) {
     this.isContentHighlighted.set(highlight);
   }
-}
-
-export interface BusinessRuleTemplate {
-  readonly id: string;
-  readonly template: TemplateRef<any>;
 }

@@ -6,6 +6,7 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
 import { EditorSettings } from '../editor-settings.service';
 import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-buyer-trade-party-specified-legal-organization.component';
 import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
+import { CiiFormControlComponent } from './components/cii-form-control.component';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party',
@@ -16,6 +17,7 @@ import { CiiFormParentContainerComponent } from './components/cii-form-parent-co
     CiiFormSellerTradePartySpecifiedTaxRegistration,
 
     CiiFormParentContainerComponent,
+    CiiFormControlComponent,
   ],
   viewProviders: [
     {
@@ -27,23 +29,14 @@ import { CiiFormParentContainerComponent } from './components/cii-form-parent-co
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <div class="mb-3">
-        <div class="editor__control">
-          <label class="form-label text-truncate" for="sellerName"> <span id="BT-27" class="fw-semibold">BT-27</span> - Seller name </label>
-          <input id="sellerName" class="form-control" formControlName="name" placeholder="LE FOURNISSEUR" />
-          <p id="sellerNameHelp" class="form-text">
-            The full formal name by which the Seller is registered in the national registry of legal entities or as a Taxable person or otherwise trades as a person or persons.
-          </p>
-        </div>
-        @if (settings()?.showBusinessRules === true) {
-          <div class="form-text">
-            <div class="fw-semibold">Business Rules</div>
-            <ul>
-              <li><span id="BR-6" class="fw-semibold">BR-6</span>: An Invoice shall contain the Seller name.</li>
-            </ul>
-          </div>
-        }
-      </div>
+      <app-cii-form-control term="BT-27" name="Seller name" [description]="bt27Description" [businessRules]="[{ id: 'BR-6', template: br6 }]" [settings]="settings()" #bt27Control>
+        <ng-template #bt27Description>
+          The full formal name by which the Seller is registered in the national registry of legal entities or as a Taxable person or otherwise trades as a person or persons.
+        </ng-template>
+        <ng-template #br6>An Invoice shall contain the Seller name.</ng-template>
+
+        <input [id]="bt27Control.controlId()" class="form-control" formControlName="name" placeholder="LE FOURNISSEUR" />
+      </app-cii-form-control>
 
       <app-cii-form-parent-container term="BT-30-00" name="SELLER LEGAL ORGANIZATION" [description]="description" [settings]="settings()">
         <ng-template #description>Details about the organization.</ng-template>
@@ -63,7 +56,7 @@ import { CiiFormParentContainerComponent } from './components/cii-form-parent-co
         [settings]="settings()"
       >
         <ng-template #description>A group of business terms providing information about the address of the Seller.</ng-template>
-        <ng-template #br8> An Invoice shall contain the Seller postal address. </ng-template>
+        <ng-template #br8> An Invoice shall contain the Seller postal address.</ng-template>
         <ng-template #remark>
           Sufficient components of the address are to be filled in order to comply to legal requirements. Like any address, the fields necessary to define the address must appear.
           The country code is mandatory.

@@ -1,10 +1,11 @@
 import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../editor-settings.service';
+import { CiiFormControlComponent } from './components/cii-form-control.component';
 
 @Component({
   selector: 'app-cii-form-specified-trade-settlement-header-monetary-summation',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CiiFormControlComponent],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -15,160 +16,141 @@ import { EditorSettings } from '../editor-settings.service';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <div>
-        <div class="editor__control">
-          <label class="form-label text-truncate" for="taxBasisTotalAmount"> <span id="BT-109" class="fw-semibold">BT-109</span> - Total amount without VAT </label>
-          <input id="taxBasisTotalAmount" class="form-control" formControlName="taxBasisTotalAmount" placeholder="100.00" />
-          <p id="taxBasisTotalAmountHelp" class="form-text">The total amount of the Invoice without VAT.</p>
-        </div>
-        @if (settings()?.showBusinessRules === true) {
-          <div class="form-text">
-            <div class="fw-semibold">Business Rules</div>
-            <ul>
-              <li><span id="BR-13" class="fw-semibold">BR-13</span>: An Invoice shall have the Invoice total amount without VAT.</li>
-              <li>
-                <span id="BR-CO-13" class="fw-semibold">BR-CO-13</span>:
-                <div class="d-flex column-gap-2 flex-wrap">
-                  <div class="text-nowrap"><code>Invoice total amount without VAT (BT-109)</code></div>
-                  <div class="d-flex column-gap-2">
-                    <div class="text-nowrap"><code>=</code></div>
-                    <div class="d-flex column-gap-1 flex-wrap">
-                      <div class="text-nowrap"><code>∑ Invoice line net amount (BT-131)</code></div>
-                      <div class="text-nowrap"><code>- Sum of allowances on document level (BT-107)</code></div>
-                      <div class="text-nowrap"><code>+ Sum of charges on document level (BT-108)</code></div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
+      <app-cii-form-control
+        term="BT-109"
+        name="Total amount without VAT"
+        [description]="bt109Description"
+        [businessRules]="[
+          { id: 'BR-13', template: br13 },
+          { id: 'BR-CO-13', template: brCo13 },
+        ]"
+        [remarks]="[bt109Remark]"
+        [settings]="settings()"
+        #bt109Control
+      >
+        <ng-template #bt109Description>The total amount of the Invoice without VAT.</ng-template>
+        <ng-template #br13> An Invoice shall have the Invoice total amount without VAT.</ng-template>
+        <ng-template #brCo13>
+          <div class="d-flex column-gap-2 flex-wrap">
+            <div class="text-nowrap"><code>Invoice total amount without VAT (BT-109)</code></div>
+            <div class="d-flex column-gap-2">
+              <div class="text-nowrap"><code>=</code></div>
+              <div class="d-flex column-gap-1 flex-wrap">
+                <div class="text-nowrap"><code>∑ Invoice line net amount (BT-131)</code></div>
+                <div class="text-nowrap"><code>- Sum of allowances on document level (BT-107)</code></div>
+                <div class="text-nowrap"><code>+ Sum of charges on document level (BT-108)</code></div>
+              </div>
+            </div>
           </div>
-        }
-        @if (settings()?.showRemarks === true) {
-          <div class="alert alert-light small">
-            <i class="bi bi-info-circle"></i>
-            The Invoice total amount without VAT is the Sum of Invoice line net amount minus Sum of allowances on document level plus Sum of charges on document level.
-          </div>
-        }
-      </div>
+        </ng-template>
+        <ng-template #bt109Remark>
+          The Invoice total amount without VAT is the Sum of Invoice line net amount minus Sum of allowances on document level plus Sum of charges on document level.
+        </ng-template>
+
+        <input [id]="bt109Control.controlId()" class="form-control" formControlName="taxBasisTotalAmount" placeholder="100.00" />
+      </app-cii-form-control>
 
       <div class="row">
         <div class="col">
-          <div class="editor__control">
-            <label class="form-label text-truncate" for="taxTotalAmount"> <span id="BT-110" class="fw-semibold">BT-110</span> - Total VAT amount </label>
-            <input id="taxTotalAmount" class="form-control" formControlName="taxTotalAmount" placeholder="4.90" />
-            <p id="taxTotalAmountHelp" class="form-text">The total VAT amount for the Invoice.</p>
-          </div>
-          @if (settings()?.showBusinessRules === true) {
-            <div class="form-text">
-              <div class="fw-semibold">Business Rules</div>
-              <ul>
-                <li>
-                  <span id="BR-CO-14" class="fw-semibold">BR-CO-14</span>:
-                  <div class="d-flex flex-wrap">
-                    <div class="text-nowrap"><code>Invoice total VAT amount (BT-110)</code></div>
-                    <div class="text-nowrap"><code>= ∑ VAT category tax amount (BT-117)</code></div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          }
-          @if (settings()?.showRemarks === true) {
-            <div class="alert alert-light small">
-              <i class="bi bi-info-circle"></i>
-              The Invoice total VAT amount is the sum of all VAT category tax amounts.
-            </div>
-          }
+          <app-cii-form-control
+            term="BT-110"
+            name="Total VAT amount"
+            [description]="bt110Description"
+            [businessRules]="[{ id: 'BR-CO-14', template: brCo14 }]"
+            [remarks]="[bt110Remark]"
+            [settings]="settings()"
+            #bt110Control
+          >
+            <ng-template #bt110Description>The total VAT amount for the Invoice.</ng-template>
+            <ng-template #brCo14>
+              <div class="d-flex flex-wrap">
+                <div class="text-nowrap"><code>Invoice total VAT amount (BT-110)</code></div>
+                <div class="text-nowrap"><code>= ∑ VAT category tax amount (BT-117)</code></div>
+              </div>
+            </ng-template>
+            <ng-template #bt110Remark> The Invoice total VAT amount is the sum of all VAT category tax amounts. </ng-template>
+
+            <input [id]="bt110Control.controlId()" class="form-control" formControlName="taxTotalAmount" placeholder="4.90" />
+          </app-cii-form-control>
         </div>
         <div class="col">
-          <div class="editor__control">
-            <label class="form-label text-truncate" for="taxTotalAmountCurrencyId"> <span id="BT-110-1" class="fw-semibold">BT-110-1</span> - VAT currency </label>
-            <input id="taxTotalAmountCurrencyId" class="form-control" formControlName="taxTotalAmountCurrencyId" placeholder="EUR" />
-            <p id="taxTotalAmountCurrencyIdHelp" class="form-text"></p>
-            @if (settings()?.showRemarks === true) {
-              <div class="alert alert-light small">
-                <i class="bi bi-info-circle"></i>
-                The currency is mandatory to differentiate between VAT amount and VAT amount in accounting currency.
+          <app-cii-form-control term="BT-110-1" name="VAT currency" [remarks]="[bt1101Remark]" [settings]="settings()" #bt1101Control>
+            <ng-template #bt1101Remark> The currency is mandatory to differentiate between VAT amount and VAT amount in accounting currency. </ng-template>
+
+            <input [id]="bt1101Control.controlId()" class="form-control" formControlName="taxTotalAmountCurrencyId" placeholder="EUR" />
+          </app-cii-form-control>
+        </div>
+      </div>
+
+      <app-cii-form-control
+        term="BT-112"
+        name="Total amount with VAT"
+        [description]="bt112Description"
+        [businessRules]="[
+          { id: 'BR-14', template: br14 },
+          { id: 'BR-CO-15', template: brCo15 },
+          { id: 'BR-FEXT-CO-15', template: brFextCo15 },
+        ]"
+        [remarks]="[bt112Remark]"
+        [settings]="settings()"
+        #bt112Control
+      >
+        <ng-template #bt112Description>The total amount of the Invoice with VAT.</ng-template>
+        <ng-template #br14> An Invoice shall have the Invoice total amount with VAT (BT-112). </ng-template>
+        <ng-template #brCo15>
+          <div class="d-flex column-gap-2 flex-wrap">
+            <div class="text-nowrap"><code>Invoice total amount with VAT (BT-112)</code></div>
+            <div class="d-flex column-gap-2">
+              <div class="text-nowrap"><code>=</code></div>
+              <div class="d-flex column-gap-2 flex-wrap">
+                <div class="text-nowrap"><code>Invoice total amount without VAT (BT-109)</code></div>
+                <div class="text-nowrap"><code>+ Invoice total VAT amount (BT-110)</code></div>
               </div>
-            }
+            </div>
           </div>
-        </div>
-      </div>
+        </ng-template>
+        <ng-template #brFextCo15>
+          For EXTENDED profile only, BR-CO-15 is replaced by BR-FXEXT-CO-15, which add a tolerance of 0,01 euro per line, document level charge and allowance in calculation.
+        </ng-template>
+        <ng-template #bt112Remark> The Invoice total amount with VAT is the Invoice total amount without VAT plus the Invoice total VAT amount.</ng-template>
 
-      <div>
-        <div class="editor__control">
-          <label class="form-label text-truncate" for="grandTotalAmount"> <span id="BT-112" class="fw-semibold">BT-112</span> - Total amount with VAT </label>
-          <input id="grandTotalAmount" class="form-control" formControlName="grandTotalAmount" placeholder="104.90" />
-          <p id="grandTotalAmountHelp" class="form-text">The total amount of the Invoice with VAT.</p>
-        </div>
-        @if (settings()?.showBusinessRules === true) {
-          <div class="form-text">
-            <div class="fw-semibold">Business Rules</div>
-            <ul>
-              <li><span id="BR-14" class="fw-semibold">BR-14</span>: An Invoice shall have the Invoice total amount with VAT (BT-112).</li>
-              <li>
-                <span id="BR-CO-15" class="fw-semibold">BR-CO-15</span>:
-                <div class="d-flex column-gap-2 flex-wrap">
-                  <div class="text-nowrap"><code>Invoice total amount with VAT (BT-112)</code></div>
-                  <div class="d-flex column-gap-2">
-                    <div class="text-nowrap"><code>=</code></div>
-                    <div class="d-flex column-gap-2 flex-wrap">
-                      <div class="text-nowrap"><code>Invoice total amount without VAT (BT-109)</code></div>
-                      <div class="text-nowrap"><code>+ Invoice total VAT amount (BT-110)</code></div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <span id="BR-FXEXT-CO-15" class="fw-semibold">BR-FXEXT-CO-15</span>: For EXTENDED profile only, BR-CO-15 is replaced by BR-FXEXT-CO-15, which add a tolerance of
-                0,01 euro per line, document level charge and allowance in calculation.
-              </li>
-            </ul>
-          </div>
-        }
-        @if (settings()?.showRemarks === true) {
-          <div class="alert alert-light small">
-            <i class="bi bi-info-circle"></i>
-            The Invoice total amount with VAT is the Invoice total amount without VAT plus the Invoice total VAT amount.
-          </div>
-        }
-      </div>
+        <input [id]="bt112Control.controlId()" class="form-control" formControlName="grandTotalAmount" placeholder="104.90" />
+      </app-cii-form-control>
 
-      <div>
-        <div class="editor__control">
-          <label class="form-label text-truncate" for="duePayableAmount"> <span id="BT-115" class="fw-semibold">BT-115</span> - Amount due for payment </label>
-          <input id="duePayableAmount" class="form-control" formControlName="duePayableAmount" placeholder="104.90" />
-          <p id="duePayableAmountHelp" class="form-text">The outstanding amount that is requested to be paid.</p>
-        </div>
-        @if (settings()?.showBusinessRules === true) {
-          <div class="form-text">
-            <div class="fw-semibold">Business Rules</div>
-            <ul>
-              <li><span id="BR-15" class="fw-semibold">BR-15</span>: An Invoice shall have the Amount due for payment.</li>
-              <li>
-                <span id="BR-CO-16" class="fw-semibold">BR-CO-16</span>:
-                <div class="d-flex column-gap-2 flex-wrap">
-                  <div><code>Amount due for payment (BT-115)</code></div>
-                  <div class="d-flex column-gap-2">
-                    <div><code>=</code></div>
-                    <div class="d-flex column-gap-2 flex-wrap">
-                      <div><code>Invoice total amount with VAT (BT-112)</code></div>
-                      <div><code>- Paid amount (BT-113)</code></div>
-                      <div><code>+ Rounding amount (BT-114)</code></div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
+      <app-cii-form-control
+        term="BT-115"
+        name="Amount due for payment"
+        [description]="bt115Description"
+        [businessRules]="[
+          { id: 'BR-15', template: br15 },
+          { id: 'BR-CO-16', template: brCo16 },
+        ]"
+        [remarks]="[bt115Remark]"
+        [settings]="settings()"
+        #bt115Control
+      >
+        <ng-template #bt115Description>The outstanding amount that is requested to be paid.</ng-template>
+        <ng-template #br15>An Invoice shall have the Amount due for payment.</ng-template>
+        <ng-template #brCo16>
+          <div class="d-flex column-gap-2 flex-wrap">
+            <div><code>Amount due for payment (BT-115)</code></div>
+            <div class="d-flex column-gap-2">
+              <div><code>=</code></div>
+              <div class="d-flex column-gap-2 flex-wrap">
+                <div><code>Invoice total amount with VAT (BT-112)</code></div>
+                <div><code>- Paid amount (BT-113)</code></div>
+                <div><code>+ Rounding amount (BT-114)</code></div>
+              </div>
+            </div>
           </div>
-        }
-        @if (settings()?.showRemarks === true) {
-          <div class="alert alert-light small">
-            <i class="bi bi-info-circle"></i>
-            This amount is the Invoice total amount with VAT minus the paid amount that has been paid in advance. The amount is zero in case of a fully paid Invoice. The amount may
-            be negative; in that case the Seller owes the amount to the Buyer.
-          </div>
-        }
-      </div>
+        </ng-template>
+        <ng-template #bt115Remark>
+          This amount is the Invoice total amount with VAT minus the paid amount that has been paid in advance. The amount is zero in case of a fully paid Invoice. The amount may
+          be negative; in that case the Seller owes the amount to the Buyer.
+        </ng-template>
+
+        <input [id]="bt115Control.controlId()" class="form-control" formControlName="duePayableAmount" placeholder="104.90" />
+      </app-cii-form-control>
     </div>
   `,
 })

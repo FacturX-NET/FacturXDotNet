@@ -1,10 +1,11 @@
 import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../editor-settings.service';
+import { CiiFormControlComponent } from './components/cii-form-control.component';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-specified-tax-registration',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CiiFormControlComponent],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -17,49 +18,44 @@ import { EditorSettings } from '../editor-settings.service';
     <div [formGroupName]="formGroupName()">
       <div class="row">
         <div class="col">
-          <div class="editor__control">
-            <label class="form-label text-truncate" for="sellerTaxId"> <span id="BT-31" class="fw-semibold">BT-31</span> - Seller VAT identifier </label>
-            <input id="sellerTaxId" class="form-control" formControlName="id" placeholder="FR11123456782" />
-            <p id="sellerTaxIdHelp" class="form-text">The Seller's VAT identifier (also known as Seller VAT identification number).</p>
-          </div>
-          @if (settings()?.showBusinessRules === true) {
-            <div class="form-text">
-              <div class="fw-semibold">Business Rules</div>
-              <ul>
-                <li>
-                  <span id="BR-CO-9" class="fw-semibold">BR-CO-9</span>: The Seller VAT identifier, the Seller tax representative VAT identifier (BT-63) and the Buyer VAT
-                  identifier (BT-48) shall have a prefix in accordance with ISO code ISO 3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may
-                  use the prefix ‘EL’.
-                </li>
-              </ul>
-              <ul>
-                <span id="BR-CO-26" class="fw-semibold">BR-CO-26</span
-                >: In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller
-                VAT identifier shall be present.
-              </ul>
-            </div>
-          }
-          @if (settings()?.showRemarks === true) {
-            <div class="alert alert-light small">
-              <i class="bi bi-info-circle"></i>
+          <app-cii-form-control
+            term="BT-31"
+            name="Seller VAT identifier"
+            [description]="bt31Description"
+            [businessRules]="[
+              { id: 'BR-CO-9', template: brCo9 },
+              { id: 'BR-CO-26', template: brCo26 },
+            ]"
+            [remarks]="[bt31Remark]"
+            [settings]="settings()"
+            #bt31Control
+          >
+            <ng-template #bt31Description>The Seller's VAT identifier (also known as Seller VAT identification number).</ng-template>
+            <ng-template #brCo9>
+              The Seller VAT identifier, the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) shall have a prefix in accordance with ISO code
+              ISO 3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix ‘EL’.
+            </ng-template>
+            <ng-template #brCo26>
+              In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) and/or the Seller VAT
+              identifier shall be present.
+            </ng-template>
+            <ng-template #bt31Remark>
               VAT number prefixed by a country code. A VAT registered Supplier shall include his VAT ID, except when he uses a tax representative.
-            </div>
-          }
+            </ng-template>
+
+            <input [id]="bt31Control.controlId()" class="form-control" formControlName="id" placeholder="FR11123456782" />
+          </app-cii-form-control>
         </div>
+
         <div class="col">
-          <div class="editor__control">
-            <label class="form-label text-truncate" for="sellerTaxIdScheme"> <span id="BT-31-0" class="fw-semibold">BT-31-0</span> - Tax Scheme identifier</label>
-            <select id="sellerTaxIdScheme" class="form-select" formControlName="idSchemeId">
+          <app-cii-form-control term="BT-31-0" name="Tax Scheme identifier" [description]="bt310Description" [remarks]="[bt310Remark]" [settings]="settings()" #bt310Control>
+            <ng-template #bt310Description>Scheme identifier for supplier VAT identifier.</ng-template>
+            <ng-template #bt310Remark>Value = VA</ng-template>
+
+            <select [id]="bt310Control.controlId()" class="form-select" formControlName="idSchemeId">
               <option value="vat" selected>VAT</option>
             </select>
-            <p id="sellerTaxIdSchemeHelp" class="form-text">Scheme identifier for supplier VAT identifier.</p>
-          </div>
-          @if (settings()?.showRemarks === true) {
-            <div class="alert alert-light small">
-              <i class="bi bi-info-circle"></i>
-              Value = VA
-            </div>
-          }
+          </app-cii-form-control>
         </div>
       </div>
     </div>

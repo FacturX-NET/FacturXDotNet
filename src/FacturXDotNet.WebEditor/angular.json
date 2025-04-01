@@ -29,7 +29,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css", "src/editor-styles.css", "node_modules/bootstrap/dist/css/bootstrap.css", "node_modules/bootstrap-icons/font/bootstrap-icons.css"],
+            "styles": ["src/styles.css", "node_modules/bootstrap/dist/css/bootstrap.css", "node_modules/bootstrap-icons/font/bootstrap-icons.css"],
             "scripts": []
           },
           "configurations": {
