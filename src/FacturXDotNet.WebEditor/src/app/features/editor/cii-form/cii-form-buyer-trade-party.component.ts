@@ -2,10 +2,12 @@ import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-buyer-trade-party-specified-legal-organization.component';
 import { EditorSettings } from '../editor-settings.service';
+import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
+import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-form-specified-trade-settlement-header-monetary-summation.component';
 
 @Component({
   selector: 'app-cii-form-buyer-trade-party',
-  imports: [ReactiveFormsModule, CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent],
+  imports: [ReactiveFormsModule, CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent, CiiFormParentContainerComponent],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -32,16 +34,14 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <h6 id="BT-47-00" class="m-0">BT-47-00 - BUYER LEGAL REGISTRATION IDENTIFIER</h6>
-      <p class="form-text ps-4">Details about the organization.</p>
-      <div class="ps-4">
-        <div class="ps-3 border-start">
-          <app-cii-form-buyer-trade-party-specified-legal-organization
-            formGroupName="specifiedLegalOrganization"
-            [settings]="settings()"
-          ></app-cii-form-buyer-trade-party-specified-legal-organization>
-        </div>
-      </div>
+      <app-cii-form-parent-container term="BT-47-00" name="BUYER LEGAL REGISTRATION IDENTIFIER" [description]="description" [settings]="settings()">
+        <ng-template #description>Details about the organization.</ng-template>
+
+        <app-cii-form-buyer-trade-party-specified-legal-organization
+          formGroupName="specifiedLegalOrganization"
+          [settings]="settings()"
+        ></app-cii-form-buyer-trade-party-specified-legal-organization>
+      </app-cii-form-parent-container>
     </div>
   `,
   styles: ``,

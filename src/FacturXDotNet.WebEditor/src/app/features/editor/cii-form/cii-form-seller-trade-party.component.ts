@@ -4,6 +4,8 @@ import { CiiFormSellerTradePartySpecifiedLegalOrganizationComponent } from './ci
 import { CiiFormSellerTradePartyPostalTradeAddress } from './cii-form-seller-trade-party-postal-trade-address';
 import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-seller-trade-party-specified-tax-registration';
 import { EditorSettings } from '../editor-settings.service';
+import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-buyer-trade-party-specified-legal-organization.component';
+import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party',
@@ -12,6 +14,8 @@ import { EditorSettings } from '../editor-settings.service';
     CiiFormSellerTradePartySpecifiedLegalOrganizationComponent,
     CiiFormSellerTradePartyPostalTradeAddress,
     CiiFormSellerTradePartySpecifiedTaxRegistration,
+
+    CiiFormParentContainerComponent,
   ],
   viewProviders: [
     {
@@ -41,52 +45,41 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <h6 id="BT-30-00" class="m-0">BT-30-00 - SELLER LEGAL ORGANIZATION</h6>
-      <p class="form-text ps-4">Details about the organization.</p>
-      <div class="ps-4">
-        <div class="ps-3 border-start">
-          <app-cii-form-seller-trade-party-specified-legal-organization
-            formGroupName="specifiedLegalOrganization"
-            [settings]="settings()"
-          ></app-cii-form-seller-trade-party-specified-legal-organization>
-        </div>
-      </div>
+      <app-cii-form-parent-container term="BT-30-00" name="SELLER LEGAL ORGANIZATION" [description]="description" [settings]="settings()">
+        <ng-template #description>Details about the organization.</ng-template>
 
-      <h6 id="BG-5" class="m-0">BG-5 - SELLER POSTAL ADDRESS</h6>
-      <p class="form-text ps-4">A group of business terms providing information about the address of the Seller.</p>
-      @if (settings()?.showBusinessRules === true) {
-        <div class="form-text ps-4">
-          <div class="fw-semibold">Business Rules</div>
-          <ul>
-            <li><span id="BR-8" class="fw-semibold">BR-8</span>: An Invoice shall contain the Seller postal address.</li>
-          </ul>
-        </div>
-      }
-      @if (settings()?.showRemarks === true) {
-        <div class="ps-4">
-          <div class="alert alert-light small">
-            <i class="bi bi-info-circle"></i>
-            Sufficient components of the address are to be filled in order to comply to legal requirements. Like any address, the fields necessary to define the address must
-            appear. The country code is mandatory.
-          </div>
-        </div>
-      }
-      <div class="ps-4">
-        <div class="ps-3 border-start">
-          <app-cii-form-seller-trade-party-postal-trade-address formGroupName="postalTradeAddress" [settings]="settings()"></app-cii-form-seller-trade-party-postal-trade-address>
-        </div>
-      </div>
+        <app-cii-form-seller-trade-party-specified-legal-organization
+          formGroupName="specifiedLegalOrganization"
+          [settings]="settings()"
+        ></app-cii-form-seller-trade-party-specified-legal-organization>
+      </app-cii-form-parent-container>
 
-      <h6 id="BT-31-00" class="m-0">BT-31-00 - SELLER VAT IDENTIFIER</h6>
-      <p class="form-text ps-4">Detailed information on tax information of the seller.</p>
-      <div class="ps-4">
-        <div class="ps-3 border-start">
-          <app-cii-form-seller-trade-party-specified-tax-registration
-            formGroupName="specifiedTaxRegistration"
-            [settings]="settings()"
-          ></app-cii-form-seller-trade-party-specified-tax-registration>
-        </div>
-      </div>
+      <app-cii-form-parent-container
+        term="BG-5"
+        name="SELLER POSTAL ADDRESS"
+        [description]="description"
+        [remarks]="[remark]"
+        [businessRules]="[{ id: 'BR-8', template: br8 }]"
+        [settings]="settings()"
+      >
+        <ng-template #description>A group of business terms providing information about the address of the Seller.</ng-template>
+        <ng-template #br8> An Invoice shall contain the Seller postal address. </ng-template>
+        <ng-template #remark>
+          Sufficient components of the address are to be filled in order to comply to legal requirements. Like any address, the fields necessary to define the address must appear.
+          The country code is mandatory.
+        </ng-template>
+
+        <app-cii-form-seller-trade-party-postal-trade-address formGroupName="postalTradeAddress" [settings]="settings()"></app-cii-form-seller-trade-party-postal-trade-address>
+      </app-cii-form-parent-container>
+
+      <app-cii-form-parent-container term="BT-31-00" name="SELLER VAT IDENTIFIER" [description]="description" [settings]="settings()">
+        <ng-template #description>Detailed information on tax information of the seller.</ng-template>
+
+        <app-cii-form-seller-trade-party-specified-tax-registration
+          formGroupName="specifiedTaxRegistration"
+          [settings]="settings()"
+        ></app-cii-form-seller-trade-party-specified-tax-registration>
+      </app-cii-form-parent-container>
     </div>
   `,
   styles: ``,

@@ -1,34 +1,41 @@
 import { Component, effect, input, model, untracked } from '@angular/core';
 import { CiiSummaryNode } from './cii-summary.component';
 import { ScrollToDirective } from '../../../core/directives/scroll-to.directive';
+import { EditorSettings } from '../editor-settings.service';
 
 @Component({
   selector: 'app-cii-summary-node',
   imports: [ScrollToDirective],
   template: `
-    <div class="text-truncate">
+    <div class="text-truncate d-flex gap-1">
       <a [scrollTo]="'#' + node().code" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary">
         <span class="fw-semibold"> {{ node().code }} </span> - {{ node().name }}
       </a>
-      @if (node().businessRules; as businessRules) {
-        <span class="text-body-tertiary" style="font-size: smaller">
-          (
-          @for (rule of businessRules; track rule) {
-            @if (!$last) {
-              <a [scrollTo]="'#' + rule" class="hoverlink">{{ rule }}</a
-              >,
-            } @else {
-              <a [scrollTo]="'#' + rule" class="hoverlink">{{ rule }}</a>
+
+      @if (settings(); as settings) {
+        <div class="text-body-tertiary d-flex align-items-center gap-1" style="font-size: smaller">
+          @if (settings.showBusinessRules) {
+            @if (node().businessRules; as businessRules) {
+              @for (rule of businessRules; track rule) {
+                <a [scrollTo]="'#' + rule" class="hoverlink">{{ rule }}</a>
+              }
             }
           }
-          )
-        </span>
+
+          @if (node().hasRemarks && settings.showRemarks) {
+            <a [scrollTo]="'#' + node().code + '-remarks'" class="hoverlink"><i class="bi bi-info-circle"></i></a>
+          }
+
+          @if (node().hasChorusProRemarks && settings.showChorusProRemarks) {
+            <a [scrollTo]="'#' + node().code + '-cpro-remarks'" class="hoverlink">CPRO</a>
+          }
+        </div>
       }
     </div>
     <div class="border-start ps-2">
       @if (node().children; as children) {
         @for (child of node().children; track child.code) {
-          <app-cii-summary-node [node]="child" />
+          <app-cii-summary-node [node]="child" [settings]="settings()" />
         }
       }
     </div>
@@ -36,4 +43,5 @@ import { ScrollToDirective } from '../../../core/directives/scroll-to.directive'
 })
 export class CiiSummaryNodeComponent {
   node = input.required<CiiSummaryNode>();
+  settings = input.required<EditorSettings>();
 }

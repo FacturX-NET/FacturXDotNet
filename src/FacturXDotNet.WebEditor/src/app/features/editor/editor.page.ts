@@ -92,7 +92,7 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
               <div class="offcanvas-body justify-content-end small">
                 <div class="overflow-x-hidden">
                   <h6 class="d-none d-xl-block">Summary</h6>
-                  <app-cii-summary [value]="cii" />
+                  <app-cii-summary [value]="cii" [settings]="settings()" />
                 </div>
               </div>
             </div>

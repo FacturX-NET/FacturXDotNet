@@ -11,35 +11,32 @@ import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-d
 import { CiiFormSupplyChainTradeTransactionComponent } from './cii-form-supply-chain-trade-transaction.component';
 import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document.component';
 import { EditorSettings } from '../editor-settings.service';
+import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
 
 @Component({
   selector: 'app-cii-form',
-  imports: [ReactiveFormsModule, CiiFormExchangedDocumentContextComponent, CiiFormSupplyChainTradeTransactionComponent, CiiFormExchangedDocumentComponent],
+  imports: [
+    ReactiveFormsModule,
+    CiiFormExchangedDocumentContextComponent,
+    CiiFormSupplyChainTradeTransactionComponent,
+    CiiFormExchangedDocumentComponent,
+    CiiFormParentContainerComponent,
+  ],
   template: `
     <form [formGroup]="form">
-      <h6 id="BG-2" class="m-0">BG-2 - EXCHANGED DOCUMENT CONTEXT</h6>
-      <p class="form-text ps-4">A group of business terms providing information on the business process and rules applicable to the Invoice document.</p>
-      <div class="ps-4">
-        <div class="ps-3 border-start">
-          <app-cii-form-exchanged-document-context formGroupName="exchangedDocumentContext" [settings]="settings()"></app-cii-form-exchanged-document-context>
-        </div>
-      </div>
+      <app-cii-form-parent-container term="BG-2" name="EXCHANGED DOCUMENT CONTEXT" [description]="description" [settings]="settings()">
+        <ng-template #description>A group of business terms providing information on the business process and rules applicable to the Invoice document.</ng-template>
 
-      <h6 id="BT-1-00" class="m-0">BT-1-00 - EXCHANGED DOCUMENT</h6>
-      <p class="form-text ps-4"></p>
-      <div class="ps-4">
-        <div class="ps-3 border-start">
-          <app-cii-form-exchanged-document formGroupName="exchangedDocument" [settings]="settings()"></app-cii-form-exchanged-document>
-        </div>
-      </div>
+        <app-cii-form-exchanged-document-context formGroupName="exchangedDocumentContext" [settings]="settings()"></app-cii-form-exchanged-document-context>
+      </app-cii-form-parent-container>
 
-      <h6 id="BG-25-00" class="m-0">BG-25-00 - SUPPLY CHAIN TRADE TRANSACTION</h6>
-      <p class="form-text ps-4"></p>
-      <div class="ps-4">
-        <div class="ps-3 border-start">
-          <app-cii-form-supply-chain-trade-transaction formGroupName="supplyChainTradeTransaction" [settings]="settings()"></app-cii-form-supply-chain-trade-transaction>
-        </div>
-      </div>
+      <app-cii-form-parent-container term="BT-1-00" name="EXCHANGED DOCUMENT" [settings]="settings()">
+        <app-cii-form-exchanged-document formGroupName="exchangedDocument" [settings]="settings()"></app-cii-form-exchanged-document>
+      </app-cii-form-parent-container>
+
+      <app-cii-form-parent-container term="BG-25-00" name="SUPPLY CHAIN TRADE TRANSACTION" [settings]="settings()">
+        <app-cii-form-supply-chain-trade-transaction formGroupName="supplyChainTradeTransaction" [settings]="settings()"></app-cii-form-supply-chain-trade-transaction>
+      </app-cii-form-parent-container>
     </form>
   `,
 })

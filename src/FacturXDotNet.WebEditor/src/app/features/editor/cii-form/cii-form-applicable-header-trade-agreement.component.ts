@@ -4,6 +4,8 @@ import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.
 import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.component';
 import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';
 import { EditorSettings } from '../editor-settings.service';
+import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-document-context.component';
+import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-agreement',
@@ -14,6 +16,7 @@ import { EditorSettings } from '../editor-settings.service';
     CiiFormBuyerTradePartyComponent,
     CiiFormBuyerTradePartyComponent,
     CiiFormBuyerOrderReferencedDocumentComponent,
+    CiiFormParentContainerComponent,
   ],
   viewProviders: [
     {
@@ -45,29 +48,19 @@ import { EditorSettings } from '../editor-settings.service';
         }
       </div>
 
-      <h6 id="BG-4" class="m-0">BG-4 - SELLER</h6>
-      <p class="form-text ps-4">A group of business terms providing information about the Seller.</p>
-      <div class="ps-4">
-        <div class="ps-3 border-start">
-          <app-cii-form-seller-trade-party formGroupName="sellerTradeParty" [settings]="settings()"></app-cii-form-seller-trade-party>
-        </div>
-      </div>
+      <app-cii-form-parent-container term="BG-4" name="SELLER" [description]="description" [settings]="settings()">
+        <ng-template #description>A group of business terms providing information about the Seller.</ng-template>
+        <app-cii-form-seller-trade-party formGroupName="sellerTradeParty" [settings]="settings()"></app-cii-form-seller-trade-party>
+      </app-cii-form-parent-container>
 
-      <h6 id="BG-7" class="m-0">BG-7 - BUYER</h6>
-      <p class="form-text ps-4">A group of business terms providing information about the Buyer.</p>
-      <div class="ps-4">
-        <div class="ps-3 border-start">
-          <app-cii-form-buyer-trade-party formGroupName="buyerTradeParty" [settings]="settings()"></app-cii-form-buyer-trade-party>
-        </div>
-      </div>
+      <app-cii-form-parent-container term="BG-7" name="BUYER" [description]="description" [settings]="settings()">
+        <ng-template #description>A group of business terms providing information about the Buyer.</ng-template>
+        <app-cii-form-buyer-trade-party formGroupName="buyerTradeParty" [settings]="settings()"></app-cii-form-buyer-trade-party>
+      </app-cii-form-parent-container>
 
-      <h6 id="BT-13-00" class="m-0">BT-13-00 - PURCHASE ORDER REFERENCE</h6>
-      <p class="form-text ps-4"></p>
-      <div class="ps-4">
-        <div class="ps-3 border-start">
-          <app-cii-form-buyer-order-referenced-document formGroupName="buyerOrderReferencedDocument" [settings]="settings()"></app-cii-form-buyer-order-referenced-document>
-        </div>
-      </div>
+      <app-cii-form-parent-container term="BT-13-00" name="PURCHASE ORDER REFERENCE" [settings]="settings()">
+        <app-cii-form-buyer-order-referenced-document formGroupName="buyerOrderReferencedDocument" [settings]="settings()"></app-cii-form-buyer-order-referenced-document>
+      </app-cii-form-parent-container>
     </div>
   `,
 })
