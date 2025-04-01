@@ -1,5 +1,4 @@
 import { AfterViewInit, Directive, ElementRef, HostListener, inject, input } from '@angular/core';
-import { Router } from '@angular/router';
 import { ScrollToService } from './scroll-to.service';
 
 @Directive({

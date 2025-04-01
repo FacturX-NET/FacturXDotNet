@@ -4,7 +4,6 @@ import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.
 import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.component';
 import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';
 import { EditorSettings } from '../editor-settings.service';
-import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-document-context.component';
 import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './components/cii-form-control.component';
 

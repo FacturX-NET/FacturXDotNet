@@ -1,4 +1,4 @@
-import { Component, effect, input, model, untracked } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CiiSummaryNode } from './cii-summary.component';
 import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
 import { EditorSettings } from '../editor-settings.service';

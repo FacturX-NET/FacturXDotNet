@@ -33,14 +33,22 @@ import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
         <ng-template #br13> An Invoice shall have the Invoice total amount without VAT.</ng-template>
         <ng-template #brCo13>
           <math>
-            <a [scrollTo]="'BT-109'"><mi>Invoice total amount without VAT (BT-109)</mi></a>
+            <a [scrollTo]="'BT-109'">
+              <mi>Invoice total amount without VAT (BT-109)</mi>
+            </a>
             <mo>=</mo>
             <mo>∑</mo>
-            <a [scrollTo]="'BT-131'"><mi>Invoice line net amount (BT-131)</mi></a>
+            <a [scrollTo]="'BT-131'">
+              <mi>Invoice line net amount (BT-131)</mi>
+            </a>
             <mo>-</mo>
-            <a [scrollTo]="'BT-107'"><mi>Sum of allowances on document level (BT-107)</mi></a>
+            <a [scrollTo]="'BT-107'">
+              <mi>Sum of allowances on document level (BT-107)</mi>
+            </a>
             <mo>+</mo>
-            <a [scrollTo]="'BT-108'"><mi>Sum of charges on document level (BT-108)</mi></a>
+            <a [scrollTo]="'BT-108'">
+              <mi>Sum of charges on document level (BT-108)</mi>
+            </a>
           </math>
         </ng-template>
         <ng-template #bt109Remark>
@@ -64,10 +72,14 @@ import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
             <ng-template #bt110Description>The total VAT amount for the Invoice.</ng-template>
             <ng-template #brCo14>
               <math>
-                <a [scrollTo]="'BT-110'"><mi>Invoice total VAT amount (BT-110)</mi></a>
+                <a [scrollTo]="'BT-110'">
+                  <mi>Invoice total VAT amount (BT-110)</mi>
+                </a>
                 <mo>=</mo>
                 <mo>∑</mo>
-                <a [scrollTo]="'BT-117'"><mi>VAT category tax amount (BT-117)</mi></a>
+                <a [scrollTo]="'BT-117'">
+                  <mi>VAT category tax amount (BT-117)</mi>
+                </a>
               </math>
             </ng-template>
             <ng-template #bt110Remark> The Invoice total VAT amount is the sum of all VAT category tax amounts.</ng-template>
@@ -102,11 +114,17 @@ import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
         <ng-template #brCo15>
           <math>
             <mrow>
-              <a [scrollTo]="'BT-112'"><mi>Invoice total amount with VAT (BT-112)</mi></a>
+              <a [scrollTo]="'BT-112'">
+                <mi>Invoice total amount with VAT (BT-112)</mi>
+              </a>
               <mo>=</mo>
-              <a [scrollTo]="'BT-109'"><mi>Invoice total amount without VAT (BT-109)</mi></a>
+              <a [scrollTo]="'BT-109'">
+                <mi>Invoice total amount without VAT (BT-109)</mi>
+              </a>
               <mo>+</mo>
-              <a [scrollTo]="'BT-110'"><mi>Invoice total VAT amount (BT-110)</mi></a>
+              <a [scrollTo]="'BT-110'">
+                <mi>Invoice total VAT amount (BT-110)</mi>
+              </a>
             </mrow>
           </math>
         </ng-template>
@@ -137,13 +155,21 @@ import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
           <math>
             <mtable>
               <mrow>
-                <a [scrollTo]="'BT-115'"><mi>Amount due for payment (BT-115)</mi></a>
+                <a [scrollTo]="'BT-115'">
+                  <mi>Amount due for payment (BT-115)</mi>
+                </a>
                 <mo>=</mo>
-                <a [scrollTo]="'BT-112'"><mi>Invoice total amount with VAT (BT-112)</mi></a>
+                <a [scrollTo]="'BT-112'">
+                  <mi>Invoice total amount with VAT (BT-112)</mi>
+                </a>
                 <mo>-</mo>
-                <a [scrollTo]="'BT-113'"><mi>Paid amount (BT-113)</mi></a>
+                <a [scrollTo]="'BT-113'">
+                  <mi>Paid amount (BT-113)</mi>
+                </a>
                 <mo>+</mo>
-                <a [scrollTo]="'BT-114'"><mi>Rounding amount (BT-114)</mi></a>
+                <a [scrollTo]="'BT-114'">
+                  <mi>Rounding amount (BT-114)</mi>
+                </a>
               </mrow>
             </mtable>
           </math>

@@ -32,7 +32,7 @@ import { CiiFormControlComponent } from './components/cii-form-control.component
           The sequential number required in Article 226(2) of the directive 2006/112/EC, to uniquely identify the Invoice within the business context, time-frame, operating systems
           and records of the Seller. It may be based on one or more series of numbers, which may include alphanumeric characters. No identification scheme is to be used.
         </ng-template>
-        <ng-template #bt1ChorusProRemark> The invoice number is limited to 20 characters. </ng-template>
+        <ng-template #bt1ChorusProRemark> The invoice number is limited to 20 characters.</ng-template>
 
         <input [id]="bt1Control.controlId()" class="form-control" formControlName="id" placeholder="F20250023" />
       </app-cii-form-control>
@@ -138,7 +138,7 @@ import { CiiFormControlComponent } from './components/cii-form-control.component
         >
           <ng-template #bt2Description>The date when the Invoice was issued.</ng-template>
           <ng-template #br3>An Invoice shall have an Invoice issue date.</ng-template>
-          <ng-template #bt2ChorusProRemark> The issue date must be before or equal to the deposit date. </ng-template>
+          <ng-template #bt2ChorusProRemark> The issue date must be before or equal to the deposit date.</ng-template>
 
           <input [id]="bt2Control.controlId()" class="form-control" formControlName="issueDateTime" type="date" />
         </app-cii-form-control>

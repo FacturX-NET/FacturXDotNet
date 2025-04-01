@@ -1,6 +1,6 @@
 import { Component, computed, input, signal, TemplateRef } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
+import { EditorSettings } from '../../editor-settings.service';
 import { NgTemplateOutlet } from '@angular/common';
 import { BusinessRuleTemplate } from './business-rule-template';
 
@@ -17,7 +17,9 @@ import { BusinessRuleTemplate } from './business-rule-template';
     </div>
 
     @if (description(); as description) {
-      <p [id]="controlHelpId()" class="form-text"><ng-container [ngTemplateOutlet]="description"></ng-container></p>
+      <p [id]="controlHelpId()" class="form-text">
+        <ng-container [ngTemplateOutlet]="description"></ng-container>
+      </p>
     } @else {
       <div class="pb-3"><!--spacer--></div>
     }

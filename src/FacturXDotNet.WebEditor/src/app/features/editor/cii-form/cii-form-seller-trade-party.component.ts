@@ -4,7 +4,6 @@ import { CiiFormSellerTradePartySpecifiedLegalOrganizationComponent } from './ci
 import { CiiFormSellerTradePartyPostalTradeAddress } from './cii-form-seller-trade-party-postal-trade-address';
 import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-seller-trade-party-specified-tax-registration';
 import { EditorSettings } from '../editor-settings.service';
-import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-buyer-trade-party-specified-legal-organization.component';
 import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './components/cii-form-control.component';
 

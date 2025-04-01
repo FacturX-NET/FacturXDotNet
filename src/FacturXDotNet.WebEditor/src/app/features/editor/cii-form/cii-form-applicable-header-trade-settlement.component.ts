@@ -3,7 +3,6 @@ import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-form-specified-trade-settlement-header-monetary-summation.component';
 import { EditorSettings } from '../editor-settings.service';
 import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
-import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.component';
 import { CiiFormControlComponent } from './components/cii-form-control.component';
 import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
 
@@ -50,7 +49,7 @@ import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
         [chorusProRemarks]="[chorusProRemark]"
         [settings]="settings()"
       >
-        <ng-template #description> A group of business terms providing the monetary totals for the Invoice. </ng-template>
+        <ng-template #description> A group of business terms providing the monetary totals for the Invoice.</ng-template>
         <ng-template #remark>
           This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with the
           rules of the SEPA or other direct debit scheme.

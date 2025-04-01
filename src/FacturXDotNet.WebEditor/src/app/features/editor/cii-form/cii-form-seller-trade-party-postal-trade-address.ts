@@ -25,7 +25,7 @@ import { CiiFormControlComponent } from './components/cii-form-control.component
         [settings]="settings()"
         #bt40Control
       >
-        <ng-template #bt40Description> A code that identifies the country. </ng-template>
+        <ng-template #bt40Description> A code that identifies the country.</ng-template>
         <ng-template #br9>The Seller postal address (BG-5) shall contain a Seller country code.</ng-template>
         <ng-template #bt40Remark>
           If no tax representative is specified, this is the country where VAT is liable. The lists of valid countries are registered with the ISO 3166-1 Maintenance agency, "Codes

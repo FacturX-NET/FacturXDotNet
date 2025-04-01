@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { ActivatedRoute, EventType, Router } from '@angular/router';
+import { EventType, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 

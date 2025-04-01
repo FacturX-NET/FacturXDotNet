@@ -48,7 +48,7 @@ import { CiiFormParentContainerComponent } from './components/cii-form-parent-co
           This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with the
           rules of the SEPA or other direct debit scheme.
         </ng-template>
-        <ng-template #chorusProRemark> Not used. </ng-template>
+        <ng-template #chorusProRemark> Not used.</ng-template>
 
         <app-cii-form-applicable-header-trade-settlement formGroupName="applicableHeaderTradeSettlement" [settings]="settings()"></app-cii-form-applicable-header-trade-settlement>
       </app-cii-form-parent-container>

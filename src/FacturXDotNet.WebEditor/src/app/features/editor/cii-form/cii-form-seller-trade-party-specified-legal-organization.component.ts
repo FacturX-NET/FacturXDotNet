@@ -27,7 +27,7 @@ import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
             [settings]="settings()"
             #bt30Control
           >
-            <ng-template #bt30Description> An identifier issued by an official registrar that identifies the Seller as a legal entity or person. </ng-template>
+            <ng-template #bt30Description> An identifier issued by an official registrar that identifies the Seller as a legal entity or person.</ng-template>
             <ng-template #brCo26>
               In order for the buyer to automatically identify a supplier, the <a [scrollTo]="'BT-29'">Seller identifier (BT-29)</a>, the
               <a [scrollTo]="'BT-30'">Seller legal registration identifier (BT-30)</a> and/or the <a [scrollTo]="'BT-31'">Seller VAT identifier (BT-31)</a> shall be present.
@@ -39,7 +39,7 @@ import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
         <div class="col">
           <div class="mb-3">
             <app-cii-form-control term="BT-30-1" name="Scheme identifier" [description]="bt301Description" [remarks]="[bt301remark]" [settings]="settings()" #bt301Control>
-              <ng-template #bt301Description> The identification scheme identifier of the Seller legal registration identifier. </ng-template>
+              <ng-template #bt301Description> The identification scheme identifier of the Seller legal registration identifier.</ng-template>
               <ng-template #bt301remark>
                 If used, the identification scheme shall be chosen from the entries of the list published by the ISO/IEC 6523 maintenance agency. For a SIREN or a SIRET, the value
                 of this field is "0002".
