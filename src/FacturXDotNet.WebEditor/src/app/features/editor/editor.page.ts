@@ -71,7 +71,7 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
           <header class="border-bottom d-flex">
             <div class="d-none d-xl-block col-3"><!--spacer--></div>
             <div class="navbar navbar-expand-xl flex-grow-1">
-              <div class="container justify-content-start gap-3">
+              <div class="flex-grow-1 d-flex justify-content-start gap-3 px-3">
                 <div class="d-block d-xl-none">
                   <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary">
                     <span class="navbar-toggler-icon"></span>
