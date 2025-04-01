@@ -10,7 +10,7 @@ import { CiiFormHighlightService } from '../services/cii-form-highlight.service'
   selector: 'app-cii-form-control',
   imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent],
   template: `
-    <div class="overflow-hidden" (mouseenter)="highlight(true)" (mouseleave)="highlight(false)">
+    <div class="overflow-hidden px-1" (mouseenter)="highlight(true)" (mouseleave)="highlight(false)">
       <div class="editor__control">
         <label [id]="id()" class="form-label text-truncate" [class.text-primary]="isHighlighted()" [for]="controlId()">
           <span class="fw-semibold">{{ term() }}</span> - {{ name() }}

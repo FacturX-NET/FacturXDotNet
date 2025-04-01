@@ -1,11 +1,13 @@
 import { Injectable, signal } from '@angular/core';
+import { debounceTime, Subject } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CiiFormHighlightService {
-  private highlightedTermInternal = signal<string | undefined>(undefined);
-  public highlightedTerm = this.highlightedTermInternal.asReadonly();
+  private highlightedTermSubject = new Subject();
+  public highlightedTerm = toSignal(this.highlightedTermSubject.pipe(debounceTime(50)));
 
   private highlighted: string[] = [];
 
@@ -17,13 +19,13 @@ export class CiiFormHighlightService {
   highlightTerm(id: string, highlight: boolean = true) {
     if (highlight) {
       this.highlighted.push(id);
-      this.highlightedTermInternal.set(id);
+      this.highlightedTermSubject.next(id);
     } else {
       this.highlighted = this.highlighted.filter((term) => term !== id);
       if (this.highlighted.length == 0) {
-        this.highlightedTermInternal.set(undefined);
+        this.highlightedTermSubject.next(undefined);
       } else {
-        this.highlightedTermInternal.set(this.highlighted[this.highlighted.length - 1]);
+        this.highlightedTermSubject.next(this.highlighted[this.highlighted.length - 1]);
       }
     }
   }

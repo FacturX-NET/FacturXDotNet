@@ -89,7 +89,7 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
                 <h5 class="offcanvas-title" id="ciiSummaryTitle">Summary</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
               </div>
-              <div class="offcanvas-body justify-content-end small">
+              <div class="offcanvas-body small">
                 <div class="overflow-x-hidden">
                   <h6 class="d-none d-xl-block">Summary</h6>
                   <app-cii-summary [value]="cii" [settings]="settings()" />
