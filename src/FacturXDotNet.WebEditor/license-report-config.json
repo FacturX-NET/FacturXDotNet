@@ -1,0 +1,10 @@
+{
+  "output": "json",
+  "fields": [
+    "name",
+    "author",
+    "installedVersion",
+    "licenseType",
+    "link"
+  ]
+}
