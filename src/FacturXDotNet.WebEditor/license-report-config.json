@@ -1,5 +1,6 @@
 {
   "output": "json",
+  "only": "prod,dev,opt,peer",
   "fields": [
     "name",
     "author",
