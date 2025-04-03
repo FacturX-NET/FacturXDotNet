@@ -1,4 +1,4 @@
-import { Component, computed, HostListener, inject, signal, Signal } from '@angular/core';
+import { Component, computed, HostListener, inject, Resource, signal, Signal } from '@angular/core';
 import { NgOptimizedImage, NgStyle } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './pdf-viewer.component';
@@ -7,8 +7,10 @@ import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-indust
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
 import { CiiSummaryComponent } from './components/cii-summary/cii-summary.component';
 import { EditorDetailsDropdownComponent } from './editor-details-dropdown.component';
-import { CurrentCiiService } from './services/current-cii.service';
 import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
+import { EditorSavedState, EditorStateService } from './services/editor-state.service';
+import { debounceTime, Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-editor',
@@ -43,32 +45,45 @@ import { EditorMenuComponent } from './components/editor-menu/editor-menu.compon
               </div>
             </div>
           </header>
-          <div class="flex-grow-1 overflow-hidden d-flex column-gap-4">
-            <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
-              <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="ciiSummaryTitle">Summary</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
+
+          @if (state.value(); as value) {
+            <div class="flex-grow-1 overflow-hidden d-flex column-gap-4">
+              <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="ciiSummaryTitle">Summary</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body small">
+                  <div class="overflow-x-hidden">
+                    <h6 class="d-none d-xl-block">Summary</h6>
+                    <app-cii-summary [value]="value.cii" [settings]="settings()" />
+                  </div>
+                </div>
               </div>
-              <div class="offcanvas-body small">
-                <div class="overflow-x-hidden">
-                  <h6 class="d-none d-xl-block">Summary</h6>
-                  <app-cii-summary [value]="cii()" [settings]="settings()" />
+              <div
+                id="editor__cii-form"
+                class="flex-grow-1 h-100 position-relative overflow-y-auto pt-3 pb-5"
+                data-bs-spy="scroll"
+                data-bs-target="#editor__cii-summary-content"
+                data-bs-smooth-scroll="true"
+                tabindex="0"
+              >
+                <div class="container ms-0">
+                  <app-cii-form [value]="value.cii" (valueChange)="saveCii($event)" [settings]="settings()" />
                 </div>
               </div>
             </div>
-            <div
-              id="editor__cii-form"
-              class="flex-grow-1 h-100 position-relative overflow-y-auto pt-3 pb-5"
-              data-bs-spy="scroll"
-              data-bs-target="#editor__cii-summary-content"
-              data-bs-smooth-scroll="true"
-              tabindex="0"
-            >
-              <div class="container ms-0">
-                <app-cii-form [value]="cii()" (valueChange)="saveCii($event)" [settings]="settings()" />
+          } @else {
+            @if (state.isLoading()) {
+              <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
               </div>
-            </div>
-          </div>
+            } @else {
+              Error!
+            }
+          }
         </div>
         <a href="javascript:void(0)" style="width: {{ resizeHandleWidth }}px; cursor: col-resize;" (mousedown)="dragStart($event)" (touchstart)="dragStart($event)"> </a>
         <div class="h-100 border" [ngStyle]="{ 'width.px': rightColumnWidth() }">
@@ -98,24 +113,28 @@ export class EditorPage {
   protected readonly environment = environment;
   protected resizeHandleWidth = 16;
 
-  private currentCiiService = inject(CurrentCiiService);
   private settingsService = inject(EditorSettingsService);
+  private editorStateService = inject(EditorStateService);
 
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected totalWidth = signal<number>(0);
   protected leftColumnWidth: Signal<number> = computed(() => this.totalWidth() - this.rightColumnWidth() - this.resizeHandleWidth);
   protected rightColumnWidth: Signal<number> = computed(() => this.settings().rightPaneWidth ?? 0);
   protected disablePointerEvents = signal<boolean>(false);
-  protected cii: Signal<CrossIndustryInvoice> = this.currentCiiService.current;
+  protected state: Resource<EditorSavedState | undefined> = this.editorStateService.savedState;
 
+  private saveSubject = new Subject<EditorSavedState>();
   private resizing = false;
 
   constructor() {
     this.updateWidth(window.innerWidth);
+    this.saveSubject.pipe(debounceTime(1000), takeUntilDestroyed()).subscribe((state) => {
+      this.editorStateService.update(state).then(() => this.editorStateService.savedState.reload());
+    });
   }
 
   saveCii(cii: CrossIndustryInvoice) {
-    this.currentCiiService.update(cii);
+    this.saveSubject.next({ cii });
   }
 
   @HostListener('window:resize', ['$event'])

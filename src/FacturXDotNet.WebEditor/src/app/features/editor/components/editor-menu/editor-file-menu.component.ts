@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CurrentCiiService } from '../../services/current-cii.service';
+import { EditorStateService } from '../../services/editor-state.service';
 
 @Component({
   selector: 'app-editor-file-menu',
@@ -18,9 +18,9 @@ import { CurrentCiiService } from '../../services/current-cii.service';
   styles: ``,
 })
 export class EditorFileMenuComponent {
-  private currentCiiService = inject(CurrentCiiService);
+  private editorStateService = inject(EditorStateService);
 
-  protected createNewFacturXDocument() {
-    this.currentCiiService.clear();
+  protected async createNewFacturXDocument() {
+    await this.editorStateService.clear();
   }
 }
