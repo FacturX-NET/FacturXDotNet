@@ -2,10 +2,10 @@ import { Component, computed, HostListener, signal, Signal } from '@angular/core
 import { NgOptimizedImage, NgStyle } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './pdf-viewer.component';
-import { CiiFormComponent } from './cii-form/cii-form.component';
+import { CiiFormComponent } from './components/cii-form/cii-form.component';
 import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-industry-invoice';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
-import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
+import { CiiSummaryComponent } from './components/cii-summary/cii-summary.component';
 import { EditorDetailsDropdownComponent } from './editor-details-dropdown.component';
 
 @Component({

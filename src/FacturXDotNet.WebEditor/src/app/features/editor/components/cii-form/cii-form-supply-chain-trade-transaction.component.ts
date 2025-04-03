@@ -3,8 +3,8 @@ import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { CiiFormApplicableHeaderTradeAgreementComponent } from './cii-form-applicable-header-trade-agreement.component';
 import { CiiFormApplicableHeaderTradeDeliveryComponent } from './cii-form-applicable-header-trade-delivery.component';
 import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-applicable-header-trade-settlement.component';
-import { EditorSettings } from '../editor-settings.service';
-import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
+import { EditorSettings } from '../../editor-settings.service';
+import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 
 @Component({
   selector: 'app-cii-form-supply-chain-trade-transaction',

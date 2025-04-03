@@ -1,36 +1,33 @@
-import { Component, computed, inject, input, signal, TemplateRef } from '@angular/core';
+import { Component, computed, contentChildren, effect, inject, input, signal, TemplateRef, viewChildren } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { EditorSettings } from '../../editor-settings.service';
+import { EditorSettings } from '../../../editor-settings.service';
 import { NgTemplateOutlet } from '@angular/common';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
-import { CiiFormHighlightTermService } from '../services/cii-form-highlight-term.service';
+import { CiiFormControlComponent } from './cii-form-control.component';
+import { CiiFormHighlightTermService } from '../../../services/cii-form-highlight-term.service';
 import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
 
 @Component({
-  selector: 'app-cii-form-control',
+  selector: 'app-cii-form-parent-container',
   imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
   template: `
-    <div class="overflow-hidden px-1" (mouseenter)="highlightTerm(true)" (mouseleave)="highlightTerm(false)">
-      <div class="editor__control">
-        <label [id]="id()" class="form-label text-truncate" [class.text-primary]="isHighlighted()" [for]="controlId()">
-          <span class="fw-semibold">{{ term() }}</span> - {{ name() }}
-        </label>
+    <h6 [id]="term()" class="m-0" [class.text-primary]="isHighlighted()">{{ term() }} - {{ name() }}</h6>
 
-        <ng-content></ng-content>
+    <div class="ps-3 border-start border-2" [class.border-primary]="isHighlighted()" (mouseenter)="highlight(true)" (mouseleave)="highlight(false)">
+      <div class="form-text">
+        @if (description(); as description) {
+          <ng-container [ngTemplateOutlet]="description"></ng-container>
+        }
       </div>
 
-      @if (description(); as description) {
-        <p [id]="controlHelpId()" class="form-text">
-          <ng-container [ngTemplateOutlet]="description"></ng-container>
-        </p>
-      } @else {
-        <div class="pb-3"><!--spacer--></div>
-      }
+      <div class="pb-2"><!--spacer--></div>
 
       @if (settings(); as settings) {
         @if (settings?.showBusinessRules === true) {
           @if (businessRules(); as businessRules) {
-            <app-cii-form-business-rules [businessRules]="businessRules"></app-cii-form-business-rules>
+            <div [id]="term() + '-rules'">
+              <app-cii-form-business-rules [businessRules]="businessRules"></app-cii-form-business-rules>
+            </div>
           }
         }
 
@@ -58,15 +55,13 @@ import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-
           }
         }
       }
+      <div class="ps-1">
+        <ng-content></ng-content>
+      </div>
     </div>
   `,
-  styles: `
-    .editor__control {
-      max-width: 420px;
-    }
-  `,
 })
-export class CiiFormControlComponent {
+export class CiiFormParentContainerComponent {
   term = input.required<string>();
   name = input.required<string>();
   description = input<TemplateRef<any>>();
@@ -75,14 +70,10 @@ export class CiiFormControlComponent {
   chorusProRemarks = input<TemplateRef<any>[]>();
   settings = input<EditorSettings>();
 
-  public id = computed(() => this.term());
-  public controlId = computed(() => this.term() + '-control');
-  public controlHelpId = computed(() => this.term() + '-control-help');
-
   private highlightService = inject(CiiFormHighlightTermService);
   protected isHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());
 
-  protected highlightTerm(value: boolean) {
+  protected highlight(value: boolean) {
     this.highlightService.highlightTerm(this.term(), value);
   }
 }

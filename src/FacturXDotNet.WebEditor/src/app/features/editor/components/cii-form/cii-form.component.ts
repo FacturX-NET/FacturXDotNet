@@ -1,17 +1,17 @@
 import { Component, effect, input, model } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { GuidelineSpecifiedDocumentContextParameterId } from '../../../core/facturx-models/cii/guideline-specified-document-context-parameter-id';
-import { InvoiceTypeCode } from '../../../core/facturx-models/cii/invoice-type-code';
-import { DateOnlyFormat } from '../../../core/facturx-models/cii/date-only-format';
-import { CrossIndustryInvoice } from '../../../core/facturx-models/cii/cross-industry-invoice';
+import { GuidelineSpecifiedDocumentContextParameterId } from '../../../../core/facturx-models/cii/guideline-specified-document-context-parameter-id';
+import { InvoiceTypeCode } from '../../../../core/facturx-models/cii/invoice-type-code';
+import { DateOnlyFormat } from '../../../../core/facturx-models/cii/date-only-format';
+import { CrossIndustryInvoice } from '../../../../core/facturx-models/cii/cross-industry-invoice';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DateOnly } from '../../../core/facturx-models/cii/date-only';
-import { VatOnlyTaxSchemeIdentifier } from '../../../core/facturx-models/cii/vat-only-tax-scheme-identifier';
+import { DateOnly } from '../../../../core/facturx-models/cii/date-only';
+import { VatOnlyTaxSchemeIdentifier } from '../../../../core/facturx-models/cii/vat-only-tax-scheme-identifier';
 import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-document-context.component';
 import { CiiFormSupplyChainTradeTransactionComponent } from './cii-form-supply-chain-trade-transaction.component';
 import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document.component';
-import { EditorSettings } from '../editor-settings.service';
-import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
+import { EditorSettings } from '../../editor-settings.service';
+import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 
 @Component({
   selector: 'app-cii-form',

@@ -1,8 +1,8 @@
 import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
-import { EditorSettings } from '../editor-settings.service';
-import { CiiFormControlComponent } from './components/cii-form-control.component';
-import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
+import { EditorSettings } from '../../editor-settings.service';
+import { CiiFormControlComponent } from './base/cii-form-control.component';
+import { ScrollToDirective } from '../../../../core/scroll-to/scroll-to.directive';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-specified-legal-organization',

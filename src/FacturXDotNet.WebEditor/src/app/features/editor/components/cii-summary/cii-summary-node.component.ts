@@ -1,9 +1,9 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { CiiSummaryNode } from './cii-summary.component';
-import { ScrollToDirective } from '../../../core/scroll-to/scroll-to.directive';
-import { EditorSettings } from '../editor-settings.service';
-import { CiiFormHighlightTermService } from '../cii-form/services/cii-form-highlight-term.service';
-import { CiiFormHighlightBusinessRuleService } from '../cii-form/services/cii-form-highlight-business-rule.service';
+import { ScrollToDirective } from '../../../../core/scroll-to/scroll-to.directive';
+import { EditorSettings } from '../../editor-settings.service';
+import { CiiFormHighlightTermService } from '../../services/cii-form-highlight-term.service';
+import { CiiFormHighlightBusinessRuleService } from '../../services/cii-form-highlight-business-rule.service';
 
 @Component({
   selector: 'app-cii-summary-node',

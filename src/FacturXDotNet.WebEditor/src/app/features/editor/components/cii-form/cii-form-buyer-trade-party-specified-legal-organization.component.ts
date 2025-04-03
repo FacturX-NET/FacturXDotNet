@@ -1,7 +1,7 @@
 import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
-import { EditorSettings } from '../editor-settings.service';
-import { CiiFormControlComponent } from './components/cii-form-control.component';
+import { EditorSettings } from '../../editor-settings.service';
+import { CiiFormControlComponent } from './base/cii-form-control.component';
 
 @Component({
   selector: 'app-cii-form-buyer-trade-party-specified-legal-organization',

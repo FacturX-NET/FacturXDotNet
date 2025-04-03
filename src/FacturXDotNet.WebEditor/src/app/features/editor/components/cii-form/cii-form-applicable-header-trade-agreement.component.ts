@@ -3,9 +3,9 @@ import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.component';
 import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.component';
 import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';
-import { EditorSettings } from '../editor-settings.service';
-import { CiiFormParentContainerComponent } from './components/cii-form-parent-container.component';
-import { CiiFormControlComponent } from './components/cii-form-control.component';
+import { EditorSettings } from '../../editor-settings.service';
+import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
+import { CiiFormControlComponent } from './base/cii-form-control.component';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-agreement',
