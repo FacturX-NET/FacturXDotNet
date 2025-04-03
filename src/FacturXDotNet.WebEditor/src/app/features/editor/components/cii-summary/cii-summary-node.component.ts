@@ -4,6 +4,8 @@ import { ScrollToDirective } from '../../../../core/scroll-to/scroll-to.directiv
 import { EditorSettings } from '../../editor-settings.service';
 import { CiiFormHighlightTermService } from '../../services/cii-form-highlight-term.service';
 import { CiiFormHighlightBusinessRuleService } from '../../services/cii-form-highlight-business-rule.service';
+import { CiiFormHighlightRemarkService } from '../../services/cii-form-highlight-remark.service';
+import { CiiFormHighlightChorusProRemarkService } from '../../services/cii-form-highlight-chorus-pro-remark.service';
 
 @Component({
   selector: 'app-cii-summary-node',
@@ -45,11 +47,27 @@ import { CiiFormHighlightBusinessRuleService } from '../../services/cii-form-hig
           }
 
           @if (node().hasRemarks && settings.showRemarks) {
-            <a [scrollTo]="node().term + '-remarks'" class="hoverlink"><i class="bi bi-info-circle"></i></a>
+            <a
+              [scrollTo]="node().term + '-remarks'"
+              class="hoverlink"
+              [class.fw-bold]="highlightedRemark() === node().term"
+              (mouseenter)="highlightRemark(node().term, true)"
+              (mouseleave)="highlightRemark(node().term, false)"
+            >
+              <i class="bi bi-info-circle"></i>
+            </a>
           }
 
           @if (node().hasChorusProRemarks && settings.showChorusProRemarks) {
-            <a [scrollTo]="node().term + '-cpro-remarks'" class="hoverlink">CPRO</a>
+            <a
+              [scrollTo]="node().term + '-cpro-remarks'"
+              class="hoverlink"
+              [class.fw-bold]="highlightedChorusProRemark() === node().term"
+              (mouseenter)="highlightChorusProRemark(node().term, true)"
+              (mouseleave)="highlightChorusProRemark(node().term, false)"
+            >
+              CPRO
+            </a>
           }
         </div>
       }
@@ -70,11 +88,25 @@ export class CiiSummaryNodeComponent {
   private highlightTermService = inject(CiiFormHighlightTermService);
   protected isNodeHighlighted = computed(() => this.highlightTermService.highlightedTerm() === this.node().term);
 
+  private highlightRemarkService = inject(CiiFormHighlightRemarkService);
+  protected highlightedRemark = this.highlightRemarkService.highlightedRemark;
+
+  private highlightChorusProRemarkService = inject(CiiFormHighlightChorusProRemarkService);
+  protected highlightedChorusProRemark = this.highlightChorusProRemarkService.highlightedChorusProRemark;
+
   private highlightBusinessRuleService = inject(CiiFormHighlightBusinessRuleService);
   protected highlightedBusinessRule = this.highlightBusinessRuleService.highlightedBusinessRule;
 
   protected highlightTerm(value: boolean) {
     this.highlightTermService.highlightTerm(this.node().term, value);
+  }
+
+  protected highlightRemark(rule: string, value: boolean) {
+    this.highlightRemarkService.highlightRemark(rule, value);
+  }
+
+  protected highlightChorusProRemark(rule: string, value: boolean) {
+    this.highlightChorusProRemarkService.highlightChorusProRemark(rule, value);
   }
 
   protected highlightBusinessRule(rule: string, value: boolean) {

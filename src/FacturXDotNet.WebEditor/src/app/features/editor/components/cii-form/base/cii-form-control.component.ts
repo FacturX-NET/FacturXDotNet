@@ -5,6 +5,8 @@ import { NgTemplateOutlet } from '@angular/common';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
 import { CiiFormHighlightTermService } from '../../../services/cii-form-highlight-term.service';
 import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
+import { CiiFormHighlightRemarkService } from '../../../services/cii-form-highlight-remark.service';
+import { CiiFormHighlightChorusProRemarkService } from '../../../services/cii-form-highlight-chorus-pro-remark.service';
 
 @Component({
   selector: 'app-cii-form-control',
@@ -12,7 +14,7 @@ import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-
   template: `
     <div class="overflow-hidden px-1">
       <div class="editor__control">
-        <label [id]="id()" class="form-label text-truncate" [class.text-primary]="isHighlighted()" [for]="controlId()">
+        <label [id]="id()" class="form-label text-truncate" [class.text-primary]="isTermHighlighted()" [for]="controlId()">
           <span class="fw-semibold">{{ term() }}</span> - {{ name() }}
         </label>
 
@@ -38,7 +40,7 @@ import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-
           @if (remarks.length > 0 && settings.showRemarks) {
             <div [id]="term() + '-remarks'">
               @for (remark of remarks; track remark) {
-                <app-cii-form-remark [highlight]="isHighlighted()">
+                <app-cii-form-remark [highlight]="isTermHighlighted() || isRemarkHighlighted()">
                   <ng-container [ngTemplateOutlet]="remark"></ng-container>
                 </app-cii-form-remark>
               }
@@ -50,7 +52,7 @@ import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-
           @if (chorusProRemarks.length > 0 && settings.showChorusProRemarks) {
             <div [id]="term() + '-cpro-remarks'">
               @for (chorusProRemark of chorusProRemarks; track chorusProRemark) {
-                <app-cii-form-remark title="CHORUSPRO" [highlight]="isHighlighted()">
+                <app-cii-form-remark title="CHORUSPRO" [highlight]="isTermHighlighted() || isChorusProRemarkHighlighted()">
                   <ng-container [ngTemplateOutlet]="chorusProRemark"></ng-container>
                 </app-cii-form-remark>
               }
@@ -80,5 +82,11 @@ export class CiiFormControlComponent {
   public controlHelpId = computed(() => this.term() + '-control-help');
 
   private highlightService = inject(CiiFormHighlightTermService);
-  protected isHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());
+  protected isTermHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());
+
+  private remarkHighlightService = inject(CiiFormHighlightRemarkService);
+  protected isRemarkHighlighted = computed(() => this.remarkHighlightService.highlightedRemark() === this.term());
+
+  private chorusProRemarkHighlightService = inject(CiiFormHighlightChorusProRemarkService);
+  protected isChorusProRemarkHighlighted = computed(() => this.chorusProRemarkHighlightService.highlightedChorusProRemark() === this.term());
 }
