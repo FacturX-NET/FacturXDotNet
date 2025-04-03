@@ -1,6 +1,5 @@
-import { Component, computed, inject, input, TemplateRef } from '@angular/core';
+import { Component, inject, input, TemplateRef } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { CiiFormHighlightTermService } from '../../../services/cii-form-highlight-term.service';
 import { CiiFormHighlightBusinessRuleService } from '../../../services/cii-form-highlight-business-rule.service';
 
 @Component({

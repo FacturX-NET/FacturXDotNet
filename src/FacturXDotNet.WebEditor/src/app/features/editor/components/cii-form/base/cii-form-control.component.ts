@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal, TemplateRef } from '@angular/core';
+import { Component, computed, inject, input, TemplateRef } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../../editor-settings.service';
 import { NgTemplateOutlet } from '@angular/common';
