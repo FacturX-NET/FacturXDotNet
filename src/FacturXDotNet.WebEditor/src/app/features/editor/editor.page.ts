@@ -8,57 +8,16 @@ import { EditorSettings, EditorSettingsService } from './editor-settings.service
 import { CiiSummaryComponent } from './components/cii-summary/cii-summary.component';
 import { EditorDetailsDropdownComponent } from './editor-details-dropdown.component';
 import { CurrentCiiService } from './services/current-cii.service';
+import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent, NgStyle, EditorDetailsDropdownComponent],
+  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent, NgStyle, EditorDetailsDropdownComponent, EditorMenuComponent],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
         <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
-        <ul class="nav justify-content-center">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">File</a>
-            <ul class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="#">Create blank FacturX document</a>
-                <a class="dropdown-item" href="#">Open FacturX document</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">Import</a>
-            <ul class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="#">Import Cross-Industry Invoice data</a>
-                <a class="dropdown-item" href="#">Import PDF image</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">Export</a>
-            <ul class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="#">Download FacturX document</a>
-                <a class="dropdown-item" href="#">Download Cross-Industry Invoice XML file</a>
-                <a class="dropdown-item" href="#">Download PDF file</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">About</a>
-            <ul class="dropdown-menu">
-              @if (environment.isUnsafeCloudEnvironment) {
-                <li>
-                  <a class="dropdown-item" href="#">Self-hosting</a>
-                </li>
-              }
-              <li>
-                <a class="dropdown-item" href="#">About FacturX.NET Web Editor</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <app-menu [showSelfHostingMenu]="environment.isUnsafeCloudEnvironment ?? false"></app-menu>
         <div class="flex-grow-1"></div>
         <div class="px-4">
           <a href="https://github.com/FacturX-NET/FacturXDotNet" class="text-light">
