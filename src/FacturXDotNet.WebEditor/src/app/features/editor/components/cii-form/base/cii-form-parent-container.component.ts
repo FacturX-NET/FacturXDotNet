@@ -3,7 +3,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../../editor-settings.service';
 import { NgTemplateOutlet } from '@angular/common';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
-import { CiiFormControlComponent } from './cii-form-control.component';
 import { CiiFormHighlightTermService } from '../../../services/cii-form-highlight-term.service';
 import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
 
@@ -13,7 +12,7 @@ import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-
   template: `
     <h6 [id]="term()" class="m-0" [class.text-primary]="isHighlighted()">{{ term() }} - {{ name() }}</h6>
 
-    <div class="ps-3 border-start border-2" [class.border-primary]="isHighlighted()" (mouseenter)="highlight(true)" (mouseleave)="highlight(false)">
+    <div class="ps-3 border-start border-2" [class.border-primary]="isHighlighted()">
       <div class="form-text">
         @if (description(); as description) {
           <ng-container [ngTemplateOutlet]="description"></ng-container>
@@ -72,8 +71,4 @@ export class CiiFormParentContainerComponent {
 
   private highlightService = inject(CiiFormHighlightTermService);
   protected isHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());
-
-  protected highlight(value: boolean) {
-    this.highlightService.highlightTerm(this.term(), value);
-  }
 }

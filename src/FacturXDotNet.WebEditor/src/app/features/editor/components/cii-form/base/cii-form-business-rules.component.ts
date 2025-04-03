@@ -11,7 +11,7 @@ import { CiiFormHighlightBusinessRuleService } from '../../../services/cii-form-
       <div class="fw-semibold">Business Rules</div>
       <ul>
         @for (rule of businessRules(); track rule.id) {
-          <li (mouseenter)="highlightBusinessRule(rule.id, true)" (mouseleave)="highlightBusinessRule(rule.id, false)">
+          <li>
             <span [id]="rule.id" class="fw-semibold" [class.fw-bold]="highlighted() == rule.id">{{ rule.id }} </span>:
             <ng-container [ngTemplateOutlet]="rule.template"></ng-container>
           </li>
@@ -26,10 +26,6 @@ export class CiiFormBusinessRulesComponent {
 
   private highlightService = inject(CiiFormHighlightBusinessRuleService);
   protected highlighted = this.highlightService.highlightedBusinessRule;
-
-  protected highlightBusinessRule(rule: string, value: boolean) {
-    this.highlightService.highlightBusinessRule(rule, value);
-  }
 }
 
 export interface BusinessRuleTemplate {

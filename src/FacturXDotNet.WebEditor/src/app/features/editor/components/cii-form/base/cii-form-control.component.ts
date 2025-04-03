@@ -10,7 +10,7 @@ import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-
   selector: 'app-cii-form-control',
   imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
   template: `
-    <div class="overflow-hidden px-1" (mouseenter)="highlightTerm(true)" (mouseleave)="highlightTerm(false)">
+    <div class="overflow-hidden px-1">
       <div class="editor__control">
         <label [id]="id()" class="form-label text-truncate" [class.text-primary]="isHighlighted()" [for]="controlId()">
           <span class="fw-semibold">{{ term() }}</span> - {{ name() }}
@@ -81,8 +81,4 @@ export class CiiFormControlComponent {
 
   private highlightService = inject(CiiFormHighlightTermService);
   protected isHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());
-
-  protected highlightTerm(value: boolean) {
-    this.highlightService.highlightTerm(this.term(), value);
-  }
 }
