@@ -19,6 +19,7 @@ export class EditorStateService {
 
   async update(value: EditorSavedState): Promise<void> {
     await this.writeSavedState('last', value);
+    this.savedState.reload();
   }
 
   async clear(): Promise<void> {
