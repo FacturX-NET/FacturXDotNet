@@ -32,7 +32,7 @@ import { CiiFormHighlightChorusProRemarkService } from '../../../services/cii-fo
       @if (settings(); as settings) {
         @if (settings?.showBusinessRules === true) {
           @if (businessRules(); as businessRules) {
-            <app-cii-form-business-rules [businessRules]="businessRules"></app-cii-form-business-rules>
+            <app-cii-form-business-rules [businessRules]="businessRules" [highlight]="isTermHighlighted()"></app-cii-form-business-rules>
           }
         }
 

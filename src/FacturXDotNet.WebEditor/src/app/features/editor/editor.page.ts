@@ -56,8 +56,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                         <button class="btn btn-outline-secondary">Export</button>
                         <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
                         <div class="dropdown-menu dropdown-menu-end">
-                          <li><a class="dropdown-item" href="#">Export Cross-Industry Invoice</a></li>
-                          <li><a class="dropdown-item" href="#">Export PDF</a></li>
+                          <li><a class="dropdown-item" href="javascript:void 0;">Export Cross-Industry Invoice</a></li>
+                          <li><a class="dropdown-item" href="javascript:void 0;" (click)="appMenu.exportMenu()?.exportPdfImage()">Export PDF</a></li>
                         </div>
                       </div>
                     </div>
@@ -140,7 +140,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
           environment is beyond my control.
         </div>
         <div class="text-nowrap">
-          <a href="#">About self-hosting...</a>
+          <a href="javascript:void 0;">About self-hosting...</a>
         </div>
       </div>
 
