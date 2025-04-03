@@ -10,7 +10,7 @@ import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-
   selector: 'app-cii-form-parent-container',
   imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
   template: `
-    <h6 [id]="term()" class="m-0" [class.text-primary]="isHighlighted()">{{ term() }} - {{ name() }}</h6>
+    <h6 [id]="term()" class="my-2 mx-0" [class.text-primary]="isHighlighted()">{{ term() }} - {{ name() }}</h6>
 
     <div class="ps-3 border-start border-2" [class.border-primary]="isHighlighted()">
       <div class="form-text">

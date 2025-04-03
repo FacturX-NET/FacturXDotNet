@@ -9,7 +9,7 @@ import { CiiSummaryComponent } from './components/cii-summary/cii-summary.compon
 import { EditorDetailsDropdownComponent } from './editor-details-dropdown.component';
 import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
 import { EditorSavedState, EditorStateService } from './services/editor-state.service';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, delay, from, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -30,23 +30,44 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
       <main class="flex-grow-1 d-flex px-1 px-md-2 px-lg-3 pt-3 pb-1 overflow-hidden">
         <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden" [ngStyle]="{ 'width.px': leftColumnWidth() }">
-          <header class="border-bottom d-flex">
-            <div class="d-none d-xl-block col-3"><!--spacer--></div>
-            <div class="navbar navbar-expand-xl flex-grow-1">
-              <div class="flex-grow-1 d-flex justify-content-start gap-3 px-3">
-                <div class="d-block d-xl-none">
-                  <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                </div>
-                <h5 class="navbar-brand m-0">Cross-Industry Invoice</h5>
-                <div class="flex-grow-1"><!--spacer--></div>
-                <app-editor-details-dropdown />
-              </div>
-            </div>
-          </header>
-
           @if (state.value(); as value) {
+            <header class="border-bottom d-flex">
+              <div class="d-none d-xl-block col-3"><!--spacer--></div>
+              <div class="navbar navbar-expand-xl flex-grow-1">
+                <div class="flex-grow-1 d-flex justify-content-start align-items-center gap-3 px-3">
+                  <div class="d-block d-xl-none">
+                    <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                  </div>
+                  <h5 class="navbar-brand m-0"><i class="bi bi-code pe-1"></i> {{ value.cii.name ?? 'Cross-Industry Invoice' }}</h5>
+
+                  <div class="flex-grow-1"><!--spacer--></div>
+
+                  @if (saving()) {
+                    <div><i class="bi bi-floppy2-fill text-body-tertiary small glow"></i></div>
+                  } @else {
+                    @if (saved()) {
+                      <div class="text-success small"><i class="bi bi-check"></i> Saveds</div>
+                    }
+
+                    <div>
+                      <div class="input-group">
+                        <button class="btn btn-outline-secondary">Export</button>
+                        <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                          <li><a class="dropdown-item" href="#">Export Cross-Industry Invoice</a></li>
+                          <li><a class="dropdown-item" href="#">Export PDF</a></li>
+                        </div>
+                      </div>
+                    </div>
+                  }
+
+                  <app-editor-details-dropdown />
+                </div>
+              </div>
+            </header>
+
             <div class="flex-grow-1 overflow-hidden d-flex column-gap-4">
               <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
                 <div class="offcanvas-header">
@@ -56,7 +77,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                 <div class="offcanvas-body small">
                   <div class="overflow-x-hidden">
                     <h6 class="d-none d-xl-block">Summary</h6>
-                    <app-cii-summary [value]="value.cii" [settings]="settings()" />
+                    <app-cii-summary [value]="value.cii.content" [settings]="settings()" />
                   </div>
                 </div>
               </div>
@@ -69,7 +90,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                 tabindex="0"
               >
                 <div class="container ms-0">
-                  <app-cii-form [value]="value.cii" (valueChange)="saveCii($event)" [settings]="settings()" />
+                  <app-cii-form [value]="value.cii.content" (valueChange)="saveCii($event)" [settings]="settings()" />
                 </div>
               </div>
             </div>
@@ -86,8 +107,35 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
           }
         </div>
         <a href="javascript:void(0)" style="width: {{ resizeHandleWidth }}px; cursor: col-resize;" (mousedown)="dragStart($event)" (touchstart)="dragStart($event)"> </a>
-        <div class="h-100 border" [ngStyle]="{ 'width.px': rightColumnWidth() }">
-          <app-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
+        <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden" [ngStyle]="{ 'width.px': rightColumnWidth() }">
+          @if (state.value(); as value) {
+            <header class="border-bottom">
+              <div class="navbar">
+                <div class="flex-grow-1 d-flex justify-content-start align-items-center gap-3 px-3">
+                  @if (value.pdf?.isAutoGenerated) {
+                    <h5 class="navbar-brand m-0"><i class="bi bi-file-pdf pe"></i> Auto-generated</h5>
+                  } @else {
+                    <h5 class="navbar-brand m-0"><i class="bi bi-file-pdf pe"></i> {{ value.pdf?.name ?? 'facture.pdf' }}</h5>
+                  }
+                </div>
+              </div>
+            </header>
+
+            @if (value.pdf?.content; as pdf) {
+              <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
+            }
+            <div class="flex-grow-1 d-flex align-items-center justify-content-center"><i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i></div>
+          } @else {
+            @if (state.isLoading()) {
+              <div class="w-100 flex-grow-1 d-flex justify-content-center align-items-center">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            } @else {
+              Error!
+            }
+          }
         </div>
       </main>
 
@@ -123,18 +171,33 @@ export class EditorPage {
   protected disablePointerEvents = signal<boolean>(false);
   protected state: Resource<EditorSavedState | undefined> = this.editorStateService.savedState;
 
+  protected saving = signal<boolean>(false);
+  protected saved = signal<boolean>(false);
   private saveSubject = new Subject<EditorSavedState>();
   private resizing = false;
 
   constructor() {
     this.updateWidth(window.innerWidth);
-    this.saveSubject.pipe(debounceTime(1000), takeUntilDestroyed()).subscribe((state) => {
-      this.editorStateService.update(state).then(() => this.editorStateService.savedState.reload());
-    });
+    this.saveSubject
+      .pipe(
+        debounceTime(1000),
+        switchMap((state) => from(this.editorStateService.update(state))),
+        tap(() => {
+          this.saving.set(false);
+          this.saved.set(true);
+          this.editorStateService.savedState.reload();
+        }),
+        delay(2000),
+        tap(() => this.saved.set(false)),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
   }
 
   saveCii(cii: CrossIndustryInvoice) {
-    this.saveSubject.next({ cii });
+    const value = this.state.value();
+    this.saving.set(true);
+    this.saveSubject.next({ ...(value?.pdf ?? {}), cii: { ...(value?.cii ?? {}), content: cii } });
   }
 
   @HostListener('window:resize', ['$event'])

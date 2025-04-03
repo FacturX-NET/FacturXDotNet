@@ -58,3 +58,13 @@ a {
 .render-whitespaces {
   white-space: pre-wrap;
 }
+
+.glow {
+  animation: placeholder-glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  50% {
+    opacity: 0.2;
+  }
+}

@@ -2,7 +2,7 @@ import { Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-pdf-viewer',
-  template: ` <embed src="https://pdfobject.com/pdf/sample.pdf" type="application/pdf" style="pointer-events: {{ pointerEvents() }}" /> `,
+  template: ` <embed [src]="objectUrl()" type="application/pdf" style="pointer-events: {{ pointerEvents() }}" /> `,
   styles: `
     embed {
       width: 100%;
@@ -11,6 +11,9 @@ import { Component, computed, input } from '@angular/core';
   `,
 })
 export class PdfViewerComponent {
+  pdf = input.required<Blob>();
   disablePointerEvents = input<boolean>(false);
+
+  protected objectUrl = computed(() => URL.createObjectURL(this.pdf()));
   protected pointerEvents = computed(() => (this.disablePointerEvents() ? 'none' : 'auto'));
 }
