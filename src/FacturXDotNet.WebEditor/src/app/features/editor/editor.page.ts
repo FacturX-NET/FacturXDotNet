@@ -1,4 +1,4 @@
-import { Component, computed, HostListener, signal, Signal } from '@angular/core';
+import { Component, computed, HostListener, inject, signal, Signal } from '@angular/core';
 import { NgOptimizedImage, NgStyle } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './pdf-viewer.component';
@@ -7,6 +7,7 @@ import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-indust
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
 import { CiiSummaryComponent } from './components/cii-summary/cii-summary.component';
 import { EditorDetailsDropdownComponent } from './editor-details-dropdown.component';
+import { CurrentCiiService } from './services/current-cii.service';
 
 @Component({
   selector: 'app-editor',
@@ -92,7 +93,7 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
               <div class="offcanvas-body small">
                 <div class="overflow-x-hidden">
                   <h6 class="d-none d-xl-block">Summary</h6>
-                  <app-cii-summary [value]="cii" [settings]="settings()" />
+                  <app-cii-summary [value]="cii()" [settings]="settings()" />
                 </div>
               </div>
             </div>
@@ -105,7 +106,7 @@ import { EditorDetailsDropdownComponent } from './editor-details-dropdown.compon
               tabindex="0"
             >
               <div class="container ms-0">
-                <app-cii-form [(value)]="cii" [settings]="settings()" />
+                <app-cii-form [value]="cii()" (valueChange)="saveCii($event)" [settings]="settings()" />
               </div>
             </div>
           </div>
@@ -138,20 +139,24 @@ export class EditorPage {
   protected readonly environment = environment;
   protected resizeHandleWidth = 16;
 
-  protected settings: Signal<EditorSettings>;
+  private currentCiiService = inject(CurrentCiiService);
+  private settingsService = inject(EditorSettingsService);
+
+  protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected totalWidth = signal<number>(0);
-  protected leftColumnWidth: Signal<number>;
-  protected rightColumnWidth: Signal<number>;
+  protected leftColumnWidth: Signal<number> = computed(() => this.totalWidth() - this.rightColumnWidth() - this.resizeHandleWidth);
+  protected rightColumnWidth: Signal<number> = computed(() => this.settings().rightPaneWidth ?? 0);
   protected disablePointerEvents = signal<boolean>(false);
-  protected cii: CrossIndustryInvoice = {};
+  protected cii: Signal<CrossIndustryInvoice> = this.currentCiiService.current;
 
   private resizing = false;
 
-  constructor(private settingsService: EditorSettingsService) {
-    this.settings = this.settingsService.settings;
-    this.leftColumnWidth = computed(() => this.totalWidth() - this.rightColumnWidth() - this.resizeHandleWidth);
-    this.rightColumnWidth = computed(() => this.settings().rightPaneWidth ?? 0);
+  constructor() {
     this.updateWidth(window.innerWidth);
+  }
+
+  saveCii(cii: CrossIndustryInvoice) {
+    this.currentCiiService.update(cii);
   }
 
   @HostListener('window:resize', ['$event'])

@@ -54,8 +54,12 @@ export class CiiFormComponent {
       }
     });
 
+    effect(() => {
+      const value = this.value();
+      this.form.patchValue(value, { emitEvent: false });
+    });
+
     this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((v) => {
-      console.log('value changed', this.form.getRawValue());
       this.value.set(this.form.getRawValue());
     });
   }
