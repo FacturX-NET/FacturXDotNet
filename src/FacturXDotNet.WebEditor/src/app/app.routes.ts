@@ -6,6 +6,10 @@ export const routes: Routes = [
     loadChildren: () => import('./features/editor/editor.routes').then((m) => m.routes),
   },
   {
+    path: 'about',
+    loadChildren: () => import('./features/about/about.routes').then((m) => m.routes),
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'editor',
