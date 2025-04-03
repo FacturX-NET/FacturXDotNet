@@ -35,7 +35,6 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
       </app-cii-form-parent-container>
     </div>
   `,
-  styles: ``,
 })
 export class CiiFormBuyerTradePartyComponent {
   formGroupName = input.required<string>();

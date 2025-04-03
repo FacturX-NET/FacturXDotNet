@@ -2,7 +2,6 @@ import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-editor-about-menu',
-  imports: [],
   template: `
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">About</a>
@@ -18,7 +17,6 @@ import { Component, input } from '@angular/core';
       </ul>
     </li>
   `,
-  styles: ``,
 })
 export class EditorAboutMenuComponent {
   showSelfHostingMenu = input<boolean>(false);

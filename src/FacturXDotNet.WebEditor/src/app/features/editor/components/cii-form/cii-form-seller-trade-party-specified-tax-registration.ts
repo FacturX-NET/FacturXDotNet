@@ -62,7 +62,6 @@ import { ScrollToDirective } from '../../../../core/scroll-to/scroll-to.directiv
       </div>
     </div>
   `,
-  styles: ``,
 })
 export class CiiFormSellerTradePartySpecifiedTaxRegistration {
   formGroupName = input.required<string>();

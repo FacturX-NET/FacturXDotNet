@@ -6,7 +6,6 @@ import { ToastInstance } from './toast.service';
 
 @Component({
   selector: 'app-toast',
-  imports: [],
   templateUrl: './toast.component.html',
 })
 export class ToastComponent {

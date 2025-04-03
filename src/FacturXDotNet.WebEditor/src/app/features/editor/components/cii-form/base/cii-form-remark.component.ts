@@ -2,7 +2,6 @@ import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-cii-form-remark',
-  imports: [],
   template: `
     <div class="alert alert-light small" [class.border-primary]="highlight()">
       @if (title(); as title) {
@@ -14,7 +13,6 @@ import { Component, input } from '@angular/core';
       <ng-content></ng-content>
     </div>
   `,
-  styles: ``,
 })
 export class CiiFormRemarkComponent {
   title = input<string>();

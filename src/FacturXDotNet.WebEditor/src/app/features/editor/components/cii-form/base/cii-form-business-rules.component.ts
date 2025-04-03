@@ -18,7 +18,6 @@ import { CiiFormHighlightBusinessRuleService } from '../../../services/cii-form-
       </ul>
     </div>
   `,
-  styles: ``,
 })
 export class CiiFormBusinessRulesComponent {
   businessRules = input.required<BusinessRuleTemplate[]>();

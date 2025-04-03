@@ -2,7 +2,6 @@ import { Component, computed, input } from '@angular/core';
 
 @Component({
   selector: 'app-pdf-viewer',
-  imports: [],
   template: ` <embed src="https://pdfobject.com/pdf/sample.pdf" type="application/pdf" style="pointer-events: {{ pointerEvents() }}" /> `,
   styles: `
     embed {

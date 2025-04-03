@@ -51,7 +51,6 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
       </div>
     </div>
   `,
-  styles: ``,
 })
 export class CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent {
   formGroupName = input.required<string>();

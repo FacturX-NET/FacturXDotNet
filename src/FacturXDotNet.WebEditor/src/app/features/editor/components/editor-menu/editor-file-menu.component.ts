@@ -3,7 +3,6 @@ import { EditorStateService } from '../../services/editor-state.service';
 
 @Component({
   selector: 'app-editor-file-menu',
-  imports: [],
   template: `
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">File</a>
@@ -15,7 +14,6 @@ import { EditorStateService } from '../../services/editor-state.service';
       </ul>
     </li>
   `,
-  styles: ``,
 })
 export class EditorFileMenuComponent {
   private editorStateService = inject(EditorStateService);

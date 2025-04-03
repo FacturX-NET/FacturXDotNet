@@ -15,7 +15,6 @@ import { EditorAboutMenuComponent } from './editor-about-menu.component';
       <app-editor-about-menu></app-editor-about-menu>
     </ul>
   `,
-  styles: ``,
 })
 export class EditorMenuComponent {
   showSelfHostingMenu = input<boolean>(false);

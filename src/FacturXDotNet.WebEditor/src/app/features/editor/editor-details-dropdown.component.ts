@@ -3,7 +3,6 @@ import { EditorSettings, EditorSettingsService } from './editor-settings.service
 
 @Component({
   selector: 'app-editor-details-dropdown',
-  imports: [],
   template: `
     @if (settings(); as settings) {
       <div class="dropdown">
@@ -43,7 +42,6 @@ import { EditorSettings, EditorSettingsService } from './editor-settings.service
       </div>
     }
   `,
-  styles: ``,
 })
 export class EditorDetailsDropdownComponent {
   public settings: Signal<EditorSettings>;

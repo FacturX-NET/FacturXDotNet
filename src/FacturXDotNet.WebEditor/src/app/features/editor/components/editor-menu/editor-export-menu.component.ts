@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-editor-export-menu',
-  imports: [],
   template: `
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">Export</a>
@@ -15,6 +14,5 @@ import { Component } from '@angular/core';
       </ul>
     </li>
   `,
-  styles: ``,
 })
 export class EditorExportMenuComponent {}
