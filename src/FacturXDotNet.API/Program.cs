@@ -1,4 +1,6 @@
+using FacturXDotNet.API.Features.Extract;
 using FacturXDotNet.API.Features.Generate;
+using FacturXDotNet.API.Features.Information;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -10,7 +12,7 @@ try
     builder.Services.AddSerilog();
 
     builder.Services.AddCors(opt => opt.AddDefaultPolicy(p => p.DisallowCredentials().AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
-
+    builder.Services.AddHealthChecks();
     builder.Services.AddOpenApi();
 
     WebApplication app = builder.Build();
@@ -21,7 +23,10 @@ try
     app.MapOpenApi();
 
     app.MapGet("/", () => Results.LocalRedirect("/scalar")).ExcludeFromDescription();
-    app.MapGenerateEndpoints();
+    app.MapHealthChecks("/health").WithTags("Health");
+    app.MapGroup("/").MapInformationEndpoints().WithTags("Information");
+    app.MapGroup("/generate").MapGenerateEndpoints().WithTags("Generate");
+    app.MapGroup("/extract").MapExtractEndpoints().WithTags("Extract");
 
     app.Run();
 }

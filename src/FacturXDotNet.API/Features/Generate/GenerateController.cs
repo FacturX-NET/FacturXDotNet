@@ -1,55 +1,31 @@
-﻿using CommunityToolkit.HighPerformance;
-using FacturXDotNet.Generation.FacturX;
+﻿using FacturXDotNet.Generation.CII;
 using FacturXDotNet.Models.CII;
-using FacturXDotNet.Models.XMP;
 
 namespace FacturXDotNet.API.Features.Generate;
 
 static class GenerateController
 {
-    public static void MapGenerateEndpoints(this IEndpointRouteBuilder app)
+    public static RouteGroupBuilder MapGenerateEndpoints(this RouteGroupBuilder routes)
     {
-        app.MapPost(
-                "/generate",
-                async (IFormFile pdf, IFormFile crossIndustryInvoice) =>
+        routes.MapPost(
+                "/cii",
+                async (CrossIndustryInvoice crossIndustryInvoice) =>
                 {
-                    FacturXDocumentBuilder builder = FacturXDocument.Create();
+                    MemoryStream stream = new();
+                    CrossIndustryInvoiceWriter writer = new();
+                    await writer.WriteAsync(stream, crossIndustryInvoice);
+                    stream.Seek(0, SeekOrigin.Begin);
 
-                    await using Stream pdfStream = pdf.OpenReadStream();
-                    builder.WithBasePdf(pdfStream);
-
-                    await using Stream ciiStream = crossIndustryInvoice.OpenReadStream();
-                    builder.WithCrossIndustryInvoice(ciiStream);
-
-                    FacturXDocument document = await builder.BuildAsync();
-
-                    DateTimeOffset now = DateTimeOffset.Now;
-                    string name = Path.GetFileNameWithoutExtension(pdf.FileName + "-facturx.pdf");
-                    Stream dataStream = document.Data.AsStream();
-
-                    return Results.File(dataStream, "application/pdf", name, now);
+                    return Results.File(stream, "text/xml", "factur-x.xml", DateTimeOffset.Now);
                 }
             )
-            .WithSummary("Generate from files")
-            .WithDescription("Generate a FacturX document from a PDF file and a Cross-Industry Invoice XML file.")
+            .WithSummary("Generate Cross-Industry Invoice")
+            .WithDescription("Generate a Cross-Industry Invoice XML file from structured data.")
             .Produces<IFormFile>()
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
 
-        app.MapPost("/generate/structured", async (GenerateFacturXRequest request) => { throw new NotImplementedException(); })
-            .WithSummary("Generate from structured data")
-            .WithDescription("Generate a FacturX document from a PDF file, the XMP metadata and the Cross-Industry Invoice data.")
-            .Produces<IFormFile>()
-            .Produces(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status500InternalServerError)
-            .DisableAntiforgery();
-    }
-
-    public class GenerateFacturXRequest
-    {
-        public string PdfFileBase64 { get; set; } = string.Empty;
-        public XmpMetadata XmpMetadata { get; set; }
-        public CrossIndustryInvoice CrossIndustryInvoice { get; set; }
+        return routes;
     }
 }
