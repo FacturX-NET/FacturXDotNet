@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { EditorStateService } from '../../services/editor-state.service';
 import { ImportFileService } from '../../../../core/import-file/import-file.service';
 import { catchError, filter, from, map, Observable, of, switchMap } from 'rxjs';
 import { CrossIndustryInvoice } from '../../../../core/api/api.models';
 import { ExtractApi } from '../../../../core/api/extract.api';
 import { ToastService } from '../../../../core/toasts/toast.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-editor-import-menu',
@@ -25,6 +26,7 @@ export class EditorImportMenuComponent {
   private importFileService = inject(ImportFileService);
   private extractApi = inject(ExtractApi);
   private toastService = inject(ToastService);
+  private destroyRef = inject(DestroyRef);
 
   importCrossIndustryInvoice() {
     from(this.importFileService.importFile('.xml'))
@@ -55,6 +57,7 @@ export class EditorImportMenuComponent {
           const newState = { ...state, cii: { name: result.file.name, content: result.cii } };
           return from(this.editorStateService.update(newState));
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
   }

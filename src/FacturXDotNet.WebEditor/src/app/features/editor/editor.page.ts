@@ -10,7 +10,7 @@ import { EditorMenuComponent } from './components/editor-menu/editor-menu.compon
 import { EditorSavedState, EditorStateService } from './services/editor-state.service';
 import { debounceTime, delay, from, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CrossIndustryInvoice } from '../../core/api/api.models';
+import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../core/api/api.models';
 
 @Component({
   selector: 'app-editor',
@@ -187,7 +187,7 @@ export class EditorPage {
       .subscribe();
   }
 
-  saveCii(cii: CrossIndustryInvoice) {
+  saveCii(cii: ICrossIndustryInvoice) {
     const value = this.state.value();
     this.saving.set(true);
     this.saveSubject.next({ ...(value?.pdf ?? {}), cii: { ...(value?.cii ?? {}), content: cii } });

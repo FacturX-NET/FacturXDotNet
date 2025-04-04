@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { CrossIndustryInvoice } from '../../../../core/api/api.models';
+import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../../../core/api/api.models';
 import { CiiSummaryNodeComponent } from './cii-summary-node.component';
 import { EditorSettings } from '../../editor-settings.service';
 
@@ -15,7 +15,7 @@ import { EditorSettings } from '../../editor-settings.service';
   `,
 })
 export class CiiSummaryComponent {
-  value = input.required<CrossIndustryInvoice>();
+  value = input.required<ICrossIndustryInvoice>();
   settings = input.required<EditorSettings>();
 
   protected menus: CiiSummaryNode[] = [

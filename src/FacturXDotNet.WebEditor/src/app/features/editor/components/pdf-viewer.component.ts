@@ -1,9 +1,14 @@
-import { Component, computed, inject, input } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component, computed, inject, input, SecurityContext } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { createLinkedSignal } from '@angular/core/primitives/signals';
 
 @Component({
   selector: 'app-pdf-viewer',
-  template: ` <embed [src]="objectUrl()" type="application/pdf" style="pointer-events: {{ pointerEvents() }}" /> `,
+  template: `
+    @if (objectUrl(); as objectUrl) {
+      <embed [src]="objectUrl.trustedBlobUrl" type="application/pdf" style="pointer-events: {{ pointerEvents() }}" />
+    }
+  `,
   styles: `
     embed {
       width: 100%;
@@ -17,9 +22,23 @@ export class PdfViewerComponent {
 
   private sanitizer = inject(DomSanitizer);
 
-  protected objectUrl = computed(() => {
-    const blobUrl = URL.createObjectURL(this.pdf());
-    return this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-  });
+  protected objectUrl = createLinkedSignal<Blob, { blobUrl: string; trustedBlobUrl: SafeUrl } | undefined>(
+    () => this.pdf(),
+    (pdf, previousBlobUrl) => {
+      if (previousBlobUrl?.value?.blobUrl !== undefined) {
+        URL.revokeObjectURL(previousBlobUrl.value?.blobUrl as string);
+      }
+
+      if (pdf === undefined) {
+        return undefined;
+      }
+
+      const blobUrl = URL.createObjectURL(pdf);
+      const trustedBlobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+
+      return { blobUrl, trustedBlobUrl };
+    },
+  );
+
   protected pointerEvents = computed(() => (this.disablePointerEvents() ? 'none' : 'auto'));
 }
