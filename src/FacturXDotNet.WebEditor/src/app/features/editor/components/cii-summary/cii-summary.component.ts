@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { CrossIndustryInvoice } from '../../../../core/facturx-models/cii/cross-industry-invoice';
+import { CrossIndustryInvoice } from '../../../../core/api/api.models';
 import { CiiSummaryNodeComponent } from './cii-summary-node.component';
 import { EditorSettings } from '../../editor-settings.service';
 

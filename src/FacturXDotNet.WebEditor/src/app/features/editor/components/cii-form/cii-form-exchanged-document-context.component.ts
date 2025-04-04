@@ -45,11 +45,11 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
 
         <select [id]="bt24Control.controlId()" class="form-select" formControlName="guidelineSpecifiedDocumentContextParameterId">
           <option value="" class="text-body-tertiary" selected>Choose a profile</option>
-          <option value="minimum">Minimum</option>
-          <option value="basic-wl">Basic WL</option>
-          <option value="basic">Basic</option>
-          <option value="en16931">EN 16931</option>
-          <option value="extended">Extended</option>
+          <option value="Minimum">Minimum</option>
+          <option value="Basic-wl">Basic WL</option>
+          <option value="Basic">Basic</option>
+          <option value="En16931">EN 16931</option>
+          <option value="Extended">Extended</option>
         </select>
       </app-cii-form-control>
     </div>

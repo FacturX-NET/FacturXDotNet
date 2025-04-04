@@ -1,12 +1,14 @@
 import { Component, effect, input, model } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { GuidelineSpecifiedDocumentContextParameterId } from '../../../../core/facturx-models/cii/guideline-specified-document-context-parameter-id';
-import { InvoiceTypeCode } from '../../../../core/facturx-models/cii/invoice-type-code';
-import { DateOnlyFormat } from '../../../../core/facturx-models/cii/date-only-format';
-import { CrossIndustryInvoice } from '../../../../core/facturx-models/cii/cross-industry-invoice';
+import {
+  CrossIndustryInvoice,
+  DateOnlyFormat,
+  GuidelineSpecifiedDocumentContextParameterId,
+  ICrossIndustryInvoice,
+  InvoiceTypeCode,
+  VatOnlyTaxSchemeIdentifier,
+} from '../../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DateOnly } from '../../../../core/facturx-models/cii/date-only';
-import { VatOnlyTaxSchemeIdentifier } from '../../../../core/facturx-models/cii/vat-only-tax-scheme-identifier';
 import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-document-context.component';
 import { CiiFormSupplyChainTradeTransactionComponent } from './cii-form-supply-chain-trade-transaction.component';
 import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document.component';
@@ -41,7 +43,7 @@ import { CiiFormParentContainerComponent } from './base/cii-form-parent-containe
   `,
 })
 export class CiiFormComponent {
-  value = model.required<CrossIndustryInvoice>();
+  value = model.required<ICrossIndustryInvoice>();
   settings = input<EditorSettings>();
   disabled = input<boolean>();
 
@@ -67,13 +69,13 @@ export class CiiFormComponent {
   protected form = new FormGroup({
     exchangedDocumentContext: new FormGroup({
       businessProcessSpecifiedDocumentContextParameterId: new FormControl('', { nonNullable: true }),
-      guidelineSpecifiedDocumentContextParameterId: new FormControl<GuidelineSpecifiedDocumentContextParameterId>('minimum', { nonNullable: true }),
+      guidelineSpecifiedDocumentContextParameterId: new FormControl<GuidelineSpecifiedDocumentContextParameterId>('Minimum', { nonNullable: true }),
     }),
     exchangedDocument: new FormGroup({
       id: new FormControl('', { nonNullable: true }),
       typeCode: new FormControl<InvoiceTypeCode | undefined>(undefined, { nonNullable: true }),
-      issueDateTime: new FormControl<DateOnly | undefined>(undefined, { nonNullable: true }),
-      issueDateTimeFormat: new FormControl<DateOnlyFormat>('102-date-only', { nonNullable: true }),
+      issueDateTime: new FormControl<Date | undefined>(undefined, { nonNullable: true }),
+      issueDateTimeFormat: new FormControl<DateOnlyFormat>('DateOnly', { nonNullable: true }),
     }),
     supplyChainTradeTransaction: new FormGroup({
       applicableHeaderTradeAgreement: new FormGroup({
@@ -89,7 +91,7 @@ export class CiiFormComponent {
           }),
           specifiedTaxRegistration: new FormGroup({
             id: new FormControl<string>('', { nonNullable: true }),
-            idSchemeId: new FormControl<VatOnlyTaxSchemeIdentifier>('vat', { nonNullable: true }),
+            idSchemeId: new FormControl<VatOnlyTaxSchemeIdentifier>('Vat', { nonNullable: true }),
           }),
         }),
         buyerTradeParty: new FormGroup({

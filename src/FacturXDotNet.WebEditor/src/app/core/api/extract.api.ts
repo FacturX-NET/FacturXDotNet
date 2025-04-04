@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { CrossIndustryInvoice } from '../facturx-models/cii/cross-industry-invoice';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../../app.config';
+import { CrossIndustryInvoice } from './api.models';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +17,6 @@ export class ExtractApi {
     const formData = new FormData();
     formData.append('xml', file, file.name);
 
-    return this.httpClient.post<CrossIndustryInvoice>(url, formData, { headers });
+    return this.httpClient.post(url, formData, { headers }).pipe(map((result) => CrossIndustryInvoice.fromJS(result)));
   }
 }

@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { EditorStateService } from '../../services/editor-state.service';
 import { ImportFileService } from '../../../../core/import-file/import-file.service';
 import { catchError, filter, from, map, Observable, of, switchMap } from 'rxjs';
-import { CrossIndustryInvoice } from '../../../../core/facturx-models/cii/cross-industry-invoice';
+import { CrossIndustryInvoice } from '../../../../core/api/api.models';
 import { ExtractApi } from '../../../../core/api/extract.api';
 import { ToastService } from '../../../../core/toasts/toast.service';
 

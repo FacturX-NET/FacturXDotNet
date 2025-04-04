@@ -1,5 +1,5 @@
 import { Injectable, resource, Resource } from '@angular/core';
-import { CrossIndustryInvoice } from '../../../core/facturx-models/cii/cross-industry-invoice';
+import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../../core/api/api.models';
 import { IDBPDatabase, IDBPTransaction, openDB, StoreNames } from 'idb';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class EditorStateService {
 
   constructor() {
     this.savedState = resource({
-      loader: () => this.loadSavedState('last').then((s) => s ?? { cii: { content: {} } }),
+      loader: () => this.loadSavedState('last').then((s): EditorSavedState => s ?? { cii: { content: {} } }),
     });
   }
 
@@ -63,7 +63,7 @@ export class EditorStateService {
 export interface EditorSavedState {
   cii: {
     name?: string;
-    content: CrossIndustryInvoice;
+    content: ICrossIndustryInvoice;
   };
   pdf?: {
     name: string;

@@ -3,7 +3,6 @@ import { NgOptimizedImage, NgStyle } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './components/pdf-viewer.component';
 import { CiiFormComponent } from './components/cii-form/cii-form.component';
-import { CrossIndustryInvoice } from '../../core/facturx-models/cii/cross-industry-invoice';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
 import { CiiSummaryComponent } from './components/cii-summary/cii-summary.component';
 import { EditorDetailsDropdownComponent } from './editor-details-dropdown.component';
@@ -11,6 +10,7 @@ import { EditorMenuComponent } from './components/editor-menu/editor-menu.compon
 import { EditorSavedState, EditorStateService } from './services/editor-state.service';
 import { debounceTime, delay, from, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CrossIndustryInvoice } from '../../core/api/api.models';
 
 @Component({
   selector: 'app-editor',

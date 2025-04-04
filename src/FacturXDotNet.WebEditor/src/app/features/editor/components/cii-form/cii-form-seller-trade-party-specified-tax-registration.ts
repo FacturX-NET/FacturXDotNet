@@ -55,7 +55,7 @@ import { ScrollToDirective } from '../../../../core/scroll-to/scroll-to.directiv
             <ng-template #bt310Remark>Value = VA</ng-template>
 
             <select [id]="bt310Control.controlId()" class="form-select" formControlName="idSchemeId">
-              <option value="vat" selected>VAT</option>
+              <option value="Vat" selected>VAT</option>
             </select>
           </app-cii-form-control>
         </div>
