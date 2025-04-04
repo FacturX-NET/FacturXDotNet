@@ -3,7 +3,6 @@ import licenses from '../../../licenses/licenses.json';
 
 @Component({
   selector: 'app-about-licenses',
-  imports: [],
   template: `
     <div class="list-group">
       @for (license of licenses; track license) {
@@ -25,7 +24,6 @@ import licenses from '../../../licenses/licenses.json';
       }
     </div>
   `,
-  styles: ``,
 })
 export class AboutLicensesComponent {
   protected licenses: string[];
