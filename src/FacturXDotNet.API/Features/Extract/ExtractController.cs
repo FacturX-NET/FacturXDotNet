@@ -1,5 +1,7 @@
-﻿using FacturXDotNet.Models.CII;
+﻿using System.ComponentModel.DataAnnotations;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Parsing.CII;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FacturXDotNet.API.Features.Extract;
 
@@ -9,7 +11,7 @@ static class ExtractController
     {
         routes.MapPost(
                 "/cii",
-                async (IFormFile xml) =>
+                async ([FromForm] IFormFile xml) =>
                 {
                     await using Stream xmlStream = xml.OpenReadStream();
                     CrossIndustryInvoiceReader ciiReader = new();

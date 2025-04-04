@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using FacturXDotNet.API.Attributes;
-using FacturXDotNet.API.Features.Information.Models;
+﻿using FacturXDotNet.API.Features.Information.Models;
+using FacturXDotNet.API.Features.Information.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FacturXDotNet.API.Features.Information;
 
@@ -8,24 +8,41 @@ static class InformationController
 {
     public static RouteGroupBuilder MapInformationEndpoints(this RouteGroupBuilder routes)
     {
-        routes.MapPost(
+        routes.MapGet(
                 "/build",
-                () =>
+                () => new BuildInformationDto
                 {
-                    Assembly assembly = typeof(InformationController).Assembly;
-                    string? version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? assembly.GetName().Version?.ToString();
-                    DateTimeOffset buildDate = assembly.GetCustomAttribute<BuildDateAttribute>()?.BuildDate ?? DateTimeOffset.UtcNow;
-
-                    return new BuildInformationDto
-                    {
-                        Version = version ?? "~dev",
-                        BuildDate = buildDate.LocalDateTime
-                    };
+                    Version = BuildInformation.Version,
+                    BuildDate = BuildInformation.BuildDate.LocalDateTime
                 }
             )
-            .WithSummary("Build information")
+            .WithSummary("Build")
             .WithDescription("Get information about the current build of the API.")
             .Produces<BuildInformationDto>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .DisableAntiforgery();
+
+        routes.MapGet(
+                "/dependencies",
+                async ([FromServices] PackagesService packagesService) =>
+                {
+                    IReadOnlyCollection<Package> packages = await packagesService.ReadPackagesAsync();
+                    return packages.Select(
+                        p => new PackageDto
+                        {
+                            Name = p.PackageName,
+                            Author = string.Join(", ", p.Authors),
+                            Version = p.PackageVersion,
+                            License = p.LicenseType,
+                            Link = p.Repository.Url
+                        }
+                    );
+                }
+            )
+            .WithSummary("Dependencies")
+            .WithDescription("Get information about the dependencies of the API application, especially about their licenses.")
+            .Produces<IReadOnlyCollection<PackageDto>>()
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();

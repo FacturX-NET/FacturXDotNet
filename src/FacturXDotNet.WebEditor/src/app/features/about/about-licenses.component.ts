@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
-import licenses from '../../../licenses/licenses.json';
+import { Component, computed, input, Signal } from '@angular/core';
+import { Package } from '../../core/api/info.api';
 
 @Component({
   selector: 'app-about-licenses',
   template: `
     <div class="list-group">
-      @for (license of licenses; track license) {
+      @for (license of licenses(); track license) {
         <div class="list-group-item">
-          <span class="fw-bold"> {{ license }} </span> ({{ packages[license].length }})
+          <span class="fw-bold"> {{ license }} </span> ({{ packagesRecord()[license].length }})
           <div>
-            @for (p of packages[license]; track p.name) {
+            @for (p of packagesRecord()[license]; track p.name) {
               <div>
                 <a [href]="p.link">{{ p.name }}</a>
                 v{{ p.version }}
@@ -26,31 +26,25 @@ import licenses from '../../../licenses/licenses.json';
   `,
 })
 export class AboutLicensesComponent {
-  protected licenses: string[];
-  protected packages: Record<string, Package[]>;
+  packages = input.required<Package[]>();
 
-  constructor() {
-    const licensesSet = new Set<string>();
-    this.packages = {};
+  protected packagesRecord: Signal<Record<string, Package[]>> = computed(() => {
+    const result: Record<string, Package[]> = {};
 
-    for (const license of licenses) {
-      if (!this.packages[license.licenseType]) {
-        this.packages[license.licenseType] = [];
+    for (const p of this.packages()) {
+      if (!result[p.license]) {
+        result[p.license] = [];
       }
 
-      licensesSet.add(license.licenseType);
-      this.packages[license.licenseType].push({ name: license.name, author: license.author, version: license.installedVersion, license: license.licenseType, link: license.link });
+      result[p.license].push(p);
     }
 
-    this.licenses = [...licensesSet];
-    this.licenses.sort((a, b) => a.localeCompare(b));
-  }
-}
+    return result;
+  });
 
-interface Package {
-  name: string;
-  author: string;
-  version: string;
-  license: string;
-  link: string;
+  protected licenses: Signal<string[]> = computed(() => {
+    const result = Object.keys(this.packagesRecord());
+    result.sort((a, b) => a.localeCompare(b));
+    return result;
+  });
 }
