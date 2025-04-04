@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FacturXDotNet.API;
 using FacturXDotNet.API.Features.Extract;
 using FacturXDotNet.API.Features.Generate;
@@ -15,6 +16,8 @@ try
     builder.Services.AddSerilog();
 
     builder.Services.AddCors(opt => opt.AddDefaultPolicy(p => p.DisallowCredentials().AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+    builder.Services.ConfigureHttpJsonOptions(options => { options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
+
     builder.Services.AddHealthChecks();
     builder.Services.AddOpenApi(
         opt =>

@@ -23,8 +23,10 @@ export class ImportFileComponent {
       return Promise.reject(new Error('Internal error: input field not found.'));
     }
 
+    input.value = '';
     input.accept = accept.join(',');
     input.click();
+
     return firstValueFrom(this.fileSubject);
   }
 
