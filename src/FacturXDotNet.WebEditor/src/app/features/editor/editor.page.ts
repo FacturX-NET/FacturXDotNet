@@ -9,10 +9,11 @@ import { CiiTab } from './tabs/cii/cii.tab';
 import { EditorSavedState, EditorStateService } from './editor-state.service';
 import { PdfViewerComponent } from './pdf-viewer.component';
 import { EditorHeaderComponent } from './editor-header.component';
+import { EditorWelcomeComponent } from './editor-welcome.component';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent, EditorMenuComponent, FormsModule, EditorHeaderComponent, TwoColumnsComponent, CiiTab],
+  imports: [NgOptimizedImage, PdfViewerComponent, EditorMenuComponent, FormsModule, EditorHeaderComponent, TwoColumnsComponent, CiiTab, EditorWelcomeComponent],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
@@ -27,70 +28,47 @@ import { EditorHeaderComponent } from './editor-header.component';
       </header>
 
       <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-1 mx-md-2 mx-lg-3 mt-3 mb-1 overflow-hidden">
-        @if (state.value(); as value) {
-          <header class="border-bottom">
-            <app-editor-header [state]="value" (exporting)="exporting.set($event)"></app-editor-header>
-          </header>
-
-          <div class="flex-grow-1 overflow-hidden">
-            <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
-              <div class="h-100 overflow-hidden" left>
-                <app-cii [settings]="settings()" [disabled]="exporting()" />
-              </div>
-              <div class="h-100" right>
-                @if (value.pdf; as pdf) {
-                  <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
-                } @else {
-                  <div class="h-100 d-flex flex-column gap-4 align-items-center justify-content-center">
-                    <button
-                      class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
-                      (click)="appMenu.importMenu()?.importPdfImage()"
-                    >
-                      <i class="bi bi-filetype-pdf text-primary fs-1"></i>
-                      <div class="lead text-primary">Import PDF image</div>
-                    </button>
-                    OR
-                    <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5">
-                      <i class="bi bi-filetype-pdf text-primary fs-1"></i>
-                      <div class="lead text-primary">Auto-generate PDF image</div>
-                    </button>
-                  </div>
-                }
-              </div>
-            </app-two-columns>
+        @if (state.isLoading()) {
+          <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
         } @else {
-          @if (state.isLoading()) {
-            <div class="w-100 h-100 d-flex justify-content-center align-items-center">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
+          @if (state.value(); as value) {
+            <header class="border-bottom">
+              <app-editor-header [state]="value" (exporting)="exporting.set($event)"></app-editor-header>
+            </header>
+
+            <div class="flex-grow-1 overflow-hidden">
+              <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
+                <div class="h-100 overflow-hidden" left>
+                  <app-cii [settings]="settings()" [disabled]="exporting()" />
+                </div>
+                <div class="h-100" right>
+                  @if (value.pdf; as pdf) {
+                    <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
+                  } @else {
+                    <div class="h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
+                      <button
+                        class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
+                        (click)="appMenu.importMenu()?.importPdfImage()"
+                      >
+                        <i class="bi bi-filetype-pdf text-primary fs-1"></i>
+                        <div class="lead text-primary">Import PDF image</div>
+                      </button>
+                      <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5">
+                        <i class="bi bi-filetype-pdf text-primary fs-1"></i>
+                        <div class="lead text-primary">Auto-generate PDF image</div>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </app-two-columns>
             </div>
           } @else {
-            <div class="w-100 h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
-              <h1 class="lead fs-1">Get started</h1>
-              <div class="d-flex gap-5 align-items-center justify-content-center">
-                <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5" style="width: 400px">
-                  <i class="bi bi-file-excel text-primary fs-1"></i>
-                  <div class="lead text-primary">Import FacturX document</div>
-                </button>
-                <button
-                  class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
-                  style="width: 400px"
-                  (click)="appMenu.importMenu()?.importPdfImage()"
-                >
-                  <i class="bi bi-file-pdf text-primary fs-1"></i>
-                  <div class="lead text-primary">Import PDF image</div>
-                </button>
-                <button
-                  class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
-                  style="width: 400px"
-                  (click)="appMenu.importMenu()?.importCrossIndustryInvoice()"
-                >
-                  <i class="bi bi-file-code text-primary fs-1"></i>
-                  <div class="lead text-primary">Import Cross-Industry Invoice file</div>
-                </button>
-              </div>
+            <div class="w-100 h-100">
+              <app-editor-welcome></app-editor-welcome>
             </div>
           }
         }
