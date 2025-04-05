@@ -21,35 +21,39 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           document tu be valid.
         </p>
 
-        <div class="mb-3">
-          <label class="form-label" for="facturxDocumentFileName">File name</label>
-          <input id="facturxDocumentFileName" class="editor__control form-control" formControlName="documentFileName" aria-describedby="facturxDocumentFileNameHelp" />
-          <p id="facturxDocumentFileNameHelp" class="form-text">The name of the embedded XML document.</p>
+        <div class="row">
+          <div class="col">
+            <label class="form-label" for="facturxDocumentFileName">File name</label>
+            <input id="facturxDocumentFileName" class="editor__control form-control" formControlName="documentFileName" aria-describedby="facturxDocumentFileNameHelp" />
+            <p id="facturxDocumentFileNameHelp" class="form-text">The name of the embedded XML document.</p>
+          </div>
+
+          <div class="col">
+            <label class="form-label" for="facturxDocumentType">File type</label>
+            <input id="facturxDocumentType" class="editor__control form-control" formControlName="documentType" aria-describedby="facturxDocumentTypeHelp" />
+            <p id="facturxDocumentTypeHelp" class="form-text">The type of the hybrid document in capital letters, e.g. INVOICE or ORDER.</p>
+          </div>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label" for="facturxDocumentType">File type</label>
-          <input id="facturxDocumentType" class="editor__control form-control" formControlName="documentType" aria-describedby="facturxDocumentTypeHelp" />
-          <p id="facturxDocumentTypeHelp" class="form-text">The type of the hybrid document in capital letters, e.g. INVOICE or ORDER.</p>
-        </div>
+        <div class="row">
+          <div class="col">
+            <label class="form-label" for="facturxVersion">Version</label>
+            <input id="facturxVersion" class="editor__control form-control" formControlName="version" aria-describedby="facturxVersionHelp" />
+            <p id="facturxVersionHelp" class="form-text">The actual version of the standard applying to the embedded XML document.</p>
+          </div>
 
-        <div class="mb-3">
-          <label class="form-label" for="facturxVersion">Version</label>
-          <input id="facturxVersion" class="editor__control form-control" formControlName="version" aria-describedby="facturxVersionHelp" />
-          <p id="facturxVersionHelp" class="form-text">The actual version of the standard applying to the embedded XML document.</p>
-        </div>
-
-        <div>
-          <label class="form-label" for="facturxConformanceLevel">Conformance level</label>
-          <select id="facturxConformanceLevel" class="editor__control form-select" formControlName="conformanceLevel" aria-describedby="facturxConformanceLevel">
-            <option value="" class="text-body-tertiary" selected>Choose a profile</option>
-            <option value="Minimum">Minimum</option>
-            <option value="Basic-wl">Basic WL</option>
-            <option value="Basic">Basic</option>
-            <option value="En16931">EN 16931</option>
-            <option value="Extended">Extended</option>
-          </select>
-          <p id="facturxConformanceLevelHelp" class="form-text">The conformance level of the embedded XML document.</p>
+          <div class="col">
+            <label class="form-label" for="facturxConformanceLevel">Conformance level</label>
+            <select id="facturxConformanceLevel" class="editor__control form-select" formControlName="conformanceLevel" aria-describedby="facturxConformanceLevel">
+              <option value="" class="text-body-tertiary" selected>Choose a profile</option>
+              <option value="Minimum">Minimum</option>
+              <option value="Basic-wl">Basic WL</option>
+              <option value="Basic">Basic</option>
+              <option value="En16931">EN 16931</option>
+              <option value="Extended">Extended</option>
+            </select>
+            <p id="facturxConformanceLevelHelp" class="form-text">The conformance level of the embedded XML document.</p>
+          </div>
         </div>
       </div>
     </div>

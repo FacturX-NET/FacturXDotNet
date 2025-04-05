@@ -64,7 +64,12 @@ export class XmpFormService {
     this.form.controls.pdfAIdentification.controls.conformance.disable({ emitEvent: false });
     this.form.controls.pdfAIdentification.controls.part.disable({ emitEvent: false });
 
+    this.form.controls.basic.controls.createDate.disable({ emitEvent: false });
+    this.form.controls.basic.controls.modifyDate.disable({ emitEvent: false });
+    this.form.controls.basic.controls.metadataDate.disable({ emitEvent: false });
     this.form.controls.basic.controls.creatorTool.disable({ emitEvent: false });
+
+    this.form.controls.pdf.controls.pdfVersion.disable({ emitEvent: false });
 
     this.form.controls.facturx.controls.documentFileName.disable({ emitEvent: false });
     this.form.controls.facturx.controls.documentType.disable({ emitEvent: false });
