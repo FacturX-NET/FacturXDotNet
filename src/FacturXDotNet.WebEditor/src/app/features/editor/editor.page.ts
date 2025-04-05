@@ -8,7 +8,7 @@ import { TwoColumnsComponent } from '../../core/two-columns/two-columns.componen
 import { CiiTab } from './tabs/cii/cii.tab';
 import { EditorSavedState, EditorStateService } from './editor-state.service';
 import { PdfViewerComponent } from './pdf-viewer.component';
-import { EditorHeaderComponent } from './editor-header.component';
+import { EditorHeaderComponent, EditorTab } from './editor-header.component';
 import { EditorWelcomeComponent } from './editor-welcome.component';
 
 @Component({
@@ -36,8 +36,8 @@ import { EditorWelcomeComponent } from './editor-welcome.component';
           </div>
         } @else {
           @if (state.value(); as value) {
-            <header class="border-bottom">
-              <app-editor-header [state]="value" (exporting)="exporting.set($event)"></app-editor-header>
+            <header>
+              <app-editor-header [state]="value" [tab]="tab()" [settings]="settings()"></app-editor-header>
             </header>
 
             <div class="flex-grow-1 overflow-hidden">
@@ -110,6 +110,6 @@ export class EditorPage {
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected disablePointerEvents = signal<boolean>(false);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
-
+  protected tab = signal<EditorTab>('cii');
   protected exporting = signal<boolean>(false);
 }

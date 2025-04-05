@@ -1,34 +1,43 @@
 import { Component, inject, input, Resource, signal } from '@angular/core';
 import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
-import { EditorSettings } from '../../editor-settings.service';
+import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
 import { debounceTime, delay, from, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CiiDropdownDetailsComponent } from './cii-dropdown-details.component';
 import { CiiFormComponent } from './cii-form/cii-form.component';
 import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
 import { EditorSavedState, EditorStateService } from '../../editor-state.service';
+import { CiiMenuComponent } from './cii-menu/cii-menu.component';
 
 @Component({
   selector: 'app-cii',
-  imports: [CiiFormComponent, CiiSummaryComponent, CiiDropdownDetailsComponent],
+  imports: [CiiFormComponent, CiiSummaryComponent, CiiMenuComponent],
   template: `
     @if (state.value(); as state) {
-      <div class="h-100 d-flex column-gap-4 overflow-hidden position-relative">
-        <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="ciiSummaryTitle">Cross-Industry Invoice</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
+      <div class="h-100 d-flex overflow-hidden position-relative">
+        @if (settings().foldSummary) {
+          <div id="editor__cii-summary" class="flex-shrink-0 offcanvas offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
+            <div class="offcanvas-header align-items-center gap-2">
+              <h5 class="offcanvas-title" id="ciiSummaryTitle">Cross-Industry Invoice</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body small">
+              <app-cii-summary [value]="state.cii" [settings]="settings()" />
+            </div>
           </div>
-          <div class="offcanvas-body small">
-            <div class="overflow-x-hidden">
-              <div class="d-flex justify-content-between">
-                <h6 class="d-none d-xl-block">Cross-Industry Invoice</h6>
-                <app-editor-details-dropdown />
+        } @else {
+          <div id="editor__cii-summary" class="flex-shrink-0 overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
+            <div class="overflow-x-hidden small">
+              <div class="d-none d-xl-flex justify-content-between">
+                <h6>Cross-Industry Invoice</h6>
               </div>
               <app-cii-summary [value]="state.cii" [settings]="settings()" />
             </div>
           </div>
-        </div>
+        }
+
+        <app-cii-menu [settings]="settings()"></app-cii-menu>
+
         <div
           id="editor__cii-form"
           class="flex-grow-1 h-100 position-relative overflow-y-auto pt-3 pb-5"
@@ -53,7 +62,11 @@ import { EditorSavedState, EditorStateService } from '../../editor-state.service
       </div>
     }
   `,
-  styles: ``,
+  styles: `
+    #editor__cii-summary {
+      width: var(--editor-summary-width);
+    }
+  `,
 })
 export class CiiTab {
   settings = input.required<EditorSettings>();
@@ -64,6 +77,7 @@ export class CiiTab {
   private saveSubject = new Subject<EditorSavedState>();
 
   private editorStateService = inject(EditorStateService);
+  private editorSettingsService = inject(EditorSettingsService);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
 
   constructor() {

@@ -27,6 +27,8 @@ body {
   --bs-nav-underline-link-active-color: var(--fx-purple);
   --bs-headings-color: var(--fx-dark-purple);
   --bs-link-decoration: none;
+
+  --editor-summary-width: 420px;
 }
 
 html,

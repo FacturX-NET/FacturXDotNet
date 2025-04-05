@@ -12,6 +12,13 @@ export class EditorSettingsService {
     this.settings.set(this.loadSettings());
   }
 
+  saveFoldSummary(value: boolean) {
+    const settings = this.settings();
+    const newSettings: EditorSettings = { ...settings, foldSummary: value };
+    this.saveSettings(newSettings);
+    this.settings.set(newSettings);
+  }
+
   saveShowBusinessRules(value: boolean) {
     const settings = this.settings();
     const newSettings: EditorSettings = { ...settings, showBusinessRules: value };
@@ -52,6 +59,7 @@ export class EditorSettingsService {
 }
 
 export interface EditorSettings {
+  readonly foldSummary?: boolean;
   readonly showBusinessRules?: boolean;
   readonly showRemarks?: boolean;
   readonly showChorusProRemarks?: boolean;
