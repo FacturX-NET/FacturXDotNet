@@ -44,27 +44,9 @@ import { FormsModule } from '@angular/forms';
 
                   <div class="navbar-brand d-flex align-items-center gap-2">
                     <i class="bi bi-code pe-1 fs-4"></i>
-                    @if (renaming()) {
-                      <form class="d-flex align-items-center gap-2" (ngSubmit)="stopRenaming()" (keydown.escape)="stopRenaming(true)">
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="newName" placeholder="factur-x.xml" [ngModelOptions]="{ standalone: true }" />
-
-                        <button class="btn btn-sm btn-outline-success" type="submit">
-                          <i class="bi bi-check"></i>
-                        </button>
-
-                        <button class="btn btn-sm btn-outline-secondary" type="button" (click)="stopRenaming(true)">
-                          <i class="bi bi-x"></i>
-                        </button>
-                      </form>
-                    } @else {
-                      <h5 class="m-0">
-                        {{ value.cii.name === '' || value.cii.name === undefined ? 'factur-x.xml' : value.cii.name }}
-                      </h5>
-
-                      <a href="javascript:void 0;" role="button" (click)="startRenaming()">
-                        <i class="bi bi-pencil-fill text-body-secondary smaller"></i>
-                      </a>
-                    }
+                    <h5 class="m-0">
+                      {{ value.cii.name === '' || value.cii.name === undefined ? 'factur-x.xml' : value.cii.name }}
+                    </h5>
                   </div>
 
                   <div class="flex-grow-1"><!--spacer--></div>
