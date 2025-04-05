@@ -1,5 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, Inject, inject } from '@angular/core';
 import { EditorStateService } from '../../services/editor-state.service';
+import { EditorMenuService } from './editor-menu.service';
+import { ToastService } from '../../../../core/toasts/toast.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, of } from 'rxjs';
+import { toastError } from '../../../../core/utils/toast-error';
 
 @Component({
   selector: 'app-editor-file-menu',
@@ -16,9 +21,14 @@ import { EditorStateService } from '../../services/editor-state.service';
   `,
 })
 export class EditorFileMenuComponent {
-  private editorStateService = inject(EditorStateService);
+  private editorMenuService = inject(EditorMenuService);
+  private toastService = inject(ToastService);
+  private destroyRef = inject(DestroyRef);
 
-  protected async createNewFacturXDocument() {
-    await this.editorStateService.clear();
+  protected createNewFacturXDocument() {
+    this.editorMenuService
+      .createNewFacturXDocument()
+      .pipe(toastError(this.toastService, 'Could not create new FacturX document.'), takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 }

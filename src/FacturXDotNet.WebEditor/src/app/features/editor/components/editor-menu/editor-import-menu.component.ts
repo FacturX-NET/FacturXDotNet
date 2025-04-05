@@ -6,6 +6,8 @@ import { CrossIndustryInvoice } from '../../../../core/api/api.models';
 import { ExtractApi } from '../../../../core/api/extract.api';
 import { ToastService } from '../../../../core/toasts/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EditorMenuService } from './editor-menu.service';
+import { toastError } from '../../../../core/utils/toast-error';
 
 @Component({
   selector: 'app-editor-import-menu',
@@ -22,54 +24,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   `,
 })
 export class EditorImportMenuComponent {
-  private editorStateService = inject(EditorStateService);
-  private importFileService = inject(ImportFileService);
-  private extractApi = inject(ExtractApi);
+  private editorMenuService = inject(EditorMenuService);
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
   importCrossIndustryInvoice() {
-    from(this.importFileService.importFile('.xml'))
-      .pipe(
-        switchMap((file): Observable<{ file: File; cii?: CrossIndustryInvoice } | undefined> => {
-          if (file === undefined) {
-            this.toastService.show({ type: 'error', message: 'Could not import CII file.' });
-            return of(undefined);
-          }
-
-          return this.extractApi.extractCrossIndustryInvoice(file).pipe(
-            catchError((err) => {
-              console.error(err);
-              return of(undefined);
-            }),
-            map((cii) => ({ file, cii })),
-          );
-        }),
-        filter((result) => result !== undefined),
-        switchMap((result) => {
-          if (result.cii === undefined) {
-            this.toastService.show({ type: 'error', message: 'Could not extract CII data from file ' + result.file.name + '.' });
-            return of(void 0);
-          }
-
-          const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-          const newState = { name: nameWithoutExtension, cii: result.cii, autoGeneratePdf: true };
-          return from(this.editorStateService.update(newState));
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
+    this.editorMenuService
+      .importCrossIndustryInvoice()
+      .pipe(toastError(this.toastService, 'Could not import Cross-Industry Invoice file.'), takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
   importPdfImage() {
-    this.importFileService.importFile('.pdf').then(async (file) => {
-      if (file === undefined) {
-        return;
-      }
-
-      const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, '');
-      const newState = { name: nameWithoutExtension, cii: {}, autoGeneratePdf: false, pdf: file };
-      await this.editorStateService.update(newState);
-    });
+    this.editorMenuService.importPdfImage().pipe(toastError(this.toastService, 'Could not create PDF image.'), takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 }

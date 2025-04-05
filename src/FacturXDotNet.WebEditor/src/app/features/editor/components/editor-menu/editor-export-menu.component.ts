@@ -7,6 +7,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
 import { CiiFormService } from '../cii-form/cii-form.service';
 import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
+import { EditorMenuService } from './editor-menu.service';
+import { toastError } from '../../../../core/utils/toast-error';
 
 @Component({
   selector: 'app-editor-export-menu',
@@ -26,42 +28,17 @@ import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 export class EditorExportMenuComponent {
   exporting = output<boolean>();
 
-  private editorStateService = inject(EditorStateService);
-  private ciiFormService = inject(CiiFormService);
-  private generateApi = inject(GenerateApi);
+  private editorMenuService = inject(EditorMenuService);
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
   exportFacturX() {
-    if (!this.editorStateService.savedState.hasValue()) {
-      return;
-    }
-
-    const value = this.editorStateService.savedState.value();
-    const pdf = value?.pdf;
-    if (value === null || pdf === undefined) {
-      this.toastService.show({ type: 'error', message: 'The PDF is not set.' });
-      return;
-    }
-
-    const cii = this.getValidCii();
-    if (cii === undefined) {
-      return;
-    }
-
     this.exporting.emit(true);
 
-    this.generateApi
-      .generateFacturX(pdf, cii)
+    this.editorMenuService
+      .exportFacturX()
       .pipe(
-        map((file) => {
-          downloadFile(file, value.name);
-        }),
-        catchError((err) => {
-          this.toastService.show({ type: 'error', message: 'Could not generate the Cross-Industry Invoice file.' });
-          console.error(err);
-          return of(void 0);
-        }),
+        toastError(this.toastService, 'Could not export FacturX document.'),
         finalize(() => {
           this.exporting.emit(false);
         }),
@@ -71,28 +48,12 @@ export class EditorExportMenuComponent {
   }
 
   exportCrossIndustryInvoice() {
-    if (!this.editorStateService.savedState.hasValue()) {
-      return;
-    }
-
-    const cii = this.getValidCii();
-    if (cii === undefined) {
-      return;
-    }
-
     this.exporting.emit(true);
 
-    this.generateApi
-      .generateCrossIndustryInvoice(cii)
+    this.editorMenuService
+      .exportCrossIndustryInvoice()
       .pipe(
-        map((file) => {
-          downloadFile(file);
-        }),
-        catchError((err) => {
-          this.toastService.show({ type: 'error', message: 'Could not generate the Cross-Industry Invoice file.' });
-          console.error(err);
-          return of(void 0);
-        }),
+        toastError(this.toastService, 'Could not export Cross-Industry Invoice data.'),
         finalize(() => {
           this.exporting.emit(false);
         }),
@@ -102,29 +63,17 @@ export class EditorExportMenuComponent {
   }
 
   exportPdfImage() {
-    if (!this.editorStateService.savedState.hasValue()) {
-      return;
-    }
-
-    const value = this.editorStateService.savedState.value();
-    if (value?.pdf === undefined) {
-      this.toastService.show({ type: 'error', message: 'The PDF is not set.' });
-      return;
-    }
-
     this.exporting.emit(true);
 
-    downloadBlob(value.pdf, value.name ?? 'invoice.pdf');
-
-    this.exporting.emit(false);
-  }
-
-  private getValidCii(): ICrossIndustryInvoice | undefined {
-    if (!this.ciiFormService.validate()) {
-      this.toastService.show({ type: 'error', message: 'The Cross-Industry Invoice data is not valid.' });
-      return undefined;
-    }
-
-    return this.ciiFormService.form.getRawValue();
+    this.editorMenuService
+      .exportPdfImage()
+      .pipe(
+        toastError(this.toastService, 'Could not export PDF image.'),
+        finalize(() => {
+          this.exporting.emit(false);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 }
