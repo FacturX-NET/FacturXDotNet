@@ -20,7 +20,7 @@ export class XmpFormService {
     this.saveSubject
       .pipe(
         debounceTime(1000),
-        switchMap((state) => from(this.editorStateService.updateXmp(state))),
+        switchMap((state) => from(this.editorStateService.updateXmp(state.xmp))),
         takeUntilDestroyed(),
       )
       .subscribe();
@@ -34,7 +34,7 @@ export class XmpFormService {
       this.form.reset(this.toFormValue(value), { emitEvent: false });
     });
 
-    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((event) => {
       const value = this.editorStateService.savedState.value();
       if (value === null) {
         return;
@@ -60,16 +60,16 @@ export class XmpFormService {
       this.form.controls.facturx.controls.conformanceLevel.setValue(ciiType, { emitEvent: false });
     });
 
-    this.form.controls.pdfAIdentification.controls.amendment.disable();
-    this.form.controls.pdfAIdentification.controls.conformance.disable();
-    this.form.controls.pdfAIdentification.controls.part.disable();
+    this.form.controls.pdfAIdentification.controls.amendment.disable({ emitEvent: false });
+    this.form.controls.pdfAIdentification.controls.conformance.disable({ emitEvent: false });
+    this.form.controls.pdfAIdentification.controls.part.disable({ emitEvent: false });
 
-    this.form.controls.basic.controls.creatorTool.disable();
+    this.form.controls.basic.controls.creatorTool.disable({ emitEvent: false });
 
-    this.form.controls.facturx.controls.documentFileName.disable();
-    this.form.controls.facturx.controls.documentType.disable();
-    this.form.controls.facturx.controls.version.disable();
-    this.form.controls.facturx.controls.conformanceLevel.disable();
+    this.form.controls.facturx.controls.documentFileName.disable({ emitEvent: false });
+    this.form.controls.facturx.controls.documentType.disable({ emitEvent: false });
+    this.form.controls.facturx.controls.version.disable({ emitEvent: false });
+    this.form.controls.facturx.controls.conformanceLevel.disable({ emitEvent: false });
   }
 
   form = new FormGroup({

@@ -56,7 +56,7 @@ export class EditorStateService {
     await this.saveLast(newState);
   }
 
-  async updateXmp(xmp: IXmpMetadata): Promise<void> {
+  async updateXmp(xmp: IXmpMetadata | undefined): Promise<void> {
     const currentState = this.savedState.value();
     if (!currentState) {
       throw new Error('No saved state found to update.');
