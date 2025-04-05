@@ -46,6 +46,39 @@ static class ExtractController
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
 
+        routes.MapPost(
+                "/attachments",
+                async ([FromForm] IFormFile file, bool skipCrossIndustryInvoice, CancellationToken cancellationToken = default) =>
+                {
+                    await using Stream pdfStream = file.OpenReadStream();
+                    FacturXDocument document = await FacturXDocument.LoadFromStream(pdfStream, cancellationToken);
+
+                    var result = new List<IFormFile>();
+                    
+                    await foreach (var attachment in document.GetAttachmentsAsync(cancellationToken: cancellationToken))
+                    {
+                        result.Add(Results.Par);
+                    }
+                    
+                    CrossIndustryInvoiceAttachment? ciiAttachment = await document.GetCrossIndustryInvoiceAttachmentAsync(cancellationToken: cancellationToken);
+                    if (ciiAttachment is null)
+                    {
+                        return Results.BadRequest("No Cross-Industry Invoice attachment found in the PDF.");
+                    }
+
+                    CrossIndustryInvoice crossIndustryInvoice = await ciiAttachment.GetCrossIndustryInvoiceAsync(cancellationToken: cancellationToken);
+                    return Results.Ok(crossIndustryInvoice);
+
+                    return Results.BadRequest($"Invalid file type: {extension}. Only PDF and XML files are supported.");
+                }
+            )
+            .WithSummary("Extract Cross-Industry Invoice")
+            .WithDescription("Extract Cross-Industry Invoice data from a FacturX PDF file or an XML file.")
+            .Produces<IFormFile[]>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .DisableAntiforgery();
+
         return routes;
     }
 }

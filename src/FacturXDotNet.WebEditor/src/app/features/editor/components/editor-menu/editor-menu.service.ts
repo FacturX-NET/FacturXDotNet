@@ -9,6 +9,8 @@ import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob
 import { GenerateApi } from '../../../../core/api/generate.api';
 import { CiiFormService } from '../../tabs/cii/cii-form/cii-form.service';
 import { EditorStateService } from '../../editor-state.service';
+import * as pdf from 'pdfjs-dist';
+import { ReturnStatement } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +23,10 @@ export class EditorMenuService {
   private generateApi = inject(GenerateApi);
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
+
+  constructor() {
+    pdf.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.mjs';
+  }
 
   createNewFacturXDocument(): Observable<void> {
     return from(this.editorStateService.clear());
@@ -37,13 +43,16 @@ export class EditorMenuService {
       }),
       filter((result) => result !== undefined),
       switchMap((result) => {
+        return from(this.extractPdfAttachments(result.file)).pipe(map((attachments) => ({ file: result.file, cii: result.cii, attachments })));
+      }),
+      switchMap((result) => {
         if (result.cii === undefined) {
           this.toastService.show({ type: 'error', message: 'Could not extract CII data from file ' + result.file.name + '.' });
           return of(void 0);
         }
 
         const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        const newState = { name: nameWithoutExtension, cii: result.cii, autoGeneratePdf: false, pdf: result.file };
+        const newState = { name: nameWithoutExtension, cii: result.cii, autoGeneratePdf: false, pdf: result.file, attachments: result.attachments };
         return from(this.editorStateService.update(newState));
       }),
       takeUntilDestroyed(this.destroyRef),
@@ -67,7 +76,7 @@ export class EditorMenuService {
         }
 
         const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        const newState = { name: nameWithoutExtension, cii: result.cii, autoGeneratePdf: true };
+        const newState = { name: nameWithoutExtension, cii: result.cii, autoGeneratePdf: true, attachments: [] };
         return from(this.editorStateService.update(newState));
       }),
       takeUntilDestroyed(this.destroyRef),
@@ -76,13 +85,19 @@ export class EditorMenuService {
 
   importPdfImage(): Observable<void> {
     return from(this.importFileService.importFile('.pdf')).pipe(
+      filter((file) => file != undefined),
       switchMap((file) => {
-        if (file === undefined) {
-          return of(void 0);
-        }
-
-        const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, '');
-        const newState = { name: nameWithoutExtension, cii: {}, autoGeneratePdf: false, pdf: file };
+        return from(this.extractPdfAttachments(file)).pipe(map((attachments) => ({ file, attachments })));
+      }),
+      switchMap((result) => {
+        const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
+        const newState = {
+          name: nameWithoutExtension,
+          cii: {},
+          autoGeneratePdf: false,
+          pdf: result.file,
+          attachments: result.attachments,
+        };
         return from(this.editorStateService.update(newState));
       }),
     );
@@ -158,5 +173,14 @@ export class EditorMenuService {
     }
 
     return this.ciiFormService.form.getRawValue();
+  }
+
+  private async extractPdfAttachments(file: File): Promise<{ name: string; description?: string; content: Uint8Array }[]> {
+    const buffer = await file.arrayBuffer();
+    const pdfDocumentLoadingTask = pdf.getDocument(buffer);
+    const pdfDocument = await pdfDocumentLoadingTask.promise;
+    const attachmentsObj = await pdfDocument.getAttachments();
+    const attachments: { filename: string; description: string; content: Uint8Array }[] = Object.values(attachmentsObj);
+    return attachments.filter((a) => a.filename !== 'factur-x.xml').map((a) => ({ name: a.filename, description: a.description, content: a.content }));
   }
 }

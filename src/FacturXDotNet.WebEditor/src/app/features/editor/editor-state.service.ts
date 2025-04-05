@@ -66,4 +66,9 @@ export interface EditorSavedState {
   cii: ICrossIndustryInvoice;
   autoGeneratePdf: boolean;
   pdf?: Blob;
+  attachments: {
+    name: string;
+    description?: string;
+    content: Uint8Array;
+  }[];
 }
