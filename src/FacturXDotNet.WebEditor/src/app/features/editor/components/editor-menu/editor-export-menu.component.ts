@@ -37,8 +37,9 @@ export class EditorExportMenuComponent {
       return;
     }
 
-    const pdf = this.editorStateService.savedState.value()?.pdf;
-    if (pdf?.content === undefined) {
+    const value = this.editorStateService.savedState.value();
+    const pdf = value?.pdf;
+    if (value === null || pdf === undefined) {
       this.toastService.show({ type: 'error', message: 'The PDF is not set.' });
       return;
     }
@@ -51,10 +52,10 @@ export class EditorExportMenuComponent {
     this.exporting.emit(true);
 
     this.generateApi
-      .generateFacturX(pdf.content, cii)
+      .generateFacturX(pdf, cii)
       .pipe(
         map((file) => {
-          downloadFile(file, pdf.name);
+          downloadFile(file, value.name);
         }),
         catchError((err) => {
           this.toastService.show({ type: 'error', message: 'Could not generate the Cross-Industry Invoice file.' });
@@ -106,14 +107,14 @@ export class EditorExportMenuComponent {
     }
 
     const value = this.editorStateService.savedState.value();
-    if (value?.pdf?.content === undefined) {
+    if (value?.pdf === undefined) {
       this.toastService.show({ type: 'error', message: 'The PDF is not set.' });
       return;
     }
 
     this.exporting.emit(true);
 
-    downloadBlob(value.pdf.content, value.pdf.name ?? 'invoice.pdf');
+    downloadBlob(value.pdf, value.name ?? 'invoice.pdf');
 
     this.exporting.emit(false);
   }

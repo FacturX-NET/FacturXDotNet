@@ -29,115 +29,148 @@ import { FormsModule } from '@angular/forms';
         </div>
       </header>
 
-      <main class="flex-grow-1 d-flex px-1 px-md-2 px-lg-3 pt-3 pb-1 overflow-hidden">
-        <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden" [ngStyle]="{ 'width.px': leftColumnWidth() }">
-          @if (state.value(); as value) {
-            <header class="border-bottom d-flex">
-              <div class="d-none d-xl-block col-3"><!--spacer--></div>
-              <div class="navbar navbar-expand-xl flex-grow-1">
-                <div class="flex-grow-1 d-flex justify-content-start align-items-center gap-3 px-3">
-                  <div class="d-block d-xl-none">
-                    <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary">
-                      <span class="navbar-toggler-icon"></span>
-                    </button>
-                  </div>
+      <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-1 mx-md-2 mx-lg-3 mt-3 mb-1 overflow-hidden">
+        @if (state.value(); as value) {
+          <header class="border-bottom d-flex">
+            <div class="d-none d-xl-block col-3"><!--spacer--></div>
+            <div class="navbar navbar-expand-xl flex-grow-1">
+              <div class="flex-grow-1 d-flex justify-content-start align-items-center gap-3 px-3">
+                <div class="d-block d-xl-none">
+                  <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                </div>
 
-                  <div class="navbar-brand d-flex align-items-center gap-2">
-                    <i class="bi bi-code pe-1 fs-4"></i>
-                    <h5 class="m-0">
-                      {{ value.cii.name === '' || value.cii.name === undefined ? 'factur-x.xml' : value.cii.name }}
-                    </h5>
-                  </div>
+                <div class="navbar-brand d-flex align-items-center gap-2">
+                  <i class="bi bi-code pe-1 fs-4"></i>
+                  <h5 class="m-0">
+                    {{ value.name === '' || value.name === undefined ? 'factur-x.xml' : value.name }}
+                  </h5>
+                </div>
 
-                  <div class="flex-grow-1"><!--spacer--></div>
+                <div class="flex-grow-1"><!--spacer--></div>
 
-                  @if (saving()) {
-                    <div><i class="bi bi-floppy2-fill text-body-tertiary small glow"></i></div>
-                  } @else {
-                    @if (saved()) {
-                      <div class="text-success small"><i class="bi bi-check"></i> Saved</div>
-                    }
-
-                    <div>
-                      <div class="input-group">
-                        <button class="btn btn-outline-secondary" (click)="appMenu.exportMenu()?.exportFacturX()">Export</button>
-                        <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
-                        <div class="dropdown-menu dropdown-menu-end">
-                          <li><a class="dropdown-item" href="javascript:void 0;" (click)="appMenu.exportMenu()?.exportCrossIndustryInvoice()">Export Cross-Industry Invoice</a></li>
-                          <li><a class="dropdown-item" href="javascript:void 0;" (click)="appMenu.exportMenu()?.exportPdfImage()">Export PDF</a></li>
-                        </div>
-                      </div>
-                    </div>
+                @if (saving()) {
+                  <div><i class="bi bi-floppy2-fill text-body-tertiary small glow"></i></div>
+                } @else {
+                  @if (saved()) {
+                    <div class="text-success small"><i class="bi bi-check"></i> Saved</div>
                   }
 
-                  <app-editor-details-dropdown />
-                </div>
-              </div>
-            </header>
+                  <div>
+                    <div class="input-group">
+                      <button class="btn btn-outline-secondary" (click)="appMenu.exportMenu()?.exportFacturX()">Export</button>
+                      <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                      <div class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="javascript:void 0;" (click)="appMenu.exportMenu()?.exportCrossIndustryInvoice()">Export Cross-Industry Invoice</a></li>
+                        <li><a class="dropdown-item" href="javascript:void 0;" (click)="appMenu.exportMenu()?.exportPdfImage()">Export PDF</a></li>
+                      </div>
+                    </div>
+                  </div>
+                }
 
-            <div class="flex-grow-1 overflow-hidden d-flex column-gap-4">
-              <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
-                <div class="offcanvas-header">
-                  <h5 class="offcanvas-title" id="ciiSummaryTitle">Cross-Industry Invoice</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body small">
-                  <div class="overflow-x-hidden">
-                    <h6 class="d-none d-xl-block">Cross-Industry Invoice</h6>
-                    <app-cii-summary [value]="value.cii.content" [settings]="settings()" />
+                <app-editor-details-dropdown />
+              </div>
+            </div>
+          </header>
+
+          <div class="h-100 d-flex">
+            <div class="h-100 overflow-hidden" [ngStyle]="{ 'width.px': leftColumnWidth() }">
+              <div class="flex-grow-1 overflow-hidden d-flex column-gap-4">
+                <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
+                  <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="ciiSummaryTitle">Cross-Industry Invoice</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body small">
+                    <div class="overflow-x-hidden">
+                      <h6 class="d-none d-xl-block">Cross-Industry Invoice</h6>
+                      <app-cii-summary [value]="value.cii" [settings]="settings()" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                id="editor__cii-form"
-                class="flex-grow-1 h-100 position-relative overflow-y-auto pt-3 pb-5"
-                data-bs-spy="scroll"
-                data-bs-target="#editor__cii-summary-content"
-                data-bs-smooth-scroll="true"
-                tabindex="0"
-              >
-                <div class="container ms-0">
-                  <app-cii-form [value]="value.cii.content" (valueChange)="saveCii($event)" [settings]="settings()" [disabled]="exporting()" />
+                <div
+                  id="editor__cii-form"
+                  class="flex-grow-1 h-100 position-relative overflow-y-auto pt-3 pb-5"
+                  data-bs-spy="scroll"
+                  data-bs-target="#editor__cii-summary-content"
+                  data-bs-smooth-scroll="true"
+                  tabindex="0"
+                >
+                  <div class="container ms-0">
+                    <app-cii-form [value]="value.cii" (valueChange)="saveCii($event)" [settings]="settings()" [disabled]="exporting()" />
+                  </div>
                 </div>
               </div>
             </div>
-          } @else {
-            @if (state.isLoading()) {
-              <div class="w-100 h-100 d-flex justify-content-center align-items-center">
-                <div class="spinner-border" role="status">
-                  <span class="visually-hidden">Loading...</span>
+            <div
+              class="d-flex align-items-center justify-content-center"
+              style="width: {{ resizeHandleWidth }}px; cursor: col-resize;"
+              (mousedown)="dragStart($event)"
+              (touchstart)="dragStart($event)"
+            >
+              <i class="bi bi-grip-vertical text-body-secondary"></i>
+            </div>
+            <div class="h-100 d-flex flex-column overflow-hidden" [ngStyle]="{ 'width.px': rightColumnWidth() }">
+              @if (value.pdf; as pdf) {
+                <div class="flex-grow-1">
+                  <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
                 </div>
-              </div>
-            } @else {
-              Error!
-            }
-          }
-        </div>
-        <a href="javascript:void(0)" style="width: {{ resizeHandleWidth }}px; cursor: col-resize;" (mousedown)="dragStart($event)" (touchstart)="dragStart($event)"> </a>
-        <div class="h-100 bg-body border rounded-3 d-flex flex-column overflow-hidden" [ngStyle]="{ 'width.px': rightColumnWidth() }">
-          @if (state.value(); as value) {
-            @if (value.pdf?.content; as pdf) {
-              <div class="flex-grow-1">
-                <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
-              </div>
-            } @else {
-              <div class="flex-grow-1 d-flex flex-column gap-2 align-items-center justify-content-center position-relative">
-                <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
-                <button class="btn btn-outline-secondary stretched-link" (click)="appMenu.importMenu()?.importPdfImage()">Import...</button>
-              </div>
-            }
-          } @else {
-            @if (state.isLoading()) {
-              <div class="w-100 flex-grow-1 d-flex justify-content-center align-items-center">
-                <div class="spinner-border" role="status">
-                  <span class="visually-hidden">Loading...</span>
+              } @else {
+                <div class="flex-grow-1 d-flex flex-column gap-4 align-items-center justify-content-center">
+                  <button
+                    class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
+                    (click)="appMenu.importMenu()?.importPdfImage()"
+                  >
+                    <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
+                    <div class="lead">Import PDF image</div>
+                  </button>
+                  OR
+                  <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5">
+                    <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
+                    <div class="lead">Auto-generate PDF image</div>
+                  </button>
                 </div>
+              }
+            </div>
+          </div>
+        } @else {
+          @if (state.isLoading()) {
+            <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
               </div>
-            } @else {
-              Error!
-            }
+            </div>
+          } @else {
+            <div class="w-100 h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
+              <h1>Get started</h1>
+              <div class="d-flex gap-5 align-items-center justify-content-center">
+                <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5" style="width: 400px">
+                  <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
+                  <div class="lead">Import FacturX document</div>
+                </button>
+                OR
+                <button
+                  class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
+                  style="width: 400px"
+                  (click)="appMenu.importMenu()?.importPdfImage()"
+                >
+                  <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
+                  <div class="lead">Import PDF image</div>
+                </button>
+                OR
+                <button
+                  class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
+                  style="width: 400px"
+                  (click)="appMenu.importMenu()?.importCrossIndustryInvoice()"
+                >
+                  <i class="bi bi-code text-body-tertiary fs-1"></i>
+                  <div class="lead">Import Cross-Industry Invoice file</div>
+                </button>
+              </div>
+            </div>
           }
-        </div>
+        }
       </main>
 
       <div class="flex-shrink-0 d-flex justify-content-center gap-2 px-4 small" [class.d-none]="!environment.isUnsafeCloudEnvironment">
@@ -158,8 +191,12 @@ import { FormsModule } from '@angular/forms';
     </div>
   `,
   styles: `
-    .smaller {
-      font-size: 0.75rem;
+    .btn-shadow {
+      box-shadow: var(--bs-box-shadow);
+    }
+
+    .btn-shadow:hover {
+      box-shadow: var(--bs-box-shadow-lg);
     }
   `,
 })
@@ -175,7 +212,7 @@ export class EditorPage {
   protected leftColumnWidth: Signal<number> = computed(() => this.totalWidth() - this.rightColumnWidth() - this.resizeHandleWidth);
   protected rightColumnWidth: Signal<number> = computed(() => this.settings().rightPaneWidth ?? 0);
   protected disablePointerEvents = signal<boolean>(false);
-  protected state: Resource<EditorSavedState | undefined> = this.editorStateService.savedState;
+  protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
 
   protected saving = signal<boolean>(false);
   protected saved = signal<boolean>(false);
@@ -207,8 +244,12 @@ export class EditorPage {
    */
   saveCii(cii: ICrossIndustryInvoice) {
     const value = this.state.value();
+    if (value === null) {
+      return;
+    }
+
     this.saving.set(true);
-    this.saveSubject.next({ ...(value ?? {}), cii: { ...(value?.cii ?? {}), content: cii } });
+    this.saveSubject.next({ ...value, cii });
   }
 
   @HostListener('window:resize', ['$event'])
