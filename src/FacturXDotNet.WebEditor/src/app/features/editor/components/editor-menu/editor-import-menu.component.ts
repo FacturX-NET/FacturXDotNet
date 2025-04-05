@@ -1,9 +1,4 @@
 import { Component, DestroyRef, inject } from '@angular/core';
-import { EditorStateService } from '../../services/editor-state.service';
-import { ImportFileService } from '../../../../core/import-file/import-file.service';
-import { catchError, filter, from, map, Observable, of, switchMap } from 'rxjs';
-import { CrossIndustryInvoice } from '../../../../core/api/api.models';
-import { ExtractApi } from '../../../../core/api/extract.api';
 import { ToastService } from '../../../../core/toasts/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditorMenuService } from './editor-menu.service';

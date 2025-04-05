@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, SecurityContext } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { createLinkedSignal } from '@angular/core/primitives/signals';
 

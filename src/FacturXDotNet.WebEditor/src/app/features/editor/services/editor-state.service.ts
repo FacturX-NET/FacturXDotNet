@@ -1,5 +1,5 @@
 import { Injectable, resource, Resource } from '@angular/core';
-import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../../core/api/api.models';
+import { ICrossIndustryInvoice } from '../../../core/api/api.models';
 import { IDBPDatabase, IDBPTransaction, openDB, StoreNames } from 'idb';
 
 @Injectable({

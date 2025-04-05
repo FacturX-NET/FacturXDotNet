@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CrossIndustryInvoice } from '../api/api.models';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../../app.config';
 

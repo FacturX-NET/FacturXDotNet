@@ -1,12 +1,7 @@
 import { Component, DestroyRef, inject, output } from '@angular/core';
-import { EditorStateService } from '../../services/editor-state.service';
-import { GenerateApi } from '../../../../core/api/generate.api';
-import { catchError, finalize, map, of } from 'rxjs';
+import { finalize } from 'rxjs';
 import { ToastService } from '../../../../core/toasts/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
-import { CiiFormService } from '../cii-form/cii-form.service';
-import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 import { EditorMenuService } from './editor-menu.service';
 import { toastError } from '../../../../core/utils/toast-error';
 

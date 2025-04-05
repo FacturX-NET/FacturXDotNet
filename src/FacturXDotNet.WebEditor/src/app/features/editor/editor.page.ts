@@ -1,34 +1,22 @@
-import { Component, computed, effect, HostListener, inject, Resource, signal, Signal } from '@angular/core';
-import { NgOptimizedImage, NgStyle } from '@angular/common';
+import { Component, computed, inject, Resource, signal, Signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './components/pdf-viewer.component';
 import { CiiFormComponent } from './components/cii-form/cii-form.component';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
 import { CiiSummaryComponent } from './components/cii-summary/cii-summary.component';
-import { EditorDetailsDropdownComponent } from './components/editor-header/editor-details-dropdown.component';
 import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
 import { EditorSavedState, EditorStateService } from './services/editor-state.service';
 import { debounceTime, delay, from, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../core/api/api.models';
+import { ICrossIndustryInvoice } from '../../core/api/api.models';
 import { FormsModule } from '@angular/forms';
 import { EditorHeaderComponent } from './components/editor-header/editor-header.component';
 import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
 
 @Component({
   selector: 'app-editor',
-  imports: [
-    NgOptimizedImage,
-    PdfViewerComponent,
-    CiiFormComponent,
-    CiiSummaryComponent,
-    NgStyle,
-    EditorDetailsDropdownComponent,
-    EditorMenuComponent,
-    FormsModule,
-    EditorHeaderComponent,
-    TwoColumnsComponent,
-  ],
+  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent, EditorMenuComponent, FormsModule, EditorHeaderComponent, TwoColumnsComponent],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">

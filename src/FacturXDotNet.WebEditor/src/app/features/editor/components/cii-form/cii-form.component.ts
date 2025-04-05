@@ -1,13 +1,6 @@
 import { Component, effect, inject, input, model } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  CrossIndustryInvoice,
-  DateOnlyFormat,
-  GuidelineSpecifiedDocumentContextParameterId,
-  ICrossIndustryInvoice,
-  InvoiceTypeCode,
-  VatOnlyTaxSchemeIdentifier,
-} from '../../../../core/api/api.models';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-document-context.component';
 import { CiiFormSupplyChainTradeTransactionComponent } from './cii-form-supply-chain-trade-transaction.component';

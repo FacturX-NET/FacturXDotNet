@@ -1,9 +1,7 @@
-import { Component, DestroyRef, Inject, inject } from '@angular/core';
-import { EditorStateService } from '../../services/editor-state.service';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { EditorMenuService } from './editor-menu.service';
 import { ToastService } from '../../../../core/toasts/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, of } from 'rxjs';
 import { toastError } from '../../../../core/utils/toast-error';
 
 @Component({
