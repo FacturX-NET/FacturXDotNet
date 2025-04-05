@@ -1,4 +1,4 @@
-import { Component, effect, model, signal } from '@angular/core';
+import { booleanAttribute, Component, effect, input, model, signal } from '@angular/core';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { EditorStateAttachment } from '../../editor-state.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -7,7 +7,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   selector: 'app-attachment',
   imports: [NgxFilesizeModule, ReactiveFormsModule],
   template: `
-    @if (edit()) {
+    @if (editable() && edit()) {
       <form [formGroup]="attachmentFormGroup" (ngSubmit)="save()">
         <input class="form-control form-control-sm mt-2" formControlName="name" placeholder="Name" />
         <div class="d-flex align-items-center gap-2 mt-2">
@@ -19,9 +19,12 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
     } @else {
       <div class="d-flex gap-2">
         <h5 class="m-0">{{ attachment().name }}</h5>
-        <a role="button" (click)="startEdition()">
-          <i class="bi bi-pencil-fill text-body-secondary small"></i>
-        </a>
+
+        @if (editable()) {
+          <a role="button" (click)="startEdition()">
+            <i class="bi bi-pencil-fill text-body-secondary small"></i>
+          </a>
+        }
       </div>
       <div class="text-body-secondary small">
         {{ attachment().content.byteLength | filesize }}
@@ -35,6 +38,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class AttachmentComponent {
   attachment = model.required<EditorStateAttachment>();
+  editable = input(true, { transform: booleanAttribute });
 
   protected edit = signal<boolean>(false);
 
@@ -51,6 +55,10 @@ export class AttachmentComponent {
   }
 
   protected startEdition() {
+    if (!this.editable()) {
+      return;
+    }
+
     this.edit.set(true);
   }
 
