@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, input, output } from '@angular/core';
-import { EditorDetailsDropdownComponent } from './editor-details-dropdown.component';
+import { CiiDropdownDetailsComponent } from '../cii/cii-dropdown-details.component';
 import { EditorSavedState } from '../../services/editor-state.service';
 import { EditorMenuService } from '../editor-menu/editor-menu.service';
 import { ToastService } from '../../../../core/toasts/toast.service';
@@ -9,7 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-editor-header',
-  imports: [EditorDetailsDropdownComponent],
+  imports: [CiiDropdownDetailsComponent],
   template: `
     <div class="d-flex">
       <div class="d-none d-xl-block col-3"><!--spacer--></div>
@@ -48,8 +48,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
               </div>
             </div>
           }
-
-          <app-editor-details-dropdown />
         </div>
       </div>
     </div>

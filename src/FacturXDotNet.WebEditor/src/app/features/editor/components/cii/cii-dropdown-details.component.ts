@@ -6,7 +6,7 @@ import { EditorSettings, EditorSettingsService } from '../../editor-settings.ser
   template: `
     @if (settings(); as settings) {
       <div class="dropdown">
-        <button href="javascript:void 0;" class="btn btn-outline-secondary small" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-eye"></i></button>
+        <a role="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-eye"></i></a>
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
             <a class="dropdown-item" href="javascript:void 0;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings.showBusinessRules !== true">
@@ -43,7 +43,7 @@ import { EditorSettings, EditorSettingsService } from '../../editor-settings.ser
     }
   `,
 })
-export class EditorDetailsDropdownComponent {
+export class CiiDropdownDetailsComponent {
   public settings: Signal<EditorSettings>;
 
   constructor(private settingsService: EditorSettingsService) {
