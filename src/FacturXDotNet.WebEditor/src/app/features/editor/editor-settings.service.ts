@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { EditorTab } from './editor-header.component';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,13 @@ export class EditorSettingsService {
   saveFoldSummary(value: boolean) {
     const settings = this.settings();
     const newSettings: EditorSettings = { ...settings, foldSummary: value };
+    this.saveSettings(newSettings);
+    this.settings.set(newSettings);
+  }
+
+  saveTab(value: EditorTab) {
+    const settings = this.settings();
+    const newSettings: EditorSettings = { ...settings, tab: value };
     this.saveSettings(newSettings);
     this.settings.set(newSettings);
   }
@@ -60,6 +68,7 @@ export class EditorSettingsService {
 
 export interface EditorSettings {
   readonly foldSummary?: boolean;
+  readonly tab?: EditorTab;
   readonly showBusinessRules?: boolean;
   readonly showRemarks?: boolean;
   readonly showChorusProRemarks?: boolean;

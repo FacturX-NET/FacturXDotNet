@@ -31,7 +31,7 @@ import { AttachmentsTab } from './tabs/attachments/attachments.tab';
       <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-1 mx-md-2 mx-lg-3 mt-3 mb-1 overflow-hidden">
         @if (state.value(); as value) {
           <header>
-            <app-editor-header [state]="value" [(tab)]="tab" [settings]="settings()"></app-editor-header>
+            <app-editor-header [state]="value" [tab]="tab()" (tabChange)="changeTab($event)" [settings]="settings()"></app-editor-header>
           </header>
 
           <div class="flex-grow-1 overflow-hidden">
@@ -42,7 +42,7 @@ import { AttachmentsTab } from './tabs/attachments/attachments.tab';
                     <app-cii [state]="value" [settings]="settings()" />
                   }
                   @case ('attachments') {
-                    <app-attachments></app-attachments>
+                    <app-attachments [state]="value"></app-attachments>
                   }
                 }
               </div>
@@ -116,5 +116,9 @@ export class EditorPage {
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected disablePointerEvents = signal<boolean>(false);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
-  protected tab = signal<EditorTab>('cii');
+  protected tab = computed(() => this.settings().tab ?? 'cii');
+
+  changeTab(tab: EditorTab) {
+    this.settingsService.saveTab(tab);
+  }
 }

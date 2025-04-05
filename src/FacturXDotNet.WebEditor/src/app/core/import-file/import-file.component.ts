@@ -24,7 +24,7 @@ export class ImportFileComponent {
     }
 
     input.value = '';
-    input.accept = accept.join(',');
+    input.accept = accept.length === 0 ? '*' : accept.join(',');
     input.click();
 
     return firstValueFrom(this.fileSubject);
