@@ -15,7 +15,7 @@ export class ExtractApi {
     const url = `${this.baseUrl}/extract/cii`;
     const headers = new HttpHeaders().append('Content-Disposition', 'multipart/form-data');
     const formData = new FormData();
-    formData.append('xml', file, file.name);
+    formData.append('file', file, file.name);
 
     return this.httpClient.post(url, formData, { headers }).pipe(map((result) => CrossIndustryInvoice.fromJS(result)));
   }

@@ -26,11 +26,34 @@ export class EditorMenuService {
     return from(this.editorStateService.clear());
   }
 
+  importFacturX(): Observable<void> {
+    return from(this.importFileService.importFile('.pdf')).pipe(
+      switchMap((file): Observable<{ file: File; cii?: CrossIndustryInvoice } | undefined> => {
+        if (file === undefined) {
+          return of(undefined);
+        }
+
+        return this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })));
+      }),
+      filter((result) => result !== undefined),
+      switchMap((result) => {
+        if (result.cii === undefined) {
+          this.toastService.show({ type: 'error', message: 'Could not extract CII data from file ' + result.file.name + '.' });
+          return of(void 0);
+        }
+
+        const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
+        const newState = { name: nameWithoutExtension, cii: result.cii, autoGeneratePdf: false, pdf: result.file };
+        return from(this.editorStateService.update(newState));
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    );
+  }
+
   importCrossIndustryInvoice(): Observable<void> {
     return from(this.importFileService.importFile('.xml')).pipe(
       switchMap((file): Observable<{ file: File; cii?: CrossIndustryInvoice } | undefined> => {
         if (file === undefined) {
-          this.toastService.show({ type: 'error', message: 'Could not import CII file.' });
           return of(undefined);
         }
 
@@ -55,7 +78,7 @@ export class EditorMenuService {
     return from(this.importFileService.importFile('.pdf')).pipe(
       switchMap((file) => {
         if (file === undefined) {
-          return throwError(() => new Error('Could not import PDF file.'));
+          return of(void 0);
         }
 
         const nameWithoutExtension = file.name.replace(/\.[^/.]+$/, '');

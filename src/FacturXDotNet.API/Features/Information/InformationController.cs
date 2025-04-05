@@ -25,9 +25,9 @@ static class InformationController
 
         routes.MapGet(
                 "/dependencies",
-                async ([FromServices] PackagesService packagesService) =>
+                async ([FromServices] PackagesService packagesService, CancellationToken cancellationToken = default) =>
                 {
-                    IReadOnlyCollection<Package> packages = await packagesService.ReadPackagesAsync();
+                    IReadOnlyCollection<Package> packages = await packagesService.ReadPackagesAsync(cancellationToken);
                     return packages.Select(
                         p => new PackageDto
                         {

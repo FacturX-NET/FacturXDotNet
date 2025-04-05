@@ -15,12 +15,13 @@ static class GenerateController
     {
         routes.MapPost(
                 "/facturx",
-                async ([FromForm] IFormFile pdf, [FromForm] IFormFile cii) =>
+                async ([FromForm] IFormFile pdf, [FromForm] IFormFile cii, CancellationToken cancellationToken = default) =>
                 {
                     FacturXDocumentBuilder builder = FacturXDocument.Create();
 
                     await using Stream ciiJsonStream = cii.OpenReadStream();
-                    CrossIndustryInvoice? crossIndustryInvoice = await JsonSerializer.DeserializeAsync<CrossIndustryInvoice>(ciiJsonStream, JsonSerializerOptions);
+                    CrossIndustryInvoice? crossIndustryInvoice =
+                        await JsonSerializer.DeserializeAsync<CrossIndustryInvoice>(ciiJsonStream, JsonSerializerOptions, cancellationToken);
                     if (crossIndustryInvoice == null)
                     {
                         return Results.BadRequest("Invalid Cross-Industry Invoice data.");
@@ -52,7 +53,7 @@ static class GenerateController
 
         routes.MapPost(
                 "/cii",
-                async (CrossIndustryInvoice crossIndustryInvoice) =>
+                async (CrossIndustryInvoice crossIndustryInvoice, CancellationToken cancellationToken = default) =>
                 {
                     MemoryStream stream = new();
                     CrossIndustryInvoiceWriter writer = new();
