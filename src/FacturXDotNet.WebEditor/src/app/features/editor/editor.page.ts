@@ -37,7 +37,7 @@ import { TwoColumnsComponent } from '../../core/two-columns/two-columns.componen
           </header>
 
           <div class="flex-grow-1 overflow-hidden">
-            <app-two-columns (dragging)="disablePointerEvents.set($event)">
+            <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
               <div class="h-100 d-flex column-gap-4 overflow-hidden" left>
                 <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
                   <div class="offcanvas-header">
