@@ -19,7 +19,7 @@ import { CiiFormService } from './tabs/cii/cii-form/cii-form.service';
       </div>
 
       <div>
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs ps-4">
           <li class="nav-item">
             <a class="nav-link" role="button" [class.active]="tab() === 'xmp'" (click)="tab.set('xmp')"> <i class="bi bi-code"></i> XMP Metadata </a>
           </li>
