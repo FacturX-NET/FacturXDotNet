@@ -20,7 +20,7 @@ import { AttachmentComponent } from './attachment.component';
         <button class="btn btn btn-outline-danger" (click)="deleteAllAttachments()"><i class="bi bi-trash"></i> Delete all</button>
       </div>
       <div class="list-group">
-        @for (attachment of state().attachments; track attachment.name) {
+        @for (attachment of attachments(); track attachment.name) {
           <div class="list-group-item">
             <div class="d-flex justify-content-between align-items-start">
               <div>
@@ -41,7 +41,7 @@ import { AttachmentComponent } from './attachment.component';
   imports: [NgxFilesizeModule, AttachmentComponent],
 })
 export class AttachmentsTab {
-  state = input.required<EditorSavedState>();
+  attachments = input.required<EditorStateAttachment[]>();
 
   private editorStateService = inject(EditorStateService);
   private importFileService = inject(ImportFileService);
@@ -56,7 +56,7 @@ export class AttachmentsTab {
           return from(file.arrayBuffer()).pipe(map((content) => ({ file, content })));
         }),
         switchMap((result) => {
-          const attachments = this.state().attachments;
+          const attachments = this.attachments();
           const newAttachments = [...attachments, { name: result.file.name, content: new Uint8Array(result.content) }];
           return from(this.editorStateService.updateAttachments(newAttachments));
         }),
@@ -67,13 +67,13 @@ export class AttachmentsTab {
   }
 
   async updateAttachment(index: number, attachment: EditorStateAttachment) {
-    const attachments = this.state().attachments;
+    const attachments = this.attachments();
     attachments[index] = attachment;
     await this.editorStateService.updateAttachments(attachments);
   }
 
   async downloadAttachment(index: number) {
-    const attachments = this.state().attachments;
+    const attachments = this.attachments();
     const attachment = attachments[index];
     if (attachment === undefined) {
       this.toastService.show({ type: 'error', message: 'Could not find attachment with name ' + name + '.' });
@@ -86,13 +86,13 @@ export class AttachmentsTab {
   }
 
   async deleteAttachment(index: number) {
-    const attachments = this.state().attachments;
+    const attachments = this.attachments();
     const newAttachments = attachments.splice(index, 1);
     await this.editorStateService.updateAttachments(newAttachments);
   }
 
   async downloadAttachments() {
-    const attachments = this.state().attachments;
+    const attachments = this.attachments();
 
     for (const attachment of attachments) {
       const blob = new Blob([attachment.content]);

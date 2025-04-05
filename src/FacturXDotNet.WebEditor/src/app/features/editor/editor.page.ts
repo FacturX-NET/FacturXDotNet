@@ -11,10 +11,22 @@ import { PdfViewerComponent } from './pdf-viewer.component';
 import { EditorHeaderComponent, EditorTab } from './editor-header.component';
 import { EditorWelcomeComponent } from './editor-welcome.component';
 import { AttachmentsTab } from './tabs/attachments/attachments.tab';
+import { XmpTab } from './tabs/xmp/xmp.tab';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent, EditorMenuComponent, FormsModule, EditorHeaderComponent, TwoColumnsComponent, CiiTab, EditorWelcomeComponent, AttachmentsTab],
+  imports: [
+    NgOptimizedImage,
+    PdfViewerComponent,
+    EditorMenuComponent,
+    FormsModule,
+    EditorHeaderComponent,
+    TwoColumnsComponent,
+    CiiTab,
+    EditorWelcomeComponent,
+    AttachmentsTab,
+    XmpTab,
+  ],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
@@ -38,11 +50,14 @@ import { AttachmentsTab } from './tabs/attachments/attachments.tab';
             <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
               <div class="h-100 overflow-hidden" left>
                 @switch (tab()) {
+                  @case ('xmp') {
+                    <app-xmp [value]="value.xmp" [settings]="settings()" />
+                  }
                   @case ('cii') {
-                    <app-cii [state]="value" [settings]="settings()" />
+                    <app-cii [value]="value.cii" [settings]="settings()" />
                   }
                   @case ('attachments') {
-                    <app-attachments [state]="value"></app-attachments>
+                    <app-attachments [attachments]="value.attachments"></app-attachments>
                   }
                 }
               </div>

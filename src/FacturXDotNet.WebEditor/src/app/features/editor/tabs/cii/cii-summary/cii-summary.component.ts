@@ -8,7 +8,7 @@ import { EditorSettings } from '../../../editor-settings.service';
   selector: 'app-cii-summary',
   imports: [CiiSummaryControlComponent],
   template: `
-    <div id="editor__cii-summary-content">
+    <div>
       @for (node of doc; track node.term) {
         <app-cii-summary-node [node]="node" [settings]="settings()" />
       }

@@ -5,6 +5,7 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
 import { EditorSavedState, EditorStateService } from '../../editor-state.service';
 import { CiiMenuComponent } from './cii-menu/cii-menu.component';
 import { CiiFormService } from './cii-form/cii-form.service';
+import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 
 @Component({
   selector: 'app-cii',
@@ -19,16 +20,16 @@ import { CiiFormService } from './cii-form/cii-form.service';
           </div>
 
           <div class="offcanvas-body small">
-            <app-cii-summary [value]="state().cii" [settings]="settings()" />
+            <app-cii-summary [value]="value()" [settings]="settings()" />
           </div>
         </div>
       } @else {
         <div id="editor__cii-summary" class="flex-shrink-0 overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
           <div class="overflow-x-hidden small">
-            <div class="d-none d-xl-flex justify-content-between">
+            <div class="justify-content-between">
               <h6>Cross-Industry Invoice</h6>
             </div>
-            <app-cii-summary [value]="state().cii" [settings]="settings()" />
+            <app-cii-summary [value]="value()" [settings]="settings()" />
           </div>
         </div>
       }
@@ -44,7 +45,7 @@ import { CiiFormService } from './cii-form/cii-form.service';
         tabindex="0"
       >
         <div class="container ms-0">
-          <app-cii-form [value]="state().cii" [settings]="settings()" />
+          <app-cii-form [value]="value()" [settings]="settings()" />
         </div>
       </div>
 
@@ -72,7 +73,7 @@ import { CiiFormService } from './cii-form/cii-form.service';
   `,
 })
 export class CiiTab {
-  state = input.required<EditorSavedState>();
+  value = input.required<ICrossIndustryInvoice>();
   settings = input.required<EditorSettings>();
 
   private ciiFormService = inject(CiiFormService);

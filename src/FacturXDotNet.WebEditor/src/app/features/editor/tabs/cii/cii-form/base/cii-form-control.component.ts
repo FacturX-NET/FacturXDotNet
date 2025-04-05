@@ -62,11 +62,6 @@ import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight
       }
     </div>
   `,
-  styles: `
-    .editor__control {
-      max-width: 420px;
-    }
-  `,
 })
 export class CiiFormControlComponent {
   term = input.required<string>();

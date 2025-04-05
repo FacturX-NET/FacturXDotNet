@@ -77,3 +77,7 @@ a {
     opacity: 0.2;
   }
 }
+
+.editor__control {
+  max-width: 420px;
+}

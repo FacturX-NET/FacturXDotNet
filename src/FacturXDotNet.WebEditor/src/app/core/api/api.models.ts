@@ -167,6 +167,55 @@ export interface IApplicableHeaderTradeSettlement {
   [key: string]: any;
 }
 
+export class AttachmentDto implements IAttachmentDto {
+  file!: string;
+  description?: string | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IAttachmentDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.file = _data['file'];
+      this.description = _data['description'];
+    }
+  }
+
+  static fromJS(data: any): AttachmentDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new AttachmentDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['file'] = this.file;
+    data['description'] = this.description;
+    return data;
+  }
+}
+
+export interface IAttachmentDto {
+  file: string;
+  description?: string | undefined;
+
+  [key: string]: any;
+}
+
 export class BuildInformationDto implements IBuildInformationDto {
   version!: string;
   buildDate!: string;
@@ -597,6 +646,16 @@ export type InvoiceTypeCode =
 
 export type VatOnlyTaxSchemeIdentifier = 'Vat';
 
+export type XmpFacturXConformanceLevel = 'Minimum' | 'BasicWl' | 'Basic' | 'Comfort' | 'En16931' | 'Extended' | 'XRechnung';
+
+export type XmpFacturXDocumentType = 'Invoice' | 'Order';
+
+export type XmpPdfAConformanceLevel = 'A' | 'B';
+
+export type XmpPdfAPropertyCategory = 'Internal' | 'External';
+
+export type XmpThumbnailFormat = 'Jpeg';
+
 export class PackageDto implements IPackageDto {
   name!: string;
   author!: string;
@@ -998,6 +1057,901 @@ export interface ISupplyChainTradeTransaction {
   applicableHeaderTradeAgreement?: IApplicableHeaderTradeAgreement | undefined;
   applicableHeaderTradeDelivery?: IApplicableHeaderTradeDelivery | undefined;
   applicableHeaderTradeSettlement?: IApplicableHeaderTradeSettlement | undefined;
+
+  [key: string]: any;
+}
+
+export class XmpBasicMetadata implements IXmpBasicMetadata {
+  identifier?: string[];
+  createDate?: string | undefined;
+  creatorTool?: string | undefined;
+  label?: string | undefined;
+  metadataDate?: string | undefined;
+  modifyDate?: string | undefined;
+  rating?: number;
+  baseUrl?: string | undefined;
+  nickname?: string | undefined;
+  thumbnails?: XmpThumbnail[];
+
+  [key: string]: any;
+
+  constructor(data?: IXmpBasicMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+      if (data.thumbnails) {
+        this.thumbnails = [];
+        for (let i = 0; i < data.thumbnails.length; i++) {
+          let item = data.thumbnails[i];
+          this.thumbnails[i] = item && !(<any>item).toJSON ? new XmpThumbnail(item) : <XmpThumbnail>item;
+        }
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      if (Array.isArray(_data['identifier'])) {
+        this.identifier = [] as any;
+        for (let item of _data['identifier']) this.identifier!.push(item);
+      }
+      this.createDate = _data['createDate'];
+      this.creatorTool = _data['creatorTool'];
+      this.label = _data['label'];
+      this.metadataDate = _data['metadataDate'];
+      this.modifyDate = _data['modifyDate'];
+      this.rating = _data['rating'];
+      this.baseUrl = _data['baseUrl'];
+      this.nickname = _data['nickname'];
+      if (Array.isArray(_data['thumbnails'])) {
+        this.thumbnails = [] as any;
+        for (let item of _data['thumbnails']) this.thumbnails!.push(XmpThumbnail.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): XmpBasicMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpBasicMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    if (Array.isArray(this.identifier)) {
+      data['identifier'] = [];
+      for (let item of this.identifier) data['identifier'].push(item);
+    }
+    data['createDate'] = this.createDate;
+    data['creatorTool'] = this.creatorTool;
+    data['label'] = this.label;
+    data['metadataDate'] = this.metadataDate;
+    data['modifyDate'] = this.modifyDate;
+    data['rating'] = this.rating;
+    data['baseUrl'] = this.baseUrl;
+    data['nickname'] = this.nickname;
+    if (Array.isArray(this.thumbnails)) {
+      data['thumbnails'] = [];
+      for (let item of this.thumbnails) data['thumbnails'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IXmpBasicMetadata {
+  identifier?: string[];
+  createDate?: string | undefined;
+  creatorTool?: string | undefined;
+  label?: string | undefined;
+  metadataDate?: string | undefined;
+  modifyDate?: string | undefined;
+  rating?: number;
+  baseUrl?: string | undefined;
+  nickname?: string | undefined;
+  thumbnails?: IXmpThumbnail[];
+
+  [key: string]: any;
+}
+
+export class XmpDublinCoreMetadata implements IXmpDublinCoreMetadata {
+  contributor?: string[];
+  coverage?: string | undefined;
+  creator?: string[];
+  date?: string[];
+  description?: string[];
+  format?: string | undefined;
+  identifier?: string | undefined;
+  language?: string[];
+  publisher?: string[];
+  relation?: string[];
+  rights?: string[];
+  source?: string | undefined;
+  subject?: string[];
+  title?: string[];
+  type?: string[];
+
+  [key: string]: any;
+
+  constructor(data?: IXmpDublinCoreMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      if (Array.isArray(_data['contributor'])) {
+        this.contributor = [] as any;
+        for (let item of _data['contributor']) this.contributor!.push(item);
+      }
+      this.coverage = _data['coverage'];
+      if (Array.isArray(_data['creator'])) {
+        this.creator = [] as any;
+        for (let item of _data['creator']) this.creator!.push(item);
+      }
+      if (Array.isArray(_data['date'])) {
+        this.date = [] as any;
+        for (let item of _data['date']) this.date!.push(item);
+      }
+      if (Array.isArray(_data['description'])) {
+        this.description = [] as any;
+        for (let item of _data['description']) this.description!.push(item);
+      }
+      this.format = _data['format'];
+      this.identifier = _data['identifier'];
+      if (Array.isArray(_data['language'])) {
+        this.language = [] as any;
+        for (let item of _data['language']) this.language!.push(item);
+      }
+      if (Array.isArray(_data['publisher'])) {
+        this.publisher = [] as any;
+        for (let item of _data['publisher']) this.publisher!.push(item);
+      }
+      if (Array.isArray(_data['relation'])) {
+        this.relation = [] as any;
+        for (let item of _data['relation']) this.relation!.push(item);
+      }
+      if (Array.isArray(_data['rights'])) {
+        this.rights = [] as any;
+        for (let item of _data['rights']) this.rights!.push(item);
+      }
+      this.source = _data['source'];
+      if (Array.isArray(_data['subject'])) {
+        this.subject = [] as any;
+        for (let item of _data['subject']) this.subject!.push(item);
+      }
+      if (Array.isArray(_data['title'])) {
+        this.title = [] as any;
+        for (let item of _data['title']) this.title!.push(item);
+      }
+      if (Array.isArray(_data['type'])) {
+        this.type = [] as any;
+        for (let item of _data['type']) this.type!.push(item);
+      }
+    }
+  }
+
+  static fromJS(data: any): XmpDublinCoreMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpDublinCoreMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    if (Array.isArray(this.contributor)) {
+      data['contributor'] = [];
+      for (let item of this.contributor) data['contributor'].push(item);
+    }
+    data['coverage'] = this.coverage;
+    if (Array.isArray(this.creator)) {
+      data['creator'] = [];
+      for (let item of this.creator) data['creator'].push(item);
+    }
+    if (Array.isArray(this.date)) {
+      data['date'] = [];
+      for (let item of this.date) data['date'].push(item);
+    }
+    if (Array.isArray(this.description)) {
+      data['description'] = [];
+      for (let item of this.description) data['description'].push(item);
+    }
+    data['format'] = this.format;
+    data['identifier'] = this.identifier;
+    if (Array.isArray(this.language)) {
+      data['language'] = [];
+      for (let item of this.language) data['language'].push(item);
+    }
+    if (Array.isArray(this.publisher)) {
+      data['publisher'] = [];
+      for (let item of this.publisher) data['publisher'].push(item);
+    }
+    if (Array.isArray(this.relation)) {
+      data['relation'] = [];
+      for (let item of this.relation) data['relation'].push(item);
+    }
+    if (Array.isArray(this.rights)) {
+      data['rights'] = [];
+      for (let item of this.rights) data['rights'].push(item);
+    }
+    data['source'] = this.source;
+    if (Array.isArray(this.subject)) {
+      data['subject'] = [];
+      for (let item of this.subject) data['subject'].push(item);
+    }
+    if (Array.isArray(this.title)) {
+      data['title'] = [];
+      for (let item of this.title) data['title'].push(item);
+    }
+    if (Array.isArray(this.type)) {
+      data['type'] = [];
+      for (let item of this.type) data['type'].push(item);
+    }
+    return data;
+  }
+}
+
+export interface IXmpDublinCoreMetadata {
+  contributor?: string[];
+  coverage?: string | undefined;
+  creator?: string[];
+  date?: string[];
+  description?: string[];
+  format?: string | undefined;
+  identifier?: string | undefined;
+  language?: string[];
+  publisher?: string[];
+  relation?: string[];
+  rights?: string[];
+  source?: string | undefined;
+  subject?: string[];
+  title?: string[];
+  type?: string[];
+
+  [key: string]: any;
+}
+
+export class XmpFacturXMetadata implements IXmpFacturXMetadata {
+  documentFileName?: string | undefined;
+  documentType?: XmpFacturXDocumentType | undefined;
+  version?: string | undefined;
+  conformanceLevel?: XmpFacturXConformanceLevel | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IXmpFacturXMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.documentFileName = _data['documentFileName'];
+      this.documentType = _data['documentType'];
+      this.version = _data['version'];
+      this.conformanceLevel = _data['conformanceLevel'];
+    }
+  }
+
+  static fromJS(data: any): XmpFacturXMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpFacturXMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['documentFileName'] = this.documentFileName;
+    data['documentType'] = this.documentType;
+    data['version'] = this.version;
+    data['conformanceLevel'] = this.conformanceLevel;
+    return data;
+  }
+}
+
+export interface IXmpFacturXMetadata {
+  documentFileName?: string | undefined;
+  documentType?: XmpFacturXDocumentType | undefined;
+  version?: string | undefined;
+  conformanceLevel?: XmpFacturXConformanceLevel | undefined;
+
+  [key: string]: any;
+}
+
+export class XmpMetadata implements IXmpMetadata {
+  pdfAIdentification?: XmpPdfAIdentificationMetadata | undefined;
+  basic?: XmpBasicMetadata | undefined;
+  pdf?: XmpPdfMetadata | undefined;
+  dublinCore?: XmpDublinCoreMetadata | undefined;
+  pdfAExtensions?: XmpPdfAExtensionsMetadata | undefined;
+  facturX?: XmpFacturXMetadata | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IXmpMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+      this.pdfAIdentification =
+        data.pdfAIdentification && !(<any>data.pdfAIdentification).toJSON
+          ? new XmpPdfAIdentificationMetadata(data.pdfAIdentification)
+          : <XmpPdfAIdentificationMetadata>this.pdfAIdentification;
+      this.basic = data.basic && !(<any>data.basic).toJSON ? new XmpBasicMetadata(data.basic) : <XmpBasicMetadata>this.basic;
+      this.pdf = data.pdf && !(<any>data.pdf).toJSON ? new XmpPdfMetadata(data.pdf) : <XmpPdfMetadata>this.pdf;
+      this.dublinCore = data.dublinCore && !(<any>data.dublinCore).toJSON ? new XmpDublinCoreMetadata(data.dublinCore) : <XmpDublinCoreMetadata>this.dublinCore;
+      this.pdfAExtensions =
+        data.pdfAExtensions && !(<any>data.pdfAExtensions).toJSON ? new XmpPdfAExtensionsMetadata(data.pdfAExtensions) : <XmpPdfAExtensionsMetadata>this.pdfAExtensions;
+      this.facturX = data.facturX && !(<any>data.facturX).toJSON ? new XmpFacturXMetadata(data.facturX) : <XmpFacturXMetadata>this.facturX;
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.pdfAIdentification = _data['pdfAIdentification'] ? XmpPdfAIdentificationMetadata.fromJS(_data['pdfAIdentification']) : <any>undefined;
+      this.basic = _data['basic'] ? XmpBasicMetadata.fromJS(_data['basic']) : <any>undefined;
+      this.pdf = _data['pdf'] ? XmpPdfMetadata.fromJS(_data['pdf']) : <any>undefined;
+      this.dublinCore = _data['dublinCore'] ? XmpDublinCoreMetadata.fromJS(_data['dublinCore']) : <any>undefined;
+      this.pdfAExtensions = _data['pdfAExtensions'] ? XmpPdfAExtensionsMetadata.fromJS(_data['pdfAExtensions']) : <any>undefined;
+      this.facturX = _data['facturX'] ? XmpFacturXMetadata.fromJS(_data['facturX']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): XmpMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['pdfAIdentification'] = this.pdfAIdentification ? this.pdfAIdentification.toJSON() : <any>undefined;
+    data['basic'] = this.basic ? this.basic.toJSON() : <any>undefined;
+    data['pdf'] = this.pdf ? this.pdf.toJSON() : <any>undefined;
+    data['dublinCore'] = this.dublinCore ? this.dublinCore.toJSON() : <any>undefined;
+    data['pdfAExtensions'] = this.pdfAExtensions ? this.pdfAExtensions.toJSON() : <any>undefined;
+    data['facturX'] = this.facturX ? this.facturX.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IXmpMetadata {
+  pdfAIdentification?: IXmpPdfAIdentificationMetadata | undefined;
+  basic?: IXmpBasicMetadata | undefined;
+  pdf?: IXmpPdfMetadata | undefined;
+  dublinCore?: IXmpDublinCoreMetadata | undefined;
+  pdfAExtensions?: IXmpPdfAExtensionsMetadata | undefined;
+  facturX?: IXmpFacturXMetadata | undefined;
+
+  [key: string]: any;
+}
+
+export class XmpPdfAExtensionsMetadata implements IXmpPdfAExtensionsMetadata {
+  schemas?: XmpPdfASchemaMetadata[];
+
+  [key: string]: any;
+
+  constructor(data?: IXmpPdfAExtensionsMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+      if (data.schemas) {
+        this.schemas = [];
+        for (let i = 0; i < data.schemas.length; i++) {
+          let item = data.schemas[i];
+          this.schemas[i] = item && !(<any>item).toJSON ? new XmpPdfASchemaMetadata(item) : <XmpPdfASchemaMetadata>item;
+        }
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      if (Array.isArray(_data['schemas'])) {
+        this.schemas = [] as any;
+        for (let item of _data['schemas']) this.schemas!.push(XmpPdfASchemaMetadata.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): XmpPdfAExtensionsMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpPdfAExtensionsMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    if (Array.isArray(this.schemas)) {
+      data['schemas'] = [];
+      for (let item of this.schemas) data['schemas'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IXmpPdfAExtensionsMetadata {
+  schemas?: IXmpPdfASchemaMetadata[];
+
+  [key: string]: any;
+}
+
+export class XmpPdfAFieldMetadata implements IXmpPdfAFieldMetadata {
+  description?: string | undefined;
+  name?: string | undefined;
+  valueType?: string | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IXmpPdfAFieldMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.description = _data['description'];
+      this.name = _data['name'];
+      this.valueType = _data['valueType'];
+    }
+  }
+
+  static fromJS(data: any): XmpPdfAFieldMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpPdfAFieldMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['description'] = this.description;
+    data['name'] = this.name;
+    data['valueType'] = this.valueType;
+    return data;
+  }
+}
+
+export interface IXmpPdfAFieldMetadata {
+  description?: string | undefined;
+  name?: string | undefined;
+  valueType?: string | undefined;
+
+  [key: string]: any;
+}
+
+export class XmpPdfAIdentificationMetadata implements IXmpPdfAIdentificationMetadata {
+  amendment?: string | undefined;
+  conformance?: XmpPdfAConformanceLevel | undefined;
+  part?: number | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IXmpPdfAIdentificationMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.amendment = _data['amendment'];
+      this.conformance = _data['conformance'];
+      this.part = _data['part'];
+    }
+  }
+
+  static fromJS(data: any): XmpPdfAIdentificationMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpPdfAIdentificationMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['amendment'] = this.amendment;
+    data['conformance'] = this.conformance;
+    data['part'] = this.part;
+    return data;
+  }
+}
+
+export interface IXmpPdfAIdentificationMetadata {
+  amendment?: string | undefined;
+  conformance?: XmpPdfAConformanceLevel | undefined;
+  part?: number | undefined;
+
+  [key: string]: any;
+}
+
+export class XmpPdfAPropertyMetadata implements IXmpPdfAPropertyMetadata {
+  category?: XmpPdfAPropertyCategory | undefined;
+  description?: string | undefined;
+  name?: string | undefined;
+  valueType?: string | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IXmpPdfAPropertyMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.category = _data['category'];
+      this.description = _data['description'];
+      this.name = _data['name'];
+      this.valueType = _data['valueType'];
+    }
+  }
+
+  static fromJS(data: any): XmpPdfAPropertyMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpPdfAPropertyMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['category'] = this.category;
+    data['description'] = this.description;
+    data['name'] = this.name;
+    data['valueType'] = this.valueType;
+    return data;
+  }
+}
+
+export interface IXmpPdfAPropertyMetadata {
+  category?: XmpPdfAPropertyCategory | undefined;
+  description?: string | undefined;
+  name?: string | undefined;
+  valueType?: string | undefined;
+
+  [key: string]: any;
+}
+
+export class XmpPdfASchemaMetadata implements IXmpPdfASchemaMetadata {
+  namespaceUri?: string | undefined;
+  prefix?: string | undefined;
+  property?: XmpPdfAPropertyMetadata[];
+  schema?: string | undefined;
+  valueType?: XmpPdfATypeMetadata[];
+
+  [key: string]: any;
+
+  constructor(data?: IXmpPdfASchemaMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+      if (data.property) {
+        this.property = [];
+        for (let i = 0; i < data.property.length; i++) {
+          let item = data.property[i];
+          this.property[i] = item && !(<any>item).toJSON ? new XmpPdfAPropertyMetadata(item) : <XmpPdfAPropertyMetadata>item;
+        }
+      }
+      if (data.valueType) {
+        this.valueType = [];
+        for (let i = 0; i < data.valueType.length; i++) {
+          let item = data.valueType[i];
+          this.valueType[i] = item && !(<any>item).toJSON ? new XmpPdfATypeMetadata(item) : <XmpPdfATypeMetadata>item;
+        }
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.namespaceUri = _data['namespaceUri'];
+      this.prefix = _data['prefix'];
+      if (Array.isArray(_data['property'])) {
+        this.property = [] as any;
+        for (let item of _data['property']) this.property!.push(XmpPdfAPropertyMetadata.fromJS(item));
+      }
+      this.schema = _data['schema'];
+      if (Array.isArray(_data['valueType'])) {
+        this.valueType = [] as any;
+        for (let item of _data['valueType']) this.valueType!.push(XmpPdfATypeMetadata.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): XmpPdfASchemaMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpPdfASchemaMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['namespaceUri'] = this.namespaceUri;
+    data['prefix'] = this.prefix;
+    if (Array.isArray(this.property)) {
+      data['property'] = [];
+      for (let item of this.property) data['property'].push(item.toJSON());
+    }
+    data['schema'] = this.schema;
+    if (Array.isArray(this.valueType)) {
+      data['valueType'] = [];
+      for (let item of this.valueType) data['valueType'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IXmpPdfASchemaMetadata {
+  namespaceUri?: string | undefined;
+  prefix?: string | undefined;
+  property?: IXmpPdfAPropertyMetadata[];
+  schema?: string | undefined;
+  valueType?: IXmpPdfATypeMetadata[];
+
+  [key: string]: any;
+}
+
+export class XmpPdfATypeMetadata implements IXmpPdfATypeMetadata {
+  description?: string | undefined;
+  field?: XmpPdfAFieldMetadata[];
+  namespaceUri?: string | undefined;
+  prefix?: string | undefined;
+  type?: string | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IXmpPdfATypeMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+      if (data.field) {
+        this.field = [];
+        for (let i = 0; i < data.field.length; i++) {
+          let item = data.field[i];
+          this.field[i] = item && !(<any>item).toJSON ? new XmpPdfAFieldMetadata(item) : <XmpPdfAFieldMetadata>item;
+        }
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.description = _data['description'];
+      if (Array.isArray(_data['field'])) {
+        this.field = [] as any;
+        for (let item of _data['field']) this.field!.push(XmpPdfAFieldMetadata.fromJS(item));
+      }
+      this.namespaceUri = _data['namespaceUri'];
+      this.prefix = _data['prefix'];
+      this.type = _data['type'];
+    }
+  }
+
+  static fromJS(data: any): XmpPdfATypeMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpPdfATypeMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['description'] = this.description;
+    if (Array.isArray(this.field)) {
+      data['field'] = [];
+      for (let item of this.field) data['field'].push(item.toJSON());
+    }
+    data['namespaceUri'] = this.namespaceUri;
+    data['prefix'] = this.prefix;
+    data['type'] = this.type;
+    return data;
+  }
+}
+
+export interface IXmpPdfATypeMetadata {
+  description?: string | undefined;
+  field?: IXmpPdfAFieldMetadata[];
+  namespaceUri?: string | undefined;
+  prefix?: string | undefined;
+  type?: string | undefined;
+
+  [key: string]: any;
+}
+
+export class XmpPdfMetadata implements IXmpPdfMetadata {
+  keywords?: string | undefined;
+  pdfVersion?: string | undefined;
+  producer?: string | undefined;
+  trapped?: boolean | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IXmpPdfMetadata) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.keywords = _data['keywords'];
+      this.pdfVersion = _data['pdfVersion'];
+      this.producer = _data['producer'];
+      this.trapped = _data['trapped'];
+    }
+  }
+
+  static fromJS(data: any): XmpPdfMetadata {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpPdfMetadata();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['keywords'] = this.keywords;
+    data['pdfVersion'] = this.pdfVersion;
+    data['producer'] = this.producer;
+    data['trapped'] = this.trapped;
+    return data;
+  }
+}
+
+export interface IXmpPdfMetadata {
+  keywords?: string | undefined;
+  pdfVersion?: string | undefined;
+  producer?: string | undefined;
+  trapped?: boolean | undefined;
+
+  [key: string]: any;
+}
+
+export class XmpThumbnail implements IXmpThumbnail {
+  format?: XmpThumbnailFormat | undefined;
+  height?: number | undefined;
+  width?: number | undefined;
+  image?: string | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IXmpThumbnail) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.format = _data['format'];
+      this.height = _data['height'];
+      this.width = _data['width'];
+      this.image = _data['image'];
+    }
+  }
+
+  static fromJS(data: any): XmpThumbnail {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpThumbnail();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['format'] = this.format;
+    data['height'] = this.height;
+    data['width'] = this.width;
+    data['image'] = this.image;
+    return data;
+  }
+}
+
+export interface IXmpThumbnail {
+  format?: XmpThumbnailFormat | undefined;
+  height?: number | undefined;
+  width?: number | undefined;
+  image?: string | undefined;
 
   [key: string]: any;
 }
