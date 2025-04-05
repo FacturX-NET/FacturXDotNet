@@ -6,6 +6,7 @@ import { CiiFormHighlightTermService } from '../../services/cii-form-highlight-t
 import { CiiFormHighlightBusinessRuleService } from '../../services/cii-form-highlight-business-rule.service';
 import { CiiFormHighlightRemarkService } from '../../services/cii-form-highlight-remark.service';
 import { CiiFormHighlightChorusProRemarkService } from '../../services/cii-form-highlight-chorus-pro-remark.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-cii-summary-node',
@@ -20,6 +21,8 @@ import { CiiFormHighlightChorusProRemarkService } from '../../services/cii-form-
         <a
           [scrollTo]="node().term"
           [class.fw-bold]="isNodeHighlighted()"
+          [class.text-success]="isValid"
+          [class.text-danger]="isInvalid"
           data-bs-dismiss="offcanvas"
           data-bs-target="#editor__cii-summary"
           (mouseenter)="this.highlightTerm(true)"
@@ -84,6 +87,16 @@ import { CiiFormHighlightChorusProRemarkService } from '../../services/cii-form-
 export class CiiSummaryNodeComponent {
   node = input.required<CiiSummaryNode>();
   settings = input.required<EditorSettings>();
+
+  protected get isValid(): boolean {
+    const node = this.node();
+    return node.control.touched && !node.control.invalid;
+  }
+
+  protected get isInvalid(): boolean {
+    const node = this.node();
+    return node.control.touched && node.control.invalid;
+  }
 
   private highlightTermService = inject(CiiFormHighlightTermService);
   protected isNodeHighlighted = computed(() => this.highlightTermService.highlightedTerm() === this.node().term);
