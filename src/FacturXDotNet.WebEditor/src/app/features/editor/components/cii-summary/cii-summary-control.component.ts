@@ -1,19 +1,18 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { CiiSummaryNode } from './cii-summary.component';
 import { ScrollToDirective } from '../../../../core/scroll-to/scroll-to.directive';
 import { EditorSettings } from '../../editor-settings.service';
 import { CiiFormHighlightTermService } from '../../services/cii-form-highlight-term.service';
 import { CiiFormHighlightBusinessRuleService } from '../../services/cii-form-highlight-business-rule.service';
 import { CiiFormHighlightRemarkService } from '../../services/cii-form-highlight-remark.service';
 import { CiiFormHighlightChorusProRemarkService } from '../../services/cii-form-highlight-chorus-pro-remark.service';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { CiiFormControl } from '../cii-form/cii-form.service';
 
 @Component({
   selector: 'app-cii-summary-node',
   imports: [ScrollToDirective],
   template: `
     <div class="text-truncate d-flex gap-1">
-      @if (node().disabled) {
+      @if (node().kind === 'group') {
         <span [class.fw-bold]="isNodeHighlighted()" (mouseenter)="this.highlightTerm(true)" (mouseleave)="this.highlightTerm(false)">
           <span class="fw-semibold"> {{ node().term }} </span> - {{ node().name }}
         </span>
@@ -84,8 +83,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
     </div>
   `,
 })
-export class CiiSummaryNodeComponent {
-  node = input.required<CiiSummaryNode>();
+export class CiiSummaryControlComponent {
+  node = input.required<CiiFormControl>();
   settings = input.required<EditorSettings>();
 
   protected get isValid(): boolean {
