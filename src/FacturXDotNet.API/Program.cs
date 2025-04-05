@@ -43,6 +43,7 @@ try
             );
         }
     );
+    builder.Services.AddEndpointsApiExplorer();
 
     builder.Services.AddTransient<PackagesService>();
 

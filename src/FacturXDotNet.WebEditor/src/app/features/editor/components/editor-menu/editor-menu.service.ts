@@ -1,14 +1,14 @@
-import { DestroyRef, inject, Injectable } from '@angular/core';
-import { ImportFileService } from '../../../../core/import-file/import-file.service';
-import { ExtractApi } from '../../../../core/api/extract.api';
-import { ToastService } from '../../../../core/toasts/toast.service';
-import { filter, from, map, Observable, of, switchMap, throwError } from 'rxjs';
-import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../../../core/api/api.models';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
-import { GenerateApi } from '../../../../core/api/generate.api';
-import { CiiFormService } from '../../tabs/cii/cii-form/cii-form.service';
-import { EditorSavedState, EditorStateService } from '../../editor-state.service';
+import {DestroyRef, inject, Injectable} from '@angular/core';
+import {ImportFileService} from '../../../../core/import-file/import-file.service';
+import {ExtractApi} from '../../../../core/api/extract.api';
+import {ToastService} from '../../../../core/toasts/toast.service';
+import {filter, from, map, Observable, of, switchMap, throwError} from 'rxjs';
+import {CrossIndustryInvoice, ICrossIndustryInvoice} from '../../../../core/api/api.models';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {downloadBlob, downloadFile} from '../../../../core/utils/download-blob';
+import {GenerateApi} from '../../../../core/api/generate.api';
+import {CiiFormService} from '../../tabs/cii/cii-form/cii-form.service';
+import {EditorStateService} from '../../editor-state.service';
 import * as pdf from 'pdfjs-dist';
 
 @Injectable({
@@ -161,7 +161,7 @@ export class EditorMenuService {
       return throwError(() => new Error('Internal Error: no valid CII data available.'));
     }
 
-    return this.generateApi.generateFacturX(value.pdf.content, cii).pipe(
+    return this.generateApi.generateFacturX(value.pdf.content, cii, ...value.attachments).pipe(
       map((file) => {
         downloadFile(file, value.name + '.pdf');
       }),

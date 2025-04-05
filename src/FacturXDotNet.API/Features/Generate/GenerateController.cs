@@ -2,8 +2,10 @@
 using System.Text.Json.Serialization;
 using FacturXDotNet.Generation.CII;
 using FacturXDotNet.Generation.FacturX;
+using FacturXDotNet.Generation.PDF;
 using FacturXDotNet.Models.CII;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace FacturXDotNet.API.Features.Generate;
 
@@ -16,9 +18,10 @@ static class GenerateController
         routes.MapPost(
                 "/facturx",
                 async (
+                    HttpContext httpContext,
                     [FromForm] IFormFile pdf,
                     [FromForm] IFormFile cii,
-                    [FromForm] IReadOnlyCollection<IFormFile>[] attachments,
+                    [FromForm] AttachmentDto[] attachments,
                     CancellationToken cancellationToken = default
                 ) =>
                 {
@@ -40,6 +43,32 @@ static class GenerateController
 
                     await using Stream pdfStream = pdf.OpenReadStream();
                     builder.WithBasePdf(pdfStream);
+
+                    int i = 0;
+                    while (true)
+                    {
+                        IFormFile? attachment = httpContext.Request.Form.Files.GetFile($"attachments[{i}].file");
+                        if (attachment == null)
+                        {
+                            break;
+                        }
+
+                        await using Stream attachmentStream = attachment.OpenReadStream();
+                        byte[] content = new byte[attachmentStream.Length];
+                        await attachmentStream.ReadExactlyAsync(content, cancellationToken);
+                        string? description = httpContext.Request.Form.TryGetValue($"attachments[{i}].description", out StringValues value) ? value.ToString() : null;
+
+                        builder.WithAttachment(
+                            new PdfAttachmentData(attachment.FileName, content)
+                            {
+                                Description = description,
+                                Relationship = AfRelationship.Data,
+                                MimeType = attachment.ContentType
+                            }
+                        );
+
+                        i++;
+                    }
 
                     FacturXDocument facturX = await builder.BuildAsync();
                     MemoryStream facturXStream = new();
@@ -77,4 +106,20 @@ static class GenerateController
 
         return routes;
     }
+}
+
+/// <summary>
+///     An attachment of a FacturX document.
+/// </summary>
+public class AttachmentDto
+{
+    /// <summary>
+    ///     The content of the attachment.
+    /// </summary>
+    public required IFormFile File { get; set; }
+
+    /// <summary>
+    ///     The description of the attachment.
+    /// </summary>
+    public string? Description { get; set; }
 }
