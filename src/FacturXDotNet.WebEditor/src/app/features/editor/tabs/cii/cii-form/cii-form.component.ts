@@ -1,6 +1,5 @@
-import { Component, effect, inject, input, model } from '@angular/core';
+import { Component, inject, input, model } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CiiFormExchangedDocumentContextComponent } from './cii-form-exchanged-document-context.component';
 import { CiiFormSupplyChainTradeTransactionComponent } from './cii-form-supply-chain-trade-transaction.component';
 import { CiiFormExchangedDocumentComponent } from './cii-form-exchanged-document.component';

@@ -1,8 +1,7 @@
-import { Component, inject, input, Resource, signal } from '@angular/core';
-import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
+import { Component, inject, input } from '@angular/core';
+import { EditorSettings } from '../../editor-settings.service';
 import { CiiFormComponent } from './cii-form/cii-form.component';
 import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
-import { EditorSavedState, EditorStateService } from '../../editor-state.service';
 import { CiiMenuComponent } from './cii-menu/cii-menu.component';
 import { CiiFormService } from './cii-form/cii-form.service';
 import { ICrossIndustryInvoice } from '../../../../core/api/api.models';

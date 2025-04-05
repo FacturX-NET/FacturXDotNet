@@ -1,12 +1,12 @@
 import { Component, DestroyRef, inject, input } from '@angular/core';
-import { EditorSavedState, EditorStateAttachment, EditorStateService } from '../../editor-state.service';
+import { EditorStateAttachment, EditorStateService } from '../../editor-state.service';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { ImportFileService } from '../../../../core/import-file/import-file.service';
-import { filter, from, map, switchMap, throwError } from 'rxjs';
+import { filter, from, map, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toastError } from '../../../../core/utils/toast-error';
 import { ToastService } from '../../../../core/toasts/toast.service';
-import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
+import { downloadBlob } from '../../../../core/utils/download-blob';
 import { AttachmentComponent } from './attachment.component';
 
 @Component({

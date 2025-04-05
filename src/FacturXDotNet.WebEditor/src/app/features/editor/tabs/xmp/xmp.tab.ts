@@ -1,13 +1,12 @@
 import { Component, input } from '@angular/core';
-import { ICrossIndustryInvoice, IXmpMetadata } from '../../../../core/api/api.models';
+import { IXmpMetadata } from '../../../../core/api/api.models';
 import { EditorSettings } from '../../editor-settings.service';
 import { XmpFormComponent } from './xmp-form/xmp-form.component';
-import { CiiSummaryComponent } from '../cii/cii-summary/cii-summary.component';
 import { XmpSummaryComponent } from './xmp-summary.component';
 
 @Component({
   selector: 'app-xmp',
-  imports: [XmpFormComponent, CiiSummaryComponent, XmpSummaryComponent],
+  imports: [XmpFormComponent, XmpSummaryComponent],
   template: `
     <div class="h-100 overflow-auto">
       <div class="container py-4">

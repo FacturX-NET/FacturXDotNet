@@ -1,9 +1,7 @@
-import { Component, effect, input, model, signal } from '@angular/core';
+import { Component, effect, model, signal } from '@angular/core';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { EditorStateAttachment } from '../../editor-state.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-attachment',

@@ -1,6 +1,5 @@
 import { Component, computed, inject, input, linkedSignal } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { createLinkedSignal } from '@angular/core/primitives/signals';
 
 @Component({
   selector: 'app-pdf-viewer',

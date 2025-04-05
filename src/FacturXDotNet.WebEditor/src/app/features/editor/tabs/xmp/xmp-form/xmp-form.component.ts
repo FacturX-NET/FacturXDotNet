@@ -1,7 +1,6 @@
 import { Component, inject, input, model } from '@angular/core';
-import { ICrossIndustryInvoice, IXmpMetadata } from '../../../../../core/api/api.models';
+import { IXmpMetadata } from '../../../../../core/api/api.models';
 import { EditorSettings } from '../../../editor-settings.service';
-import { CiiFormService } from '../../cii/cii-form/cii-form.service';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { XmpFormService } from './xmp-form.service';
 import { XmpFormFacturxComponent } from './xmp-form-facturx.component';

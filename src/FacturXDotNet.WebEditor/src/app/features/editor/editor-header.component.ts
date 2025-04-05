@@ -1,10 +1,5 @@
-import { Component, computed, DestroyRef, inject, input, model, output } from '@angular/core';
-import { finalize } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { EditorMenuService } from './components/editor-menu/editor-menu.service';
+import { Component, inject, input, model } from '@angular/core';
 import { EditorSavedState } from './editor-state.service';
-import { ToastService } from '../../core/toasts/toast.service';
-import { toastError } from '../../core/utils/toast-error';
 import { EditorSettings } from './editor-settings.service';
 import { CiiFormService } from './tabs/cii/cii-form/cii-form.service';
 
