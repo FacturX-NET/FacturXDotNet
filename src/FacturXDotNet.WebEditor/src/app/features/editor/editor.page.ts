@@ -60,7 +60,7 @@ import { FormsModule } from '@angular/forms';
 
                     <div>
                       <div class="input-group">
-                        <button class="btn btn-outline-secondary">Export</button>
+                        <button class="btn btn-outline-secondary" (click)="appMenu.exportMenu()?.exportFacturX()">Export</button>
                         <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
                         <div class="dropdown-menu dropdown-menu-end">
                           <li><a class="dropdown-item" href="javascript:void 0;" (click)="appMenu.exportMenu()?.exportCrossIndustryInvoice()">Export Cross-Industry Invoice</a></li>

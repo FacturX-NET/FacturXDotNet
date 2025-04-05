@@ -13,7 +13,7 @@ import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob
       <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">Export</a>
       <ul class="dropdown-menu">
         <li>
-          <a class="dropdown-item" href="javascript:void 0;">Download FacturX document</a>
+          <a class="dropdown-item" href="javascript:void 0;" (click)="exportFacturX()">Download FacturX document</a>
           <a class="dropdown-item" href="javascript:void 0;" (click)="exportCrossIndustryInvoice()">Download Cross-Industry Invoice XML file</a>
           <a class="dropdown-item" href="javascript:void 0;" (click)="exportPdfImage()">Download PDF file</a>
         </li>
@@ -26,6 +26,32 @@ export class EditorExportMenuComponent {
   private generateApi = inject(GenerateApi);
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
+
+  exportFacturX() {
+    if (!this.editorStateService.savedState.hasValue()) {
+      return;
+    }
+
+    const value = this.editorStateService.savedState.value();
+    if (value?.pdf?.content === undefined || value?.cii?.content === undefined) {
+      return;
+    }
+
+    this.generateApi
+      .generateFacturX(value.pdf.content, value.pdf.name, value.cii.content)
+      .pipe(
+        map((file) => {
+          downloadFile(file);
+        }),
+        catchError((err) => {
+          this.toastService.show({ type: 'error', message: 'Could not generate CII file.' });
+          console.error(err);
+          return of(void 0);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
+  }
 
   exportCrossIndustryInvoice() {
     if (!this.editorStateService.savedState.hasValue()) {
@@ -40,8 +66,8 @@ export class EditorExportMenuComponent {
     this.generateApi
       .generateCrossIndustryInvoice(value.cii.content)
       .pipe(
-        map((blob) => {
-          downloadBlob(blob, value.cii.name ?? 'factur-x.xml');
+        map((file) => {
+          downloadFile(file);
         }),
         catchError((err) => {
           this.toastService.show({ type: 'error', message: 'Could not generate CII file.' });

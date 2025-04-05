@@ -15,7 +15,9 @@ try
     WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSerilog();
 
-    builder.Services.AddCors(opt => opt.AddDefaultPolicy(p => p.DisallowCredentials().AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+    builder.Services.AddCors(
+        opt => opt.AddDefaultPolicy(p => p.DisallowCredentials().AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("Content-Disposition"))
+    );
     builder.Services.ConfigureHttpJsonOptions(options => { options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 
     builder.Services.AddHealthChecks();
