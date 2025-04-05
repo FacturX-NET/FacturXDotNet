@@ -15,7 +15,7 @@ import { CiiMenuComponent } from './cii-menu/cii-menu.component';
     @if (state.value(); as state) {
       <div class="h-100 d-flex overflow-hidden position-relative">
         @if (settings().foldSummary) {
-          <div id="editor__cii-summary" class="flex-shrink-0 offcanvas offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
+          <div id="editor__cii-summary--offcanvas" class="flex-shrink-0 offcanvas offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
             <div class="offcanvas-header align-items-center gap-2">
               <h5 class="offcanvas-title" id="ciiSummaryTitle">Cross-Industry Invoice</h5>
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#editor__cii-summary" aria-label="Close"></button>
@@ -65,6 +65,10 @@ import { CiiMenuComponent } from './cii-menu/cii-menu.component';
   styles: `
     #editor__cii-summary {
       width: var(--editor-summary-width);
+    }
+
+    #editor__cii-summary--offcanvas {
+      width: var(--editor-summary-offcanvas-width);
     }
   `,
 })

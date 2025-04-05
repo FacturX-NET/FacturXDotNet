@@ -1,18 +1,23 @@
 import { Component, inject, input } from '@angular/core';
 import { CiiMenuDetailsDropdownComponent } from './cii-menu-details-dropdown.component';
 import { EditorSettings, EditorSettingsService } from '../../../editor-settings.service';
-import { CiiMenuFoldComponent } from './cii-menu-fold.component';
 
 @Component({
   selector: 'app-cii-menu',
-  imports: [CiiMenuDetailsDropdownComponent, CiiMenuFoldComponent],
+  imports: [CiiMenuDetailsDropdownComponent],
   template: `
     <div class="d-flex flex-column align-items-center py-2">
-      <app-cii-menu-fold [settings]="settings()" />
-
       @if (settings().foldSummary) {
-        <button class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary">
-          <span class="navbar-toggler-icon"></span>
+        <button class="btn btn-link" (click)="foldSummary()">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <button class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary--offcanvas">
+          <i class="bi bi-body-text"></i>
+        </button>
+      } @else {
+        <button class="btn btn-link" (click)="unfoldSummary()">
+          <i class="bi bi-chevron-right"></i>
         </button>
       }
 
@@ -27,4 +32,14 @@ import { CiiMenuFoldComponent } from './cii-menu-fold.component';
 })
 export class CiiMenuComponent {
   settings = input.required<EditorSettings>();
+
+  private editorSettingsService = inject(EditorSettingsService);
+
+  foldSummary() {
+    this.editorSettingsService.saveFoldSummary(true);
+  }
+
+  unfoldSummary() {
+    this.editorSettingsService.saveFoldSummary(false);
+  }
 }

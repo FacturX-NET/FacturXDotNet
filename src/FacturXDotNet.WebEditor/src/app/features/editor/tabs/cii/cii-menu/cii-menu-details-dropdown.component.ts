@@ -6,7 +6,7 @@ import { EditorSettings, EditorSettingsService } from '../../../editor-settings.
   template: `
     @if (settings(); as settings) {
       <div class="dropdown">
-        <button class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-eye"></i></button>
+        <button class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-eye"></i></button>
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
             <a class="dropdown-item" href="javascript:void 0;" (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings.showBusinessRules !== true">
