@@ -10,18 +10,26 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     <div class="w-100 h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
       <h1 class="lead fs-1">Get started</h1>
       <div class="d-flex gap-5 align-items-center justify-content-center">
-        <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5" style="width: 400px">
+        <button
+          class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
+          style="width: 400px"
+          (click)="createNewDocumentFromFacturX()"
+        >
           <i class="bi bi-file-excel text-primary fs-1"></i>
           <div class="lead text-primary">Import FacturX document</div>
         </button>
-        <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5" style="width: 400px" (click)="importPdfImage()">
+        <button
+          class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
+          style="width: 400px"
+          (click)="createNewDocumentFromPdf()"
+        >
           <i class="bi bi-file-pdf text-primary fs-1"></i>
           <div class="lead text-primary">Import PDF image</div>
         </button>
         <button
           class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
           style="width: 400px"
-          (click)="importCrossIndustryInvoice()"
+          (click)="createNewDocumentFromCrossIndustryInvoice()"
         >
           <i class="bi bi-file-code text-primary fs-1"></i>
           <div class="lead text-primary">Import Cross-Industry Invoice file</div>
@@ -35,14 +43,18 @@ export class EditorWelcomeComponent {
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
-  importCrossIndustryInvoice() {
+  createNewDocumentFromFacturX() {
+    this.editorMenuService.createNewDocumentFromFacturX().pipe(toastError(this.toastService, 'Could not import FacturX file.'), takeUntilDestroyed(this.destroyRef)).subscribe();
+  }
+
+  createNewDocumentFromCrossIndustryInvoice() {
     this.editorMenuService
-      .importCrossIndustryInvoice()
+      .createNewDocumentFromCrossIndustryInvoice()
       .pipe(toastError(this.toastService, 'Could not import Cross-Industry Invoice file.'), takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 
-  importPdfImage() {
-    this.editorMenuService.importPdfImage().pipe(toastError(this.toastService, 'Could not create PDF image.'), takeUntilDestroyed(this.destroyRef)).subscribe();
+  createNewDocumentFromPdf() {
+    this.editorMenuService.createNewDocumentFromPdf().pipe(toastError(this.toastService, 'Could not import PDF file.'), takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 }

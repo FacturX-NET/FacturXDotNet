@@ -6,7 +6,6 @@
 
 /* tslint:disable */
 /* eslint-disable */
-
 // ReSharper disable InconsistentNaming
 
 export class ApplicableHeaderTradeAgreement implements IApplicableHeaderTradeAgreement {
@@ -170,7 +169,7 @@ export interface IApplicableHeaderTradeSettlement {
 
 export class BuildInformationDto implements IBuildInformationDto {
   version!: string;
-  buildDate!: Date;
+  buildDate!: string;
 
   [key: string]: any;
 
@@ -188,7 +187,7 @@ export class BuildInformationDto implements IBuildInformationDto {
         if (_data.hasOwnProperty(property)) this[property] = _data[property];
       }
       this.version = _data['version'];
-      this.buildDate = _data['buildDate'] ? new Date(_data['buildDate'].toString()) : <any>undefined;
+      this.buildDate = _data['buildDate'];
     }
   }
 
@@ -205,14 +204,14 @@ export class BuildInformationDto implements IBuildInformationDto {
       if (this.hasOwnProperty(property)) data[property] = this[property];
     }
     data['version'] = this.version;
-    data['buildDate'] = this.buildDate ? this.buildDate.toISOString() : <any>undefined;
+    data['buildDate'] = this.buildDate;
     return data;
   }
 }
 
 export interface IBuildInformationDto {
   version: string;
-  buildDate: Date;
+  buildDate: string;
 
   [key: string]: any;
 }
@@ -432,7 +431,7 @@ export interface ICrossIndustryInvoice {
 export class ExchangedDocument implements IExchangedDocument {
   id?: string | undefined;
   typeCode?: InvoiceTypeCode | undefined;
-  issueDateTime?: Date | undefined;
+  issueDateTime?: string | undefined;
   issueDateTimeFormat?: DateOnlyFormat | undefined;
 
   [key: string]: any;
@@ -452,7 +451,7 @@ export class ExchangedDocument implements IExchangedDocument {
       }
       this.id = _data['id'];
       this.typeCode = _data['typeCode'];
-      this.issueDateTime = _data['issueDateTime'] ? new Date(_data['issueDateTime'].toString()) : <any>undefined;
+      this.issueDateTime = _data['issueDateTime'];
       this.issueDateTimeFormat = _data['issueDateTimeFormat'];
     }
   }
@@ -471,7 +470,7 @@ export class ExchangedDocument implements IExchangedDocument {
     }
     data['id'] = this.id;
     data['typeCode'] = this.typeCode;
-    data['issueDateTime'] = this.issueDateTime ? formatDate(this.issueDateTime) : <any>undefined;
+    data['issueDateTime'] = this.issueDateTime;
     data['issueDateTimeFormat'] = this.issueDateTimeFormat;
     return data;
   }
@@ -480,7 +479,7 @@ export class ExchangedDocument implements IExchangedDocument {
 export interface IExchangedDocument {
   id?: string | undefined;
   typeCode?: InvoiceTypeCode | undefined;
-  issueDateTime?: Date | undefined;
+  issueDateTime?: string | undefined;
   issueDateTimeFormat?: DateOnlyFormat | undefined;
 
   [key: string]: any;
@@ -1001,10 +1000,6 @@ export interface ISupplyChainTradeTransaction {
   applicableHeaderTradeSettlement?: IApplicableHeaderTradeSettlement | undefined;
 
   [key: string]: any;
-}
-
-function formatDate(d: Date) {
-  return d.getFullYear() + '-' + (d.getMonth() < 9 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1) + '-' + (d.getDate() < 10 ? '0' + d.getDate() : d.getDate());
 }
 
 export interface FileResponse {

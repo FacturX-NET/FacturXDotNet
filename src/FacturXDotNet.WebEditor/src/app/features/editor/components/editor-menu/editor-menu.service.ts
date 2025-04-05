@@ -8,9 +8,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
 import { GenerateApi } from '../../../../core/api/generate.api';
 import { CiiFormService } from '../../tabs/cii/cii-form/cii-form.service';
-import { EditorStateService } from '../../editor-state.service';
+import { EditorSavedState, EditorStateService } from '../../editor-state.service';
 import * as pdf from 'pdfjs-dist';
-import { ReturnStatement } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root',
@@ -28,11 +27,14 @@ export class EditorMenuService {
     pdf.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.mjs';
   }
 
-  createNewFacturXDocument(): Observable<void> {
+  createNewDocument(): Observable<void> {
     return from(this.editorStateService.clear());
   }
 
-  importFacturX(): Observable<void> {
+  /**
+   * Import the PDF data, the Cross-Industry Invoice data and the attachments into a new document.
+   */
+  createNewDocumentFromFacturX(): Observable<void> {
     return from(this.importFileService.importFile('.pdf')).pipe(
       switchMap((file): Observable<{ file: File; cii?: CrossIndustryInvoice } | undefined> => {
         if (file === undefined) {
@@ -52,15 +54,17 @@ export class EditorMenuService {
         }
 
         const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        const newState = { name: nameWithoutExtension, cii: result.cii, autoGeneratePdf: false, pdf: result.file, attachments: result.attachments };
-        return from(this.editorStateService.update(newState));
+        return from(this.editorStateService.save(nameWithoutExtension, result.cii, result.file, false, result.attachments));
       }),
       takeUntilDestroyed(this.destroyRef),
     );
   }
 
-  importCrossIndustryInvoice(): Observable<void> {
-    return from(this.importFileService.importFile('.xml')).pipe(
+  /**
+   * Import the Cross-Industry Invoice data into a new document.
+   */
+  createNewDocumentFromCrossIndustryInvoice(): Observable<void> {
+    return from(this.importFileService.importFile('.pdf')).pipe(
       switchMap((file): Observable<{ file: File; cii?: CrossIndustryInvoice } | undefined> => {
         if (file === undefined) {
           return of(undefined);
@@ -76,30 +80,65 @@ export class EditorMenuService {
         }
 
         const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        const newState = { name: nameWithoutExtension, cii: result.cii, autoGeneratePdf: true, attachments: [] };
-        return from(this.editorStateService.update(newState));
+        return from(this.editorStateService.save(nameWithoutExtension, result.cii, undefined, true, []));
       }),
       takeUntilDestroyed(this.destroyRef),
     );
   }
 
-  importPdfImage(): Observable<void> {
+  /**
+   * Import the PDF data into a new document.
+   */
+  createNewDocumentFromPdf(): Observable<void> {
+    return from(this.importFileService.importFile('.pdf')).pipe(
+      filter((file) => file !== undefined),
+      switchMap((file) => {
+        return from(this.extractPdfAttachments(file)).pipe(map((attachments) => ({ file: file, attachments })));
+      }),
+      switchMap((result) => {
+        const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
+        return from(this.editorStateService.save(nameWithoutExtension, {}, result.file, false, result.attachments));
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    );
+  }
+
+  /**
+   * Imports a Cross-Industry Invoice file and merge its data with the current state.
+   */
+  importCrossIndustryInvoiceData(): Observable<void> {
+    return from(this.importFileService.importFile('.xml')).pipe(
+      switchMap((file): Observable<{ file: File; cii?: CrossIndustryInvoice } | undefined> => {
+        if (file === undefined) {
+          return of(undefined);
+        }
+
+        return this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })));
+      }),
+      filter((result) => result !== undefined),
+      switchMap((result) => {
+        if (result.cii === undefined) {
+          this.toastService.show({ type: 'error', message: 'Could not extract CII data from file ' + result.file.name + '.' });
+          return of(void 0);
+        }
+
+        return from(this.editorStateService.updateCii(result.cii));
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    );
+  }
+
+  /**
+   * Imports a PDF file and merge its data with the current state.
+   * The attachments of the PDF are ignored.
+   */
+  importPdfImageData(): Observable<void> {
     return from(this.importFileService.importFile('.pdf')).pipe(
       filter((file) => file != undefined),
       switchMap((file) => {
         return from(this.extractPdfAttachments(file)).pipe(map((attachments) => ({ file, attachments })));
       }),
-      switchMap((result) => {
-        const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        const newState = {
-          name: nameWithoutExtension,
-          cii: {},
-          autoGeneratePdf: false,
-          pdf: result.file,
-          attachments: result.attachments,
-        };
-        return from(this.editorStateService.update(newState));
-      }),
+      switchMap((result) => from(this.editorStateService.updatePdf(result.file, false))),
     );
   }
 
@@ -122,9 +161,9 @@ export class EditorMenuService {
       return throwError(() => new Error('Internal Error: no valid CII data available.'));
     }
 
-    return this.generateApi.generateFacturX(value.pdf, cii).pipe(
+    return this.generateApi.generateFacturX(value.pdf.content, cii).pipe(
       map((file) => {
-        downloadFile(file, value.name);
+        downloadFile(file, value.name + '.pdf');
       }),
       takeUntilDestroyed(this.destroyRef),
     );
@@ -163,7 +202,7 @@ export class EditorMenuService {
       return throwError(() => new Error('Internal Error: the PDF is not set.'));
     }
 
-    downloadBlob(value.pdf, value.name ?? 'invoice.pdf');
+    downloadBlob(value.pdf.content, value.name ?? 'invoice.pdf');
     return of(void 0);
   }
 

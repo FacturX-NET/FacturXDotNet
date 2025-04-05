@@ -21,10 +21,10 @@ import { CiiFormService } from './tabs/cii/cii-form/cii-form.service';
       <div>
         <ul class="nav nav-tabs">
           <li class="nav-item">
-            <a class="nav-link" [class.active]="tab() === 'xmp'" role="button"> <i class="bi bi-code"></i> XMP Metadata </a>
+            <a class="nav-link" role="button" [class.active]="tab() === 'xmp'" (click)="tab.set('xmp')"> <i class="bi bi-code"></i> XMP Metadata </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" [class.active]="tab() === 'cii'" role="button">
+            <a class="nav-link" role="button" [class.active]="tab() === 'cii'" (click)="tab.set('cii')">
               @if (ciiIsInvalid) {
                 <i class="bi bi-x-circle-fill text-danger"></i>
               } @else {
@@ -35,7 +35,9 @@ import { CiiFormService } from './tabs/cii/cii-form/cii-form.service';
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" [class.active]="tab() === 'attachments'" role="button"> <i class="bi bi-paperclip"></i> Attachments ({{ state().attachments.length }}) </a>
+            <a class="nav-link" role="button" [class.active]="tab() === 'attachments'" (click)="tab.set('attachments')">
+              <i class="bi bi-paperclip"></i> Attachments ({{ state().attachments.length }})
+            </a>
           </li>
         </ul>
       </div>

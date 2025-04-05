@@ -1,11 +1,50 @@
-import { Injectable } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateOnlyFormat, GuidelineSpecifiedDocumentContextParameterId, InvoiceTypeCode, VatOnlyTaxSchemeIdentifier } from '../../../../../core/api/api.models';
+import { debounceTime, from, Subject, switchMap, tap } from 'rxjs';
+import { EditorSavedState, EditorStateService } from '../../../editor-state.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CiiFormService {
+  state = signal<CiiFormState>('pristine');
+  private saveSubject = new Subject<EditorSavedState>();
+
+  private editorStateService = inject(EditorStateService);
+
+  constructor() {
+    this.saveSubject
+      .pipe(
+        tap(() => this.state.set('dirty')),
+        debounceTime(1000),
+        tap(() => this.state.set('saving')),
+        switchMap((state) => from(this.editorStateService.updateCii(state))),
+        tap(() => this.state.set('pristine')),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
+
+    effect(() => {
+      const value = this.editorStateService.savedState.value()?.cii;
+      if (value === undefined) {
+        return;
+      }
+
+      this.form.reset(value, { emitEvent: false });
+    });
+
+    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      const value = this.editorStateService.savedState.value();
+      if (value === null) {
+        return;
+      }
+
+      this.saveSubject.next({ ...value, cii: this.form.getRawValue() });
+    });
+  }
+
   validate() {
     this.form.markAllAsTouched();
     return this.form.valid;
@@ -22,7 +61,7 @@ export class CiiFormService {
     exchangedDocument: new FormGroup({
       id: new FormControl('', { nonNullable: true }),
       typeCode: new FormControl<InvoiceTypeCode | undefined>(undefined, { nonNullable: true, validators: [Validators.required] }),
-      issueDateTime: new FormControl<Date | undefined>(undefined, { nonNullable: true }),
+      issueDateTime: new FormControl<string | undefined>(undefined, { nonNullable: true }),
       issueDateTimeFormat: new FormControl<DateOnlyFormat | undefined>(undefined, { nonNullable: true, validators: [Validators.required] }),
     }),
     supplyChainTradeTransaction: new FormGroup({
@@ -398,6 +437,8 @@ export class CiiFormService {
     },
   ];
 }
+
+export type CiiFormState = 'pristine' | 'dirty' | 'saving';
 
 export type CiiFormControl = CiiFormGroup | CiiFormField;
 

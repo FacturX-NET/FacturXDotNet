@@ -39,30 +39,10 @@ import { ICrossIndustryInvoice } from '../../../../../core/api/api.models';
 export class CiiFormComponent {
   value = model.required<ICrossIndustryInvoice>();
   settings = input<EditorSettings>();
-  disabled = input<boolean>();
 
   private ciiFormService = inject(CiiFormService);
 
   protected get form(): FormGroup {
     return this.ciiFormService.form;
-  }
-
-  constructor() {
-    effect(() => {
-      if (this.disabled()) {
-        this.form.disable({ emitEvent: false });
-      } else {
-        this.form.enable({ emitEvent: false });
-      }
-    });
-
-    effect(() => {
-      const value = this.value();
-      this.form.patchValue(value, { emitEvent: false });
-    });
-
-    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((_) => {
-      this.value.set(this.form.getRawValue());
-    });
   }
 }

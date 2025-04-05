@@ -10,15 +10,16 @@ import { EditorSavedState, EditorStateService } from './editor-state.service';
 import { PdfViewerComponent } from './pdf-viewer.component';
 import { EditorHeaderComponent, EditorTab } from './editor-header.component';
 import { EditorWelcomeComponent } from './editor-welcome.component';
+import { AttachmentsTab } from './tabs/attachments/attachments.tab';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent, EditorMenuComponent, FormsModule, EditorHeaderComponent, TwoColumnsComponent, CiiTab, EditorWelcomeComponent],
+  imports: [NgOptimizedImage, PdfViewerComponent, EditorMenuComponent, FormsModule, EditorHeaderComponent, TwoColumnsComponent, CiiTab, EditorWelcomeComponent, AttachmentsTab],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
         <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
-        <app-menu #appMenu [showSelfHostingMenu]="environment.isUnsafeCloudEnvironment ?? false" (exporting)="exporting.set($event)"></app-menu>
+        <app-menu #appMenu [showSelfHostingMenu]="environment.isUnsafeCloudEnvironment ?? false"></app-menu>
         <div class="flex-grow-1"></div>
         <div class="px-4">
           <a href="https://github.com/FacturX-NET/FacturXDotNet" class="text-light">
@@ -28,49 +29,54 @@ import { EditorWelcomeComponent } from './editor-welcome.component';
       </header>
 
       <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-1 mx-md-2 mx-lg-3 mt-3 mb-1 overflow-hidden">
-        @if (state.isLoading()) {
+        @if (state.value(); as value) {
+          <header>
+            <app-editor-header [state]="value" [(tab)]="tab" [settings]="settings()"></app-editor-header>
+          </header>
+
+          <div class="flex-grow-1 overflow-hidden">
+            <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
+              <div class="h-100 overflow-hidden" left>
+                @switch (tab()) {
+                  @case ('cii') {
+                    <app-cii [state]="value" [settings]="settings()" />
+                  }
+                  @case ('attachments') {
+                    <app-attachments></app-attachments>
+                  }
+                }
+              </div>
+              <div class="h-100" right>
+                @if (value.pdf; as pdf) {
+                  <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
+                } @else {
+                  <div class="h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
+                    <button
+                      class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
+                      (click)="appMenu.importMenu()?.importPdfImage()"
+                    >
+                      <i class="bi bi-filetype-pdf text-primary fs-1"></i>
+                      <div class="lead text-primary">Import PDF image</div>
+                    </button>
+                    <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5">
+                      <i class="bi bi-filetype-pdf text-primary fs-1"></i>
+                      <div class="lead text-primary">Auto-generate PDF image</div>
+                    </button>
+                  </div>
+                }
+              </div>
+            </app-two-columns>
+          </div>
+        } @else if (state.isLoading()) {
           <div class="w-100 h-100 d-flex justify-content-center align-items-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
           </div>
         } @else {
-          @if (state.value(); as value) {
-            <header>
-              <app-editor-header [state]="value" [tab]="tab()" [settings]="settings()"></app-editor-header>
-            </header>
-
-            <div class="flex-grow-1 overflow-hidden">
-              <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
-                <div class="h-100 overflow-hidden" left>
-                  <app-cii [settings]="settings()" [disabled]="exporting()" />
-                </div>
-                <div class="h-100" right>
-                  @if (value.pdf; as pdf) {
-                    <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
-                  } @else {
-                    <div class="h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
-                      <button
-                        class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
-                        (click)="appMenu.importMenu()?.importPdfImage()"
-                      >
-                        <i class="bi bi-filetype-pdf text-primary fs-1"></i>
-                        <div class="lead text-primary">Import PDF image</div>
-                      </button>
-                      <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5">
-                        <i class="bi bi-filetype-pdf text-primary fs-1"></i>
-                        <div class="lead text-primary">Auto-generate PDF image</div>
-                      </button>
-                    </div>
-                  }
-                </div>
-              </app-two-columns>
-            </div>
-          } @else {
-            <div class="w-100 h-100">
-              <app-editor-welcome></app-editor-welcome>
-            </div>
-          }
+          <div class="w-100 h-100">
+            <app-editor-welcome></app-editor-welcome>
+          </div>
         }
       </main>
 
@@ -111,5 +117,4 @@ export class EditorPage {
   protected disablePointerEvents = signal<boolean>(false);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
   protected tab = signal<EditorTab>('cii');
-  protected exporting = signal<boolean>(false);
 }

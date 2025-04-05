@@ -8,16 +8,16 @@ import { EditorSettings, EditorSettingsService } from '../../../editor-settings.
   template: `
     <div class="d-flex flex-column align-items-center py-2">
       @if (settings().foldSummary) {
-        <button class="btn btn-link" (click)="foldSummary()">
-          <i class="bi bi-chevron-left"></i>
+        <button class="btn btn-link" (click)="unfoldSummary()">
+          <i class="bi bi-chevron-right"></i>
         </button>
 
         <button class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary--offcanvas">
           <i class="bi bi-body-text"></i>
         </button>
       } @else {
-        <button class="btn btn-link" (click)="unfoldSummary()">
-          <i class="bi bi-chevron-right"></i>
+        <button class="btn btn-link" (click)="foldSummary()">
+          <i class="bi bi-chevron-left"></i>
         </button>
       }
 
