@@ -199,10 +199,6 @@ export class EditorPage {
         takeUntilDestroyed(),
       )
       .subscribe();
-
-    effect(() => {
-      console.log(this.state.value());
-    });
   }
 
   /**
