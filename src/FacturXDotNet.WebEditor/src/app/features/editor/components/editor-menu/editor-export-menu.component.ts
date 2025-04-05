@@ -1,7 +1,7 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, output } from '@angular/core';
 import { EditorStateService } from '../../services/editor-state.service';
 import { GenerateApi } from '../../../../core/api/generate.api';
-import { catchError, map, of } from 'rxjs';
+import { catchError, finalize, map, of } from 'rxjs';
 import { ToastService } from '../../../../core/toasts/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
@@ -22,6 +22,8 @@ import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob
   `,
 })
 export class EditorExportMenuComponent {
+  exporting = output<boolean>();
+
   private editorStateService = inject(EditorStateService);
   private generateApi = inject(GenerateApi);
   private toastService = inject(ToastService);
@@ -34,19 +36,25 @@ export class EditorExportMenuComponent {
 
     const value = this.editorStateService.savedState.value();
     if (value?.pdf?.content === undefined || value?.cii?.content === undefined) {
+      this.toastService.show({ type: 'error', message: 'PDF or CII not set.' });
       return;
     }
 
+    this.exporting.emit(true);
+
     this.generateApi
-      .generateFacturX(value.pdf.content, value.pdf.name, value.cii.content)
+      .generateFacturX(value.pdf.content, value.cii.content)
       .pipe(
         map((file) => {
-          downloadFile(file);
+          downloadFile(file, value.pdf?.name);
         }),
         catchError((err) => {
           this.toastService.show({ type: 'error', message: 'Could not generate CII file.' });
           console.error(err);
           return of(void 0);
+        }),
+        finalize(() => {
+          this.exporting.emit(false);
         }),
         takeUntilDestroyed(this.destroyRef),
       )
@@ -60,8 +68,11 @@ export class EditorExportMenuComponent {
 
     const value = this.editorStateService.savedState.value();
     if (value?.cii?.content === undefined) {
+      this.toastService.show({ type: 'error', message: 'CII not set.' });
       return;
     }
+
+    this.exporting.emit(true);
 
     this.generateApi
       .generateCrossIndustryInvoice(value.cii.content)
@@ -73,6 +84,9 @@ export class EditorExportMenuComponent {
           this.toastService.show({ type: 'error', message: 'Could not generate CII file.' });
           console.error(err);
           return of(void 0);
+        }),
+        finalize(() => {
+          this.exporting.emit(false);
         }),
         takeUntilDestroyed(this.destroyRef),
       )
@@ -86,9 +100,14 @@ export class EditorExportMenuComponent {
 
     const value = this.editorStateService.savedState.value();
     if (value?.pdf?.content === undefined) {
+      this.toastService.show({ type: 'error', message: 'PDF not set.' });
       return;
     }
 
+    this.exporting.emit(true);
+
     downloadBlob(value.pdf.content, value.pdf.name ?? 'invoice.pdf');
+
+    this.exporting.emit(false);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, computed, HostListener, inject, Resource, signal, Signal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, Resource, signal, Signal } from '@angular/core';
 import { NgOptimizedImage, NgStyle } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { PdfViewerComponent } from './components/pdf-viewer.component';
@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
         <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
-        <app-menu #appMenu [showSelfHostingMenu]="environment.isUnsafeCloudEnvironment ?? false"></app-menu>
+        <app-menu #appMenu [showSelfHostingMenu]="environment.isUnsafeCloudEnvironment ?? false" (exporting)="exporting.set($event)"></app-menu>
         <div class="flex-grow-1"></div>
         <div class="px-4">
           <a href="https://github.com/FacturX-NET/FacturXDotNet" class="text-light">
@@ -97,7 +97,7 @@ import { FormsModule } from '@angular/forms';
                 tabindex="0"
               >
                 <div class="container ms-0">
-                  <app-cii-form [value]="value.cii.content" (valueChange)="saveCii($event)" [settings]="settings()" />
+                  <app-cii-form [value]="value.cii.content" (valueChange)="saveCii($event)" [settings]="settings()" [disabled]="exporting()" />
                 </div>
               </div>
             </div>
@@ -182,8 +182,7 @@ export class EditorPage {
   private saveSubject = new Subject<EditorSavedState>();
   private resizing = false;
 
-  protected renaming = signal(false);
-  protected newName: string | undefined;
+  protected exporting = signal<boolean>(false);
 
   constructor() {
     this.updateWidth(window.innerWidth);
@@ -200,12 +199,20 @@ export class EditorPage {
         takeUntilDestroyed(),
       )
       .subscribe();
+
+    effect(() => {
+      console.log(this.state.value());
+    });
   }
 
+  /**
+   * Registers the current CII state for saving. The state will be saved after a debounce period.
+   * @param cii The Cross-Industry Invoice to save.
+   */
   saveCii(cii: ICrossIndustryInvoice) {
     const value = this.state.value();
     this.saving.set(true);
-    this.saveSubject.next({ ...(value?.pdf ?? {}), cii: { ...(value?.cii ?? {}), content: cii } });
+    this.saveSubject.next({ ...(value ?? {}), cii: { ...(value?.cii ?? {}), content: cii } });
   }
 
   @HostListener('window:resize', ['$event'])
@@ -274,25 +281,5 @@ export class EditorPage {
     if (this.rightColumnWidth() === 0) {
       this.settingsService.saveRightPaneWidth(width / 2);
     }
-  }
-
-  protected startRenaming() {
-    this.newName = this.state.value()?.cii.name;
-    this.renaming.set(true);
-  }
-
-  protected async stopRenaming(cancel: boolean = false) {
-    const state = this.state.value();
-    if (!state) {
-      return;
-    }
-
-    if (cancel) {
-      this.newName = undefined;
-    } else {
-      await this.editorStateService.update({ ...state, cii: { ...state.cii, name: this.newName } });
-    }
-
-    this.renaming.set(false);
   }
 }

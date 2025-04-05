@@ -1,5 +1,5 @@
-export function downloadFile(file: File) {
-  downloadBlob(file, file.name);
+export function downloadFile(file: File, name?: string) {
+  downloadBlob(file, name ?? file.name);
 }
 
 export function downloadBlob(blob: Blob, name?: string) {

@@ -61,7 +61,7 @@ export class CiiFormComponent {
       this.form.patchValue(value, { emitEvent: false });
     });
 
-    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((v) => {
+    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((_) => {
       this.value.set(this.form.getRawValue());
     });
   }
@@ -69,13 +69,13 @@ export class CiiFormComponent {
   protected form = new FormGroup({
     exchangedDocumentContext: new FormGroup({
       businessProcessSpecifiedDocumentContextParameterId: new FormControl('', { nonNullable: true }),
-      guidelineSpecifiedDocumentContextParameterId: new FormControl<GuidelineSpecifiedDocumentContextParameterId>('Minimum', { nonNullable: true }),
+      guidelineSpecifiedDocumentContextParameterId: new FormControl<GuidelineSpecifiedDocumentContextParameterId | undefined>(undefined, { nonNullable: true }),
     }),
     exchangedDocument: new FormGroup({
       id: new FormControl('', { nonNullable: true }),
       typeCode: new FormControl<InvoiceTypeCode | undefined>(undefined, { nonNullable: true }),
       issueDateTime: new FormControl<Date | undefined>(undefined, { nonNullable: true }),
-      issueDateTimeFormat: new FormControl<DateOnlyFormat>('DateOnly', { nonNullable: true }),
+      issueDateTimeFormat: new FormControl<DateOnlyFormat | undefined>(undefined, { nonNullable: true }),
     }),
     supplyChainTradeTransaction: new FormGroup({
       applicableHeaderTradeAgreement: new FormGroup({
@@ -91,7 +91,7 @@ export class CiiFormComponent {
           }),
           specifiedTaxRegistration: new FormGroup({
             id: new FormControl<string>('', { nonNullable: true }),
-            idSchemeId: new FormControl<VatOnlyTaxSchemeIdentifier>('Vat', { nonNullable: true }),
+            idSchemeId: new FormControl<VatOnlyTaxSchemeIdentifier | undefined>(undefined, { nonNullable: true }),
           }),
         }),
         buyerTradeParty: new FormGroup({
@@ -119,5 +119,3 @@ export class CiiFormComponent {
     }),
   });
 }
-
-export type CrossIndustryInvoiceFormVerbosity = 'minimal' | 'normal' | 'detailed';

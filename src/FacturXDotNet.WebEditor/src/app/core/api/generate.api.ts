@@ -11,7 +11,7 @@ export class GenerateApi {
   private httpClient = inject(HttpClient);
   private baseUrl = inject(API_BASE_URL);
 
-  generateFacturX(pdf: Blob, pdfName: string, cii: ICrossIndustryInvoice): Observable<File> {
+  generateFacturX(pdf: Blob, cii: ICrossIndustryInvoice): Observable<File> {
     const url = `${this.baseUrl}/generate/facturx`;
     const ciiObj = new CrossIndustryInvoice(cii);
     const ciiObjJson = ciiObj.toJSON();
@@ -20,7 +20,7 @@ export class GenerateApi {
 
     const headers = new HttpHeaders().append('Content-Disposition', 'multipart/form-data');
     const formData = new FormData();
-    formData.append('pdf', pdf, pdfName);
+    formData.append('pdf', pdf, 'base.pdf');
     formData.append('cii', ciiBlob, 'factur-x.xml');
 
     return this.httpClient.post(url, formData, { headers, observe: 'response', responseType: 'blob' }).pipe(
