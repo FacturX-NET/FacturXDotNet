@@ -166,7 +166,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           </p>
         </div>
 
-        <div class="mb-3">
+        <div>
           <label class="form-label" for="dublinCoreType">Type</label>
           <input id="dublinCoreType" class="editor__control form-control" formControlName="type" aria-describedby="dublinCoreTypeHelp" />
           <p id="dublinCoreTypeHelp" class="form-text">

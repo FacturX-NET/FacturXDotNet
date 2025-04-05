@@ -39,7 +39,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           <p id="facturxVersionHelp" class="form-text">The actual version of the standard applying to the embedded XML document.</p>
         </div>
 
-        <div class="mb-3">
+        <div>
           <label class="form-label" for="facturxConformanceLevel">Conformance level</label>
           <select id="facturxConformanceLevel" class="editor__control form-select" formControlName="conformanceLevel" aria-describedby="facturxConformanceLevel">
             <option value="" class="text-body-tertiary" selected>Choose a profile</option>

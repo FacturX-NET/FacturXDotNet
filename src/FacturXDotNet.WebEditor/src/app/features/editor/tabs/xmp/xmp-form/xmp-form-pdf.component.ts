@@ -36,7 +36,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           <p id="pdfProducerHelp" class="form-text">The name of the tool that created the PDF document.</p>
         </div>
 
-        <div class="form-check form-switch mb-3">
+        <div class="form-check form-switch">
           <input id="pdfTrapped" class="editor__control form-check-input" formControlName="producer" type="checkbox" role="switch" aria-describedby="pdfTrappedHelp" />
           <label class="form-check-label" for="pdfTrapped">Trapped</label>
           <p id="pdfTrappedHelp" class="form-text">True when the document has been trapped.</p>

@@ -84,7 +84,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           </p>
         </div>
 
-        <div class="mb-3">
+        <div>
           <label class="form-label" for="basicNickname">Nickname</label>
           <input id="basicNickname" class="editor__control form-control" formControlName="nickname" aria-describedby="basicNicknameHelp" />
           <p id="basicNicknameHelp" class="form-text">A short informal name for the resource.</p>
