@@ -1,5 +1,5 @@
 import { Component, Signal } from '@angular/core';
-import { EditorSettings, EditorSettingsService } from './editor-settings.service';
+import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
 
 @Component({
   selector: 'app-editor-details-dropdown',

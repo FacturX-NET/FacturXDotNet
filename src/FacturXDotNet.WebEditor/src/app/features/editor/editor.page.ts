@@ -5,17 +5,30 @@ import { PdfViewerComponent } from './components/pdf-viewer.component';
 import { CiiFormComponent } from './components/cii-form/cii-form.component';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
 import { CiiSummaryComponent } from './components/cii-summary/cii-summary.component';
-import { EditorDetailsDropdownComponent } from './editor-details-dropdown.component';
+import { EditorDetailsDropdownComponent } from './components/editor-header/editor-details-dropdown.component';
 import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
 import { EditorSavedState, EditorStateService } from './services/editor-state.service';
 import { debounceTime, delay, from, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../core/api/api.models';
 import { FormsModule } from '@angular/forms';
+import { EditorHeaderComponent } from './components/editor-header/editor-header.component';
+import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent, NgStyle, EditorDetailsDropdownComponent, EditorMenuComponent, FormsModule],
+  imports: [
+    NgOptimizedImage,
+    PdfViewerComponent,
+    CiiFormComponent,
+    CiiSummaryComponent,
+    NgStyle,
+    EditorDetailsDropdownComponent,
+    EditorMenuComponent,
+    FormsModule,
+    EditorHeaderComponent,
+    TwoColumnsComponent,
+  ],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
@@ -31,52 +44,13 @@ import { FormsModule } from '@angular/forms';
 
       <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-1 mx-md-2 mx-lg-3 mt-3 mb-1 overflow-hidden">
         @if (state.value(); as value) {
-          <header class="border-bottom d-flex">
-            <div class="d-none d-xl-block col-3"><!--spacer--></div>
-            <div class="navbar navbar-expand-xl flex-grow-1">
-              <div class="flex-grow-1 d-flex justify-content-start align-items-center gap-3 px-3">
-                <div class="d-block d-xl-none">
-                  <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                </div>
-
-                <div class="navbar-brand d-flex align-items-center gap-2">
-                  <i class="bi bi-code pe-1 fs-4"></i>
-                  <h5 class="m-0">
-                    {{ value.name === '' || value.name === undefined ? 'factur-x.xml' : value.name }}
-                  </h5>
-                </div>
-
-                <div class="flex-grow-1"><!--spacer--></div>
-
-                @if (saving()) {
-                  <div><i class="bi bi-floppy2-fill text-body-tertiary small glow"></i></div>
-                } @else {
-                  @if (saved()) {
-                    <div class="text-success small"><i class="bi bi-check"></i> Saved</div>
-                  }
-
-                  <div>
-                    <div class="input-group">
-                      <button class="btn btn-outline-secondary" (click)="appMenu.exportMenu()?.exportFacturX()">Export</button>
-                      <button class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false"></button>
-                      <div class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="javascript:void 0;" (click)="appMenu.exportMenu()?.exportCrossIndustryInvoice()">Export Cross-Industry Invoice</a></li>
-                        <li><a class="dropdown-item" href="javascript:void 0;" (click)="appMenu.exportMenu()?.exportPdfImage()">Export PDF</a></li>
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                <app-editor-details-dropdown />
-              </div>
-            </div>
+          <header class="border-bottom">
+            <app-editor-header [state]="value" [saving]="saving()" [saved]="saved()" (exporting)="exporting.set($event)"></app-editor-header>
           </header>
 
-          <div class="h-100 d-flex">
-            <div class="h-100 overflow-hidden" [ngStyle]="{ 'width.px': leftColumnWidth() }">
-              <div class="flex-grow-1 overflow-hidden d-flex column-gap-4">
+          <div class="flex-grow-1 overflow-hidden">
+            <app-two-columns (dragging)="disablePointerEvents.set($event)">
+              <div class="h-100 d-flex column-gap-4 overflow-hidden" left>
                 <div id="editor__cii-summary" class="col-3 offcanvas-xl offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
                   <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="ciiSummaryTitle">Cross-Industry Invoice</h5>
@@ -102,22 +76,10 @@ import { FormsModule } from '@angular/forms';
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              class="d-flex align-items-center justify-content-center"
-              style="width: {{ resizeHandleWidth }}px; cursor: col-resize;"
-              (mousedown)="dragStart($event)"
-              (touchstart)="dragStart($event)"
-            >
-              <i class="bi bi-grip-vertical text-body-secondary"></i>
-            </div>
-            <div class="h-100 d-flex flex-column overflow-hidden" [ngStyle]="{ 'width.px': rightColumnWidth() }">
-              @if (value.pdf; as pdf) {
-                <div class="flex-grow-1">
+              <div class="h-100 d-flex flex-column gap-4 align-items-center justify-content-center" right>
+                @if (value.pdf; as pdf) {
                   <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
-                </div>
-              } @else {
-                <div class="flex-grow-1 d-flex flex-column gap-4 align-items-center justify-content-center">
+                } @else {
                   <button
                     class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
                     (click)="appMenu.importMenu()?.importPdfImage()"
@@ -130,9 +92,9 @@ import { FormsModule } from '@angular/forms';
                     <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
                     <div class="lead">Auto-generate PDF image</div>
                   </button>
-                </div>
-              }
-            </div>
+                }
+              </div>
+            </app-two-columns>
           </div>
         } @else {
           @if (state.isLoading()) {
@@ -217,12 +179,10 @@ export class EditorPage {
   protected saving = signal<boolean>(false);
   protected saved = signal<boolean>(false);
   private saveSubject = new Subject<EditorSavedState>();
-  private resizing = false;
 
   protected exporting = signal<boolean>(false);
 
   constructor() {
-    this.updateWidth(window.innerWidth);
     this.saveSubject
       .pipe(
         debounceTime(1000),
@@ -250,73 +210,5 @@ export class EditorPage {
 
     this.saving.set(true);
     this.saveSubject.next({ ...value, cii });
-  }
-
-  @HostListener('window:resize', ['$event'])
-  resize(event: Event) {
-    const target = event.target as Window;
-    const width = target?.innerWidth ?? 0;
-    this.updateWidth(width);
-  }
-
-  @HostListener('window:mousemove', ['$event'])
-  mousemove(event: Event) {
-    if (this.resizing) {
-      event.preventDefault();
-      this.drag(event);
-    }
-  }
-
-  @HostListener('window:touchmove', ['$event'])
-  touchmove(event: Event) {
-    if (this.resizing) {
-      event.preventDefault();
-      this.drag(event);
-    }
-  }
-
-  @HostListener('window:mouseup', ['$event'])
-  mouseup(event: Event) {
-    if (this.resizing) {
-      event.preventDefault();
-      this.dragEnd();
-    }
-  }
-
-  @HostListener('window:touchend', ['$event'])
-  touchend(event: Event) {
-    if (this.resizing) {
-      event.preventDefault();
-      this.dragEnd();
-    }
-  }
-
-  protected dragStart(event: Event) {
-    event.preventDefault();
-    this.resizing = true;
-    this.disablePointerEvents.set(true);
-  }
-
-  protected drag(event: Event) {
-    event.preventDefault();
-
-    if (this.resizing) {
-      const width = this.totalWidth();
-      const x = event.type === 'mousemove' ? (event as MouseEvent).clientX : (event as TouchEvent).touches[0].clientX;
-      this.settingsService.saveRightPaneWidth(width - x - this.resizeHandleWidth / 2);
-    }
-  }
-
-  protected dragEnd(event?: Event) {
-    event?.preventDefault();
-    this.resizing = false;
-    this.disablePointerEvents.set(false);
-  }
-
-  private updateWidth(width: number) {
-    this.totalWidth.set(width);
-    if (this.rightColumnWidth() === 0) {
-      this.settingsService.saveRightPaneWidth(width / 2);
-    }
   }
 }
