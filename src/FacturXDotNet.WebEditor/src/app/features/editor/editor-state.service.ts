@@ -143,7 +143,7 @@ export interface EditorSavedState {
   attachments: EditorStateAttachment[];
 }
 
-interface EditorStateAttachment {
+export interface EditorStateAttachment {
   name: string;
   description?: string;
   content: Uint8Array;

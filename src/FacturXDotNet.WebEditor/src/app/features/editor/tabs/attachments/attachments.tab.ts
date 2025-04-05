@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, input } from '@angular/core';
-import { EditorSavedState, EditorStateService } from '../../editor-state.service';
+import { EditorSavedState, EditorStateAttachment, EditorStateService } from '../../editor-state.service';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { ImportFileService } from '../../../../core/import-file/import-file.service';
 import { filter, from, map, switchMap, throwError } from 'rxjs';
@@ -7,6 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toastError } from '../../../../core/utils/toast-error';
 import { ToastService } from '../../../../core/toasts/toast.service';
 import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
+import { AttachmentComponent } from './attachment.component';
 
 @Component({
   selector: 'app-attachments',
@@ -23,15 +24,11 @@ import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob
           <div class="list-group-item">
             <div class="d-flex justify-content-between align-items-start">
               <div>
-                <h5 class="m-0">{{ attachment.name }}</h5>
-                <div class="text-body-secondary small">{{ attachment.content.byteLength | filesize }}</div>
-                @if (attachment.description) {
-                  <div class="small text-body-secondary text-truncate">{{ attachment.description }}</div>
-                }
+                <app-attachment [attachment]="attachment" (attachmentChange)="updateAttachment($index, $event)"></app-attachment>
               </div>
               <div class="d-flex gap-2">
-                <button class="btn btn btn-outline-secondary" (click)="downloadAttachment(attachment.name)"><i class="bi bi-download"></i> Download</button>
-                <button class="btn btn btn-outline-danger" (click)="deleteAttachment(attachment.name)"><i class="bi bi-trash"></i> Delete</button>
+                <button class="btn btn btn-outline-secondary" (click)="downloadAttachment($index)"><i class="bi bi-download"></i> Download</button>
+                <button class="btn btn btn-outline-danger" (click)="deleteAttachment($index)"><i class="bi bi-trash"></i> Delete</button>
               </div>
             </div>
           </div>
@@ -41,7 +38,7 @@ import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob
       </div>
     </div>
   `,
-  imports: [NgxFilesizeModule],
+  imports: [NgxFilesizeModule, AttachmentComponent],
 })
 export class AttachmentsTab {
   state = input.required<EditorSavedState>();
@@ -69,9 +66,15 @@ export class AttachmentsTab {
       .subscribe();
   }
 
-  async downloadAttachment(name: string) {
+  async updateAttachment(index: number, attachment: EditorStateAttachment) {
     const attachments = this.state().attachments;
-    const attachment = attachments.find((a) => a.name === name);
+    attachments[index] = attachment;
+    await this.editorStateService.updateAttachments(attachments);
+  }
+
+  async downloadAttachment(index: number) {
+    const attachments = this.state().attachments;
+    const attachment = attachments[index];
     if (attachment === undefined) {
       this.toastService.show({ type: 'error', message: 'Could not find attachment with name ' + name + '.' });
       return;
@@ -82,9 +85,9 @@ export class AttachmentsTab {
     downloadBlob(blob, attachment.name);
   }
 
-  async deleteAttachment(name: string) {
+  async deleteAttachment(index: number) {
     const attachments = this.state().attachments;
-    const newAttachments = attachments.filter((a) => a.name !== name);
+    const newAttachments = attachments.splice(index, 1);
     await this.editorStateService.updateAttachments(newAttachments);
   }
 

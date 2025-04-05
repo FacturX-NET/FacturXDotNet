@@ -15,7 +15,12 @@ static class GenerateController
     {
         routes.MapPost(
                 "/facturx",
-                async ([FromForm] IFormFile pdf, [FromForm] IFormFile cii, CancellationToken cancellationToken = default) =>
+                async (
+                    [FromForm] IFormFile pdf,
+                    [FromForm] IFormFile cii,
+                    [FromForm] IReadOnlyCollection<IFormFile>[] attachments,
+                    CancellationToken cancellationToken = default
+                ) =>
                 {
                     FacturXDocumentBuilder builder = FacturXDocument.Create();
 
