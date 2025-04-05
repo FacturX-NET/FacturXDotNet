@@ -11,10 +11,11 @@ import { EditorSavedState, EditorStateService } from './services/editor-state.se
 import { debounceTime, delay, from, Subject, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../core/api/api.models';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent, NgStyle, EditorDetailsDropdownComponent, EditorMenuComponent],
+  imports: [NgOptimizedImage, PdfViewerComponent, CiiFormComponent, CiiSummaryComponent, NgStyle, EditorDetailsDropdownComponent, EditorMenuComponent, FormsModule],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
@@ -40,7 +41,31 @@ import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../core/api/api.
                       <span class="navbar-toggler-icon"></span>
                     </button>
                   </div>
-                  <h5 class="navbar-brand m-0"><i class="bi bi-code pe-1"></i> {{ value.cii.name ?? 'Cross-Industry Invoice' }}</h5>
+
+                  <div class="navbar-brand d-flex align-items-center gap-2">
+                    <i class="bi bi-code pe-1 fs-4"></i>
+                    @if (renaming()) {
+                      <form class="d-flex align-items-center gap-2" (ngSubmit)="stopRenaming()" (keydown.escape)="stopRenaming(true)">
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="newName" placeholder="factur-x.xml" [ngModelOptions]="{ standalone: true }" />
+
+                        <button class="btn btn-sm btn-outline-success" type="submit">
+                          <i class="bi bi-check"></i>
+                        </button>
+
+                        <button class="btn btn-sm btn-outline-secondary" type="button" (click)="stopRenaming(true)">
+                          <i class="bi bi-x"></i>
+                        </button>
+                      </form>
+                    } @else {
+                      <h5 class="m-0">
+                        {{ value.cii.name === '' || value.cii.name === undefined ? 'factur-x.xml' : value.cii.name }}
+                      </h5>
+
+                      <a href="javascript:void 0;" role="button" (click)="startRenaming()">
+                        <i class="bi bi-pencil-fill text-body-secondary smaller"></i>
+                      </a>
+                    }
+                  </div>
 
                   <div class="flex-grow-1"><!--spacer--></div>
 
@@ -150,6 +175,11 @@ import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../core/api/api.
       </div>
     </div>
   `,
+  styles: `
+    .smaller {
+      font-size: 0.75rem;
+    }
+  `,
 })
 export class EditorPage {
   protected readonly environment = environment;
@@ -169,6 +199,9 @@ export class EditorPage {
   protected saved = signal<boolean>(false);
   private saveSubject = new Subject<EditorSavedState>();
   private resizing = false;
+
+  protected renaming = signal(false);
+  protected newName: string | undefined;
 
   constructor() {
     this.updateWidth(window.innerWidth);
@@ -259,5 +292,25 @@ export class EditorPage {
     if (this.rightColumnWidth() === 0) {
       this.settingsService.saveRightPaneWidth(width / 2);
     }
+  }
+
+  protected startRenaming() {
+    this.newName = this.state.value()?.cii.name;
+    this.renaming.set(true);
+  }
+
+  protected async stopRenaming(cancel: boolean = false) {
+    const state = this.state.value();
+    if (!state) {
+      return;
+    }
+
+    if (cancel) {
+      this.newName = undefined;
+    } else {
+      await this.editorStateService.update({ ...state, cii: { ...state.cii, name: this.newName } });
+    }
+
+    this.renaming.set(false);
   }
 }
