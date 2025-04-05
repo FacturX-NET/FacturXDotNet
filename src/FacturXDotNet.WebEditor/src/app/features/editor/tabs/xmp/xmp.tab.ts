@@ -28,7 +28,7 @@ import { XmpSummaryComponent } from './xmp-summary.component';
   `,
   styles: `
     #editor__xmp-summary {
-      width: var(--editor-summary-width);
+      width: 220px;
     }
 
     #editor__xmp-summary > div {
