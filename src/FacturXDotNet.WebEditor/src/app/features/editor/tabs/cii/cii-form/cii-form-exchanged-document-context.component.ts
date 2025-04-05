@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
-import { EditorSettings } from '../../editor-settings.service';
+import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
 
 @Component({

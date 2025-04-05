@@ -1,6 +1,6 @@
 import { Injectable, resource, Resource } from '@angular/core';
-import { ICrossIndustryInvoice } from '../../../core/api/api.models';
 import { IDBPDatabase, IDBPTransaction, openDB, StoreNames } from 'idb';
+import { ICrossIndustryInvoice } from '../../core/api/api.models';
 
 @Injectable({
   providedIn: 'root',

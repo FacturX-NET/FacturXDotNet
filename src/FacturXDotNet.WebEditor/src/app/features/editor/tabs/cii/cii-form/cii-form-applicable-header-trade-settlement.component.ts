@@ -1,10 +1,10 @@
 import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-form-specified-trade-settlement-header-monetary-summation.component';
-import { EditorSettings } from '../../editor-settings.service';
+import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
-import { ScrollToDirective } from '../../../../core/scroll-to/scroll-to.directive';
+import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-settlement',

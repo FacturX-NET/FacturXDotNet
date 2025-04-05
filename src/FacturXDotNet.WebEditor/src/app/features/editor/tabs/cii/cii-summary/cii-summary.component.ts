@@ -1,8 +1,8 @@
 import { Component, inject, input } from '@angular/core';
-import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 import { CiiSummaryControlComponent } from './cii-summary-control.component';
-import { EditorSettings } from '../../editor-settings.service';
 import { CiiFormService } from '../cii-form/cii-form.service';
+import { ICrossIndustryInvoice } from '../../../../../core/api/api.models';
+import { EditorSettings } from '../../../editor-settings.service';
 
 @Component({
   selector: 'app-cii-summary',

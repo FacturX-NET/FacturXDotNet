@@ -25,6 +25,9 @@ export class PdfViewerComponent {
   protected objectUrl = createLinkedSignal<Blob, { blobUrl: string; trustedBlobUrl: SafeUrl } | undefined>(
     () => this.pdf(),
     (pdf, previousBlobUrl) => {
+      console.log(pdf);
+      console.log(previousBlobUrl);
+
       if (previousBlobUrl?.value?.blobUrl !== undefined) {
         URL.revokeObjectURL(previousBlobUrl.value?.blobUrl as string);
       }

@@ -1,18 +1,18 @@
 import { Component, computed, inject, Resource, signal, Signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
-import { PdfViewerComponent } from './components/pdf-viewer.component';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
 import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
-import { EditorSavedState, EditorStateService } from './services/editor-state.service';
 import { FormsModule } from '@angular/forms';
-import { EditorHeaderComponent } from './components/editor-header/editor-header.component';
 import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
-import { CiiComponent } from './components/cii/cii.component';
+import { CiiTab } from './tabs/cii/cii.tab';
+import { EditorSavedState, EditorStateService } from './editor-state.service';
+import { PdfViewerComponent } from './pdf-viewer.component';
+import { EditorHeaderComponent } from './editor-header.component';
 
 @Component({
   selector: 'app-editor',
-  imports: [NgOptimizedImage, PdfViewerComponent, EditorMenuComponent, FormsModule, EditorHeaderComponent, TwoColumnsComponent, CiiComponent],
+  imports: [NgOptimizedImage, PdfViewerComponent, EditorMenuComponent, FormsModule, EditorHeaderComponent, TwoColumnsComponent, CiiTab],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
@@ -37,22 +37,24 @@ import { CiiComponent } from './components/cii/cii.component';
               <div class="h-100 overflow-hidden" left>
                 <app-cii [settings]="settings()" [disabled]="exporting()" />
               </div>
-              <div class="h-100 d-flex flex-column gap-4 align-items-center justify-content-center" right>
+              <div class="h-100" right>
                 @if (value.pdf; as pdf) {
                   <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
                 } @else {
-                  <button
-                    class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
-                    (click)="appMenu.importMenu()?.importPdfImage()"
-                  >
-                    <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
-                    <div class="lead">Import PDF image</div>
-                  </button>
-                  OR
-                  <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5">
-                    <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
-                    <div class="lead">Auto-generate PDF image</div>
-                  </button>
+                  <div class="h-100 d-flex flex-column gap-4 align-items-center justify-content-center">
+                    <button
+                      class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
+                      (click)="appMenu.importMenu()?.importPdfImage()"
+                    >
+                      <i class="bi bi-filetype-pdf text-primary fs-1"></i>
+                      <div class="lead text-primary">Import PDF image</div>
+                    </button>
+                    OR
+                    <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5">
+                      <i class="bi bi-filetype-pdf text-primary fs-1"></i>
+                      <div class="lead text-primary">Auto-generate PDF image</div>
+                    </button>
+                  </div>
                 }
               </div>
             </app-two-columns>
@@ -66,29 +68,27 @@ import { CiiComponent } from './components/cii/cii.component';
             </div>
           } @else {
             <div class="w-100 h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
-              <h1>Get started</h1>
+              <h1 class="lead fs-1">Get started</h1>
               <div class="d-flex gap-5 align-items-center justify-content-center">
                 <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5" style="width: 400px">
-                  <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
-                  <div class="lead">Import FacturX document</div>
+                  <i class="bi bi-file-excel text-primary fs-1"></i>
+                  <div class="lead text-primary">Import FacturX document</div>
                 </button>
-                OR
                 <button
                   class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
                   style="width: 400px"
                   (click)="appMenu.importMenu()?.importPdfImage()"
                 >
-                  <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
-                  <div class="lead">Import PDF image</div>
+                  <i class="bi bi-file-pdf text-primary fs-1"></i>
+                  <div class="lead text-primary">Import PDF image</div>
                 </button>
-                OR
                 <button
                   class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
                   style="width: 400px"
                   (click)="appMenu.importMenu()?.importCrossIndustryInvoice()"
                 >
-                  <i class="bi bi-code text-body-tertiary fs-1"></i>
-                  <div class="lead">Import Cross-Industry Invoice file</div>
+                  <i class="bi bi-file-code text-primary fs-1"></i>
+                  <div class="lead text-primary">Import Cross-Industry Invoice file</div>
                 </button>
               </div>
             </div>
@@ -115,11 +115,11 @@ import { CiiComponent } from './components/cii/cii.component';
   `,
   styles: `
     .btn-shadow {
-      box-shadow: var(--bs-box-shadow);
+      box-shadow: 0 0.5rem 1rem rgba(var(--bs-primary-rgb), 0.15);
     }
 
     .btn-shadow:hover {
-      box-shadow: var(--bs-box-shadow-lg);
+      box-shadow: 0 1rem 3rem rgba(var(--bs-primary-rgb), 0.25);
     }
   `,
 })

@@ -1,6 +1,6 @@
 import { Component, inject, input, TemplateRef } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { CiiFormHighlightBusinessRuleService } from '../../../services/cii-form-highlight-business-rule.service';
+import { CiiFormHighlightBusinessRuleService } from '../../cii-form-highlight-business-rule.service';
 
 @Component({
   selector: 'app-cii-form-business-rules',

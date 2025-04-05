@@ -1,12 +1,12 @@
 import { Component, computed, inject, input, TemplateRef } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { EditorSettings } from '../../../editor-settings.service';
 import { NgTemplateOutlet } from '@angular/common';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
-import { CiiFormHighlightTermService } from '../../../services/cii-form-highlight-term.service';
 import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
-import { CiiFormHighlightRemarkService } from '../../../services/cii-form-highlight-remark.service';
-import { CiiFormHighlightChorusProRemarkService } from '../../../services/cii-form-highlight-chorus-pro-remark.service';
+import { EditorSettings } from '../../../../editor-settings.service';
+import { CiiFormHighlightTermService } from '../../cii-form-highlight-term.service';
+import { CiiFormHighlightRemarkService } from '../../cii-form-highlight-remark.service';
+import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight-chorus-pro-remark.service';
 
 @Component({
   selector: 'app-cii-form-control',

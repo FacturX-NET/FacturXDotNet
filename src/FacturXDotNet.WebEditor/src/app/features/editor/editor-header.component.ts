@@ -1,15 +1,13 @@
 import { Component, DestroyRef, inject, input, output } from '@angular/core';
-import { CiiDropdownDetailsComponent } from '../cii/cii-dropdown-details.component';
-import { EditorSavedState } from '../../services/editor-state.service';
-import { EditorMenuService } from '../editor-menu/editor-menu.service';
-import { ToastService } from '../../../../core/toasts/toast.service';
-import { toastError } from '../../../../core/utils/toast-error';
 import { finalize } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EditorMenuService } from './components/editor-menu/editor-menu.service';
+import { EditorSavedState } from './editor-state.service';
+import { ToastService } from '../../core/toasts/toast.service';
+import { toastError } from '../../core/utils/toast-error';
 
 @Component({
   selector: 'app-editor-header',
-  imports: [CiiDropdownDetailsComponent],
   template: `
     <div class="d-flex">
       <div class="d-none d-xl-block col-3"><!--spacer--></div>

@@ -1,12 +1,12 @@
 import { Component, inject, input, Resource, signal } from '@angular/core';
-import { CiiFormComponent } from '../cii-form/cii-form.component';
-import { CiiSummaryComponent } from '../cii-summary/cii-summary.component';
 import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 import { EditorSettings } from '../../editor-settings.service';
 import { debounceTime, delay, from, Subject, switchMap, tap } from 'rxjs';
-import { EditorSavedState, EditorStateService } from '../../services/editor-state.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CiiDropdownDetailsComponent } from './cii-dropdown-details.component';
+import { CiiFormComponent } from './cii-form/cii-form.component';
+import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
+import { EditorSavedState, EditorStateService } from '../../editor-state.service';
 
 @Component({
   selector: 'app-cii',
@@ -55,7 +55,7 @@ import { CiiDropdownDetailsComponent } from './cii-dropdown-details.component';
   `,
   styles: ``,
 })
-export class CiiComponent {
+export class CiiTab {
   settings = input.required<EditorSettings>();
   disabled = input<boolean>();
 

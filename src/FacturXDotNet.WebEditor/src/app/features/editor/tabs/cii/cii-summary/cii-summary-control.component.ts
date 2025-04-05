@@ -1,11 +1,11 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { ScrollToDirective } from '../../../../core/scroll-to/scroll-to.directive';
-import { EditorSettings } from '../../editor-settings.service';
-import { CiiFormHighlightTermService } from '../../services/cii-form-highlight-term.service';
-import { CiiFormHighlightBusinessRuleService } from '../../services/cii-form-highlight-business-rule.service';
-import { CiiFormHighlightRemarkService } from '../../services/cii-form-highlight-remark.service';
-import { CiiFormHighlightChorusProRemarkService } from '../../services/cii-form-highlight-chorus-pro-remark.service';
 import { CiiFormControl } from '../cii-form/cii-form.service';
+import { EditorSettings } from '../../../editor-settings.service';
+import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
+import { CiiFormHighlightChorusProRemarkService } from '../cii-form-highlight-chorus-pro-remark.service';
+import { CiiFormHighlightTermService } from '../cii-form-highlight-term.service';
+import { CiiFormHighlightRemarkService } from '../cii-form-highlight-remark.service';
+import { CiiFormHighlightBusinessRuleService } from '../cii-form-highlight-business-rule.service';
 
 @Component({
   selector: 'app-cii-summary-node',
