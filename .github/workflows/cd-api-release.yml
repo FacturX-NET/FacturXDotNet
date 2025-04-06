@@ -32,7 +32,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT        
 
       - name: Build the Docker image
-        run: cd src/FacturXDotNet.API; docker build . --file Dockerfile --tag my-image-name:${{ steps.compute_version.outputs.version }} --label "runnumber=${GITHUB_RUN_ID}"
+        run: cd src; docker build . --file Dockerfile --tag my-image-name:${{ steps.compute_version.outputs.version }} --label "runnumber=${GITHUB_RUN_ID}"
 
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -40,6 +40,7 @@ jobs:
       - name: Push image
         id: push_image
         run: |
+          cd src;
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/FactorXDotNet.API
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           VERSION=${{ steps.compute_version.outputs.version }}
@@ -54,6 +55,7 @@ jobs:
       - name: Push latest (if not pre-release)
         if: ${{ steps.push_image.outputs.latest_should_change == 'true' }}
         run: |
+          cd src;
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/FactorXDotNet.API
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo IMAGE_ID=$IMAGE_ID
