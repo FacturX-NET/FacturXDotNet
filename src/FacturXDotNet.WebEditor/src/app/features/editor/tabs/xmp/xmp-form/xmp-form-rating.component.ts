@@ -146,7 +146,7 @@ export class XmpFormRatingComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {}
 
   protected set(value: number) {
-    if (this.disabled()) {
+    if (this.disabled() || this.readonly()) {
       return;
     }
 
@@ -162,7 +162,7 @@ export class XmpFormRatingComponent implements ControlValueAccessor {
   }
 
   protected preview(value: number) {
-    if (this.disabled()) {
+    if (this.disabled() || this.readonly()) {
       return;
     }
 
