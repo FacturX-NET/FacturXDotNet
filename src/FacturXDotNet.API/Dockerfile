@@ -8,7 +8,6 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY . .
-RUN rm global.json # Remove global.json to use version defined by the base image
 RUN dotnet restore "FacturXDotNet.API/FacturXDotNet.API.csproj"
 WORKDIR /src/FacturXDotNet.API
 RUN dotnet build "FacturXDotNet.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
