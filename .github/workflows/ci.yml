@@ -167,14 +167,16 @@ jobs:
       - name: Setup environment
         run: |
           cd src/FacturXDotNet.WebEditor
-          echo "import { Environment } from './environment.types';"                 > src/FacturXDotNet.WebEditor/src/environments/environment.ts
-          echo ""                                                                   >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
-          echo "export const environment: Environment = {"                          >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
-          echo "  version: '${{ steps.compute_version.outputs.version}}',"          >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
-          echo "  buildDate: new Date('${{ steps.compute_date.outputs.date }}'),"   >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
-          echo "  isUnsafeCloudEnvironment: true,"                                  >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
-          echo "  apiUrl: 'dev/build',"                                             >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
-          echo "};"                                                                 >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
+          echo "import { Environment } from './environment.types';"                 > src/environments/environment.ts
+          echo ""                                                                   >> src/environments/environment.ts
+          echo "export const environment: Environment = {"                          >> src/environments/environment.ts
+          echo "  version: '${{ steps.compute_version.outputs.version}}',"          >> src/environments/environment.ts
+          echo "  buildDate: new Date('${{ steps.compute_date.outputs.date }}'),"   >> src/environments/environment.ts
+          echo "  isUnsafeCloudEnvironment: true,"                                  >> src/environments/environment.ts
+          echo "  apiUrl: 'dev/build',"                                             >> src/environments/environment.ts
+          echo "};"                                                                 >> src/environments/environment.ts
+          echo "Environment is"
+          cat src/environments/environment.ts
 
       - name: Build
         run: cd src/FacturXDotNet.WebEditor; npm run build --if-present
