@@ -8,6 +8,7 @@ on:
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  MINVERBUILDMETADATA: build.${{ github.run_id }}.${{ github.run_attempt}}
 
 jobs:
   dotnet-releaser:
