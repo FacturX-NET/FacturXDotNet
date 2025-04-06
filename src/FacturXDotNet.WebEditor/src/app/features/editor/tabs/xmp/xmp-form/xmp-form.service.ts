@@ -41,7 +41,6 @@ export class XmpFormService {
       }
 
       const newXmp = this.toXmpMetadata(this.form.getRawValue());
-      console.log(newXmp);
       this.saveSubject.next({ ...value, xmp: newXmp });
     });
 

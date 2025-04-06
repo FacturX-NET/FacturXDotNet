@@ -3,7 +3,7 @@ import { ImportFileService } from '../../../../core/import-file/import-file.serv
 import { ExtractApi } from '../../../../core/api/extract.api';
 import { ToastService } from '../../../../core/toasts/toast.service';
 import { filter, from, map, Observable, of, switchMap, throwError } from 'rxjs';
-import { CrossIndustryInvoice, ICrossIndustryInvoice } from '../../../../core/api/api.models';
+import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
 import { GenerateApi } from '../../../../core/api/generate.api';

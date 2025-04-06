@@ -10,6 +10,7 @@ export class DeletedAttachmentsService {
   public get deletedAttachments() {
     return this.deletedAttachmentsInternal.asReadonly();
   }
+
   private deletedAttachmentsInternal = signal<DeletedAttachment[]>([]);
 
   recordDeletedAttachment(attachment: EditorStateAttachment) {
