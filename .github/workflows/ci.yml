@@ -48,6 +48,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -117,3 +119,57 @@ jobs:
         with:
           recreate: true
           path: code-coverage-results.md
+
+  build-and-test-frontend:
+    name: Build & Test Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install MinVer
+        run: dotnet tool install -g minver-cli
+
+      - name: Compute version
+        id: compute_version
+        run: echo "version=$(minver -t v -v d)" >> $GITHUB_OUTPUT
+
+      - name: Compute date
+        id: compute_date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dump licenses file
+        run: node scripts/dump-licenses.js
+
+      - name: Setup environment
+        run: |
+          echo "import { Environment } from './environment.types';"                 > src/FacturXDotNet.WebEditor/src/environments/environment.ts
+          echo ""                                                                   >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
+          echo "export const environment: Environment = {"                          >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
+          echo "  version: '${{ steps.compute_version.outputs.version}}',"          >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
+          echo "  buildDate: new Date('${{ steps.compute_date.outputs.date }}'),"   >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
+          echo "  isUnsafeCloudEnvironment: true,"                                  >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
+          echo "  apiUrl: 'dev/build',"                                             >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
+          echo "};"                                                                 >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Test
+        run: npm test
