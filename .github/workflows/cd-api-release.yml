@@ -33,7 +33,13 @@ jobs:
         run: |
           VERSION=$(minver -t v -v d)
           echo "Version is $VERSION"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT        
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Install dotnet-project-licenses
+        run: dotnet tool install -g dotnet-project-licenses
+
+      - name: Generate licenses file
+        run: cd src/FacturXDotNet.API; dotnet-project-licenses -i dotnet-project-licenses-input.json --json --output-directory Resources
 
       - name: Build the Docker image
         run: cd src; docker build . --file FacturXDotNet.API/Dockerfile --tag facturxdotnet-api --label "runnumber=${GITHUB_RUN_ID}" --build-arg VERSION=${{ steps.compute_version.outputs.version }}
@@ -45,7 +51,7 @@ jobs:
         id: push_image
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/facturxdotnet-api
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]' | tr '+' '.')
           VERSION=${{ steps.compute_version.outputs.version }}
           LATEST_SHOULD_CHANGE=${{ !contains(steps.compute_version.outputs.version, '-') }}
           echo IMAGE_ID=$IMAGE_ID
