@@ -3,7 +3,9 @@ using System.Text.Json.Serialization;
 using FacturXDotNet.Generation.CII;
 using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Generation.PDF;
+using FacturXDotNet.Generation.XMP;
 using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.XMP;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 
@@ -19,13 +21,31 @@ static class GenerateController
                 "/facturx",
                 async (
                     HttpContext httpContext,
+                    [FromForm] IFormFile? xmp,
                     [FromForm] IFormFile pdf,
                     [FromForm] IFormFile cii,
-                    [FromForm] AttachmentDto[] attachments,
+                    [FromForm] AttachmentDto[]? attachments = null,
                     CancellationToken cancellationToken = default
                 ) =>
                 {
                     FacturXDocumentBuilder builder = FacturXDocument.Create();
+
+
+                    if (xmp != null)
+                    {
+                        await using Stream xmpJsonStream = xmp.OpenReadStream();
+                        XmpMetadata? xmpMetadata = await JsonSerializer.DeserializeAsync<XmpMetadata>(xmpJsonStream, JsonSerializerOptions, cancellationToken);
+                        if (xmpMetadata == null)
+                        {
+                            return Results.BadRequest("Invalid XMP metadata.");
+                        }
+
+                        await using MemoryStream xmpStream = new();
+                        XmpMetadataWriter xmpWriter = new();
+                        await xmpWriter.WriteAsync(xmpStream, xmpMetadata);
+                        xmpStream.Seek(0, SeekOrigin.Begin);
+                        builder.PostProcess(opt => { opt.XmpMetadata(metadata => metadata.FillValues(xmpMetadata)); });
+                    }
 
                     await using Stream ciiJsonStream = cii.OpenReadStream();
                     CrossIndustryInvoice? crossIndustryInvoice =
@@ -36,8 +56,8 @@ static class GenerateController
                     }
 
                     await using MemoryStream ciiStream = new();
-                    CrossIndustryInvoiceWriter writer = new();
-                    await writer.WriteAsync(ciiStream, crossIndustryInvoice);
+                    CrossIndustryInvoiceWriter ciiWriter = new();
+                    await ciiWriter.WriteAsync(ciiStream, crossIndustryInvoice);
                     ciiStream.Seek(0, SeekOrigin.Begin);
                     builder.WithCrossIndustryInvoice(ciiStream);
 

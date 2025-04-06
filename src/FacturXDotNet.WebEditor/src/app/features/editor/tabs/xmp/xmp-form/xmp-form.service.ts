@@ -40,7 +40,9 @@ export class XmpFormService {
         return;
       }
 
-      this.saveSubject.next({ ...value, xmp: this.toXmpMetadata(this.form.getRawValue()) });
+      const newXmp = this.toXmpMetadata(this.form.getRawValue());
+      console.log(newXmp);
+      this.saveSubject.next({ ...value, xmp: newXmp });
     });
 
     const ciiType = ciiFormService.form.controls.exchangedDocumentContext.controls.guidelineSpecifiedDocumentContextParameterId.value;
@@ -80,43 +82,43 @@ export class XmpFormService {
 
   form = new FormGroup({
     pdfAIdentification: new FormGroup({
-      amendment: new FormControl('', { nonNullable: true }),
+      amendment: new FormControl<string | undefined>(undefined, { nonNullable: true }),
       conformance: new FormControl<XmpPdfAConformanceLevel>('B', { nonNullable: true }),
       part: new FormControl<number>(3, { nonNullable: true }),
     }),
     basic: new FormGroup({
-      identifier: new FormControl('', { nonNullable: true }),
-      createDate: new FormControl('', { nonNullable: true }),
+      identifier: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      createDate: new FormControl<string | undefined>(undefined, { nonNullable: true }),
       creatorTool: new FormControl('FacturX.NET', { nonNullable: true }),
-      label: new FormControl('', { nonNullable: true }),
-      metadataDate: new FormControl('', { nonNullable: true }),
-      modifyDate: new FormControl('', { nonNullable: true }),
+      label: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      metadataDate: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      modifyDate: new FormControl<string | undefined>(undefined, { nonNullable: true }),
       rating: new FormControl<number>(0, { nonNullable: true }),
-      baseUrl: new FormControl('', { nonNullable: true }),
-      nickname: new FormControl('', { nonNullable: true }),
+      baseUrl: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      nickname: new FormControl<string | undefined>(undefined, { nonNullable: true }),
     }),
     pdf: new FormGroup({
-      keywords: new FormControl('', { nonNullable: true }),
-      pdfVersion: new FormControl('', { nonNullable: true }),
+      keywords: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      pdfVersion: new FormControl<string | undefined>(undefined, { nonNullable: true }),
       producer: new FormControl('FacturX.NET', { nonNullable: true }),
       trapped: new FormControl<boolean>(false, { nonNullable: true }),
     }),
     dublinCore: new FormGroup({
-      contributor: new FormControl('', { nonNullable: true }),
-      coverage: new FormControl('', { nonNullable: true }),
-      creator: new FormControl('', { nonNullable: true }),
-      date: new FormControl('', { nonNullable: true }),
-      description: new FormControl('', { nonNullable: true }),
-      format: new FormControl('', { nonNullable: true }),
-      identifier: new FormControl('', { nonNullable: true }),
-      language: new FormControl('', { nonNullable: true }),
-      publisher: new FormControl('', { nonNullable: true }),
-      relation: new FormControl('', { nonNullable: true }),
-      rights: new FormControl('', { nonNullable: true }),
-      source: new FormControl('', { nonNullable: true }),
-      subject: new FormControl('', { nonNullable: true }),
-      title: new FormControl('', { nonNullable: true }),
-      type: new FormControl('', { nonNullable: true }),
+      contributor: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      coverage: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      creator: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      date: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      description: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      format: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      identifier: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      language: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      publisher: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      relation: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      rights: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      source: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      subject: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      title: new FormControl<string | undefined>(undefined, { nonNullable: true }),
+      type: new FormControl<string | undefined>(undefined, { nonNullable: true }),
     }),
     facturx: new FormGroup({
       documentFileName: new FormControl('factur-x.xml', { nonNullable: true }),
@@ -134,7 +136,7 @@ export class XmpFormService {
         part: value.pdfAIdentification?.part,
       },
       basic: {
-        identifier: value.basic?.identifier === undefined ? undefined : [value.basic?.identifier],
+        identifier: stringIsNullOrEmpty(value.basic?.identifier) ? undefined : [value.basic?.identifier],
         createDate: value.basic?.createDate,
         creatorTool: value.basic?.creatorTool,
         label: value.basic?.label,
@@ -151,21 +153,21 @@ export class XmpFormService {
         trapped: value.pdf?.trapped,
       },
       dublinCore: {
-        contributor: value.dublinCore?.contributor === undefined ? undefined : [value.dublinCore.contributor],
+        contributor: stringIsNullOrEmpty(value.dublinCore?.contributor) ? undefined : [value.dublinCore.contributor],
         coverage: value.dublinCore?.coverage,
-        creator: value.dublinCore?.creator === undefined ? undefined : [value.dublinCore.creator],
-        date: value.dublinCore?.date === undefined ? undefined : [value.dublinCore.date],
-        description: value.dublinCore?.description === undefined ? undefined : [value.dublinCore.description],
+        creator: stringIsNullOrEmpty(value.dublinCore?.creator) ? undefined : [value.dublinCore.creator],
+        date: stringIsNullOrEmpty(value.dublinCore?.date) ? undefined : [value.dublinCore.date],
+        description: stringIsNullOrEmpty(value.dublinCore?.description) ? undefined : [value.dublinCore.description],
         format: value.dublinCore?.format,
         identifier: value.dublinCore?.identifier,
-        language: value.dublinCore?.language === undefined ? undefined : [value.dublinCore.language],
-        publisher: value.dublinCore?.publisher === undefined ? undefined : [value.dublinCore.publisher],
-        relation: value.dublinCore?.relation === undefined ? undefined : [value.dublinCore.relation],
-        rights: value.dublinCore?.rights === undefined ? undefined : [value.dublinCore.rights],
+        language: stringIsNullOrEmpty(value.dublinCore?.language) ? undefined : [value.dublinCore.language],
+        publisher: stringIsNullOrEmpty(value.dublinCore?.publisher) ? undefined : [value.dublinCore.publisher],
+        relation: stringIsNullOrEmpty(value.dublinCore?.relation) ? undefined : [value.dublinCore.relation],
+        rights: stringIsNullOrEmpty(value.dublinCore?.rights) ? undefined : [value.dublinCore.rights],
         source: value.dublinCore?.source,
-        subject: value.dublinCore?.subject === undefined ? undefined : [value.dublinCore.subject],
-        title: value.dublinCore?.title === undefined ? undefined : [value.dublinCore.title],
-        type: value.dublinCore?.type === undefined ? undefined : [value.dublinCore.type],
+        subject: stringIsNullOrEmpty(value.dublinCore?.subject) ? undefined : [value.dublinCore.subject],
+        title: stringIsNullOrEmpty(value.dublinCore?.title) ? undefined : [value.dublinCore.title],
+        type: stringIsNullOrEmpty(value.dublinCore?.type) ? undefined : [value.dublinCore.type],
       },
       facturX: {
         documentFileName: value.facturx?.documentFileName,
@@ -230,4 +232,8 @@ export class XmpFormService {
     const newDate = date ? new Date(date) : new Date();
     return new Date(newDate.getTime() - newDate.getTimezoneOffset() * 60000).toISOString().slice(0, -1);
   }
+}
+
+function stringIsNullOrEmpty(value: string | null | undefined): value is undefined | null {
+  return value === undefined || value === null || value === '';
 }

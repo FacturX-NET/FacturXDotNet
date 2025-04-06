@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../../app.config';
-import { CrossIndustryInvoice, ICrossIndustryInvoice } from './api.models';
+import { CrossIndustryInvoice, ICrossIndustryInvoice, IXmpMetadata } from './api.models';
 import { EditorStateAttachment } from '../../features/editor/editor-state.service';
 
 @Injectable({
@@ -12,16 +12,26 @@ export class GenerateApi {
   private httpClient = inject(HttpClient);
   private baseUrl = inject(API_BASE_URL);
 
-  generateFacturX(pdf: Blob, cii: ICrossIndustryInvoice, ...attachments: EditorStateAttachment[]): Observable<File> {
+  generateFacturX(xmp: IXmpMetadata | undefined, pdf: Blob, cii: ICrossIndustryInvoice, ...attachments: EditorStateAttachment[]): Observable<File> {
     const url = `${this.baseUrl}/generate/facturx`;
+
+    const headers = new HttpHeaders().append('Content-Disposition', 'multipart/form-data');
+    const formData = new FormData();
+
+    if (xmp !== undefined) {
+      const xmpObj = new CrossIndustryInvoice(xmp);
+      const xmpObjJson = xmpObj.toJSON();
+      const xmpObjString = JSON.stringify(xmpObjJson);
+      const xmpBlob = new Blob([xmpObjString], { type: 'application/json' });
+      formData.append('xmp', xmpBlob);
+    }
+
+    formData.append('pdf', pdf, 'base.pdf');
+
     const ciiObj = new CrossIndustryInvoice(cii);
     const ciiObjJson = ciiObj.toJSON();
     const ciiObjString = JSON.stringify(ciiObjJson);
     const ciiBlob = new Blob([ciiObjString], { type: 'application/json' });
-
-    const headers = new HttpHeaders().append('Content-Disposition', 'multipart/form-data');
-    const formData = new FormData();
-    formData.append('pdf', pdf, 'base.pdf');
     formData.append('cii', ciiBlob, 'factur-x.xml');
 
     let i = 0;

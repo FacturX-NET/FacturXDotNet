@@ -146,7 +146,7 @@ export class EditorMenuService {
       return throwError(() => new Error('Internal Error: no valid CII data available.'));
     }
 
-    return this.generateApi.generateFacturX(value.pdf.content, cii, ...value.attachments).pipe(
+    return this.generateApi.generateFacturX(value.xmp, value.pdf.content, cii, ...value.attachments).pipe(
       map((file) => {
         downloadFile(file, `${value.name}.pdf`);
       }),
