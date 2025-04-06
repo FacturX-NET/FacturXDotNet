@@ -77,11 +77,11 @@ jobs:
           echo "${{ secrets.PROD_SSH_KEY }}" > ~/.ssh/prod.key
           chmod 600 ~/.ssh/prod.key
 
-          echo "Host prod" > ~/.ssh/config
+          echo "Host prod"                               > ~/.ssh/config
           echo "  HostName ${{ secrets.PROD_SSH_HOST }}" >> ~/.ssh/config
-          echo "  User ${{ secrets.PROD_SSH_USER }}" >> ~/.ssh/config
-          echo "  IdentityFile ~/.ssh/prod.key" >> ~/.ssh/config
-          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "  User ${{ secrets.PROD_SSH_USER }}"     >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/prod.key"          >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no"              >> ~/.ssh/config
 
       - name: Docker compose pull
         run: |
