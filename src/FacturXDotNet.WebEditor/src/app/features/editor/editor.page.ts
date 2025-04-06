@@ -1,20 +1,20 @@
-import {Component, computed, inject, Resource, signal, Signal} from '@angular/core';
-import {NgOptimizedImage} from '@angular/common';
-import {environment} from '../../../environments/environment';
-import {EditorSettings, EditorSettingsService} from './editor-settings.service';
-import {EditorMenuComponent} from './components/editor-menu/editor-menu.component';
-import {FormsModule} from '@angular/forms';
-import {TwoColumnsComponent} from '../../core/two-columns/two-columns.component';
-import {CiiTab} from './tabs/cii/cii.tab';
-import {EditorSavedState, EditorStateService} from './editor-state.service';
-import {PdfViewerComponent} from './pdf-viewer.component';
-import {EditorHeaderComponent, EditorTab} from './editor-header.component';
-import {EditorWelcomeComponent} from './editor-welcome.component';
-import {AttachmentsTab} from './tabs/attachments/attachments.tab';
-import {XmpTab} from './tabs/xmp/xmp.tab';
-import {API_BASE_URL} from '../../app.config';
-import {ApiServerStatusComponent} from '../../core/api/components/api-server-status.component';
-import {ApiConstantsService} from '../../core/api/api-constants.service';
+import { Component, computed, inject, Resource, signal, Signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
+import { environment } from '../../../environments/environment';
+import { EditorSettings, EditorSettingsService } from './editor-settings.service';
+import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
+import { FormsModule } from '@angular/forms';
+import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
+import { CiiTab } from './tabs/cii/cii.tab';
+import { EditorSavedState, EditorStateService } from './editor-state.service';
+import { PdfViewerComponent } from './pdf-viewer.component';
+import { EditorHeaderComponent, EditorTab } from './editor-header.component';
+import { EditorWelcomeComponent } from './editor-welcome.component';
+import { AttachmentsTab } from './tabs/attachments/attachments.tab';
+import { XmpTab } from './tabs/xmp/xmp.tab';
+import { API_BASE_URL } from '../../app.config';
+import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
+import { ApiConstantsService } from '../../core/api/services/api-constants.service';
 
 @Component({
   selector: 'app-editor',

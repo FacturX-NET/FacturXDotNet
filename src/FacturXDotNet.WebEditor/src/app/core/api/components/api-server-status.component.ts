@@ -1,6 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
 import { HealthApi } from '../health.api';
-import { API_BASE_URL } from '../../../app.config';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -8,14 +7,14 @@ import { rxResource } from '@angular/core/rxjs-interop';
   imports: [],
   template: `
     @if (health.isLoading()) {
-      <span class="placeholder-glow">
+      <div class="placeholder-glow">
         <span class="placeholder placeholder" style="width:100px"></span>
-      </span>
+      </div>
     } @else {
-      <span>
+      <div class="text-truncate" style="max-width: 150px">
         <i class="bi bi-{{ healthIcon() }}"></i>
         {{ health.value() ?? 'Unreachable' }}
-      </span>
+      </div>
     }
   `,
   styles: ``,
@@ -34,7 +33,10 @@ function computeHealthIcon(value: string | undefined) {
   switch (value) {
     case 'Healthy':
       return 'check-lg';
+    case 'Degraded':
+      return 'exclamation-triangle-fill';
+    case 'Unhealthy':
     default:
-      return 'x-lg';
+      return 'x-circle-fill';
   }
 }
