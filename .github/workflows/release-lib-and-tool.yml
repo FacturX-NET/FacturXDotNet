@@ -54,6 +54,8 @@ jobs:
 
       - name: Build, Tests, Cover, Pack and Publish
         shell: bash
+        env:
+          MINVERVERSIONOVERRIDE: ${{ steps.compute_version.outputs.version }}
         run: |
           dotnet tool install --global dotnet-releaser
           cd src
