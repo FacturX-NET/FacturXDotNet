@@ -12,6 +12,10 @@ import { EditorHeaderComponent, EditorTab } from './editor-header.component';
 import { EditorWelcomeComponent } from './editor-welcome.component';
 import { AttachmentsTab } from './tabs/attachments/attachments.tab';
 import { XmpTab } from './tabs/xmp/xmp.tab';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { HealthApi } from '../../core/api/health.api';
+import { API_BASE_URL } from '../../app.config';
+import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
 
 @Component({
   selector: 'app-editor',
@@ -26,13 +30,22 @@ import { XmpTab } from './tabs/xmp/xmp.tab';
     EditorWelcomeComponent,
     AttachmentsTab,
     XmpTab,
+    ApiServerStatusComponent,
   ],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
         <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
+
         <app-menu #appMenu [showSelfHostingMenu]="environment.isUnsafeCloudEnvironment ?? false"></app-menu>
+
         <div class="flex-grow-1"></div>
+
+        <div class="d-flex gap-2 px-4 small position-relative">
+          <a class="text-light text-decoration-underline stretched-link" [href]="apiUrl" target="_blank"> API server: </a>
+          <app-api-server-status></app-api-server-status>
+        </div>
+
         <div class="px-4">
           <a href="https://github.com/FacturX-NET/FacturXDotNet" class="text-light">
             <i class="bi bi-github fs-4"></i>
@@ -127,6 +140,7 @@ export class EditorPage {
 
   private settingsService = inject(EditorSettingsService);
   private editorStateService = inject(EditorStateService);
+  protected apiUrl = inject(API_BASE_URL);
 
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected disablePointerEvents = signal<boolean>(false);

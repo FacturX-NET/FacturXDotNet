@@ -7,6 +7,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { API_BASE_URL } from '../../app.config';
 import licenses from '../../../licenses/licenses.json';
+import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
 
 @Component({
   selector: 'app-about',
@@ -44,8 +45,14 @@ import licenses from '../../../licenses/licenses.json';
 
           <div class="my-4">
             <h2>API</h2>
+            <p class="position-relative">
+              @if (!status.loading()) {
+                <a class="pe-2 stretched-link" [href]="apiUrl">{{ apiUrl }}</a>
+              }
+              <app-api-server-status #status />
+            </p>
 
-            @if (apiDependencies.isLoading()) {
+            @if (apiDependencies.isLoading() || apiBuildInformation.isLoading()) {
               <div class="placeholder-glow">
                 <p>
                   <span class="placeholder col-6"></span>
@@ -71,20 +78,18 @@ import licenses from '../../../licenses/licenses.json';
                   </div>
                 </div>
               </div>
-            } @else if (apiDependencies.hasValue()) {
-              <p>
-                The API used by this application is located at <a [href]="apiUrl">{{ apiUrl }}</a
-                >. <br />
-                It is currently in version <span class="fw-semibold">{{ apiBuildInformation.value()?.version ?? '???' }}</span> and was built on
-                {{ (apiBuildInformation.value()?.buildDate | date) ?? '???' }}.
-              </p>
-
-              <p class="fw-bold">Dependencies</p>
-              <app-about-licenses [packages]="apiDependencies.value() ?? []"></app-about-licenses>
             } @else {
-              <div class="alert alert-danger">
-                <i class="bi bi-x-circle-fill text-danger"></i> The API server at <a [href]="apiUrl">{{ apiUrl }}</a> is unreachable.
-              </div>
+              @if (apiBuildInformation.value(); as apiBuildInformation) {
+                <p>
+                  The API server is currently in version <span class="fw-semibold">{{ apiBuildInformation.version }}</span> and was built on
+                  {{ apiBuildInformation.buildDate | date }}.
+                </p>
+              }
+
+              @if (apiDependencies.value(); as dependencies) {
+                <p class="fw-bold">Dependencies</p>
+                <app-about-licenses [packages]="dependencies"></app-about-licenses>
+              }
             }
           </div>
 
@@ -108,7 +113,7 @@ import licenses from '../../../licenses/licenses.json';
       </div>
     </div>
   `,
-  imports: [RouterLink, AboutLicensesComponent, DatePipe],
+  imports: [RouterLink, AboutLicensesComponent, DatePipe, ApiServerStatusComponent],
 })
 export class AboutPage {
   private infoApi = inject(InfoApi);
