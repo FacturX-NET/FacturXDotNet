@@ -1,0 +1,87 @@
+﻿name: Continuous Deployment - API Release
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+jobs:
+
+  build-docker-image:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install MinVer
+        run: dotnet tool install -g minver-cli
+
+      - name: Compute version
+        id: compute_version
+        run: |
+          VERSION=$(minver -t v -v d)
+          echo "Version is $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT        
+
+      - name: Build the Docker image
+        run: cd src/FacturXDotNet.API; docker build . --file Dockerfile --tag my-image-name:${{ steps.compute_version.outputs.version }} --label "runnumber=${GITHUB_RUN_ID}"
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        id: push_image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/FactorXDotNet.API
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          VERSION=${{ steps.compute_version.outputs.version }}
+          LATEST_SHOULD_CHANGE=${{ !contains(steps.compute_version.outputs.version, '-') }}
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          echo LATEST_SHOULD_CHANGE=$LATEST_SHOULD_CHANGE
+          docker tag FactorXDotNet.API $IMAGE_ID:$VERSION 
+          docker push $IMAGE_ID:$VERSION
+          echo "latest_should_change=$LATEST_SHOULD_CHANGE" >> $GITHUB_OUTPUT
+
+      - name: Push latest (if not pre-release)
+        if: ${{ steps.push_image.outputs.latest_should_change == 'true' }}
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/FactorXDotNet.API
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=latest
+          docker tag FactorXDotNet.API $IMAGE_ID:latest 
+          docker push $IMAGE_ID:latest
+  
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.prod_ssh_key }}" > ~/.ssh/prod.key
+          chmod 600 ~/.ssh/prod.key
+
+          echo "Host prod" > ~/.ssh/config
+          echo "  HostName ${{ secrets.PROD_SSH_HOST }}" >> ~/.ssh/config
+          echo "  User ${{ secrets.PROD_SSH_USER }}" >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/prod.key" >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+
+      - name: Docker compose pull
+        run: |
+          ssh prod 'cd facturxdotnet/release; docker compose pull'
+
+      - name: Docker compose up
+        run: |
+          ssh prod 'cd facturxdotnet/release; docker compose up -d'
