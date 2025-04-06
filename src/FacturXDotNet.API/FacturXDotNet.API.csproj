@@ -27,19 +27,17 @@
         <Content Include="..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
-        <Content Update="Resources\licenses.json">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj"/>
-    </ItemGroup> 
+    </ItemGroup>
 
-    <Target Name="Generate license file" BeforeTargets="Build">
+    <Target Name="GenerateLicenseFile" BeforeTargets="Build">
         <Message Importance="high" Text="Generating license file..."/>
-        <Exec Command="dotnet tool install --global dotnet-project-licenses"/>
-        <Exec Command="dotnet-project-licenses -i dotnet-project-licenses-input.json --json --output-directory Resources"/>
+        <Exec Command="dotnet tool install --global dotnet-project-licenses" ContinueOnError="WarnAndContinue" />
+        <Exec Command="dotnet-project-licenses -i dotnet-project-licenses-input.json --json --output-directory Resources" ContinueOnError="WarnAndContinue" />
+        <Warning Text="The licenses file has not been generated, the API will not be able to report its dependencies." Condition="!Exists('Resources/licenses.json')" />
     </Target>
 
 </Project>
