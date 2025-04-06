@@ -1,13 +1,13 @@
-import {Component, inject} from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {AboutLicensesComponent} from './about-licenses.component';
-import {environment} from '../../../environments/environment';
-import {DatePipe, NgOptimizedImage} from '@angular/common';
-import {API_BASE_URL} from '../../app.config';
+import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { AboutLicensesComponent } from './about-licenses.component';
+import { environment } from '../../../environments/environment';
+import { DatePipe, NgOptimizedImage } from '@angular/common';
+import { API_BASE_URL } from '../../app.config';
 import licenses from '../../../licenses/licenses.json';
-import {ApiServerStatusComponent} from '../../core/api/components/api-server-status.component';
-import {ApiConstantsService} from '../../core/api/api-constants.service';
-import {IPackageDto} from '../../core/api/api.models';
+import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
+import { ApiConstantsService } from '../../core/api/services/api-constants.service';
+import { IPackageDto } from '../../core/api/api.models';
 
 @Component({
   selector: 'app-about',
@@ -82,9 +82,9 @@ import {IPackageDto} from '../../core/api/api.models';
             <div class="card-body">
               <h2 class="card-title">API</h2>
 
-              <p class="position-relative">
+              <p class="d-flex gap-2 position-relative">
                 @if (!status.loading()) {
-                  <a class="pe-2 stretched-link" [href]="apiUrl">{{ apiUrl }}</a>
+                  <a class="stretched-link" [href]="apiUrl">{{ apiUrl }}</a>
                 }
                 <app-api-server-status #status />
               </p>
@@ -156,7 +156,7 @@ import {IPackageDto} from '../../core/api/api.models';
   imports: [RouterLink, AboutLicensesComponent, DatePipe, ApiServerStatusComponent, NgOptimizedImage],
 })
 export class AboutPage {
-  protected webEditorPackages: IPackageDto[] = licenses.map(l => ({
+  protected webEditorPackages: IPackageDto[] = licenses.map((l) => ({
     name: l.name,
     author: l.author,
     version: l.installedVersion,
