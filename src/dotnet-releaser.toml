@@ -5,7 +5,7 @@ project = "FacturXDotNet.sln"
 
 [msbuild.properties]
 PublishTrimmed = false
-AssemblyInformationalVersion = "0.0.0"
+Version = "0.0.0"
 
 [[pack]]
 rid = ["win-x64", "win-arm64"]

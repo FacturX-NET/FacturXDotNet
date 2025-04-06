@@ -46,7 +46,7 @@ jobs:
 
       - name: Set version in dotnet-releaser config file
         run: |
-          sed -i "s/AssemblyInformationalVersion = \"0.0.0\"/AssemblyInformationalVersion = \"${{ steps.compute_version.outputs.version }}\"/" src/dotnet-releaser.toml
+          sed -i "s/Version = \"0.0.0\"/Version = \"${{ steps.compute_version.outputs.version }}\"/" src/dotnet-releaser.toml
 
       - name: Add System.CommandLine daily builds nuget source
         run: dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json --name "System.CommandLine - Daily Builds"
