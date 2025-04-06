@@ -1,6 +1,8 @@
-﻿using FacturXDotNet.API.Features.Information.Models;
+﻿using FacturXDotNet.API.Configuration;
+using FacturXDotNet.API.Features.Information.Models;
 using FacturXDotNet.API.Features.Information.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace FacturXDotNet.API.Features.Information;
 
@@ -19,6 +21,20 @@ static class InformationController
             .WithSummary("Build")
             .WithDescription("Get information about the current build of the API.")
             .Produces<BuildInformationDto>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .DisableAntiforgery();
+
+        routes.MapGet(
+                "/hosting",
+                ([FromServices] IOptionsSnapshot<AppConfiguration> configuration) => new HostingInformationDto
+                {
+                    UnsafeEnvironment = configuration.Value.Hosting.UnsafeEnvironment
+                }
+            )
+            .WithSummary("Hosting")
+            .WithDescription("Get information about the current hosting environment of the API application.")
+            .Produces<HostingInformationDto>()
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();

@@ -1,5 +1,5 @@
-import { Component, computed, input, Signal } from '@angular/core';
-import { Package } from '../../core/api/info.api';
+import {Component, computed, input, Signal} from '@angular/core';
+import {IPackageDto} from '../../core/api/api.models';
 
 @Component({
   selector: 'app-about-licenses',
@@ -26,10 +26,10 @@ import { Package } from '../../core/api/info.api';
   `,
 })
 export class AboutLicensesComponent {
-  packages = input.required<Package[]>();
+  packages = input.required<IPackageDto[]>();
 
-  protected packagesRecord: Signal<Record<string, Package[]>> = computed(() => {
-    const result: Record<string, Package[]> = {};
+  protected packagesRecord: Signal<Record<string, IPackageDto[]>> = computed(() => {
+    const result: Record<string, IPackageDto[]> = {};
 
     for (const p of this.packages()) {
       if (!result[p.license]) {

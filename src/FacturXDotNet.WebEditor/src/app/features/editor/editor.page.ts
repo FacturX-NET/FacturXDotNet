@@ -1,21 +1,20 @@
-import { Component, computed, inject, Resource, signal, Signal } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
-import { environment } from '../../../environments/environment';
-import { EditorSettings, EditorSettingsService } from './editor-settings.service';
-import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
-import { FormsModule } from '@angular/forms';
-import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
-import { CiiTab } from './tabs/cii/cii.tab';
-import { EditorSavedState, EditorStateService } from './editor-state.service';
-import { PdfViewerComponent } from './pdf-viewer.component';
-import { EditorHeaderComponent, EditorTab } from './editor-header.component';
-import { EditorWelcomeComponent } from './editor-welcome.component';
-import { AttachmentsTab } from './tabs/attachments/attachments.tab';
-import { XmpTab } from './tabs/xmp/xmp.tab';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { HealthApi } from '../../core/api/health.api';
-import { API_BASE_URL } from '../../app.config';
-import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
+import {Component, computed, inject, Resource, signal, Signal} from '@angular/core';
+import {NgOptimizedImage} from '@angular/common';
+import {environment} from '../../../environments/environment';
+import {EditorSettings, EditorSettingsService} from './editor-settings.service';
+import {EditorMenuComponent} from './components/editor-menu/editor-menu.component';
+import {FormsModule} from '@angular/forms';
+import {TwoColumnsComponent} from '../../core/two-columns/two-columns.component';
+import {CiiTab} from './tabs/cii/cii.tab';
+import {EditorSavedState, EditorStateService} from './editor-state.service';
+import {PdfViewerComponent} from './pdf-viewer.component';
+import {EditorHeaderComponent, EditorTab} from './editor-header.component';
+import {EditorWelcomeComponent} from './editor-welcome.component';
+import {AttachmentsTab} from './tabs/attachments/attachments.tab';
+import {XmpTab} from './tabs/xmp/xmp.tab';
+import {API_BASE_URL} from '../../app.config';
+import {ApiServerStatusComponent} from '../../core/api/components/api-server-status.component';
+import {ApiConstantsService} from '../../core/api/api-constants.service';
 
 @Component({
   selector: 'app-editor',
@@ -37,7 +36,7 @@ import { ApiServerStatusComponent } from '../../core/api/components/api-server-s
       <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
         <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
 
-        <app-menu #appMenu [showSelfHostingMenu]="environment.isUnsafeCloudEnvironment ?? false"></app-menu>
+        <app-menu #appMenu [showSelfHostingMenu]="unsafeEnvironment()"></app-menu>
 
         <div class="flex-grow-1"></div>
 
@@ -108,7 +107,7 @@ import { ApiServerStatusComponent } from '../../core/api/components/api-server-s
         }
       </main>
 
-      <div class="flex-shrink-0 d-flex justify-content-center gap-2 px-4 small" [class.d-none]="!environment.isUnsafeCloudEnvironment">
+      <div class="flex-shrink-0 d-flex justify-content-center gap-2 px-4 small" [class.d-none]="!unsafeEnvironment()">
         <div class="text-truncate">
           <span class="text-danger fw-semibold"><i class="bi bi-exclamation-triangle-fill "></i> Do not share sensitive data </span>
           This application is hosted in an unsafe cloud environment. Although I do not store your data, or use your it for any purpose other than the application, the hosting
@@ -140,8 +139,10 @@ export class EditorPage {
 
   private settingsService = inject(EditorSettingsService);
   private editorStateService = inject(EditorStateService);
+  private apiConstantsService = inject(ApiConstantsService);
   protected apiUrl = inject(API_BASE_URL);
 
+  protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected disablePointerEvents = signal<boolean>(false);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;

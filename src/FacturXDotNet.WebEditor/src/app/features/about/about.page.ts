@@ -1,13 +1,13 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { AboutLicensesComponent } from './about-licenses.component';
-import { environment } from '../../../environments/environment';
-import { InfoApi, Package } from '../../core/api/info.api';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { DatePipe, NgOptimizedImage } from '@angular/common';
-import { API_BASE_URL } from '../../app.config';
+import {Component, inject} from '@angular/core';
+import {RouterLink} from '@angular/router';
+import {AboutLicensesComponent} from './about-licenses.component';
+import {environment} from '../../../environments/environment';
+import {DatePipe, NgOptimizedImage} from '@angular/common';
+import {API_BASE_URL} from '../../app.config';
 import licenses from '../../../licenses/licenses.json';
-import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
+import {ApiServerStatusComponent} from '../../core/api/components/api-server-status.component';
+import {ApiConstantsService} from '../../core/api/api-constants.service';
+import {IPackageDto} from '../../core/api/api.models';
 
 @Component({
   selector: 'app-about',
@@ -89,7 +89,7 @@ import { ApiServerStatusComponent } from '../../core/api/components/api-server-s
                 <app-api-server-status #status />
               </p>
 
-              @if (apiDependencies.isLoading() || apiBuildInformation.isLoading()) {
+              @if (apiConstants.isLoading()) {
                 <div class="placeholder-glow">
                   <p>
                     <span class="placeholder col-6"></span>
@@ -116,16 +116,14 @@ import { ApiServerStatusComponent } from '../../core/api/components/api-server-s
                   </div>
                 </div>
               } @else {
-                @if (apiBuildInformation.value(); as apiBuildInformation) {
+                @if (apiConstants.value(); as apiConstants) {
                   <p>
-                    The API server is currently in version <span class="fw-semibold">{{ apiBuildInformation.version }}</span> and was built on
-                    {{ apiBuildInformation.buildDate | date }}.
+                    The API server is currently in version <span class="fw-semibold">{{ apiConstants.build.version }}</span> and was built on
+                    {{ apiConstants.build.buildDate | date }}.
                   </p>
-                }
 
-                @if (apiDependencies.value(); as dependencies) {
                   <p class="fw-bold">Dependencies</p>
-                  <app-about-licenses [packages]="dependencies"></app-about-licenses>
+                  <app-about-licenses [packages]="apiConstants.dependencies"></app-about-licenses>
                 }
               }
             </div>
@@ -158,18 +156,16 @@ import { ApiServerStatusComponent } from '../../core/api/components/api-server-s
   imports: [RouterLink, AboutLicensesComponent, DatePipe, ApiServerStatusComponent, NgOptimizedImage],
 })
 export class AboutPage {
-  private infoApi = inject(InfoApi);
-  protected apiUrl = inject(API_BASE_URL);
-
-  protected apiBuildInformation = rxResource({ loader: () => this.infoApi.getBuildInformation() });
-  protected apiDependencies = rxResource({ loader: () => this.infoApi.getDependencies() });
-  protected webEditorVersion = environment.version;
-  protected webEditorBuildDate = environment.buildDate;
-  protected webEditorPackages: Package[] = licenses.map((l) => ({
+  protected webEditorPackages: IPackageDto[] = licenses.map(l => ({
     name: l.name,
     author: l.author,
     version: l.installedVersion,
     license: l.licenseType,
     link: l.link,
   }));
+  protected apiUrl = inject(API_BASE_URL);
+  private apiConstantsService = inject(ApiConstantsService);
+  protected webEditorVersion = environment.version;
+  protected webEditorBuildDate = environment.buildDate;
+  protected apiConstants = this.apiConstantsService.info;
 }

@@ -6,7 +6,6 @@
 
 /* tslint:disable */
 /* eslint-disable */
-
 // ReSharper disable InconsistentNaming
 
 export class ApplicableHeaderTradeAgreement implements IApplicableHeaderTradeAgreement {
@@ -164,55 +163,6 @@ export class ApplicableHeaderTradeSettlement implements IApplicableHeaderTradeSe
 export interface IApplicableHeaderTradeSettlement {
   invoiceCurrencyCode?: string | undefined;
   specifiedTradeSettlementHeaderMonetarySummation?: ISpecifiedTradeSettlementHeaderMonetarySummation | undefined;
-
-  [key: string]: any;
-}
-
-export class AttachmentDto implements IAttachmentDto {
-  file!: string;
-  description?: string | undefined;
-
-  [key: string]: any;
-
-  constructor(data?: IAttachmentDto) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
-      }
-    }
-  }
-
-  init(_data?: any) {
-    if (_data) {
-      for (var property in _data) {
-        if (_data.hasOwnProperty(property)) this[property] = _data[property];
-      }
-      this.file = _data['file'];
-      this.description = _data['description'];
-    }
-  }
-
-  static fromJS(data: any): AttachmentDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new AttachmentDto();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    for (var property in this) {
-      if (this.hasOwnProperty(property)) data[property] = this[property];
-    }
-    data['file'] = this.file;
-    data['description'] = this.description;
-    return data;
-  }
-}
-
-export interface IAttachmentDto {
-  file: string;
-  description?: string | undefined;
 
   [key: string]: any;
 }
@@ -580,6 +530,51 @@ export class ExchangedDocumentContext implements IExchangedDocumentContext {
 export interface IExchangedDocumentContext {
   businessProcessSpecifiedDocumentContextParameterId?: string | undefined;
   guidelineSpecifiedDocumentContextParameterId?: GuidelineSpecifiedDocumentContextParameterId | undefined;
+
+  [key: string]: any;
+}
+
+export class HostingInformationDto implements IHostingInformationDto {
+  unsafeEnvironment?: boolean;
+
+  [key: string]: any;
+
+  constructor(data?: IHostingInformationDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  static fromJS(data: any): HostingInformationDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new HostingInformationDto();
+    result.init(data);
+    return result;
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.unsafeEnvironment = _data['unsafeEnvironment'];
+    }
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['unsafeEnvironment'] = this.unsafeEnvironment;
+    return data;
+  }
+}
+
+export interface IHostingInformationDto {
+  unsafeEnvironment?: boolean;
 
   [key: string]: any;
 }

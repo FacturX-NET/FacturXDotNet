@@ -151,10 +151,10 @@ jobs:
           echo "Date is $DATE"
           echo "date=$DATE" >> $GITHUB_OUTPUT
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
           cache: 'npm'
           cache-dependency-path: 'src/FacturXDotNet.WebEditor/package-lock.json'
 
@@ -172,7 +172,6 @@ jobs:
           echo "export const environment: Environment = {"                          >> src/environments/environment.ts
           echo "  version: '${{ steps.compute_version.outputs.version}}',"          >> src/environments/environment.ts
           echo "  buildDate: new Date('${{ steps.compute_date.outputs.date }}'),"   >> src/environments/environment.ts
-          echo "  isUnsafeCloudEnvironment: true,"                                  >> src/environments/environment.ts
           echo "  apiUrl: 'dev/build',"                                             >> src/environments/environment.ts
           echo "};"                                                                 >> src/environments/environment.ts
           echo "Environment is"

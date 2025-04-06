@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using FacturXDotNet.API;
+using FacturXDotNet.API.Configuration;
 using FacturXDotNet.API.Features.Extract;
 using FacturXDotNet.API.Features.Generate;
 using FacturXDotNet.API.Features.Information;
@@ -15,6 +16,7 @@ try
     WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSerilog();
 
+    builder.Services.Configure<AppConfiguration>(builder.Configuration);
     builder.Services.AddCors(
         opt => opt.AddDefaultPolicy(p => p.DisallowCredentials().AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().WithExposedHeaders("Content-Disposition"))
     );
