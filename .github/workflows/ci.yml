@@ -1,4 +1,4 @@
-name: Build & Test
+name: Continuous Integration - PR Build & Test
 
 on:
   pull_request:

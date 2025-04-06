@@ -1,4 +1,4 @@
-name: Release Library and Tool
+name: Continuous Deployment - Publish Library and Tool
 
 on:
   push:

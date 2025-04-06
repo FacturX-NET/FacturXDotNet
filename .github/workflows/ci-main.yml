@@ -1,4 +1,4 @@
-name: Build & Test (main)
+name: Continuous Integration - Main Build & Test
 
 on:
   push:
