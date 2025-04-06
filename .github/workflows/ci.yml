@@ -139,11 +139,17 @@ jobs:
 
       - name: Compute version
         id: compute_version
-        run: echo "version=$(minver -t v -v d)" >> $GITHUB_OUTPUT
+        run: |
+          VERSION=$(minver -t v -v d)
+          echo "Version is $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Compute date
         id: compute_date
-        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          echo "Date is $DATE"
+          echo "date=$DATE" >> $GITHUB_OUTPUT
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
