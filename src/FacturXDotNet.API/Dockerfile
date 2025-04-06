@@ -9,12 +9,11 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY . .
 RUN dotnet restore "FacturXDotNet.API/FacturXDotNet.API.csproj"
-WORKDIR /src/FacturXDotNet.API
-RUN dotnet build "FacturXDotNet.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "FacturXDotNet.API/FacturXDotNet.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "FacturXDotNet.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "FacturXDotNet.API/FacturXDotNet.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 ARG PORT=5295
