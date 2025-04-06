@@ -10,6 +10,7 @@ WORKDIR /src
 COPY ["FacturXDotNet.API/FacturXDotNet.API.csproj", "FacturXDotNet.API/"]
 RUN dotnet restore "FacturXDotNet.API/FacturXDotNet.API.csproj"
 COPY . .
+RUN rm global.json # Remove global.json to use version defined by the base image
 WORKDIR "/src/FacturXDotNet.API"
 RUN dotnet build "FacturXDotNet.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
