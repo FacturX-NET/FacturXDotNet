@@ -1,4 +1,4 @@
-import { Component, computed, forwardRef, input, numberAttribute, signal } from '@angular/core';
+import { booleanAttribute, Component, computed, forwardRef, input, numberAttribute, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -13,23 +13,52 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
   template: `
     <div class="d-flex gap-1">
-      <a role="button" (click)="set(-1)" (mouseenter)="preview(-1)" (mouseleave)="cancelPreview()">
+      <a [attr.role]="this.disabled() || this.readonly() ? undefined : 'button'" (click)="set(-1)" (mouseenter)="preview(-1)" (mouseleave)="cancelPreview()">
         @if (rate() < 0) {
-          <i class="bi bi-x-circle-fill text-danger"></i>
+          @if (this.disabled()) {
+            <i class="bi bi-x-circle-fill danger-disabled-color"></i>
+          } @else {
+            <i class="bi bi-x-circle-fill text-danger"></i>
+          }
         } @else {
-          <i class="bi bi-x-circle text-body-tertiary"></i>
+          @if (this.disabled()) {
+            <i class="bi bi-x-circle-fill disabled-color"></i>
+          } @else {
+            <i class="bi bi-x-circle text-body-tertiary"></i>
+          }
         }
       </a>
-      <a role="button" (click)="set(0)" (mouseenter)="preview(0)" (mouseleave)="cancelPreview()">
-        <i class="bi bi-dot" [class.text-body-tertiary]="rate() != 0" [class.text-body]="rate() == 0"></i>
+
+      <a [attr.role]="this.disabled() || this.readonly() ? undefined : 'button'" (click)="set(0)" (mouseenter)="preview(0)" (mouseleave)="cancelPreview()">
+        @if (rate() == 0) {
+          @if (this.disabled()) {
+            <i class="bi bi-dot text-body-secondary"></i>
+          } @else {
+            <i class="bi bi-dot text-body"></i>
+          }
+        } @else {
+          @if (this.disabled()) {
+            <i class="bi bi-dot disabled-color"></i>
+          } @else {
+            <i class="bi bi-dot text-body-tertiary"></i>
+          }
+        }
       </a>
 
       @for (value of values(); track value) {
-        <a role="button" (click)="set(value)" (mouseenter)="preview(value)" (mouseleave)="cancelPreview()">
+        <a [attr.role]="this.disabled() || this.readonly() ? undefined : 'button'" (click)="set(value)" (mouseenter)="preview(value)" (mouseleave)="cancelPreview()">
           @if (rate() >= value) {
-            <i class="bi bi-star-fill star-color"></i>
+            @if (this.disabled()) {
+              <i class="bi bi-star-fill star-disabled-color"></i>
+            } @else {
+              <i class="bi bi-star-fill star-color"></i>
+            }
           } @else {
-            <i class="bi bi-star text-body-tertiary"></i>
+            @if (this.disabled()) {
+              <i class="bi bi-star-fill disabled-color"></i>
+            } @else {
+              <i class="bi bi-star text-body-tertiary"></i>
+            }
           }
         </a>
       }
@@ -37,13 +66,25 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       <div class="ps-2">
         @switch (rate()) {
           @case (-1) {
-            <span class="text-danger small">Rejected</span>
+            @if (this.disabled()) {
+              <span class="danger-disabled-color small">Rejected</span>
+            } @else {
+              <span class="text-danger small">Rejected</span>
+            }
           }
           @case (0) {
-            <span class="text-body-secondary small">Unrated</span>
+            @if (this.disabled()) {
+              <span class="text-body-tertiary small">Unrated</span>
+            } @else {
+              <span class="text-body-secondary small">Unrated</span>
+            }
           }
           @default {
-            {{ rate() }} / {{ max() }}
+            @if (this.disabled()) {
+              <span class="text-body-tertiary">{{ rate() }} / {{ max() }}</span>
+            } @else {
+              <span class="star-color text-body-secondary">{{ rate() }} / {{ max() }}</span>
+            }
           }
         }
       </div>
@@ -53,10 +94,23 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     .star-color {
       color: rgba(255, 193, 7, 1);
     }
+
+    .star-disabled-color {
+      color: rgba(255, 230, 156, 1);
+    }
+
+    .danger-disabled-color {
+      color: rgba(241, 174, 181, 1);
+    }
+
+    .disabled-color {
+      color: var(--bs-secondary-bg);
+    }
   `,
 })
 export class XmpFormRatingComponent implements ControlValueAccessor {
   max = input(5, { transform: numberAttribute });
+  readonly = input(false, { transform: booleanAttribute });
 
   protected disabled = signal(false);
   protected value = signal(0);
@@ -92,6 +146,10 @@ export class XmpFormRatingComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {}
 
   protected set(value: number) {
+    if (this.disabled()) {
+      return;
+    }
+
     const sanitized = this.sanitize(value);
 
     this.value.set(sanitized);
@@ -104,6 +162,10 @@ export class XmpFormRatingComponent implements ControlValueAccessor {
   }
 
   protected preview(value: number) {
+    if (this.disabled()) {
+      return;
+    }
+
     this.previewValue.set(value);
   }
 
