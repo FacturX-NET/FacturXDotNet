@@ -1,13 +1,13 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { AboutLicensesComponent } from './about-licenses.component';
-import { environment } from '../../../environments/environment';
-import { DatePipe, NgOptimizedImage } from '@angular/common';
-import { API_BASE_URL } from '../../app.config';
+import {Component, inject} from '@angular/core';
+import {RouterLink} from '@angular/router';
+import {AboutLicensesComponent} from './about-licenses.component';
+import {environment} from '../../../environments/environment';
+import {DatePipe, NgOptimizedImage} from '@angular/common';
+import {API_BASE_URL} from '../../app.config';
 import licenses from '../../../licenses/licenses.json';
-import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
-import { ApiConstantsService } from '../../core/api/services/api-constants.service';
-import { IPackageDto } from '../../core/api/api.models';
+import {ApiServerStatusComponent} from '../../core/api/components/api-server-status.component';
+import {ApiConstantsService} from '../../core/api/services/api-constants.service';
+import {IPackageDto} from '../../core/api/api.models';
 
 @Component({
   selector: 'app-about',
@@ -118,8 +118,9 @@ import { IPackageDto } from '../../core/api/api.models';
               } @else {
                 @if (apiConstants.value(); as apiConstants) {
                   <p>
-                    The API server is currently in version <span class="fw-semibold">{{ apiConstants.build.version }}</span> and was built on
-                    {{ apiConstants.build.buildDate | date }}.
+                    The API server is currently in version <span class="fw-semibold text-nowrap">{{ apiConstants.build.version }}</span> and was built on
+                    <span class="text-nowrap">{{ apiConstants.build.buildDate | date }}</span
+                    >.
                   </p>
 
                   <p class="fw-bold">Dependencies</p>
@@ -136,7 +137,9 @@ import { IPackageDto } from '../../core/api/api.models';
               <h2 class="card-title">Web Editor</h2>
 
               <p>
-                The web editor (this application) is currently in version <span class="fw-semibold">{{ webEditorVersion }}</span> and was built on {{ webEditorBuildDate | date }}.
+                The web editor (this application) is currently in version <span class="fw-semibold text-nowrap">{{ webEditorVersion }}</span> and was built on
+                <span class="text-nowrap">{{ webEditorBuildDate | date }}</span
+                >.
               </p>
 
               <p>
