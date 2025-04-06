@@ -10,7 +10,7 @@ env:
 
 jobs:
   validate-pr-title:
-    
+    name: Validate PR title
     runs-on: ubuntu-latest
     
     steps:
@@ -36,8 +36,8 @@ jobs:
             }
           add_scope_label: 'true'
   
-  build:
-
+  build-and-test-backend:
+    name: Build & Test Backend
     runs-on: ubuntu-latest
     
     permissions:

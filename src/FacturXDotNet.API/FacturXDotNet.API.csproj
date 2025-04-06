@@ -38,6 +38,7 @@
 
     <Target Name="Generate license file" BeforeTargets="Build">
         <Message Importance="high" Text="Generating license file..."/>
+        <Exec Command="dotnet tool install --global dotnet-project-licenses"/>
         <Exec Command="dotnet-project-licenses -i dotnet-project-licenses-input.json --json --output-directory Resources"/>
     </Target>
 
