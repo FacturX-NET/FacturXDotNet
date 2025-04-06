@@ -58,6 +58,7 @@ jobs:
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/facturxdotnet-api
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]' | tr '+' '.')
           VERSION=${{ steps.compute_version.outputs.version }}
+          VERSION=$(echo $VERSION | tr '[A-Z]' '[a-z]' | tr '+' '.')
           LATEST_SHOULD_CHANGE=${{ !contains(steps.compute_version.outputs.version, '-') }}
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
