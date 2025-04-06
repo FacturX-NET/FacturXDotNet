@@ -29,12 +29,11 @@ try
                 {
                     doc.Info.Title = "FacturX.NET";
                     doc.Info.Version = BuildInformation.Version;
-                    doc.Info.Summary = "Work with FacturX documents through a REST API.";
                     doc.Info.Description = $"""
                                             FacturX.NET API - Work in progress. <br/>
                                             Built on {BuildInformation.BuildDate:D}
                                             """;
-                    doc.Info.License = new OpenApiLicense { Identifier = "MIT", Name = "MIT", Url = new Uri("https://github.com/FacturX-NET/FacturXDotNet/blob/main/LICENSE") };
+                    doc.Info.License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://github.com/FacturX-NET/FacturXDotNet/blob/main/LICENSE") };
                     doc.Info.Contact = new OpenApiContact
                         { Name = "Ismail Bennani", Email = "facturx.net@gmail.com", Url = new Uri("https://github.com/FacturX-NET/FacturXDotNet/issues") };
 
@@ -55,7 +54,7 @@ try
     app.MapScalarApiReference();
 
     app.MapGet("/", () => Results.LocalRedirect("/scalar")).ExcludeFromDescription();
-    app.MapHealthChecks("/health").WithTags("Health").WithOpenApi();
+    app.MapHealthChecks("/health");
     app.MapGroup("/info").MapInformationEndpoints().WithTags("Information");
     app.MapGroup("/generate").MapGenerateEndpoints().WithTags("Generate");
     app.MapGroup("/extract").MapExtractEndpoints().WithTags("Extract");
