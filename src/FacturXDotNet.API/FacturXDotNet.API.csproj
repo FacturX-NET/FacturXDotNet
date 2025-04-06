@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
+        <PackageReference Include="Microsoft.OpenApi" Version="1.6.24" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.1.6" />
+        <PackageReference Include="Semver" Version="3.0.0"/>
+        <PackageReference Include="Serilog" Version="4.2.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="FacturXDotNet.API.Attributes.BuildDateAttribute">
+            <_Parameter1>$([System.DateTimeOffset]::UtcNow)</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj"/>
+    </ItemGroup>
+
+    <Target Name="GenerateLicenseFile" BeforeTargets="Build">
+        <Message Importance="high" Text="Generating license file..."/>
+        <Exec Command="dotnet tool install --global dotnet-project-licenses" ContinueOnError="WarnAndContinue" />
+        <Exec Command="dotnet-project-licenses -i dotnet-project-licenses-input.json --json --output-directory Resources" ContinueOnError="WarnAndContinue" />
+        <Warning Text="The licenses file has not been generated, the API will not be able to report its dependencies." Condition="!Exists('Resources/licenses.json')" />
+    </Target>
+
+</Project>

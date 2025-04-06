@@ -1,4 +1,4 @@
-![FacturX.NET logo](Assets/Logo/logo.png)
+![FacturX.NET logo](assets/Logo/logo.png)
 
 [![NuGet - Library](https://img.shields.io/nuget/v/FacturXDotNet
 )](https://www.nuget.org/packages/FacturXDotNet/)

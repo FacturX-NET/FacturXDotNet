@@ -1,4 +1,4 @@
-name: Release
+name: Release Library and Tool
 
 on:
   push:
@@ -11,7 +11,7 @@ env:
 
 jobs:
   dotnet-releaser:
-    name: Build, Test, Pack, Publish, Push
+    name: Library and Tool - Build, Test, Pack, Publish, Push
     runs-on: ubuntu-latest
     
     permissions:

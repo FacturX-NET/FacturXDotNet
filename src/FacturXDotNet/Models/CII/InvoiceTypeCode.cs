@@ -17,7 +17,7 @@
 ///         <item>380: Commercial Invoice</item>
 ///         <item>381: Credit note</item>
 ///         <item>384: Corrected invoice</item>
-///         <item>389: Self-billied invoice (created by the buyer on behalf of the supplier)</item>
+///         <item>389: Self-billed invoice (created by the buyer on behalf of the supplier)</item>
 ///         <item>261: Self billed credit note (not accepted by CHORUSPRO)</item>
 ///         <item>386: Prepayment invoice</item>
 ///         <item>751: Invoice information for accounting purposes (not accepted by CHORUSPRO)</item>

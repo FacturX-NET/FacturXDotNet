@@ -39,6 +39,7 @@ static class FacturXDocumentBuilderAddXmpMetadataStep
             xmpMetadata.Basic ??= new XmpBasicMetadata();
             xmpMetadata.Basic.CreateDate = now;
             xmpMetadata.Basic.ModifyDate = now;
+            xmpMetadata.Basic.MetadataDate = now;
             xmpMetadata.PdfAExtensions ??= new XmpPdfAExtensionsMetadata();
             AddFacturXPdfAExtensionIfNecessary(xmpMetadata.PdfAExtensions);
             xmpMetadata.FacturX ??= new XmpFacturXMetadata();

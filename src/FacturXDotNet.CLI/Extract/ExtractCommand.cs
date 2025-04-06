@@ -131,8 +131,8 @@ class ExtractCommand() : CommandBase<ExtractCommandOptions>("extract", "Extracts
             return;
         }
 
-        await using FileStream xmpFile = File.Open(outputPath, FileMode.Create);
-        await ciiAttachment.CopyToAsync(xmpFile, cancellationToken: cancellationToken);
+        await using FileStream ciiFile = File.Open(outputPath, FileMode.Create);
+        await ciiAttachment.CopyToAsync(ciiFile, cancellationToken: cancellationToken);
     }
 
     static async Task ExtractXmp(FileInfo pdfPath, string outputPath, CancellationToken cancellationToken)
