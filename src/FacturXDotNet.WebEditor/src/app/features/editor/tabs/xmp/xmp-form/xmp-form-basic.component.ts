@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { XmpFormRatingComponent } from './xmp-form-rating.component';
 
 @Component({
   selector: 'app-xmp-form-basic',
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [FormsModule, ReactiveFormsModule, XmpFormRatingComponent],
   viewProviders: [
     {
       provide: ControlContainer,
@@ -65,7 +66,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
 
         <div class="mb-3">
           <label class="form-label" for="basicRating">Rating</label>
-          <input id="basicRating" class="editor__control form-control" formControlName="rating" type="number" min="-1" max="5" aria-describedby="basicRatingHelp" />
+          <app-xmp-form-rating id="basicRating" max="5" formControlName="rating" aria-describedby="basicRatingHelp" />
           <p id="basicRatingHelp" class="form-text">
             A user-assigned rating for this file. The value shall be -1 or in the range [0..5], where -1 indicates “rejected” and 0 indicates “unrated”. If xmp:Rating is not
             present, a value of 0 should be assumed.

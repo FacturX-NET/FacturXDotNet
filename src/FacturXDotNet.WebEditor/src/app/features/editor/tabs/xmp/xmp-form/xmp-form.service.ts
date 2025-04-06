@@ -177,10 +177,6 @@ export class XmpFormService {
   }
 
   private toFormValue(value: IXmpMetadata): typeof this.form.value {
-    console.log(value.basic!.createDate);
-    console.log(new Date(value.basic!.createDate!));
-    console.log(this.getDateString(new Date(value.basic!.createDate!)));
-
     return {
       pdfAIdentification: {
         amendment: value.pdfAIdentification?.amendment,
