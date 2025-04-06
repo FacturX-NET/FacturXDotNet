@@ -17,11 +17,11 @@ These formats are the main formats used in the french and german electronic invo
 
 It comes in multiple flavors:
 
-- a CLI tool: [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.CLI) [nuget](https://www.nuget.org/packages/FacturXDotNet.CLI)
+- a CLI tool: [nuget](https://www.nuget.org/packages/FacturXDotNet.CLI) | [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.CLI)
 - a desktop editor: (coming soon)
-- a web API: [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.API) [app](https://api.facturxdotnet.org)
-- a web app: [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.WebEditor) [app](https://editor.facturxdotnet.org)
-- a .NET library: [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet) [nuget](https://www.nuget.org/packages/FacturXDotNet)
+- a web API: [app](https://api.facturxdotnet.org) | [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.API)
+- a web app: [app](https://editor.facturxdotnet.org) | [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.WebEditor)
+- a .NET library: [nuget](https://www.nuget.org/packages/FacturXDotNet) | [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet)
 
 All these tools provide the same set of features.
 
