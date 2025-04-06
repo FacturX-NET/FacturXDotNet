@@ -159,13 +159,14 @@ jobs:
           cache-dependency-path: 'src/FacturXDotNet.WebEditor/package-lock.json'
 
       - name: Install dependencies
-        run: npm ci
+        run: cd src/FacturXDotNet.WebEditor; npm ci
 
       - name: Dump licenses file
-        run: node scripts/dump-licenses.js
+        run: cd src/FacturXDotNet.WebEditor; node scripts/dump-licenses.js
 
       - name: Setup environment
         run: |
+          cd src/FacturXDotNet.WebEditor
           echo "import { Environment } from './environment.types';"                 > src/FacturXDotNet.WebEditor/src/environments/environment.ts
           echo ""                                                                   >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
           echo "export const environment: Environment = {"                          >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
@@ -176,4 +177,4 @@ jobs:
           echo "};"                                                                 >> src/FacturXDotNet.WebEditor/src/environments/environment.ts
 
       - name: Build
-        run: npm run build --if-present
+        run: cd src/FacturXDotNet.WebEditor; npm run build --if-present
