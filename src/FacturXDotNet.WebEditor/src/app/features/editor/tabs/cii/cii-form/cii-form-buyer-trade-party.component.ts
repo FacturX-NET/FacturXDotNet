@@ -25,7 +25,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
         <input [id]="control.controlId()" class="form-control" formControlName="name" placeholder="LE CLIENT" />
       </app-cii-form-control>
 
-      <app-cii-form-parent-container term="BT-47-00" name="BUYER LEGAL REGISTRATION IDENTIFIER" [description]="description" [settings]="settings()">
+      <app-cii-form-parent-container term="BT-47-00" name="BUYER LEGAL REGISTRATION IDENTIFIER" [description]="description" [settings]="settings()" depth="4">
         <ng-template #description>Details about the organization.</ng-template>
 
         <app-cii-form-buyer-trade-party-specified-legal-organization

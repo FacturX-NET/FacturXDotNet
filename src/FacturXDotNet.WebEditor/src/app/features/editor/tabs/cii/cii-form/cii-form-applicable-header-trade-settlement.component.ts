@@ -48,6 +48,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
         [remarks]="[remark]"
         [chorusProRemarks]="[chorusProRemark]"
         [settings]="settings()"
+        depth="3"
       >
         <ng-template #description> A group of business terms providing the monetary totals for the Invoice.</ng-template>
         <ng-template #remark>

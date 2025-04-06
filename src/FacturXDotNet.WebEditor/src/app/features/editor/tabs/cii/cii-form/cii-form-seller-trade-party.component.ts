@@ -37,7 +37,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
         <input [id]="bt27Control.controlId()" class="form-control" formControlName="name" placeholder="LE FOURNISSEUR" />
       </app-cii-form-control>
 
-      <app-cii-form-parent-container term="BT-30-00" name="SELLER LEGAL ORGANIZATION" [description]="description" [settings]="settings()">
+      <app-cii-form-parent-container term="BT-30-00" name="SELLER LEGAL ORGANIZATION" [description]="description" [settings]="settings()" depth="4">
         <ng-template #description>Details about the organization.</ng-template>
 
         <app-cii-form-seller-trade-party-specified-legal-organization
@@ -53,6 +53,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
         [remarks]="[remark]"
         [businessRules]="[{ id: 'BR-8', template: br8 }]"
         [settings]="settings()"
+        depth="4"
       >
         <ng-template #description>A group of business terms providing information about the address of the Seller.</ng-template>
         <ng-template #br8> An Invoice shall contain the Seller postal address.</ng-template>
@@ -64,7 +65,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
         <app-cii-form-seller-trade-party-postal-trade-address formGroupName="postalTradeAddress" [settings]="settings()"></app-cii-form-seller-trade-party-postal-trade-address>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container term="BT-31-00" name="SELLER VAT IDENTIFIER" [description]="description" [settings]="settings()">
+      <app-cii-form-parent-container term="BT-31-00" name="SELLER VAT IDENTIFIER" [description]="description" [settings]="settings()" depth="4">
         <ng-template #description>Detailed information on tax information of the seller.</ng-template>
 
         <app-cii-form-seller-trade-party-specified-tax-registration

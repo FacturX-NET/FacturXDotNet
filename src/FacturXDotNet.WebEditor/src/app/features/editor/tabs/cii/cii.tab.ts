@@ -37,7 +37,7 @@ import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 
       <div
         id="editor__cii-form"
-        class="flex-grow-1 h-100 position-relative overflow-y-auto pt-3 pb-5"
+        class="flex-grow-1 h-100 position-relative overflow-y-auto mt-3 pb-5"
         data-bs-spy="scroll"
         data-bs-target="#editor__cii-summary-content"
         data-bs-smooth-scroll="true"

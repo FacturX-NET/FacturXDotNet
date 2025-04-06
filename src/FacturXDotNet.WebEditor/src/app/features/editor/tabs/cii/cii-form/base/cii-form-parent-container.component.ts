@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, TemplateRef } from '@angular/core';
+import { Component, computed, ElementRef, inject, input, numberAttribute, TemplateRef, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
@@ -12,7 +12,9 @@ import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight
   selector: 'app-cii-form-parent-container',
   imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
   template: `
-    <h6 [id]="term()" class="my-2 mx-0" [class.text-primary]="isTermHighlighted()">{{ term() }} - {{ name() }}</h6>
+    <h6 #title [id]="term()" class="py-2 m-0 sticky-top bg-body" style="top: {{ topPx() }}px; z-index: {{ zIndex() }}" [class.text-primary]="isTermHighlighted()">
+      {{ term() }} - {{ name() }}
+    </h6>
 
     <div class="ps-3 border-start border-2" [class.border-primary]="isTermHighlighted()">
       <div class="form-text" [class.text-primary]="isTermHighlighted()">
@@ -70,6 +72,21 @@ export class CiiFormParentContainerComponent {
   remarks = input<TemplateRef<any>[]>();
   chorusProRemarks = input<TemplateRef<any>[]>();
   settings = input<EditorSettings>();
+  depth = input.required({ transform: numberAttribute });
+
+  protected topPx = computed(() => {
+    const depth = this.depth();
+    const element = this.titleElement()?.nativeElement as HTMLElement;
+
+    return (depth - 1) * (element.offsetHeight + 16);
+  });
+
+  protected zIndex = computed(() => {
+    const depth = this.depth();
+    return 1000 - depth;
+  });
+
+  private titleElement = viewChild<ElementRef>('title');
 
   private highlightService = inject(CiiFormHighlightTermService);
   protected isTermHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());

@@ -25,11 +25,11 @@ import { CiiFormParentContainerComponent } from './base/cii-form-parent-containe
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-parent-container term="BT-10-00" name="HEADER TARDE AGREEMENT" [settings]="settings()">
+      <app-cii-form-parent-container term="BT-10-00" name="HEADER TRADE AGREEMENT" [settings]="settings()" depth="2">
         <app-cii-form-applicable-header-trade-agreement formGroupName="applicableHeaderTradeAgreement" [settings]="settings()"></app-cii-form-applicable-header-trade-agreement>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container term="BG-13-00" name="DELIVERY INFORMATION" [description]="description" [settings]="settings()">
+      <app-cii-form-parent-container term="BG-13-00" name="DELIVERY INFORMATION" [description]="description" [settings]="settings()" depth="2">
         <ng-template #description>A group of business terms providing information about where and when the goods and services invoiced are delivered.</ng-template>
 
         <app-cii-form-applicable-header-trade-delivery formGroupName="applicableHeaderTradeDelivery" [settings]="settings()"></app-cii-form-applicable-header-trade-delivery>
@@ -42,6 +42,7 @@ import { CiiFormParentContainerComponent } from './base/cii-form-parent-containe
         [remarks]="[remark]"
         [chorusProRemarks]="[chorusProRemark]"
         [settings]="settings()"
+        depth="2"
       >
         <ng-template #description>A group of business terms to specify a direct debit.</ng-template>
         <ng-template #remark>
