@@ -10,7 +10,7 @@ ARG VERSION=0.0.0
 WORKDIR /src
 COPY . .
 RUN dotnet restore "FacturXDotNet.API/FacturXDotNet.API.csproj"
-RUN dotnet build "FacturXDotNet.API/FacturXDotNet.API.csproj" -c $BUILD_CONFIGURATION -o /app/build /p:AssemblyVersion=$VERSION
+RUN dotnet build "FacturXDotNet.API/FacturXDotNet.API.csproj" -c $BUILD_CONFIGURATION -o /app/build /p:Version=$VERSION
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
