@@ -45,38 +45,46 @@ import licenses from '../../../licenses/licenses.json';
           <div class="my-4">
             <h2>API</h2>
 
-            @if (apiBuildInformation.isLoading()) {
-              <p class="placeholder-glow">
-                <span class="placeholder col-6"></span>
-                <span class="placeholder col-8"></span>
-              </p>
-            } @else {
-              <p>
-                The API used by this application is located at <a [href]="apiUrl">{{ apiUrl }}</a
-                >. <br />
-                It is currently in version <span class="fw-semibold">{{ apiBuildInformation.value()?.version }}</span> and was built on
-                {{ apiBuildInformation.value()?.buildDate | date }}.
-              </p>
-            }
-
-            <p class="fw-bold">Dependencies</p>
             @if (apiDependencies.isLoading()) {
-              <div class="list-group">
-                <div class="list-group-item">
-                  <div class="placeholder-glow d-flex flex-column gap-2">
-                    <span class="placeholder col-3"></span>
-                    <span class="placeholder col-6"></span>
+              <div class="placeholder-glow">
+                <p>
+                  <span class="placeholder col-6"></span>
+                  <span class="placeholder col-8"></span>
+                </p>
+
+                <p>
+                  <span class="placeholder col-2"></span>
+                </p>
+
+                <div class="list-group">
+                  <div class="list-group-item">
+                    <div class="d-flex flex-column gap-2">
+                      <span class="placeholder col-3"></span>
+                      <span class="placeholder col-6"></span>
+                    </div>
                   </div>
-                </div>
-                <div class="list-group-item">
-                  <div class="placeholder-glow d-flex flex-column gap-2">
-                    <span class="placeholder col-2"></span>
-                    <span class="placeholder col-7"></span>
+                  <div class="list-group-item">
+                    <div class="d-flex flex-column gap-2">
+                      <span class="placeholder col-2"></span>
+                      <span class="placeholder col-7"></span>
+                    </div>
                   </div>
                 </div>
               </div>
-            } @else {
+            } @else if (apiDependencies.hasValue()) {
+              <p>
+                The API used by this application is located at <a [href]="apiUrl">{{ apiUrl }}</a
+                >. <br />
+                It is currently in version <span class="fw-semibold">{{ apiBuildInformation.value()?.version ?? '???' }}</span> and was built on
+                {{ (apiBuildInformation.value()?.buildDate | date) ?? '???' }}.
+              </p>
+
+              <p class="fw-bold">Dependencies</p>
               <app-about-licenses [packages]="apiDependencies.value() ?? []"></app-about-licenses>
+            } @else {
+              <div class="alert alert-danger">
+                <i class="bi bi-x-circle-fill text-danger"></i> The API server at <a [href]="apiUrl">{{ apiUrl }}</a> is unreachable.
+              </div>
             }
           </div>
 
