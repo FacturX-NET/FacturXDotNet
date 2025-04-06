@@ -38,6 +38,10 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.0" />
         <PackageReference Include="FacturXDotNet.PDFsharp" Version="6.2.0-preview-3" />
+        <PackageReference Include="MinVer" Version="6.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="TurboXml" Version="2.0.2"/>
     </ItemGroup>
 
