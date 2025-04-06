@@ -7,6 +7,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 ARG VERSION=0.0.0
+ENV MINVERVERSIONOVERRIDE=$VERSION
 WORKDIR /src
 COPY . .
 RUN dotnet restore "FacturXDotNet.API/FacturXDotNet.API.csproj"
