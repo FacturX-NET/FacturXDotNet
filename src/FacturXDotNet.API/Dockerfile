@@ -17,6 +17,9 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "FacturXDotNet.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+ARG PORT=5295
+ENV ASPNETCORE_HTTP_PORTS=$PORT
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "FacturXDotNet.API.dll"]
+HEALTHCHECK CMD curl --fail http://localhost:$PORT/health || exit
