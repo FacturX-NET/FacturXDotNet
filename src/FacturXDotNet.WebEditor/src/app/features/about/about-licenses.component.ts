@@ -4,7 +4,7 @@ import { Package } from '../../core/api/info.api';
 @Component({
   selector: 'app-about-licenses',
   template: `
-    <div class="list-group">
+    <div class="list-group list-group-flush">
       @for (license of licenses(); track license) {
         <div class="list-group-item">
           <span class="fw-bold"> {{ license }} </span> ({{ packagesRecord()[license].length }})
