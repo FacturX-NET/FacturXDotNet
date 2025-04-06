@@ -29,10 +29,26 @@ import { IPackageDto } from '../../core/api/api.models';
             <div class="col">
               Available as
               <ul>
-                <li>a <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.CLI">CLI tool</a></li>
-                <li>a <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.API">web API</a> (used by this application)</li>
-                <li>a <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.WebEditor">web editor</a> (this application)</li>
-                <li>a <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet">.NET library</a></li>
+                <li>
+                  a CLI tool:
+                  <a href="https://www.nuget.org/packages/FacturXDotNet.CLI">nuget</a>,
+                  <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.CLI">source</a>
+                </li>
+                <li>
+                  a web API:
+                  <a href="https://api.facturxdotnet.org">app</a>,
+                  <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.API">source</a>
+                </li>
+                <li>
+                  a web app:
+                  <a href="https://editor.facturxdotnet.org">app</a>,
+                  <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.WebEditor">source</a>
+                </li>
+                <li>
+                  a .NET library:
+                  <a href="https://www.nuget.org/packages/FacturXDotNet">nuget</a>,
+                  <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet">source</a>
+                </li>
               </ul>
 
               <span class="fw-bold">Links</span>
@@ -118,8 +134,9 @@ import { IPackageDto } from '../../core/api/api.models';
               } @else {
                 @if (apiConstants.value(); as apiConstants) {
                   <p>
-                    The API server is currently in version <span class="fw-semibold">{{ apiConstants.build.version }}</span> and was built on
-                    {{ apiConstants.build.buildDate | date }}.
+                    The API server is currently in version <span class="fw-semibold text-nowrap">{{ apiConstants.build.version }}</span> and was built on
+                    <span class="text-nowrap">{{ apiConstants.build.buildDate | date }}</span
+                    >.
                   </p>
 
                   <p class="fw-bold">Dependencies</p>
@@ -136,7 +153,9 @@ import { IPackageDto } from '../../core/api/api.models';
               <h2 class="card-title">Web Editor</h2>
 
               <p>
-                The web editor (this application) is currently in version <span class="fw-semibold">{{ webEditorVersion }}</span> and was built on {{ webEditorBuildDate | date }}.
+                The web editor (this application) is currently in version <span class="fw-semibold text-nowrap">{{ webEditorVersion }}</span> and was built on
+                <span class="text-nowrap">{{ webEditorBuildDate | date }}</span
+                >.
               </p>
 
               <p>
@@ -164,8 +183,8 @@ export class AboutPage {
     link: l.link,
   }));
   protected apiUrl = inject(API_BASE_URL);
-  private apiConstantsService = inject(ApiConstantsService);
   protected webEditorVersion = environment.version;
   protected webEditorBuildDate = environment.buildDate;
+  private apiConstantsService = inject(ApiConstantsService);
   protected apiConstants = this.apiConstantsService.info;
 }
