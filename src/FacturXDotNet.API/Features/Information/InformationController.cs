@@ -28,16 +28,32 @@ static class InformationController
                 async ([FromServices] PackagesService packagesService, CancellationToken cancellationToken = default) =>
                 {
                     IReadOnlyCollection<Package> packages = await packagesService.ReadPackagesAsync(cancellationToken);
-                    return packages.Select(
-                        p => new PackageDto
+
+                    List<PackageDto> result = packages.Select(
+                            p => new PackageDto
+                            {
+                                Name = p.PackageName,
+                                Author = string.Join(", ", p.Authors),
+                                Version = p.PackageVersion,
+                                License = p.LicenseType,
+                                Link = p.Repository.Url
+                            }
+                        )
+                        .ToList();
+
+                    // add the dotnet-project-licenses, which is the tool that is used to extract the licenses file used above
+                    result.Add(
+                        new PackageDto
                         {
-                            Name = p.PackageName,
-                            Author = string.Join(", ", p.Authors),
-                            Version = p.PackageVersion,
-                            License = p.LicenseType,
-                            Link = p.Repository.Url
+                            Name = "dotnet-project-licenses",
+                            Author = "Tom Chavakis,  Lexy2,  senslen",
+                            Version = "2.7.1",
+                            License = "Apache-2.0",
+                            Link = "https://github.com/tomchavakis/nuget-license"
                         }
                     );
+
+                    return result;
                 }
             )
             .WithSummary("Dependencies")
