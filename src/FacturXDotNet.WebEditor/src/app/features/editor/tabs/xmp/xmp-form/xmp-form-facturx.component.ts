@@ -15,8 +15,8 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
   template: `
     <div class="card" formGroupName="facturx">
       <div class="card-body">
-        <h4 id="facturx" class="card-title">Factur-X</h4>
-        <p class="card-text">
+        <h4 class="card-title sticky-top bg-body">Factur-X</h4>
+        <p id="facturx" class="card-text">
           The Factur-X metadata is used to describe the attachment that contains the Cross-Industry Invoice metadata. It is a PDF/A extension that MUST be present for the Factur-X
           document tu be valid.
         </p>

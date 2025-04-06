@@ -15,8 +15,8 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
   template: `
     <div class="card" formGroupName="pdf">
       <div class="card-body">
-        <h4 id="pdf" class="card-title">PDF</h4>
-        <p class="card-text">This namespace specifies properties used with Adobe PDF documents.</p>
+        <h4 class="card-title sticky-top bg-body">PDF</h4>
+        <p id="pdf" class="card-text">This namespace specifies properties used with Adobe PDF documents.</p>
 
         <div class="row">
           <div class="col">

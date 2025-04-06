@@ -15,8 +15,8 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
   template: `
     <div class="card" formGroupName="dublinCore">
       <div class="card-body">
-        <h4 id="dublin-core" class="card-title">Dublin Core</h4>
-        <p class="card-text">
+        <h4 class="card-title sticky-top bg-body">Dublin Core</h4>
+        <p id="dublin-core" class="card-text">
           The Dublin Core namespace provides a set of commonly used properties. The names and usage shall be as defined in the Dublin Core Metadata Element Set, created by the
           Dublin Core Metadata Initiative (DCMI).
         </p>
@@ -56,7 +56,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
 
         <div class="mb-3">
           <label class="form-label" for="dublinCoreDate">Date</label>
-          <input id="dublinCoreDate" class="editor__control form-control" formControlName="date" type="date" aria-describedby="dublinCoreDateHelp" />
+          <input id="dublinCoreDate" class="editor__control form-control" formControlName="date" type="datetime-local" aria-describedby="dublinCoreDateHelp" />
           <p id="dublinCoreDateHelp" class="form-text">
             <span class="fw-semibold">DCMI definition</span>: A point or period of time associated with an event in the life cycle of the resource.
           </p>
@@ -64,7 +64,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
 
         <div class="mb-3">
           <label class="form-label" for="dublinCoreDescription">Description</label>
-          <input id="dublinCoreDescription" class="editor__control form-control" formControlName="description" aria-describedby="dublinCoreDescriptionHelp" />
+          <textarea id="dublinCoreDescription" class="form-control" formControlName="description" aria-describedby="dublinCoreDescriptionHelp"></textarea>
           <p id="dublinCoreDescriptionHelp" class="form-text">
             <span class="fw-semibold">DCMI definition</span>: An account of the resource. <br />
             <span class="fw-semibold">XMP addition</span>: XMP usage is a list of textual descriptions of the content of the resource, given in various languages. <br />

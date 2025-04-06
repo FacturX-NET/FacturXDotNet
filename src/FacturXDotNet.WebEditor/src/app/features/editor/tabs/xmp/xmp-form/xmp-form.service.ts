@@ -70,6 +70,7 @@ export class XmpFormService {
     this.form.controls.basic.controls.creatorTool.disable({ emitEvent: false });
 
     this.form.controls.pdf.controls.pdfVersion.disable({ emitEvent: false });
+    this.form.controls.pdf.controls.producer.disable({ emitEvent: false });
 
     this.form.controls.facturx.controls.documentFileName.disable({ emitEvent: false });
     this.form.controls.facturx.controls.documentType.disable({ emitEvent: false });
@@ -97,7 +98,7 @@ export class XmpFormService {
     pdf: new FormGroup({
       keywords: new FormControl('', { nonNullable: true }),
       pdfVersion: new FormControl('', { nonNullable: true }),
-      producer: new FormControl('', { nonNullable: true }),
+      producer: new FormControl('FacturX.NET', { nonNullable: true }),
       trapped: new FormControl<boolean>(false, { nonNullable: true }),
     }),
     dublinCore: new FormGroup({
@@ -176,6 +177,10 @@ export class XmpFormService {
   }
 
   private toFormValue(value: IXmpMetadata): typeof this.form.value {
+    console.log(value.basic!.createDate);
+    console.log(new Date(value.basic!.createDate!));
+    console.log(this.getDateString(new Date(value.basic!.createDate!)));
+
     return {
       pdfAIdentification: {
         amendment: value.pdfAIdentification?.amendment,
@@ -184,11 +189,11 @@ export class XmpFormService {
       },
       basic: {
         identifier: value.basic?.identifier?.[0],
-        createDate: value.basic?.createDate,
+        createDate: value.basic?.createDate === undefined ? undefined : this.getDateString(new Date(value.basic.createDate)),
         creatorTool: value.basic?.creatorTool,
         label: value.basic?.label,
-        metadataDate: value.basic?.metadataDate,
-        modifyDate: value.basic?.modifyDate,
+        metadataDate: value.basic?.metadataDate === undefined ? undefined : this.getDateString(new Date(value.basic.metadataDate)),
+        modifyDate: value.basic?.modifyDate === undefined ? undefined : this.getDateString(new Date(value.basic.modifyDate)),
         rating: value.basic?.rating,
         baseUrl: value.basic?.baseUrl,
         nickname: value.basic?.nickname,
@@ -223,5 +228,10 @@ export class XmpFormService {
         conformanceLevel: value.facturX?.conformanceLevel,
       },
     };
+  }
+
+  private getDateString(date?: Date) {
+    const newDate = date ? new Date(date) : new Date();
+    return new Date(newDate.getTime() - newDate.getTimezoneOffset() * 60000).toISOString().slice(0, -1);
   }
 }

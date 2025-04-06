@@ -1,4 +1,5 @@
-﻿using FacturXDotNet.Models.CII;
+﻿using FacturXDotNet.API.Features.Extract.Models;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.CII;
 using FacturXDotNet.Parsing.XMP;
@@ -81,6 +82,38 @@ static class ExtractController
             .WithSummary("Extract Cross-Industry Invoice")
             .WithDescription("Extract Cross-Industry Invoice data from a FacturX PDF file or an XML file.")
             .Produces<CrossIndustryInvoice>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .DisableAntiforgery();
+
+        routes.MapPost(
+                "/xmp-cii",
+                async ([FromForm] IFormFile file, CancellationToken cancellationToken = default) =>
+                {
+
+                    await using Stream pdfStream = file.OpenReadStream();
+                    FacturXDocument document = await FacturXDocument.LoadFromStream(pdfStream, cancellationToken);
+
+                    XmpMetadata? xmpMetadata = await document.GetXmpMetadataAsync(cancellationToken: cancellationToken);
+                    if (xmpMetadata is null)
+                    {
+                        return Results.BadRequest("No XMP metadata found in the PDF.");
+                    }
+
+                    CrossIndustryInvoiceAttachment? ciiAttachment = await document.GetCrossIndustryInvoiceAttachmentAsync(cancellationToken: cancellationToken);
+                    if (ciiAttachment is null)
+                    {
+                        return Results.BadRequest("No Cross-Industry Invoice attachment found in the PDF.");
+                    }
+
+                    CrossIndustryInvoice crossIndustryInvoice = await ciiAttachment.GetCrossIndustryInvoiceAsync(cancellationToken: cancellationToken);
+
+                    return Results.Ok(new XmpMetadataAndCrossIndustryInvoice { XmpMetadata = xmpMetadata, CrossIndustryInvoice = crossIndustryInvoice });
+                }
+            )
+            .WithSummary("Extract XMP and Cross-Industry Invoice")
+            .WithDescription("Extract the XMP Metadata and the Cross-Industry Invoice data from a FacturX PDF.")
+            .Produces<XmpMetadataAndCrossIndustryInvoice>()
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();

@@ -15,8 +15,8 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
   template: `
     <div class="card" formGroupName="pdfAIdentification">
       <div class="card-body">
-        <h4 id="pdf-a-identification" class="card-title">PDF/A Identification</h4>
-        <p class="card-text">
+        <h4 class="card-title sticky-top bg-body">PDF/A Identification</h4>
+        <p id="pdf-a-identification" class="card-text">
           The only mandatory XMP entries are those which indicate that the file is a PDF/A-1 document and its conformance level. The table below lists all properties in the PDF/A
           identification schema. The namespace URI is incorrectly described in ISO 19005-1. Unlike predefined XMP schemas, the namespace prefix is not only preferred, but required.
         </p>

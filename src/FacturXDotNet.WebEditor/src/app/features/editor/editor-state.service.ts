@@ -18,11 +18,12 @@ export class EditorStateService {
     });
   }
 
-  async save(name: string, cii: ICrossIndustryInvoice, pdf: Blob | undefined, autoGeneratePdf: boolean, attachments: EditorStateAttachment[]): Promise<void> {
-    const state = {
+  async new({ name, xmp, cii, pdf, autoGeneratePdf, attachments }: NewEditorStateArgs): Promise<void> {
+    const state: EditorSavedState = {
       name,
-      cii,
-      autoGeneratePdf,
+      xmp,
+      cii: cii ?? {},
+      autoGeneratePdf: autoGeneratePdf ?? pdf === undefined,
       pdf:
         pdf === undefined
           ? undefined
@@ -30,7 +31,7 @@ export class EditorStateService {
               id: this.idGenerator(),
               content: pdf,
             },
-      attachments,
+      attachments: attachments ?? [],
     };
 
     await this.saveLast(state);
@@ -143,6 +144,15 @@ export class EditorStateService {
   private idGenerator() {
     return Math.random().toString(36).substring(2);
   }
+}
+
+export interface NewEditorStateArgs {
+  name: string;
+  xmp?: IXmpMetadata;
+  cii?: ICrossIndustryInvoice;
+  pdf?: Blob | undefined;
+  autoGeneratePdf?: boolean;
+  attachments?: EditorStateAttachment[];
 }
 
 export interface EditorSavedState {

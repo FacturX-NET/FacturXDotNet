@@ -6,7 +6,6 @@
 
 /* tslint:disable */
 /* eslint-disable */
-
 // ReSharper disable InconsistentNaming
 
 export class ApplicableHeaderTradeAgreement implements IApplicableHeaderTradeAgreement {
@@ -1457,6 +1456,64 @@ export interface IXmpMetadata {
   dublinCore?: IXmpDublinCoreMetadata | undefined;
   pdfAExtensions?: IXmpPdfAExtensionsMetadata | undefined;
   facturX?: IXmpFacturXMetadata | undefined;
+
+  [key: string]: any;
+}
+
+export class XmpMetadataAndCrossIndustryInvoice implements IXmpMetadataAndCrossIndustryInvoice {
+  xmpMetadata!: XmpMetadata;
+  crossIndustryInvoice!: CrossIndustryInvoice;
+
+  [key: string]: any;
+
+  constructor(data?: IXmpMetadataAndCrossIndustryInvoice) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+      this.xmpMetadata = data.xmpMetadata && !(<any>data.xmpMetadata).toJSON ? new XmpMetadata(data.xmpMetadata) : <XmpMetadata>this.xmpMetadata;
+      this.crossIndustryInvoice =
+        data.crossIndustryInvoice && !(<any>data.crossIndustryInvoice).toJSON
+          ? new CrossIndustryInvoice(data.crossIndustryInvoice)
+          : <CrossIndustryInvoice>this.crossIndustryInvoice;
+    }
+    if (!data) {
+      this.xmpMetadata = new XmpMetadata();
+      this.crossIndustryInvoice = new CrossIndustryInvoice();
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.xmpMetadata = _data['xmpMetadata'] ? XmpMetadata.fromJS(_data['xmpMetadata']) : new XmpMetadata();
+      this.crossIndustryInvoice = _data['crossIndustryInvoice'] ? CrossIndustryInvoice.fromJS(_data['crossIndustryInvoice']) : new CrossIndustryInvoice();
+    }
+  }
+
+  static fromJS(data: any): XmpMetadataAndCrossIndustryInvoice {
+    data = typeof data === 'object' ? data : {};
+    let result = new XmpMetadataAndCrossIndustryInvoice();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['xmpMetadata'] = this.xmpMetadata ? this.xmpMetadata.toJSON() : <any>undefined;
+    data['crossIndustryInvoice'] = this.crossIndustryInvoice ? this.crossIndustryInvoice.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IXmpMetadataAndCrossIndustryInvoice {
+  xmpMetadata: IXmpMetadata;
+  crossIndustryInvoice: ICrossIndustryInvoice;
 
   [key: string]: any;
 }

@@ -36,25 +36,21 @@ export class EditorMenuService {
    */
   createNewDocumentFromFacturX(): Observable<void> {
     return from(this.importFileService.importFile('.pdf')).pipe(
-      switchMap((file): Observable<{ file: File; cii?: CrossIndustryInvoice } | undefined> => {
-        if (file === undefined) {
-          return of(undefined);
-        }
-
-        return this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })));
-      }),
+      filter((file) => file !== undefined),
+      switchMap((file) => this.extractApi.extractXmpAndCrossIndustryInvoice(file).pipe(map((result) => ({ file, xmp: result.xmpMetadata, cii: result.crossIndustryInvoice })))),
       filter((result) => result !== undefined),
       switchMap((result) => {
-        return from(this.extractPdfAttachments(result.file)).pipe(map((attachments) => ({ file: result.file, cii: result.cii, attachments })));
+        return from(this.extractPdfAttachments(result.file)).pipe(map((attachments) => ({ ...result, attachments })));
       }),
       switchMap((result) => {
         if (result.cii === undefined) {
-          this.toastService.show({ type: 'error', message: 'Could not extract CII data from file ' + result.file.name + '.' });
-          return of(void 0);
+          return throwError(() => `Could not extract data from file ${result.file.name}.`);
         }
 
         const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        return from(this.editorStateService.save(nameWithoutExtension, result.cii, result.file, false, result.attachments));
+        return from(
+          this.editorStateService.new({ name: nameWithoutExtension, xmp: result.xmp, cii: result.cii, pdf: result.file, autoGeneratePdf: false, attachments: result.attachments }),
+        );
       }),
       takeUntilDestroyed(this.destroyRef),
     );
@@ -65,22 +61,16 @@ export class EditorMenuService {
    */
   createNewDocumentFromCrossIndustryInvoice(): Observable<void> {
     return from(this.importFileService.importFile('.pdf')).pipe(
-      switchMap((file): Observable<{ file: File; cii?: CrossIndustryInvoice } | undefined> => {
-        if (file === undefined) {
-          return of(undefined);
-        }
-
-        return this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })));
-      }),
+      filter((file) => file !== undefined),
+      switchMap((file) => this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })))),
       filter((result) => result !== undefined),
       switchMap((result) => {
         if (result.cii === undefined) {
-          this.toastService.show({ type: 'error', message: 'Could not extract CII data from file ' + result.file.name + '.' });
-          return of(void 0);
+          return throwError(() => `Could not extract CII data from file ${result.file.name}.`);
         }
 
         const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        return from(this.editorStateService.save(nameWithoutExtension, result.cii, undefined, true, []));
+        return from(this.editorStateService.new({ name: nameWithoutExtension, cii: result.cii }));
       }),
       takeUntilDestroyed(this.destroyRef),
     );
@@ -92,12 +82,13 @@ export class EditorMenuService {
   createNewDocumentFromPdf(): Observable<void> {
     return from(this.importFileService.importFile('.pdf')).pipe(
       filter((file) => file !== undefined),
-      switchMap((file) => {
-        return from(this.extractPdfAttachments(file)).pipe(map((attachments) => ({ file: file, attachments })));
+      switchMap((file) => this.extractApi.extractXmpMetadata(file).pipe(map((xmp) => ({ file, xmp })))),
+      switchMap((result) => {
+        return from(this.extractPdfAttachments(result.file)).pipe(map((attachments) => ({ ...result, attachments })));
       }),
       switchMap((result) => {
         const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        return from(this.editorStateService.save(nameWithoutExtension, {}, result.file, false, result.attachments));
+        return from(this.editorStateService.new({ name: nameWithoutExtension, xmp: result.xmp, pdf: result.file, autoGeneratePdf: false, attachments: result.attachments }));
       }),
       takeUntilDestroyed(this.destroyRef),
     );
@@ -108,18 +99,12 @@ export class EditorMenuService {
    */
   importCrossIndustryInvoiceData(): Observable<void> {
     return from(this.importFileService.importFile('.xml')).pipe(
-      switchMap((file): Observable<{ file: File; cii?: CrossIndustryInvoice } | undefined> => {
-        if (file === undefined) {
-          return of(undefined);
-        }
-
-        return this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })));
-      }),
+      filter((file) => file !== undefined),
+      switchMap((file) => this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })))),
       filter((result) => result !== undefined),
       switchMap((result) => {
         if (result.cii === undefined) {
-          this.toastService.show({ type: 'error', message: 'Could not extract CII data from file ' + result.file.name + '.' });
-          return of(void 0);
+          return throwError(() => `Could not extract CII data from file ${result.file.name}.`);
         }
 
         return from(this.editorStateService.updateCii(result.cii));
@@ -163,7 +148,7 @@ export class EditorMenuService {
 
     return this.generateApi.generateFacturX(value.pdf.content, cii, ...value.attachments).pipe(
       map((file) => {
-        downloadFile(file, value.name + '.pdf');
+        downloadFile(file, `${value.name}.pdf`);
       }),
       takeUntilDestroyed(this.destroyRef),
     );
@@ -186,7 +171,7 @@ export class EditorMenuService {
 
     return this.generateApi.generateCrossIndustryInvoice(cii).pipe(
       map((file) => {
-        downloadFile(file, value.name + '.xml');
+        downloadFile(file, `${value.name}.xml`);
       }),
       takeUntilDestroyed(this.destroyRef),
     );
