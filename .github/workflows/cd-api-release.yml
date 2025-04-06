@@ -32,7 +32,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT        
 
       - name: Build the Docker image
-        run: docker build . --file src/FacturXDotNet.API/Dockerfile --tag my-image-name:${{ steps.compute_version.outputs.version }} --label "runnumber=${GITHUB_RUN_ID}"
+        run: cd src; docker build . --file FacturXDotNet.API/Dockerfile --tag my-image-name:${{ steps.compute_version.outputs.version }} --label "runnumber=${GITHUB_RUN_ID}"
 
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
