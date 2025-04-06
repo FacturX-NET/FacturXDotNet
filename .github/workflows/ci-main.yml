@@ -11,7 +11,7 @@ env:
 
 jobs:
   dotnet-releaser:
-    name: Build, Test, Cover
+    name: Build, Test, Cover backend
     runs-on: ubuntu-latest
     
     permissions:
@@ -47,6 +47,73 @@ jobs:
       - name: Upload binaries
         uses: actions/upload-artifact@v4
         with:
-          name: binaries
+          name: backend-binaries
           path: src/artifacts-dotnet-releaser
+          if-no-files-found: 'error'
+  
+  build-and-test-frontend:
+    name: Build frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install MinVer
+        run: dotnet tool install -g minver-cli
+
+      - name: Compute version
+        id: compute_version
+        run: |
+          VERSION=$(minver -t v -v d)
+          echo "Version is $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Compute date
+        id: compute_date
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          echo "Date is $DATE"
+          echo "date=$DATE" >> $GITHUB_OUTPUT
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+          cache-dependency-path: 'src/FacturXDotNet.WebEditor/package-lock.json'
+
+      - name: Install dependencies
+        run: cd src/FacturXDotNet.WebEditor; npm ci
+
+      - name: Dump licenses file
+        run: cd src/FacturXDotNet.WebEditor; node scripts/dump-licenses.js
+
+      - name: Setup environment
+        run: |
+          cd src/FacturXDotNet.WebEditor
+          echo "import { Environment } from './environment.types';"                 > src/environments/environment.ts
+          echo ""                                                                   >> src/environments/environment.ts
+          echo "export const environment: Environment = {"                          >> src/environments/environment.ts
+          echo "  version: '${{ steps.compute_version.outputs.version}}',"          >> src/environments/environment.ts
+          echo "  buildDate: new Date('${{ steps.compute_date.outputs.date }}'),"   >> src/environments/environment.ts
+          echo "  apiUrl: 'https://api.facturxdotnet.org',"                         >> src/environments/environment.ts
+          echo "};"                                                                 >> src/environments/environment.ts
+          echo "Environment is"
+          cat src/environments/environment.ts
+
+      - name: Build
+        run: cd src/FacturXDotNet.WebEditor; npm run build --if-present
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-binaries
+          path: src/FacturXDotNet.WebEditor/dist/facturxdotnet-webeditor
           if-no-files-found: 'error'

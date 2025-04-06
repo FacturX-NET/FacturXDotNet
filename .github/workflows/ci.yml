@@ -37,7 +37,7 @@ jobs:
           add_scope_label: 'true'
   
   build-and-test-backend:
-    name: Build & Test Backend
+    name: Build, Test, Cover backend
     runs-on: ubuntu-latest
     
     permissions:
@@ -121,7 +121,7 @@ jobs:
           path: code-coverage-results.md
 
   build-and-test-frontend:
-    name: Build & Test Frontend
+    name: Build frontend
     runs-on: ubuntu-latest
 
     steps:
