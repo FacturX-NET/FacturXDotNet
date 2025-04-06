@@ -25,6 +25,11 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
       - name: Install MinVer
         run: dotnet tool install -g minver-cli
 
@@ -34,11 +39,6 @@ jobs:
           VERSION=$(minver -t v -v d)
           echo "Version is $VERSION"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Setup .NET 6
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 6.0.x
 
       - name: Install dotnet-project-licenses
         run: dotnet tool install -g dotnet-project-licenses --framework net6.0
