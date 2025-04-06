@@ -59,7 +59,7 @@ jobs:
         if: ${{ steps.push_image.outputs.latest_should_change == 'true' }}
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/facturxdotnet-api
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]' | tr '+' '.')
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=latest
           docker tag facturxdotnet-api $IMAGE_ID:latest 
