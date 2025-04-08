@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, Signal } from '@angular/core';
 import { ImportFileService } from '../../../core/import-file/import-file.service';
 import { ExtractApi } from '../../../core/api/extract.api';
 import { filter, from, map, Observable, of, switchMap, throwError } from 'rxjs';
@@ -20,6 +20,9 @@ export class EditorMenuService {
   private extractApi = inject(ExtractApi);
   private generateApi = inject(GenerateApi);
   private destroyRef = inject(DestroyRef);
+
+  public canImport: Signal<boolean> = computed(() => this.editorStateService.savedState.value() !== null);
+  public canExport: Signal<boolean> = computed(() => this.editorStateService.savedState.value() !== null);
 
   constructor() {
     pdf.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -96,6 +99,10 @@ export class EditorMenuService {
    * Imports a Cross-Industry Invoice file and merge its data with the current state.
    */
   importCrossIndustryInvoiceData(): Observable<void> {
+    if (!this.canImport()) {
+      return throwError(() => new Error('Internal Error: no saved state available.'));
+    }
+
     return from(this.importFileService.importFile('.xml')).pipe(
       filter((file) => file !== undefined),
       switchMap((file) => this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })))),
@@ -116,6 +123,10 @@ export class EditorMenuService {
    * The attachments of the PDF are ignored.
    */
   importPdfImageData(): Observable<void> {
+    if (!this.canImport()) {
+      return throwError(() => new Error('Internal Error: no saved state available.'));
+    }
+
     return from(this.importFileService.importFile('.pdf')).pipe(
       filter((file) => file != undefined),
       switchMap((file) => {
@@ -126,7 +137,7 @@ export class EditorMenuService {
   }
 
   exportFacturX(): Observable<void> {
-    if (!this.editorStateService.savedState.hasValue()) {
+    if (!this.canExport()) {
       return throwError(() => new Error('Internal Error: no saved state available.'));
     }
 
@@ -153,7 +164,7 @@ export class EditorMenuService {
   }
 
   exportCrossIndustryInvoice(): Observable<void> {
-    if (!this.editorStateService.savedState.hasValue()) {
+    if (!this.canExport()) {
       return throwError(() => new Error('Internal Error: no saved state available.'));
     }
 
@@ -176,7 +187,7 @@ export class EditorMenuService {
   }
 
   exportPdfImage(): Observable<void> {
-    if (!this.editorStateService.savedState.hasValue()) {
+    if (!this.canExport()) {
       return throwError(() => new Error('Internal Error: no saved state available.'));
     }
 
