@@ -1,8 +1,8 @@
 import { Component, DestroyRef, inject } from '@angular/core';
-import { ToastService } from '../../../../core/toasts/toast.service';
+import { ToastService } from '../../../core/toasts/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditorMenuService } from './editor-menu.service';
-import { toastError } from '../../../../core/utils/toast-error';
+import { toastError } from '../../../core/utils/toast-error';
 
 @Component({
   selector: 'app-editor-import-menu',
