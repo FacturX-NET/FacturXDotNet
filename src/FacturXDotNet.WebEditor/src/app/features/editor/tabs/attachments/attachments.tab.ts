@@ -44,7 +44,7 @@ import { DeletedAttachment, DeletedAttachmentsService } from './deleted-attachme
 
       @if (deletedAttachments().length > 0) {
         <div class="my-5 text-body-secondary">
-          <h4 class="text-truncate">Deleted attachments</h4>
+          <h4 class="text-truncate">Deleted attachments ({{ deletedAttachments().length }})</h4>
           <hr class="mt-0" />
           <p>
             These attachments have been deleted, they will not be part of the exported results. They can be restored by clicking on the restore button. <br />
