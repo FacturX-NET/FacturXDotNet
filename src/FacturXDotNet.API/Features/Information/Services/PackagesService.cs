@@ -21,6 +21,6 @@ class PackagesService
             throw new InvalidOperationException("Could not read licenses file.");
         }
 
-        return licenses;
+        return licenses.Distinct().ToArray();
     }
 }
