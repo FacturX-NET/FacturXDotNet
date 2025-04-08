@@ -11,10 +11,10 @@ import { toastError } from '../../../core/utils/toast-error';
       <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">File</a>
       <ul class="dropdown-menu">
         <li>
-          <a role="button" class="dropdown-item" (click)="createNewDocument()">Create blank FacturX document</a>
+          <a role="button" class="dropdown-item" (click)="createNewDocument()">New FacturX document</a>
           <a role="button" class="dropdown-item" (click)="createNewDocumentFromFacturX()">Open FacturX document</a>
-          <a role="button" class="dropdown-item" (click)="createNewDocumentFromCrossIndustryInvoice()">Create from Cross-Industry Invoice</a>
-          <a role="button" class="dropdown-item" (click)="createNewDocumentFromPdf()">Create from PDF</a>
+          <a role="button" class="dropdown-item" (click)="createNewDocumentFromCrossIndustryInvoice()">Open Cross-Industry Invoice</a>
+          <a role="button" class="dropdown-item" (click)="createNewDocumentFromPdf()">Open PDF</a>
         </li>
       </ul>
     </li>
