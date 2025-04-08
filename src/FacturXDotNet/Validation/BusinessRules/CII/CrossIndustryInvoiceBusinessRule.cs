@@ -9,7 +9,7 @@ namespace FacturXDotNet.Validation.BusinessRules.CII;
 /// <param name="Name">The name of the rule.</param>
 /// <param name="Description">A description of the rule.</param>
 /// <param name="Profiles">The profiles in which this rule should be enforced.</param>
-public abstract record CrossIndustryInvoiceBusinessRule(string Name, string Description, FacturXProfileFlags Profiles) : BusinessRule(
+public abstract record CrossIndustryInvoiceBusinessRule(string Name, string Description, FacturXProfileFlags Profiles, IReadOnlyCollection<string> FieldsInvolved) : BusinessRule(
     Name,
     Description,
     Profiles,

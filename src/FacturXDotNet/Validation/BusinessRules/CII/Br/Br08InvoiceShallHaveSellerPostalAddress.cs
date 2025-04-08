@@ -9,7 +9,10 @@ namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 public record Br08InvoiceShallHaveSellerPostalAddress() : CrossIndustryInvoiceBusinessRule(
     "BR-08",
     "An Invoice shall contain the Seller postal address (BG-5).",
-    FacturXProfile.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher(),
+    [
+        $"{nameof(CrossIndustryInvoice.SupplyChainTradeTransaction)}.{nameof(SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement)}.{nameof(ApplicableHeaderTradeAgreement.SellerTradeParty)}.{nameof(SellerTradeParty.PostalTradeAddress)}"
+    ]
 )
 {
     /// <inheritdoc />

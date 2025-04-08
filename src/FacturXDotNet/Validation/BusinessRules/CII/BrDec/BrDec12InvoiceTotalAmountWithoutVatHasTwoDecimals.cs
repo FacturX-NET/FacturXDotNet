@@ -10,7 +10,10 @@ namespace FacturXDotNet.Validation.BusinessRules.CII.BrDec;
 public record BrDec12InvoiceTotalAmountWithoutVatHasTwoDecimals() : CrossIndustryInvoiceBusinessRule(
     "BR-DEC-12",
     "The allowed maximum number of decimals for the Invoice total amount without VAT (BT-109) is 2.",
-    FacturXProfile.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher(),
+    [
+        $"{nameof(CrossIndustryInvoice.SupplyChainTradeTransaction)}.{nameof(SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement)}.{nameof(ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation)}.{nameof(SpecifiedTradeSettlementHeaderMonetarySummation.TaxBasisTotalAmount)}"
+    ]
 )
 {
     /// <inheritdoc />

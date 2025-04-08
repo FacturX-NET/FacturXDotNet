@@ -9,7 +9,10 @@ namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 public record Br13InvoiceShallHaveTotalAmountWithoutVat() : CrossIndustryInvoiceBusinessRule(
     "BR-13",
     "An Invoice shall have the Invoice total amount without VAT (BT-109).",
-    FacturXProfile.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher(),
+    [
+        $"{nameof(CrossIndustryInvoice.SupplyChainTradeTransaction)}.{nameof(SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement)}.{nameof(ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation)}.{nameof(SpecifiedTradeSettlementHeaderMonetarySummation.TaxBasisTotalAmount)}"
+    ]
 )
 {
     /// <inheritdoc />

@@ -6,7 +6,12 @@ namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 /// <summary>
 ///     BR-03: An Invoice shall have an Invoice issue date (BT-2).
 /// </summary>
-public record Br03InvoiceShallHaveIssueDate() : CrossIndustryInvoiceBusinessRule("BR-03", "An Invoice shall have an Invoice issue date (BT-2).", FacturXProfile.Minimum.AndHigher())
+public record Br03InvoiceShallHaveIssueDate() : CrossIndustryInvoiceBusinessRule(
+    "BR-03",
+    "An Invoice shall have an Invoice issue date (BT-2).",
+    FacturXProfile.Minimum.AndHigher(),
+    [$"{nameof(CrossIndustryInvoice.ExchangedDocument)}.{nameof(ExchangedDocument.IssueDateTime)}"]
+)
 {
     /// <inheritdoc />
     public override bool Check(CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>

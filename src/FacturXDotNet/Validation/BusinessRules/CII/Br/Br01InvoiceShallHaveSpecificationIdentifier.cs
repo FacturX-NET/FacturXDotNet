@@ -9,7 +9,8 @@ namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 public record Br01InvoiceShallHaveSpecificationIdentifier() : CrossIndustryInvoiceBusinessRule(
     "BR-01",
     "An Invoice shall have a Specification identifier (BT-24).",
-    FacturXProfile.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher(),
+    [$"{nameof(CrossIndustryInvoice.ExchangedDocumentContext)}.{nameof(ExchangedDocumentContext.GuidelineSpecifiedDocumentContextParameterId)}"]
 )
 {
     /// <inheritdoc />

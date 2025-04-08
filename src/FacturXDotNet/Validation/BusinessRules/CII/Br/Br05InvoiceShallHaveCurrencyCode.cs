@@ -9,7 +9,10 @@ namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 public record Br05InvoiceShallHaveCurrencyCode() : CrossIndustryInvoiceBusinessRule(
     "BR-05",
     "An Invoice shall have an Invoice currency code (BT-5).",
-    FacturXProfile.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher(),
+    [
+        $"{nameof(CrossIndustryInvoice.SupplyChainTradeTransaction)}.{nameof(SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement)}.{nameof(ApplicableHeaderTradeSettlement.InvoiceCurrencyCode)}"
+    ]
 )
 {
     /// <inheritdoc />

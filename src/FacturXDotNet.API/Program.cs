@@ -5,6 +5,7 @@ using FacturXDotNet.API.Features.Extract;
 using FacturXDotNet.API.Features.Generate;
 using FacturXDotNet.API.Features.Information;
 using FacturXDotNet.API.Features.Information.Services;
+using FacturXDotNet.API.Features.Validate;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using Serilog;
@@ -60,6 +61,7 @@ try
     app.MapGroup("/info").MapInformationEndpoints().WithTags("Information");
     app.MapGroup("/generate").MapGenerateEndpoints().WithTags("Generate");
     app.MapGroup("/extract").MapExtractEndpoints().WithTags("Extract");
+    app.MapGroup("/validate").MapValidateEndpoints().WithTags("Validate");
 
     app.Run();
 }
