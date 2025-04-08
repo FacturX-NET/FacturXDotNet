@@ -1,13 +1,13 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
-import { ImportFileService } from '../../../../core/import-file/import-file.service';
-import { ExtractApi } from '../../../../core/api/extract.api';
+import { ImportFileService } from '../../../core/import-file/import-file.service';
+import { ExtractApi } from '../../../core/api/extract.api';
 import { filter, from, map, Observable, of, switchMap, throwError } from 'rxjs';
-import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
+import { ICrossIndustryInvoice } from '../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
-import { GenerateApi } from '../../../../core/api/generate.api';
-import { CiiFormService } from '../../tabs/cii/cii-form/cii-form.service';
-import { EditorStateService } from '../../editor-state.service';
+import { downloadBlob, downloadFile } from '../../../core/utils/download-blob';
+import { GenerateApi } from '../../../core/api/generate.api';
+import { CiiFormService } from '../tabs/cii/cii-form/cii-form.service';
+import { EditorStateService } from '../editor-state.service';
 import * as pdf from 'pdfjs-dist';
 
 @Injectable({
@@ -58,7 +58,7 @@ export class EditorMenuService {
    * Import the Cross-Industry Invoice data into a new document.
    */
   createNewDocumentFromCrossIndustryInvoice(): Observable<void> {
-    return from(this.importFileService.importFile('.pdf')).pipe(
+    return from(this.importFileService.importFile('.xml')).pipe(
       filter((file) => file !== undefined),
       switchMap((file) => this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })))),
       filter((result) => result !== undefined),

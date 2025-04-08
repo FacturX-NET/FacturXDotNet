@@ -2,7 +2,7 @@ import { Component, computed, inject, Resource, signal, Signal } from '@angular/
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
-import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
+import { EditorMenuComponent } from './editor-menu/editor-menu.component';
 import { FormsModule } from '@angular/forms';
 import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
 import { CiiTab } from './tabs/cii/cii.tab';
