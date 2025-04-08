@@ -58,7 +58,7 @@ export class EditorMenuService {
    * Import the Cross-Industry Invoice data into a new document.
    */
   createNewDocumentFromCrossIndustryInvoice(): Observable<void> {
-    return from(this.importFileService.importFile('.pdf')).pipe(
+    return from(this.importFileService.importFile('.xml')).pipe(
       filter((file) => file !== undefined),
       switchMap((file) => this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })))),
       filter((result) => result !== undefined),
