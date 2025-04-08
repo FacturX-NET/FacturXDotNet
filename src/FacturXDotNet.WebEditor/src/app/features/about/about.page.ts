@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AboutLicensesComponent } from './about-licenses.component';
 import { environment } from '../../../environments/environment';
@@ -20,10 +20,11 @@ import { IPackageDto } from '../../core/api/api.models';
       <div class="card mb-4">
         <div class="card-body">
           <h2 class="card-title">About</h2>
-          <div class="row">
-            <div class="col-6">
+          <div class="row gy-4">
+            <div class="col col-lg-6">
               <div class="w-100 h-100 d-flex align-items-center justify-content-center">
-                <img ngSrc="logo.png" width="369" height="92" alt="FacturX.NET" />
+                <img class="d-none d-sm-block" ngSrc="logo.png" width="369" height="92" alt="FacturX.NET" />
+                <img class="d-block d-sm-none" ngSrc="logo.png" width="185" height="46" alt="FacturX.NET" />
               </div>
             </div>
             <div class="col">
@@ -60,22 +61,22 @@ import { IPackageDto } from '../../core/api/api.models';
           </div>
 
           <div class="mx-auto pb-4 px-2 py-5">
-            <div class="d-flex justify-content-evenly">
-              <div class="position-relative col-3">
+            <div class="row text-center">
+              <div class="position-relative col">
                 <h5><i class="bi bi-envelope-at"></i> Contact</h5>
                 <p>
                   Have questions about FacturX.NET?<br />
                   <a class="stretched-link" href="mailto:contact@facturxdotnet.org">Drop me a message</a>.
                 </p>
               </div>
-              <div class="position-relative col-3">
+              <div class="position-relative col">
                 <h5><i class="bi bi-chat-dots"></i> Issue</h5>
                 <p>
                   Encountered a bug or unexpected behavior?<br />
                   Report it by <a class="stretched-link" href="https://github.com/FacturX-NET/FacturXDotNet">opening an issue</a>.
                 </p>
               </div>
-              <div class="position-relative col-3">
+              <div class="position-relative col">
                 <h5><i class="bi bi-star"></i> Support</h5>
                 <p>
                   Enjoying FacturX.NET?<br />
@@ -134,8 +135,8 @@ import { IPackageDto } from '../../core/api/api.models';
               } @else {
                 @if (apiConstants.value(); as apiConstants) {
                   <p>
-                    The API server is currently in version <span class="fw-semibold text-nowrap">{{ apiConstants.build.version }}</span> and was built on
-                    <span class="text-nowrap">{{ apiConstants.build.buildDate | date }}</span
+                    The API server is currently in version <span class="fw-semibold text-truncate">{{ apiVersion() }}</span> and was built on
+                    <span class="text-truncate">{{ apiConstants.build.buildDate | date }}</span
                     >.
                   </p>
 
@@ -153,8 +154,8 @@ import { IPackageDto } from '../../core/api/api.models';
               <h2 class="card-title">Web Editor</h2>
 
               <p>
-                The web editor (this application) is currently in version <span class="fw-semibold text-nowrap">{{ webEditorVersion }}</span> and was built on
-                <span class="text-nowrap">{{ webEditorBuildDate | date }}</span
+                The web editor (this application) is currently in version <span class="fw-semibold text-truncate">{{ webEditorVersion }}</span> and was built on
+                <span class="text-truncate">{{ webEditorBuildDate | date }}</span
                 >.
               </p>
 
@@ -183,8 +184,25 @@ export class AboutPage {
     link: l.link,
   }));
   protected apiUrl = inject(API_BASE_URL);
-  protected webEditorVersion = environment.version;
+  protected webEditorVersion = removeBuildInformation(environment.version);
   protected webEditorBuildDate = environment.buildDate;
   private apiConstantsService = inject(ApiConstantsService);
+  protected apiVersion = computed(() => {
+    const apiConstants = this.apiConstantsService.info.value();
+    if (apiConstants === undefined) {
+      return undefined;
+    }
+
+    return removeBuildInformation(apiConstants.build.version);
+  });
   protected apiConstants = this.apiConstantsService.info;
+}
+
+function removeBuildInformation(version: string) {
+  const indexOfPlus = version.indexOf('+');
+  if (indexOfPlus === -1) {
+    return version;
+  }
+
+  return version.substring(0, indexOfPlus);
 }
