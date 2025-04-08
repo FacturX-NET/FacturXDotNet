@@ -13,16 +13,16 @@ export class DeletedAttachmentsService {
 
   private deletedAttachmentsInternal = signal<DeletedAttachment[]>([]);
 
-  recordDeletedAttachment(attachment: EditorStateAttachment) {
+  recordDeletedAttachment(...attachmentsToRecord: EditorStateAttachment[]) {
     const attachments = this.loadAttachments();
-    const newAttachments = [{ ...attachment, id: this.generateId() }, ...attachments];
+    const newAttachments = [...attachmentsToRecord.map((attachment) => ({ ...attachment, id: this.generateId() })), ...attachments];
     this.saveAttachments(newAttachments);
     this.deletedAttachmentsInternal.set(newAttachments);
   }
 
-  removeDeletedAttachment(attachment: DeletedAttachment) {
+  removeDeletedAttachments(...attachmentsToRemove: DeletedAttachment[]) {
     const attachments = this.loadAttachments();
-    const newAttachments = attachments.filter((a) => a.id !== attachment.id);
+    const newAttachments = attachments.filter((a) => attachments.every((attachmentToRemove) => a.id !== attachmentToRemove.id));
     this.saveAttachments(newAttachments);
     this.deletedAttachmentsInternal.set(newAttachments);
   }
