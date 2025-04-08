@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using FacturXDotNet.API.Features.Generate.Models;
 using FacturXDotNet.Generation.CII;
 using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Generation.PDF;
@@ -126,20 +127,4 @@ static class GenerateController
 
         return routes;
     }
-}
-
-/// <summary>
-///     An attachment of a FacturX document.
-/// </summary>
-public class AttachmentDto
-{
-    /// <summary>
-    ///     The content of the attachment.
-    /// </summary>
-    public required IFormFile File { get; set; }
-
-    /// <summary>
-    ///     The description of the attachment.
-    /// </summary>
-    public string? Description { get; set; }
 }
