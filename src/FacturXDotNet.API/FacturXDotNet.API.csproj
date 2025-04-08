@@ -28,12 +28,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="..\.dockerignore">
-            <Link>.dockerignore</Link>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\FacturXDotNet\FacturXDotNet.csproj"/>
     </ItemGroup>
 
