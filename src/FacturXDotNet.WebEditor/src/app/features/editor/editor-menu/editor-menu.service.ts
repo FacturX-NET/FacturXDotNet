@@ -22,7 +22,7 @@ export class EditorMenuService {
   private destroyRef = inject(DestroyRef);
 
   constructor() {
-    pdf.GlobalWorkerOptions.workerSrc = 'https://app.unpkg.com/pdfjs-dist@5.1.91/files/build/pdf.worker.min.mjs';
+    pdf.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
   }
 
   createNewDocument(): Observable<void> {
