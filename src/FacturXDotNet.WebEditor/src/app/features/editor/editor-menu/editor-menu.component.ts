@@ -9,7 +9,7 @@ import { EditorMenuService } from './editor-menu.service';
   selector: 'app-menu',
   imports: [EditorFileMenuComponent, EditorImportMenuComponent, EditorExportMenuComponent, EditorAboutMenuComponent],
   template: `
-    <ul class="nav justify-content-center">
+    <ul class="nav align-items-center justify-content-center">
       <app-editor-file-menu #fileMenu></app-editor-file-menu>
 
       @if (canImport()) {
