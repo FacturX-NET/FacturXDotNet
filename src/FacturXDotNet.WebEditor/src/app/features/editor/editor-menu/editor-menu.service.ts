@@ -28,8 +28,15 @@ export class EditorMenuService {
     pdf.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
   }
 
-  createNewDocument(): Observable<void> {
+  backToWelcomePage(): Observable<void> {
     return from(this.editorStateService.clear());
+  }
+
+  /**
+   * Create a new, blank state.
+   */
+  createNewDocument(): Observable<void> {
+    return from(this.editorStateService.new({ name: 'New Invoice' }));
   }
 
   /**

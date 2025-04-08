@@ -26,7 +26,7 @@ export class EditorFileMenuComponent {
   private destroyRef = inject(DestroyRef);
 
   protected createNewDocument() {
-    this.editorMenuService.createNewDocument().pipe(toastError(this.toastService, 'Could not create new FacturX document.'), takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.editorMenuService.backToWelcomePage().pipe(toastError(this.toastService, 'Could not create new FacturX document.'), takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   protected createNewDocumentFromFacturX() {

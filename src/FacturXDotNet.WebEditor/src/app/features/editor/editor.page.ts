@@ -33,22 +33,26 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
   ],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
-      <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
-        <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
-
-        <app-menu #appMenu [showSelfHostingMenu]="unsafeEnvironment()"></app-menu>
-
-        <div class="flex-grow-1"></div>
-
-        <div class="d-flex gap-2 px-4 small position-relative">
-          <a class="text-light text-decoration-underline stretched-link" [href]="apiUrl" target="_blank"> API server: </a>
-          <app-api-server-status></app-api-server-status>
+      <header class="flex-shrink-0 text-bg-secondary d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <div class="my-2 my-lg-0">
+          <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
         </div>
 
-        <div class="px-4">
-          <a href="https://github.com/FacturX-NET/FacturXDotNet" class="text-light">
-            <i class="bi bi-github fs-4"></i>
-          </a>
+        <div class="col-12 col-lg d-flex align-items-center">
+          <div class="flex-grow-1 d-flex flex-wrap align-items-center justify-content-between">
+            <app-menu #appMenu [showSelfHostingMenu]="unsafeEnvironment()"></app-menu>
+
+            <div class="d-flex gap-2 px-4 small position-relative">
+              <a class="text-light text-decoration-underline stretched-link" [href]="apiUrl" target="_blank"> API server: </a>
+              <app-api-server-status></app-api-server-status>
+            </div>
+          </div>
+
+          <div class="px-4">
+            <a href="https://github.com/FacturX-NET/FacturXDotNet" class="text-light">
+              <i class="bi bi-github fs-4"></i>
+            </a>
+          </div>
         </div>
       </header>
 
