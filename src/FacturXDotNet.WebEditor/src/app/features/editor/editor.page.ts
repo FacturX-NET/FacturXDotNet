@@ -130,15 +130,6 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
       </div>
     </div>
   `,
-  styles: `
-    .btn-shadow {
-      box-shadow: 0 0.5rem 1rem rgba(var(--bs-primary-rgb), 0.15);
-    }
-
-    .btn-shadow:hover {
-      box-shadow: 0 1rem 3rem rgba(var(--bs-primary-rgb), 0.25);
-    }
-  `,
 })
 export class EditorPage {
   protected readonly environment = environment;
