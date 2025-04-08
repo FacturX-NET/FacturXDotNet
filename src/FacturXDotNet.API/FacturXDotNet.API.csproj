@@ -21,6 +21,11 @@
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
     </ItemGroup>
 
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugSymbols>False</DebugSymbols>
+        <DebugType>None</DebugType>
+    </PropertyGroup>
+
     <ItemGroup>
         <AssemblyAttribute Include="FacturXDotNet.API.Attributes.BuildDateAttribute">
             <_Parameter1>$([System.DateTimeOffset]::UtcNow)</_Parameter1>
