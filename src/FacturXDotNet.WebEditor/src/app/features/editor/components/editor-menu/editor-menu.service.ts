@@ -1,7 +1,6 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { ImportFileService } from '../../../../core/import-file/import-file.service';
 import { ExtractApi } from '../../../../core/api/extract.api';
-import { ToastService } from '../../../../core/toasts/toast.service';
 import { filter, from, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -20,11 +19,10 @@ export class EditorMenuService {
   private importFileService = inject(ImportFileService);
   private extractApi = inject(ExtractApi);
   private generateApi = inject(GenerateApi);
-  private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
   constructor() {
-    pdf.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.mjs';
+    pdf.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.0.375/pdf.worker.min.mjs';
   }
 
   createNewDocument(): Observable<void> {
