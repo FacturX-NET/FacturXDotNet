@@ -81,3 +81,18 @@ a {
 .editor__control {
   max-width: 420px;
 }
+
+.btn {
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--fx-purple) !important;
+  --bs-btn-border-color: var(--fx-purple) !important;
+  --bs-btn-hover-bg: var(--fx-purple) !important;
+  --bs-btn-hover-border-color: var(--fx-purple) !important;
+  --bs-btn-focus-shadow-rgb: var(--fx-purple-rgb) !important;
+  --bs-btn-active-bg: var(--fx-purple) !important;
+  --bs-btn-active-border-color: var(--fx-purple) !important;
+  --bs-btn-disabled-color: var(--fx-purple) !important;
+  --bs-btn-disabled-border-color: var(--fx-purple) !important;
+}

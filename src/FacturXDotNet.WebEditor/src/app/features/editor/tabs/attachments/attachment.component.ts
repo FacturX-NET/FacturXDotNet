@@ -14,7 +14,10 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
           <div class="flex-shrink-0 text-body-secondary small">{{ attachment().content.byteLength | filesize }} -</div>
           <input class="form-control form-control-sm" formControlName="description" placeholder="Description" />
         </div>
-        <button class="btn btn-sm btn-outline-secondary mt-3"><i class="bi bi-floppy2-fill"></i> Save</button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-secondary mt-3"><i class="bi bi-floppy2-fill"></i> Save</button>
+          <button type="button" class="btn btn-sm btn-outline-danger mt-3" (click)="cancel()"><i class="bi bi-x-lg"></i> Cancel</button>
+        </div>
       </form>
     } @else {
       <div class="d-flex gap-2">
@@ -65,6 +68,12 @@ export class AttachmentComponent {
   protected save() {
     const attachment = this.attachment();
     this.attachment.set({ ...attachment, name: this.attachmentFormGroup.controls.name.value, description: this.attachmentFormGroup.controls.description.value });
+    this.edit.set(false);
+  }
+
+  protected cancel() {
+    const attachment = this.attachment();
+    this.attachmentFormGroup.reset(attachment, { emitEvent: false });
     this.edit.set(false);
   }
 }
