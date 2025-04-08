@@ -6,7 +6,6 @@ using FacturXDotNet.Parsing.XMP;
 using FacturXDotNet.Validation.BusinessRules;
 using FacturXDotNet.Validation.BusinessRules.CII;
 using FacturXDotNet.Validation.BusinessRules.Hybrid;
-using FacturXDotNet.Validation.BusinessRules.Internals;
 using CrossIndustryInvoiceBusinessRule = FacturXDotNet.Validation.BusinessRules.CII.CrossIndustryInvoiceBusinessRule;
 
 namespace FacturXDotNet.Validation;
@@ -48,23 +47,8 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
         CrossIndustryInvoice cii = await ciiAttachment.GetCrossIndustryInvoiceAsync(password, cancellationToken: cancellationToken);
         FacturXProfile profile = GetExpectedProfile(xmp, cii);
 
-        IEnumerable<HybridBusinessRule> hybridRules = HybridBusinessRules.Rules
-            .Where(rule => rule.Severity is BusinessRuleSeverity.Fatal || rule.Severity is BusinessRuleSeverity.Warning && _options.TreatWarningsAsErrors)
-            .Where(rule => !ShouldSkipRule(rule));
-        if (!hybridRules.All(rule => rule.Check(xmp, ciiAttachment.Name, cii)))
-        {
-            return false;
-        }
-
-        IEnumerable<CrossIndustryInvoiceBusinessRule> businessRules = CrossIndustryInvoiceBusinessRules.Rules
-            .Where(rule => !ShouldSkipRule(rule))
-            .Where(rule => rule.Profiles.Match(profile));
-        if (!businessRules.All(rule => rule.Check(cii)))
-        {
-            return false;
-        }
-
-        return true;
+        return ValidationUtils.ValidateHybridRules(xmp, cii, ciiAttachment, _options.RulesToSkip, _options.TreatWarningsAsErrors)
+               && ValidationUtils.ValidateBusinessRules(cii, profile, _options.RulesToSkip);
     }
 
     /// <summary>
@@ -146,53 +130,10 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
         FacturXProfile expectedProfile = GetExpectedProfile(xmp, cii);
         builder.SetExpectedProfile(expectedProfile);
 
-        CheckHybridRules(builder, xmp, cii is null ? null : ciiAttachmentName, cii);
-        CheckBusinessRules(builder, expectedProfile, cii);
+        ValidationUtils.CheckHybridRules(builder, xmp, cii is null ? null : ciiAttachmentName, cii, _options.CheckCallback, _options.RulesToSkip);
+        ValidationUtils.CheckBusinessRules(builder, expectedProfile, cii, _options.CheckCallback, _options.RulesToSkip);
 
         return builder.Build();
-    }
-
-    void CheckHybridRules(FacturXValidationResultBuilder builder, XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii)
-    {
-        foreach (HybridBusinessRule rule in HybridBusinessRules.Rules)
-        {
-            // Hybrid rules are always expected to pass
-            const BusinessRuleExpectedValidationStatus expectation = BusinessRuleExpectedValidationStatus.Success;
-
-            if (ShouldSkipRule(rule))
-            {
-                builder.AddRuleStatus(rule, expectation, BusinessRuleValidationStatus.Skipped, []);
-            }
-            else
-            {
-                BusinessRuleDetailsLogger logger = new();
-                BusinessRuleValidationStatus status = rule.Check(xmp, ciiAttachmentName, cii, logger) ? BusinessRuleValidationStatus.Passed : BusinessRuleValidationStatus.Failed;
-                BusinessRuleValidationResult result = builder.AddRuleStatus(rule, expectation, status, logger.GetDetails());
-                _options.CheckCallback?.Invoke(result);
-            }
-        }
-    }
-
-    void CheckBusinessRules(FacturXValidationResultBuilder builder, FacturXProfile expectedProfile, CrossIndustryInvoice? cii)
-    {
-        foreach (CrossIndustryInvoiceBusinessRule rule in CrossIndustryInvoiceBusinessRules.Rules)
-        {
-            // Hybrid rules are always expected to pass
-            BusinessRuleExpectedValidationStatus expectation =
-                IsRuleExpectedToFail(rule, expectedProfile) ? BusinessRuleExpectedValidationStatus.Failure : BusinessRuleExpectedValidationStatus.Success;
-
-            if (ShouldSkipRule(rule))
-            {
-                builder.AddRuleStatus(rule, expectation, BusinessRuleValidationStatus.Skipped, []);
-            }
-            else
-            {
-                BusinessRuleDetailsLogger logger = new();
-                BusinessRuleValidationStatus status = rule.Check(cii) ? BusinessRuleValidationStatus.Passed : BusinessRuleValidationStatus.Failed;
-                BusinessRuleValidationResult result = builder.AddRuleStatus(rule, expectation, status, logger.GetDetails());
-                _options.CheckCallback?.Invoke(result);
-            }
-        }
     }
 
     FacturXProfile GetExpectedProfile(XmpMetadata? xmp, CrossIndustryInvoice? cii) =>
@@ -200,12 +141,6 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
             ? _options.ProfileOverride.Value
             : xmp?.FacturX?.ConformanceLevel?.ToFacturXProfile()
               ?? cii?.ExchangedDocumentContext?.GuidelineSpecifiedDocumentContextParameterId?.ToFacturXProfileOrNull() ?? FacturXProfile.None;
-
-    static bool IsRuleExpectedToFail(CrossIndustryInvoiceBusinessRule rule, FacturXProfile profile) => !rule.Profiles.Match(profile);
-
-    bool ShouldSkipRule(CrossIndustryInvoiceBusinessRule rule) => _options.RulesToSkip.Any(r => string.Equals(rule.Name, r, StringComparison.InvariantCultureIgnoreCase));
-
-    bool ShouldSkipRule(HybridBusinessRule rule) => _options.RulesToSkip.Any(r => string.Equals(rule.Name, r, StringComparison.InvariantCultureIgnoreCase));
 
     async Task<bool> CheckHybridRuleAsync(FacturXDocument invoice, HybridBusinessRule hybridRule, string ciiAttachmentName, string? password, CancellationToken cancellationToken)
     {
