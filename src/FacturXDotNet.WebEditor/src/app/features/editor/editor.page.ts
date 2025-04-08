@@ -33,26 +33,30 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
   ],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
-      <header class="flex-shrink-0 text-bg-secondary d-flex align-items-center">
-        <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
-
-        <app-menu #appMenu [showSelfHostingMenu]="unsafeEnvironment()"></app-menu>
-
-        <div class="flex-grow-1"></div>
-
-        <div class="d-flex gap-2 px-4 small position-relative">
-          <a class="text-light text-decoration-underline stretched-link" [href]="apiUrl" target="_blank"> API server: </a>
-          <app-api-server-status></app-api-server-status>
+      <header class="flex-shrink-0 text-bg-secondary d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <div class="my-2 my-lg-0">
+          <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
         </div>
 
-        <div class="px-4">
-          <a href="https://github.com/FacturX-NET/FacturXDotNet" class="text-light">
-            <i class="bi bi-github fs-4"></i>
-          </a>
+        <div class="col-12 col-lg d-flex align-items-center">
+          <div class="flex-grow-1 d-flex flex-wrap align-items-center justify-content-center justify-content-lg-between">
+            <app-menu #appMenu [showSelfHostingMenu]="unsafeEnvironment()"></app-menu>
+
+            <div class="d-flex gap-2 px-4 small position-relative">
+              <a class="text-light text-decoration-underline stretched-link" [href]="apiUrl" target="_blank"> API server: </a>
+              <app-api-server-status></app-api-server-status>
+            </div>
+          </div>
+
+          <div class="px-4">
+            <a href="https://github.com/FacturX-NET/FacturXDotNet" class="text-light">
+              <i class="bi bi-github fs-4"></i>
+            </a>
+          </div>
         </div>
       </header>
 
-      <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-1 mx-md-2 mx-lg-3 mt-3 mb-1 overflow-hidden">
+      <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
         @if (state.value(); as value) {
           <header>
             <app-editor-header [state]="value" [tab]="tab()" (tabChange)="changeTab($event)" [settings]="settings()"></app-editor-header>
@@ -107,20 +111,22 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
         }
       </main>
 
-      <div class="flex-shrink-0 d-flex justify-content-center gap-2 px-4 small" [class.d-none]="!unsafeEnvironment()">
-        <div class="text-truncate">
-          <span class="text-danger fw-semibold"><i class="bi bi-exclamation-triangle-fill "></i> Do not share sensitive data </span>
-          This application is hosted in an unsafe cloud environment. Although I do not store your data, or use your it for any purpose other than the application, the hosting
-          environment is beyond my control.
+      <div class="py-lg-1">
+        <div class="flex-shrink-0 d-flex justify-content-center gap-2 px-4 small" [class.d-none]="!unsafeEnvironment()">
+          <div class="text-truncate">
+            <span class="text-danger fw-semibold"><i class="bi bi-exclamation-triangle-fill "></i> Do not share sensitive data </span>
+            This application is hosted in an unsafe cloud environment. Although I do not store your data, or use your it for any purpose other than the application, the hosting
+            environment is beyond my control.
+          </div>
+          <div class="text-nowrap">
+            <a href="javascript:void 0;">About self-hosting...</a>
+          </div>
         </div>
-        <div class="text-nowrap">
-          <a href="javascript:void 0;">About self-hosting...</a>
-        </div>
-      </div>
 
-      <div class="flex-shrink-0 text-body-tertiary text-center px-4 text-truncate small">
-        <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and under the MIT
-        License, feel free to use, modify, and share.
+        <div class="flex-shrink-0 text-body-tertiary text-center px-4 text-truncate small">
+          <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and under the MIT
+          License, feel free to use, modify, and share.
+        </div>
       </div>
     </div>
   `,
