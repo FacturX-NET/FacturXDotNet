@@ -7,7 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-editor-welcome',
   template: `
-    <div class="w-100 h-100 d-flex flex-column gap-4 align-items-center justify-content-center">
+    <div class="min-h-100 d-flex flex-column gap-4 align-items-center justify-content-center py-4">
       <h1 class="lead fs-1">Get started</h1>
 
       <div class="w-100 px-4 d-flex flex-wrap gap-4 justify-content-center">
