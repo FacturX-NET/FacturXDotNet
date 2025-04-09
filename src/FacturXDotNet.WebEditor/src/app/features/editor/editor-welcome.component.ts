@@ -52,21 +52,42 @@ export class EditorWelcomeComponent {
   private destroyRef = inject(DestroyRef);
 
   createNewDocument() {
-    this.editorMenuService.createNewDocument().pipe(toastError(this.toastService, 'Could not create blank document.'), takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.editorMenuService
+      .createNewDocument()
+      .pipe(
+        toastError(this.toastService, (message) => `Could not create blank document: ${message}.`),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 
   createNewDocumentFromFacturX() {
-    this.editorMenuService.createNewDocumentFromFacturX().pipe(toastError(this.toastService, 'Could not import FacturX file.'), takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.editorMenuService
+      .createNewDocumentFromFacturX()
+      .pipe(
+        toastError(this.toastService, (message) => `Could not import FacturX file: ${message}.`),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 
   createNewDocumentFromCrossIndustryInvoice() {
     this.editorMenuService
       .createNewDocumentFromCrossIndustryInvoice()
-      .pipe(toastError(this.toastService, 'Could not import Cross-Industry Invoice file.'), takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        toastError(this.toastService, (message) => `Could not import Cross-Industry Invoice file: ${message}.`),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe();
   }
 
   createNewDocumentFromPdf() {
-    this.editorMenuService.createNewDocumentFromPdf().pipe(toastError(this.toastService, 'Could not import PDF file.'), takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.editorMenuService
+      .createNewDocumentFromPdf()
+      .pipe(
+        toastError(this.toastService, (message) => `Could not import PDF file: ${message}.`),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 }

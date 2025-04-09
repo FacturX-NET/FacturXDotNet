@@ -99,7 +99,7 @@ export class AttachmentsTab {
           return from(file.arrayBuffer()).pipe(map((content) => ({ file, content })));
         }),
         switchMap((result) => from(this.addAttachmentsInternal({ name: result.file.name, content: new Uint8Array(result.content) }))),
-        toastError(this.toastService, 'Could not import file.'),
+        toastError(this.toastService, (message) => `Could not import file: ${message}.`),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();

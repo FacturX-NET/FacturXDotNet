@@ -26,21 +26,42 @@ export class EditorFileMenuComponent {
   private destroyRef = inject(DestroyRef);
 
   protected createNewDocument() {
-    this.editorMenuService.backToWelcomePage().pipe(toastError(this.toastService, 'Could not create new FacturX document.'), takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.editorMenuService
+      .backToWelcomePage()
+      .pipe(
+        toastError(this.toastService, (message) => `Could not create new Factur-X document: ${message}`),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 
   protected createNewDocumentFromFacturX() {
-    this.editorMenuService.createNewDocumentFromFacturX().pipe(toastError(this.toastService, 'Could not open FacturX document.'), takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.editorMenuService
+      .createNewDocumentFromFacturX()
+      .pipe(
+        toastError(this.toastService, (message) => `Could not open Factur-X document: ${message}`),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 
   protected createNewDocumentFromCrossIndustryInvoice() {
     this.editorMenuService
       .createNewDocumentFromCrossIndustryInvoice()
-      .pipe(toastError(this.toastService, 'Could not open FacturX document.'), takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        toastError(this.toastService, (message) => `Could not open Factur-X document: ${message}`),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe();
   }
 
   protected createNewDocumentFromPdf() {
-    this.editorMenuService.createNewDocumentFromPdf().pipe(toastError(this.toastService, 'Could not open FacturX document.'), takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.editorMenuService
+      .createNewDocumentFromPdf()
+      .pipe(
+        toastError(this.toastService, (message) => `Could not open Factur-X document: ${message}`),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 }

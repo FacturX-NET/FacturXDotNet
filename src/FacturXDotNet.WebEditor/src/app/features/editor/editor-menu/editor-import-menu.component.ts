@@ -26,11 +26,20 @@ export class EditorImportMenuComponent {
   importCrossIndustryInvoice() {
     this.editorMenuService
       .importCrossIndustryInvoiceData()
-      .pipe(toastError(this.toastService, 'Could not import Cross-Industry Invoice file.'), takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        toastError(this.toastService, (message) => `Could not import Cross-Industry Invoice file: ${message}`),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe();
   }
 
   importPdfImage() {
-    this.editorMenuService.importPdfImageData().pipe(toastError(this.toastService, 'Could not create PDF image.'), takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.editorMenuService
+      .importPdfImageData()
+      .pipe(
+        toastError(this.toastService, (message) => `Could not create PDF image: ${message}`),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 }

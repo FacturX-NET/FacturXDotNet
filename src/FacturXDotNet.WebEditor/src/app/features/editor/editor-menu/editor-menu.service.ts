@@ -107,7 +107,7 @@ export class EditorMenuService {
    */
   importCrossIndustryInvoiceData(): Observable<void> {
     if (!this.canImport()) {
-      return throwError(() => new Error('Internal Error: no saved state available.'));
+      return throwError(() => new Error('Internal Error: no saved state available'));
     }
 
     return from(this.importFileService.importFile('.xml')).pipe(
@@ -131,7 +131,7 @@ export class EditorMenuService {
    */
   importPdfImageData(): Observable<void> {
     if (!this.canImport()) {
-      return throwError(() => new Error('Internal Error: no saved state available.'));
+      return throwError(() => new Error('Internal Error: no saved state available'));
     }
 
     return from(this.importFileService.importFile('.pdf')).pipe(
@@ -145,24 +145,26 @@ export class EditorMenuService {
 
   exportFacturX(): Observable<void> {
     if (!this.canExport()) {
-      return throwError(() => new Error('Internal Error: no saved state available.'));
+      return throwError(() => new Error('Internal Error: no saved state available'));
     }
 
     const value = this.editorStateService.savedState.value();
     if (value === null) {
-      return throwError(() => new Error('Internal Error: no saved state available.'));
+      return throwError(() => new Error('Internal Error: no saved state available'));
     }
 
-    if (value?.pdf === undefined) {
-      return throwError(() => new Error('Internal Error: the PDF is not set.'));
-    }
+    return from(this.getValidCii()).pipe(
+      switchMap((cii) => {
+        if (value?.pdf === undefined) {
+          return throwError(() => new Error('Internal Error: the PDF is not set'));
+        }
 
-    const cii = this.getValidCii();
-    if (cii === undefined) {
-      return throwError(() => new Error('Internal Error: no valid CII data available.'));
-    }
+        if (cii === undefined) {
+          return throwError(() => new Error('Invalid Cross-Industry Invoice data'));
+        }
 
-    return this.generateApi.generateFacturX(value.xmp, value.pdf.content, cii, ...value.attachments).pipe(
+        return this.generateApi.generateFacturX(value.xmp, value.pdf.content, cii, ...value.attachments);
+      }),
       map((file) => {
         downloadFile(file, `${value.name}.pdf`);
       }),
@@ -172,20 +174,22 @@ export class EditorMenuService {
 
   exportCrossIndustryInvoice(): Observable<void> {
     if (!this.canExport()) {
-      return throwError(() => new Error('Internal Error: no saved state available.'));
+      return throwError(() => new Error('Internal Error: no saved state available'));
     }
 
     const value = this.editorStateService.savedState.value();
     if (value === null) {
-      return throwError(() => new Error('Internal Error: no saved state available.'));
+      return throwError(() => new Error('Internal Error: no saved state available'));
     }
 
-    const cii = this.getValidCii();
-    if (cii === undefined) {
-      return throwError(() => new Error('Internal Error: no valid CII data available.'));
-    }
+    return from(this.getValidCii()).pipe(
+      switchMap((cii) => {
+        if (cii === undefined) {
+          return throwError(() => new Error('Invalid Cross-Industry Invoice data'));
+        }
 
-    return this.generateApi.generateCrossIndustryInvoice(cii).pipe(
+        return this.generateApi.generateCrossIndustryInvoice(cii);
+      }),
       map((file) => {
         downloadFile(file, `${value.name}.xml`);
       }),
@@ -195,20 +199,20 @@ export class EditorMenuService {
 
   exportPdfImage(): Observable<void> {
     if (!this.canExport()) {
-      return throwError(() => new Error('Internal Error: no saved state available.'));
+      return throwError(() => new Error('Internal Error: no saved state available'));
     }
 
     const value = this.editorStateService.savedState.value();
     if (value?.pdf === undefined) {
-      return throwError(() => new Error('Internal Error: the PDF is not set.'));
+      return throwError(() => new Error('Internal Error: the PDF is not set'));
     }
 
     downloadBlob(value.pdf.content, value.name ?? 'invoice.pdf');
     return of(void 0);
   }
 
-  private getValidCii(): ICrossIndustryInvoice | undefined {
-    if (!this.ciiFormService.validate()) {
+  private async getValidCii(): Promise<ICrossIndustryInvoice | undefined> {
+    if (!(await this.ciiFormService.validate())) {
       return undefined;
     }
 

@@ -33,7 +33,7 @@ export class EditorExportMenuComponent {
     this.editorMenuService
       .exportFacturX()
       .pipe(
-        toastError(this.toastService, 'Could not export FacturX document.'),
+        toastError(this.toastService, (message) => `Could not export Factur-X document: ${message}.`),
         finalize(() => {
           this.exporting.emit(false);
         }),
@@ -48,7 +48,7 @@ export class EditorExportMenuComponent {
     this.editorMenuService
       .exportCrossIndustryInvoice()
       .pipe(
-        toastError(this.toastService, 'Could not export Cross-Industry Invoice data.'),
+        toastError(this.toastService, (message) => `Could not export Cross-Industry Invoice data: ${message}.`),
         finalize(() => {
           this.exporting.emit(false);
         }),
@@ -63,7 +63,7 @@ export class EditorExportMenuComponent {
     this.editorMenuService
       .exportPdfImage()
       .pipe(
-        toastError(this.toastService, 'Could not export PDF image.'),
+        toastError(this.toastService, (message) => `Could not export PDF image: ${message}.`),
         finalize(() => {
           this.exporting.emit(false);
         }),

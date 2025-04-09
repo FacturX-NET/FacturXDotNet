@@ -1,9 +1,16 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateOnlyFormat, GuidelineSpecifiedDocumentContextParameterId, InvoiceTypeCode, VatOnlyTaxSchemeIdentifier } from '../../../../../core/api/api.models';
-import { debounceTime, from, Subject, switchMap, tap } from 'rxjs';
+import { DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import {
+  DateOnlyFormat,
+  GuidelineSpecifiedDocumentContextParameterId,
+  ICrossIndustryInvoice,
+  InvoiceTypeCode,
+  VatOnlyTaxSchemeIdentifier,
+} from '../../../../../core/api/api.models';
+import { debounceTime, firstValueFrom, from, map, Observable, Subject, switchMap, tap } from 'rxjs';
 import { EditorSavedState, EditorStateService } from '../../../editor-state.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ValidateApi } from '../../../../../core/api/validate.api';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +19,9 @@ export class CiiFormService {
   state = signal<CiiFormState>('pristine');
   private saveSubject = new Subject<EditorSavedState>();
 
+  private validateApi = inject(ValidateApi);
   private editorStateService = inject(EditorStateService);
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
     this.saveSubject
@@ -20,7 +29,7 @@ export class CiiFormService {
         tap(() => this.state.set('dirty')),
         debounceTime(1000),
         tap(() => this.state.set('saving')),
-        switchMap((state) => from(this.editorStateService.updateCii(state))),
+        switchMap((state) => from(this.editorStateService.updateCii(state.cii))),
         tap(() => this.state.set('pristine')),
         takeUntilDestroyed(),
       )
@@ -32,7 +41,7 @@ export class CiiFormService {
         return;
       }
 
-      this.form.reset(value, { emitEvent: false });
+      this.form.patchValue(this.toFormValue(value), { emitEvent: false });
     });
 
     this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
@@ -45,9 +54,15 @@ export class CiiFormService {
     });
   }
 
-  validate() {
+  async validate(): Promise<boolean> {
     this.form.markAllAsTouched();
-    return this.form.valid;
+    if (!this.form.valid) {
+      return false;
+    }
+
+    const cii: ICrossIndustryInvoice = this.fromFormValue(this.form.getRawValue());
+    const validationResult = await firstValueFrom(this.validateApi.validateCrossIndustryInvoice(cii).pipe(takeUntilDestroyed(this.destroyRef)));
+    return validationResult.valid;
   }
 
   form = new FormGroup({
@@ -436,6 +451,116 @@ export class CiiFormService {
       ],
     },
   ];
+
+  private fromFormValue(value: Required<typeof this.form.value>): ICrossIndustryInvoice {
+    return {
+      exchangedDocumentContext: {
+        businessProcessSpecifiedDocumentContextParameterId: value.exchangedDocumentContext?.businessProcessSpecifiedDocumentContextParameterId,
+        guidelineSpecifiedDocumentContextParameterId: value.exchangedDocumentContext?.guidelineSpecifiedDocumentContextParameterId,
+      },
+      exchangedDocument: {
+        id: value.exchangedDocument?.id,
+        typeCode: value.exchangedDocument?.typeCode,
+        issueDateTime: value.exchangedDocument?.issueDateTime,
+        issueDateTimeFormat: value.exchangedDocument?.issueDateTimeFormat,
+      },
+      supplyChainTradeTransaction: {
+        applicableHeaderTradeAgreement: {
+          buyerReference: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.buyerReference,
+          sellerTradeParty: {
+            name: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.name,
+            specifiedLegalOrganization: {
+              id: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.specifiedLegalOrganization?.id,
+              idSchemeId: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.specifiedLegalOrganization?.idSchemeId,
+            },
+            postalTradeAddress: {
+              countryId: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.postalTradeAddress?.countryId,
+            },
+            specifiedTaxRegistration: {
+              id: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.specifiedTaxRegistration?.id,
+              idSchemeId: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.specifiedTaxRegistration?.idSchemeId,
+            },
+          },
+          buyerTradeParty: {
+            name: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.buyerTradeParty?.name,
+            specifiedLegalOrganization: {
+              id: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.buyerTradeParty?.specifiedLegalOrganization?.id,
+              idSchemeId: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.buyerTradeParty?.specifiedLegalOrganization?.idSchemeId,
+            },
+          },
+          buyerOrderReferencedDocument: {
+            issuerAssignedId: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.buyerOrderReferencedDocument?.issuerAssignedId,
+          },
+        },
+        applicableHeaderTradeDelivery: {},
+        applicableHeaderTradeSettlement: {
+          invoiceCurrencyCode: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.invoiceCurrencyCode,
+          specifiedTradeSettlementHeaderMonetarySummation: {
+            taxBasisTotalAmount: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.specifiedTradeSettlementHeaderMonetarySummation?.taxBasisTotalAmount,
+            taxTotalAmount: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.specifiedTradeSettlementHeaderMonetarySummation?.taxTotalAmount,
+            taxTotalAmountCurrencyId: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.specifiedTradeSettlementHeaderMonetarySummation?.taxTotalAmountCurrencyId,
+            grandTotalAmount: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.specifiedTradeSettlementHeaderMonetarySummation?.grandTotalAmount,
+            duePayableAmount: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.specifiedTradeSettlementHeaderMonetarySummation?.duePayableAmount,
+          },
+        },
+      },
+    };
+  }
+
+  private toFormValue(value: ICrossIndustryInvoice): typeof this.form.value {
+    return {
+      exchangedDocumentContext: {
+        businessProcessSpecifiedDocumentContextParameterId: value.exchangedDocumentContext?.businessProcessSpecifiedDocumentContextParameterId,
+        guidelineSpecifiedDocumentContextParameterId: value.exchangedDocumentContext?.guidelineSpecifiedDocumentContextParameterId,
+      },
+      exchangedDocument: {
+        id: value.exchangedDocument?.id,
+        typeCode: value.exchangedDocument?.typeCode,
+        issueDateTime: value.exchangedDocument?.issueDateTime,
+        issueDateTimeFormat: value.exchangedDocument?.issueDateTimeFormat,
+      },
+      supplyChainTradeTransaction: {
+        applicableHeaderTradeAgreement: {
+          buyerReference: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.buyerReference,
+          sellerTradeParty: {
+            name: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.name,
+            specifiedLegalOrganization: {
+              id: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.specifiedLegalOrganization?.id,
+              idSchemeId: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.specifiedLegalOrganization?.idSchemeId,
+            },
+            postalTradeAddress: {
+              countryId: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.postalTradeAddress?.countryId,
+            },
+            specifiedTaxRegistration: {
+              id: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.specifiedTaxRegistration?.id,
+              idSchemeId: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.sellerTradeParty?.specifiedTaxRegistration?.idSchemeId,
+            },
+          },
+          buyerTradeParty: {
+            name: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.buyerTradeParty?.name,
+            specifiedLegalOrganization: {
+              id: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.buyerTradeParty?.specifiedLegalOrganization?.id,
+              idSchemeId: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.buyerTradeParty?.specifiedLegalOrganization?.idSchemeId,
+            },
+          },
+          buyerOrderReferencedDocument: {
+            issuerAssignedId: value.supplyChainTradeTransaction?.applicableHeaderTradeAgreement?.buyerOrderReferencedDocument?.issuerAssignedId,
+          },
+        },
+        applicableHeaderTradeDelivery: {},
+        applicableHeaderTradeSettlement: {
+          invoiceCurrencyCode: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.invoiceCurrencyCode,
+          specifiedTradeSettlementHeaderMonetarySummation: {
+            taxBasisTotalAmount: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.specifiedTradeSettlementHeaderMonetarySummation?.taxBasisTotalAmount,
+            taxTotalAmount: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.specifiedTradeSettlementHeaderMonetarySummation?.taxTotalAmount,
+            taxTotalAmountCurrencyId: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.specifiedTradeSettlementHeaderMonetarySummation?.taxTotalAmountCurrencyId,
+            grandTotalAmount: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.specifiedTradeSettlementHeaderMonetarySummation?.grandTotalAmount,
+            duePayableAmount: value.supplyChainTradeTransaction?.applicableHeaderTradeSettlement?.specifiedTradeSettlementHeaderMonetarySummation?.duePayableAmount,
+          },
+        },
+      },
+    };
+  }
 }
 
 export type CiiFormState = 'pristine' | 'dirty' | 'saving';
@@ -500,3 +625,7 @@ interface CiiFormField extends CiiFormControlBase {
    */
   control: FormControl;
 }
+
+type ExtractFormControl<T> = {
+  [K in keyof T]: T[K] extends FormControl<infer U> ? U : T[K];
+};
