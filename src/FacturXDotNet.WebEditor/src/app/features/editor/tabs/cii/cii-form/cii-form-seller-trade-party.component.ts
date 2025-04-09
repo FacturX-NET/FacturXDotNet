@@ -14,7 +14,6 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
     CiiFormSellerTradePartySpecifiedLegalOrganizationComponent,
     CiiFormSellerTradePartyPostalTradeAddress,
     CiiFormSellerTradePartySpecifiedTaxRegistration,
-
     CiiFormParentContainerComponent,
     CiiFormControlComponent,
   ],
@@ -28,7 +27,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control term="BT-27" name="Seller name" [description]="bt27Description" [businessRules]="[{ id: 'BR-6', template: br6 }]" [settings]="settings()" #bt27Control>
+      <app-cii-form-control term="BT-27" name="Seller name" [description]="bt27Description" [businessRules]="[{ id: 'BR-06', template: br6 }]" [settings]="settings()" #bt27Control>
         <ng-template #bt27Description>
           The full formal name by which the Seller is registered in the national registry of legal entities or as a Taxable person or otherwise trades as a person or persons.
         </ng-template>
@@ -47,11 +46,11 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
       </app-cii-form-parent-container>
 
       <app-cii-form-parent-container
-        term="BG-5"
+        term="BR-05"
         name="SELLER POSTAL ADDRESS"
         [description]="description"
         [remarks]="[remark]"
-        [businessRules]="[{ id: 'BR-8', template: br8 }]"
+        [businessRules]="[{ id: 'BR-08', template: br8 }]"
         [settings]="settings()"
         depth="4"
       >

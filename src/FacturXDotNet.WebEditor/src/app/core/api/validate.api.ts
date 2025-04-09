@@ -19,7 +19,7 @@ export class ValidateApi {
       map(() => ({ valid: true })),
       catchError((err) => {
         if (err.status === 400 && err.error !== undefined) {
-          const errors = err.error as Record<string, string[]>;
+          const errors = err.error.errors as Record<string, string[]>;
           return of({ valid: false, errors });
         }
 

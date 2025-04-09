@@ -23,7 +23,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
         term="BT-5"
         name="Invoice currency code"
         [description]="description"
-        [businessRules]="[{ id: 'BR-5', template: br5 }]"
+        [businessRules]="[{ id: 'BR-05', template: br5 }]"
         [remarks]="[remark]"
         [chorusProRemarks]="[chorusProRemark]"
         [settings]="settings()"

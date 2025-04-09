@@ -28,7 +28,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
         term="BT-24"
         name="Specification identifier"
         [description]="bt24Description"
-        [businessRules]="[{ id: 'BR-1', template: br1 }]"
+        [businessRules]="[{ id: 'BR-01', template: br1 }]"
         [remarks]="[bt24Remark]"
         [settings]="settings()"
         #bt24Control

@@ -1,24 +1,25 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { CiiFormControl } from '../cii-form/cii-form.service';
+import { CiiFormControl, CiiFormService } from '../cii-form/cii-form.service';
 import { EditorSettings } from '../../../editor-settings.service';
 import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
 import { CiiFormHighlightChorusProRemarkService } from '../cii-form-highlight-chorus-pro-remark.service';
 import { CiiFormHighlightTermService } from '../cii-form-highlight-term.service';
 import { CiiFormHighlightRemarkService } from '../cii-form-highlight-remark.service';
 import { CiiFormHighlightBusinessRuleService } from '../cii-form-highlight-business-rule.service';
+import { ciiTerms } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-summary-node',
   imports: [ScrollToDirective],
   template: `
     <div class="text-truncate d-flex gap-1">
-      @if (node().kind === 'group') {
+      @if (term().kind === 'group') {
         <span [class.fw-bold]="isNodeHighlighted()" (mouseenter)="this.highlightTerm(true)" (mouseleave)="this.highlightTerm(false)">
-          <span class="fw-semibold"> {{ node().term }} </span> - {{ node().name }}
+          <span class="fw-semibold"> {{ term().term }} </span> - {{ term().name }}
         </span>
       } @else {
         <a
-          [scrollTo]="node().term"
+          [scrollTo]="term().term"
           [class.fw-bold]="isNodeHighlighted()"
           [class.text-success]="isValid"
           [class.text-danger]="isInvalid"
@@ -27,19 +28,21 @@ import { CiiFormHighlightBusinessRuleService } from '../cii-form-highlight-busin
           (mouseenter)="this.highlightTerm(true)"
           (mouseleave)="this.highlightTerm(false)"
         >
-          <span class="fw-semibold"> {{ node().term }} </span> - {{ node().name }}
+          <span class="fw-semibold"> {{ term().term }} </span> - {{ term().name }}
         </a>
       }
 
       @if (settings(); as settings) {
         <div class="text-body-tertiary d-flex align-items-center gap-1" style="font-size: smaller">
           @if (settings.showBusinessRules) {
-            @if (node().businessRules; as businessRules) {
+            @if (term().businessRules; as businessRules) {
               @for (rule of businessRules; track rule) {
                 <a
                   [scrollTo]="rule"
                   class="hoverlink"
                   [class.fw-bold]="highlightedBusinessRule() === rule"
+                  [class.text-danger]="businessRuleStatuses()[rule] === 'invalid'"
+                  [class.text-success]="businessRuleStatuses()[rule] === 'valid'"
                   (mouseenter)="highlightBusinessRule(rule, true)"
                   (mouseleave)="highlightBusinessRule(rule, false)"
                   >{{ rule }}</a
@@ -50,7 +53,7 @@ import { CiiFormHighlightBusinessRuleService } from '../cii-form-highlight-busin
 
           @if (node().hasRemarks && settings.showRemarks) {
             <a
-              [scrollTo]="node().term + '-remarks'"
+              [scrollTo]="term().term + '-remarks'"
               class="hoverlink"
               [class.fw-bold]="highlightedRemark() === node().term"
               (mouseenter)="highlightRemark(node().term, true)"
@@ -62,7 +65,7 @@ import { CiiFormHighlightBusinessRuleService } from '../cii-form-highlight-busin
 
           @if (node().hasChorusProRemarks && settings.showChorusProRemarks) {
             <a
-              [scrollTo]="node().term + '-cpro-remarks'"
+              [scrollTo]="term().term + '-cpro-remarks'"
               class="hoverlink"
               [class.fw-bold]="highlightedChorusProRemark() === node().term"
               (mouseenter)="highlightChorusProRemark(node().term, true)"
@@ -87,6 +90,12 @@ export class CiiSummaryControlComponent {
   node = input.required<CiiFormControl>();
   settings = input.required<EditorSettings>();
 
+  protected term = computed(() => {
+    const term = ciiTerms[this.node().term];
+    console.log(term);
+    return term;
+  });
+
   protected get isValid(): boolean {
     const node = this.node();
     return node.control.touched && !node.control.invalid;
@@ -96,6 +105,9 @@ export class CiiSummaryControlComponent {
     const node = this.node();
     return node.control.touched && node.control.invalid;
   }
+
+  private ciiFormService = inject(CiiFormService);
+  protected businessRuleStatuses = this.ciiFormService.businessRules;
 
   private highlightTermService = inject(CiiFormHighlightTermService);
   protected isNodeHighlighted = computed(() => this.highlightTermService.highlightedTerm() === this.node().term);

@@ -18,7 +18,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control term="BT-44" name="Buyer name" [description]="description" [businessRules]="[{ id: 'BR-7', template: br7 }]" [settings]="settings()" #control>
+      <app-cii-form-control term="BT-44" name="Buyer name" [description]="description" [businessRules]="[{ id: 'BR-07', template: br7 }]" [settings]="settings()" #control>
         <ng-template #description>The full name of the Buyer.</ng-template>
         <ng-template #br7>An Invoice shall contain the Buyer name.</ng-template>
 

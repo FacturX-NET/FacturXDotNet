@@ -45,12 +45,12 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
         <input [id]="control.controlId()" class="form-control" formControlName="buyerReference" placeholder="SERVEXEC" />
       </app-cii-form-control>
 
-      <app-cii-form-parent-container term="BG-4" name="SELLER" [description]="description" [settings]="settings()" depth="3">
+      <app-cii-form-parent-container term="BR-04" name="SELLER" [description]="description" [settings]="settings()" depth="3">
         <ng-template #description>A group of business terms providing information about the Seller.</ng-template>
         <app-cii-form-seller-trade-party formGroupName="sellerTradeParty" [settings]="settings()"></app-cii-form-seller-trade-party>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container term="BG-7" name="BUYER" [description]="description" [settings]="settings()" depth="3">
+      <app-cii-form-parent-container term="BR-07" name="BUYER" [description]="description" [settings]="settings()" depth="3">
         <ng-template #description>A group of business terms providing information about the Buyer.</ng-template>
         <app-cii-form-buyer-trade-party formGroupName="buyerTradeParty" [settings]="settings()"></app-cii-form-buyer-trade-party>
       </app-cii-form-parent-container>
