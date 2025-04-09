@@ -21,6 +21,23 @@ export const ciiBusinessRules: Record<string, BusinessRule> = {
     description:
       'The Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63) and the Buyer VAT identifier (BT-48) shall have a prefix in accordance with ISO code ISO 3166-1 alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix ‘EL’.',
   },
+  'BR-CO-13': {
+    name: 'BR-CO-13',
+    description:
+      'Invoice total amount without VAT (BT-109) = ∑ Invoice line net amount (BT-131) - Sum of allowances on document level (BT-107) + Sum of charges on document level (BT-108)',
+  },
+  'BR-CO-14': {
+    name: 'BR-CO-14',
+    description: ' Invoice total VAT amount (BT-110) = ∑ VAT category tax amount (BT-117)',
+  },
+  'BR-CO-15': {
+    name: 'BR-CO-15',
+    description: 'Invoice total amount with VAT (BT-112) = Invoice total amount without VAT (BT-109) + Invoice total VAT amount (BT-110)',
+  },
+  'BR-CO-16': {
+    name: 'BR-CO-16',
+    description: 'Amount due for payment (BT-115) = Invoice total amount with VAT (BT-112) - Paid amount (BT-113) + Rounding amount (BT-114)',
+  },
   'BR-CO-26': {
     name: 'BR-CO-26',
     description:
@@ -34,5 +51,10 @@ export const ciiBusinessRules: Record<string, BusinessRule> = {
     name: 'BR-S-01',
     description:
       'An Invoice that contains an Invoice line (BG-25), a Document level allowance (BG-20) or a Document level charge (BG-21) where the VAT category code (BT-151, BT-95 or BT-102) is “Standard rated” shall contain in the VAT breakdown (BG-23) at least one VAT category code (BT-118) equal with "Standard rated".',
+  },
+  'BR-FXEXT-CO-15': {
+    name: 'BR-FXEXT-CO-15',
+    description:
+      'For EXTENDED profile only, BR-CO-15 is replaced by BR-FXEXT-CO-15, which add a tolerance of 0,01 euro per line, document level charge and allowance in calculation.',
   },
 };

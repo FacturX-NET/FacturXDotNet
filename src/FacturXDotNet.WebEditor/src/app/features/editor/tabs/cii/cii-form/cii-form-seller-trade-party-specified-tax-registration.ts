@@ -24,7 +24,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
             name="Seller VAT identifier"
             [description]="bt31Description"
             [businessRules]="[
-              { id: 'BR-CO-9', template: brCo9 },
+              { id: 'BR-CO-09', template: brCo9 },
               { id: 'BR-CO-26', template: brCo26 },
             ]"
             [remarks]="[bt31Remark]"

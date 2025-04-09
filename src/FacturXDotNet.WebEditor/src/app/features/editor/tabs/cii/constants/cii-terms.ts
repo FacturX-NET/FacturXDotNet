@@ -116,7 +116,7 @@ export const ciiTerms: Record<string, CiiTerm> = {
     term: 'BT-31',
     name: 'Seller VAT identifier',
     kind: 'field',
-    businessRules: ['BR-CO-9', 'BR-CO-26'],
+    businessRules: ['BR-CO-09', 'BR-CO-26'],
   },
   'BT-31-0': {
     term: 'BT-31-0',
