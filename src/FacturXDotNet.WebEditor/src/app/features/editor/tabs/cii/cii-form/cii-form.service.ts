@@ -76,15 +76,12 @@ export class CiiFormService {
     const rulesStatuses: Record<string, 'invalid' | 'valid'> = Object.fromEntries(Object.keys(ciiBusinessRules).map((r) => [r, 'valid']));
     if (validationResult.errors !== undefined) {
       for (const [_, errors] of Object.entries(validationResult.errors)) {
-        console.log(errors);
         for (const rule of errors) {
           rulesStatuses[rule] = 'invalid';
         }
       }
     }
     this.businessRulesInternal.set(rulesStatuses);
-
-    console.log(rulesStatuses);
 
     return validationResult.valid;
   }

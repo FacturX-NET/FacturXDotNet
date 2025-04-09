@@ -5,7 +5,6 @@ export function toastError(toastService: ToastService, messageFactory: (error: s
   return catchError((err) => {
     const errorMessage = getErrorMessage(err);
     toastService.show({ type: 'error', message: messageFactory(errorMessage) });
-    console.error(err);
     return of(void 0);
   });
 }

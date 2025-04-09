@@ -90,11 +90,7 @@ export class CiiSummaryControlComponent {
   node = input.required<CiiFormControl>();
   settings = input.required<EditorSettings>();
 
-  protected term = computed(() => {
-    const term = ciiTerms[this.node().term];
-    console.log(term);
-    return term;
-  });
+  protected term = computed(() => ciiTerms[this.node().term]);
 
   protected get isValid(): boolean {
     const node = this.node();
