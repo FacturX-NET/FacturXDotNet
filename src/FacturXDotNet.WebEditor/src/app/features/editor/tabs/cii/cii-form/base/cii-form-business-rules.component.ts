@@ -12,12 +12,12 @@ import { CiiFormService } from '../cii-form.service';
       <div class="ps-2 pb-2">
         @for (rule of businessRules(); track rule.id) {
           <div
-            [class.text-primary]="highlightedRule() === rule.id"
-            [class.text-danger]="highlightedRule() !== rule.id && statuses()[rule.id] == 'invalid'"
-            [class.text-success]="highlightedRule() !== rule.id && statuses()[rule.id] == 'valid'"
+            [class.text-primary]="highlightedRule() === rule.id && statuses()[rule.id] !== 'invalid' && statuses()[rule.id] !== 'valid'"
+            [class.text-danger]="statuses()[rule.id] === 'invalid'"
+            [class.text-success]="statuses()[rule.id] === 'valid'"
           >
             <span class="pe-1">
-              @if (highlightedRule() == rule.id) {
+              @if (highlightedRule() === rule.id && statuses()[rule.id] !== 'invalid' && statuses()[rule.id] !== 'valid') {
                 <i class="bi bi-arrow-right"></i>
               } @else {
                 @switch (statuses()[rule.id]) {
