@@ -7,7 +7,7 @@ import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormService } from './cii-form.service';
 import { ICrossIndustryInvoice } from '../../../../../core/api/api.models';
-import { ciiTerms, requireTerm } from '../constants/cii-terms';
+import { requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form',

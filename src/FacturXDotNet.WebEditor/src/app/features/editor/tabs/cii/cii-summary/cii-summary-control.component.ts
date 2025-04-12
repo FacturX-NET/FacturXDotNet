@@ -6,7 +6,7 @@ import { CiiFormHighlightChorusProRemarkService } from '../cii-form-highlight-ch
 import { CiiFormHighlightTermService } from '../cii-form-highlight-term.service';
 import { CiiFormHighlightRemarkService } from '../cii-form-highlight-remark.service';
 import { CiiFormHighlightBusinessRuleService } from '../cii-form-highlight-business-rule.service';
-import { BusinessTermIdentifier, ciiTerms, getTerm } from '../constants/cii-terms';
+import { BusinessTermIdentifier, getTerm } from '../constants/cii-terms';
 import { BusinessRuleIdentifier } from '../constants/cii-business-rules';
 
 @Component({

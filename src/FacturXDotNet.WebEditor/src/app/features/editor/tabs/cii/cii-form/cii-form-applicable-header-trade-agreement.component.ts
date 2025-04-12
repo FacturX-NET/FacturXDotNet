@@ -6,7 +6,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
-import { ciiTerms, requireTerm } from '../constants/cii-terms';
+import { requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-agreement',

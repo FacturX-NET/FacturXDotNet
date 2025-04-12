@@ -1,8 +1,7 @@
-import { Component, computed, ElementRef, inject, input, numberAttribute, Signal, TemplateRef, viewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, input, numberAttribute, Signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgTemplateOutlet } from '@angular/common';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
-import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
+import { CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
 import { EditorSettings } from '../../../../editor-settings.service';
 import { CiiFormHighlightTermService } from '../../cii-form-highlight-term.service';
 import { CiiFormHighlightRemarkService } from '../../cii-form-highlight-remark.service';
@@ -12,7 +11,7 @@ import { BusinessRule, requireRule } from '../../constants/cii-business-rules';
 
 @Component({
   selector: 'app-cii-form-parent-container',
-  imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
+  imports: [ReactiveFormsModule, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
   template: `
     <h6 #title [id]="term()" class="py-2 m-0 sticky-top bg-body" style="top: {{ topPx() }}px; z-index: {{ zIndex() }}" [class.text-primary]="isTermHighlighted()">
       {{ term().term }} - {{ term().name }}

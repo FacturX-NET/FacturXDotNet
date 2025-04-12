@@ -5,7 +5,7 @@ import { CiiFormApplicableHeaderTradeDeliveryComponent } from './cii-form-applic
 import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-applicable-header-trade-settlement.component';
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
-import { ciiTerms, requireTerm } from '../constants/cii-terms';
+import { requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-supply-chain-trade-transaction',

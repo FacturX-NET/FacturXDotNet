@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, input } from '@angular/core';
 import { EditorStateAttachment, EditorStateService } from '../../editor-state.service';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { ImportFileService } from '../../../../core/import-file/import-file.service';
-import { filter, from, lastValueFrom, map, Observable, switchMap } from 'rxjs';
+import { filter, from, map, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { toastError } from '../../../../core/utils/toast-error';
 import { ToastService } from '../../../../core/toasts/toast.service';

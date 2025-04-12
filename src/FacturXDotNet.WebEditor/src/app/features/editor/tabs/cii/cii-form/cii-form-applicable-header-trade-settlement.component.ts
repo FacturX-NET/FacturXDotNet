@@ -4,12 +4,11 @@ import { CiiFormSpecifiedTradeSettlementHeaderMonetarySummation } from './cii-fo
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
-import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
-import { ciiTerms, requireTerm } from '../constants/cii-terms';
+import { requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-settlement',
-  imports: [ReactiveFormsModule, CiiFormSpecifiedTradeSettlementHeaderMonetarySummation, CiiFormParentContainerComponent, CiiFormControlComponent, ScrollToDirective],
+  imports: [ReactiveFormsModule, CiiFormSpecifiedTradeSettlementHeaderMonetarySummation, CiiFormParentContainerComponent, CiiFormControlComponent],
   viewProviders: [
     {
       provide: ControlContainer,

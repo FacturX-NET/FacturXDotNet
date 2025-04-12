@@ -2,12 +2,11 @@ import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
-import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
-import { ciiTerms, requireTerm } from '../constants/cii-terms';
+import { requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-specified-tax-registration',
-  imports: [ReactiveFormsModule, CiiFormControlComponent, ScrollToDirective],
+  imports: [ReactiveFormsModule, CiiFormControlComponent],
   viewProviders: [
     {
       provide: ControlContainer,
