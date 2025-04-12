@@ -20,9 +20,7 @@ import { ciiTerms, requireTerm } from '../constants/cii-terms';
   ],
   template: `
     <form [formGroup]="form">
-      <app-cii-form-parent-container [term]="br2" [description]="description" [settings]="settings()" depth="1">
-        <ng-template #description>A group of business terms providing information on the business process and rules applicable to the Invoice document.</ng-template>
-
+      <app-cii-form-parent-container [term]="br2" [settings]="settings()" depth="1">
         <app-cii-form-exchanged-document-context formGroupName="exchangedDocumentContext" [settings]="settings()"></app-cii-form-exchanged-document-context>
       </app-cii-form-parent-container>
 

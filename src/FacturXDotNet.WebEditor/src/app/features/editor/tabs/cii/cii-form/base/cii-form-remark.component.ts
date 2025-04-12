@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, Input, input } from '@angular/core';
 
 @Component({
   selector: 'app-cii-form-remark',
@@ -10,11 +10,12 @@ import { Component, input } from '@angular/core';
         <i class="bi bi-info-circle pe-1"></i>
       }
 
-      <ng-content></ng-content>
+      {{ remark() }}
     </div>
   `,
 })
 export class CiiFormRemarkComponent {
+  remark = input.required<string>();
   title = input<string>();
   highlight = input<boolean>();
 }

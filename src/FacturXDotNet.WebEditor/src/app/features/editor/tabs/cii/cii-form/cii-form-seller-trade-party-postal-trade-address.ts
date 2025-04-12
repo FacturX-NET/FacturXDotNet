@@ -17,21 +17,7 @@ import { ciiTerms, requireTerm } from '../constants/cii-terms';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control
-        [term]="bt40"
-        [description]="bt40Description"
-        [businessRules]="[{ id: 'BR-09', template: br9 }]"
-        [remarks]="[bt40Remark]"
-        [settings]="settings()"
-        #bt40Control
-      >
-        <ng-template #bt40Description> A code that identifies the country.</ng-template>
-        <ng-template #br9>The Seller postal address (BR-05) shall contain a Seller country code.</ng-template>
-        <ng-template #bt40Remark>
-          If no tax representative is specified, this is the country where VAT is liable. The lists of valid countries are registered with the ISO 3166-1 Maintenance agency, "Codes
-          for the representation of names of countries and their subdivisions".
-        </ng-template>
-
+      <app-cii-form-control [term]="bt40" [settings]="settings()" #bt40Control>
         <input [id]="bt40Control.controlId()" class="form-control" formControlName="countryId" placeholder="FR" />
       </app-cii-form-control>
     </div>

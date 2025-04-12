@@ -19,16 +19,11 @@ import { ciiTerms, requireTerm } from '../constants/cii-terms';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control [term]="bt44" [description]="description" [businessRules]="[{ id: 'BR-07', template: br7 }]" [settings]="settings()" #control>
-        <ng-template #description>The full name of the Buyer.</ng-template>
-        <ng-template #br7>An Invoice shall contain the Buyer name.</ng-template>
-
+      <app-cii-form-control [term]="bt44" [settings]="settings()" #control>
         <input [id]="control.controlId()" class="form-control" formControlName="name" placeholder="LE CLIENT" />
       </app-cii-form-control>
 
-      <app-cii-form-parent-container [term]="bt4700" [description]="description" [settings]="settings()" depth="4">
-        <ng-template #description>Details about the organization.</ng-template>
-
+      <app-cii-form-parent-container [term]="bt4700" [settings]="settings()" depth="4">
         <app-cii-form-buyer-trade-party-specified-legal-organization
           formGroupName="specifiedLegalOrganization"
           [settings]="settings()"

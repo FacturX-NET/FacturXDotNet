@@ -1,9 +1,25 @@
-interface BusinessRule {
-  name: string;
+export type BusinessRuleIdentifier = keyof typeof ciiBusinessRules;
+
+export interface BusinessRule {
+  name: BusinessRuleIdentifier;
   description: string;
 }
 
-export const ciiBusinessRules: Record<string, BusinessRule> = {
+export function getRule(rule: string): BusinessRule | undefined {
+  const key = rule as BusinessRuleIdentifier;
+  return ciiBusinessRules[key];
+}
+
+export function requireRule(rule: BusinessRuleIdentifier): BusinessRule {
+  const result = ciiBusinessRules[rule];
+  if (result === undefined) {
+    throw new Error(`Could not find rule ${rule}.`);
+  }
+
+  return result;
+}
+
+export const ciiBusinessRules = {
   'BR-01': { name: 'BR-01', description: 'An Invoice shall have a Specification identifier (BT-24).' },
   'BR-02': { name: 'BR-02', description: 'An Invoice shall have an Invoice number (BT-1).' },
   'BR-03': { name: 'BR-03', description: 'An Invoice shall have an Invoice issue date (BT-2).' },
@@ -57,4 +73,4 @@ export const ciiBusinessRules: Record<string, BusinessRule> = {
     description:
       'For EXTENDED profile only, BR-CO-15 is replaced by BR-FXEXT-CO-15, which add a tolerance of 0,01 euro per line, document level charge and allowance in calculation.',
   },
-};
+} as const;

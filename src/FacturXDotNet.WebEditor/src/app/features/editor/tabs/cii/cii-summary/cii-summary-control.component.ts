@@ -6,7 +6,8 @@ import { CiiFormHighlightChorusProRemarkService } from '../cii-form-highlight-ch
 import { CiiFormHighlightTermService } from '../cii-form-highlight-term.service';
 import { CiiFormHighlightRemarkService } from '../cii-form-highlight-remark.service';
 import { CiiFormHighlightBusinessRuleService } from '../cii-form-highlight-business-rule.service';
-import { ciiTerms, getTerm } from '../constants/cii-terms';
+import { BusinessTermIdentifier, ciiTerms, getTerm } from '../constants/cii-terms';
+import { BusinessRuleIdentifier } from '../constants/cii-business-rules';
 
 @Component({
   selector: 'app-cii-summary-node',
@@ -123,15 +124,15 @@ export class CiiSummaryControlComponent {
     this.highlightTermService.highlightTerm(this.node().term, value);
   }
 
-  protected highlightRemark(rule: string, value: boolean) {
+  protected highlightRemark(rule: BusinessTermIdentifier, value: boolean) {
     this.highlightRemarkService.highlightRemark(rule, value);
   }
 
-  protected highlightChorusProRemark(rule: string, value: boolean) {
+  protected highlightChorusProRemark(rule: BusinessTermIdentifier, value: boolean) {
     this.highlightChorusProRemarkService.highlightChorusProRemark(rule, value);
   }
 
-  protected highlightBusinessRule(rule: string, value: boolean) {
+  protected highlightBusinessRule(rule: BusinessRuleIdentifier, value: boolean) {
     this.highlightBusinessRuleService.highlightBusinessRule(rule, value);
   }
 }

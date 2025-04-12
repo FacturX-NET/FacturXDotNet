@@ -17,54 +17,11 @@ import { ciiTerms, requireTerm } from '../constants/cii-terms';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control
-        [term]="bt1"
-        [description]="bt1Description"
-        [businessRules]="[{ id: 'BR-02', template: br2 }]"
-        [remarks]="[bt1Remark]"
-        [chorusProRemarks]="[bt1ChorusProRemark]"
-        [settings]="settings()"
-        #bt1Control
-      >
-        <ng-template #bt1Description>A unique identification of the Invoice.</ng-template>
-        <ng-template #br2>An Invoice shall have an Invoice number.</ng-template>
-        <ng-template #bt1Remark>
-          The sequential number required in Article 226(2) of the directive 2006/112/EC, to uniquely identify the Invoice within the business context, time-frame, operating systems
-          and records of the Seller. It may be based on one or more series of numbers, which may include alphanumeric characters. No identification scheme is to be used.
-        </ng-template>
-        <ng-template #bt1ChorusProRemark> The invoice number is limited to 20 characters.</ng-template>
-
+      <app-cii-form-control [term]="bt1" [settings]="settings()" #bt1Control>
         <input [id]="bt1Control.controlId()" class="form-control" formControlName="id" placeholder="F20250023" />
       </app-cii-form-control>
 
-      <app-cii-form-control
-        [term]="bt3"
-        [description]="bt3Description"
-        [businessRules]="[{ id: 'BR-04', template: br4 }]"
-        [remarks]="[bt3Remark]"
-        [chorusProRemarks]="[bt3ChorusProRemark]"
-        [settings]="settings()"
-        #bt3Control
-      >
-        <ng-template #bt3Description>A code specifying the functional type of the Invoice.</ng-template>
-        <ng-template #br4> An Invoice shall have an Invoice type code.</ng-template>
-        <ng-template #bt3Remark>
-          Commercial invoices and credit notes are defined according the entries in UNTDID 1001. Other entries of UNTDID 1001 with specific invoices or credit notes may be used if
-          applicable.
-        </ng-template>
-        <ng-template #bt3ChorusProRemark>
-          The types of documents used are:
-          <ul>
-            <li>380: Commercial Invoice</li>
-            <li>381: Credit note</li>
-            <li>384: Corrected invoice</li>
-            <li>389: Self-billed invoice (created by the buyer on behalf of the supplier)</li>
-            <li>261: Self billed credit note (not accepted by CHORUSPRO)</li>
-            <li>386: Prepayment invoice</li>
-            <li>751: Invoice information for accounting purposes (not accepted by CHORUSPRO)</li>
-          </ul>
-        </ng-template>
-
+      <app-cii-form-control [term]="bt3" [settings]="settings()" #bt3Control>
         <select [id]="bt3Control.controlId()" class="form-select" formControlName="typeCode">
           <option value="" class="text-body-tertiary" selected>Choose a type</option>
           <option value="RequestForPayment">71 - Request for payment</option>
@@ -126,24 +83,11 @@ import { ciiTerms, requireTerm } from '../constants/cii-terms';
       </app-cii-form-control>
 
       <div class="d-flex flex-wrap column-gap-4">
-        <app-cii-form-control
-          [term]="bt2"
-          [description]="bt2Description"
-          [businessRules]="[{ id: 'BR-03', template: br3 }]"
-          [chorusProRemarks]="[bt2ChorusProRemark]"
-          [settings]="settings()"
-          #bt2Control
-        >
-          <ng-template #bt2Description>The date when the Invoice was issued.</ng-template>
-          <ng-template #br3>An Invoice shall have an Invoice issue date.</ng-template>
-          <ng-template #bt2ChorusProRemark> The issue date must be before or equal to the deposit date.</ng-template>
-
+        <app-cii-form-control [term]="bt2" [settings]="settings()" #bt2Control>
           <input [id]="bt2Control.controlId()" class="form-control" formControlName="issueDateTime" type="date" />
         </app-cii-form-control>
 
-        <app-cii-form-control [term]="bt20" [description]="bt20Description" [settings]="settings()" #bt20Control>
-          <ng-template #bt20Description>Only value "102"</ng-template>
-
+        <app-cii-form-control [term]="bt20" [settings]="settings()" #bt20Control>
           <select [id]="bt20Control.controlId()" class="form-select" formControlName="issueDateTimeFormat">
             <option value="DateOnly" selected>102 - Date only</option>
           </select>

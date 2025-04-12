@@ -30,21 +30,15 @@ import { ciiTerms, requireTerm } from '../constants/cii-terms';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control [term]="bt10" [description]="description" [remarks]="[remark]" [chorusProRemarks]="[chorusProRemark]" [settings]="settings()" #control>
-        <ng-template #description>An identifier assigned by the Buyer used for internal routing purposes.</ng-template>
-        <ng-template #remark>The identifier is defined by the Buyer (e.g. contact ID, department, office id, project code), but provided by the Seller in the Invoice.</ng-template>
-        <ng-template #chorusProRemark>The invoice number is limited to 20 characters.</ng-template>
-
+      <app-cii-form-control [term]="bt10" [settings]="settings()" #control>
         <input [id]="control.controlId()" class="form-control" formControlName="buyerReference" placeholder="SERVEXEC" />
       </app-cii-form-control>
 
-      <app-cii-form-parent-container [term]="br04" [description]="description" [settings]="settings()" depth="3">
-        <ng-template #description>A group of business terms providing information about the Seller.</ng-template>
+      <app-cii-form-parent-container [term]="br04" [settings]="settings()" depth="3">
         <app-cii-form-seller-trade-party formGroupName="sellerTradeParty" [settings]="settings()"></app-cii-form-seller-trade-party>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container [term]="br07" [description]="description" [settings]="settings()" depth="3">
-        <ng-template #description>A group of business terms providing information about the Buyer.</ng-template>
+      <app-cii-form-parent-container [term]="br07" [settings]="settings()" depth="3">
         <app-cii-form-buyer-trade-party formGroupName="buyerTradeParty" [settings]="settings()"></app-cii-form-buyer-trade-party>
       </app-cii-form-parent-container>
 

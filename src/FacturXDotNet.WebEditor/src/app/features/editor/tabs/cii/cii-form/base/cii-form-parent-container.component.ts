@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, inject, input, numberAttribute, TemplateRef, viewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, input, numberAttribute, Signal, TemplateRef, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgTemplateOutlet } from '@angular/common';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
@@ -8,6 +8,7 @@ import { CiiFormHighlightTermService } from '../../cii-form-highlight-term.servi
 import { CiiFormHighlightRemarkService } from '../../cii-form-highlight-remark.service';
 import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight-chorus-pro-remark.service';
 import { CiiTerm } from '../../constants/cii-terms';
+import { BusinessRule, requireRule } from '../../constants/cii-business-rules';
 
 @Component({
   selector: 'app-cii-form-parent-container',
@@ -18,43 +19,35 @@ import { CiiTerm } from '../../constants/cii-terms';
     </h6>
 
     <div class="ps-3 border-start border-2" [class.border-primary]="isTermHighlighted()">
-      <div class="form-text" [class.text-primary]="isTermHighlighted()">
-        @if (description(); as description) {
-          <ng-container [ngTemplateOutlet]="description"></ng-container>
-        }
-      </div>
+      @if (term().description !== undefined) {
+        <p class="form-text" [class.text-primary]="isTermHighlighted()">
+          {{ term().description }}
+        </p>
+      }
 
       <div class="pb-2"><!--spacer--></div>
 
       @if (settings(); as settings) {
-        @if (settings?.showBusinessRules === true) {
-          @if (businessRules(); as businessRules) {
+        @if (businessRules().length > 0) {
+          @if (settings?.showBusinessRules === true) {
             <div [id]="businessRulesId()">
-              <app-cii-form-business-rules [businessRules]="businessRules" [highlight]="isTermHighlighted()"></app-cii-form-business-rules>
+              <app-cii-form-business-rules [businessRules]="businessRules()" [highlight]="isTermHighlighted()"></app-cii-form-business-rules>
             </div>
           }
         }
 
-        @if (remarks(); as remarks) {
-          @if (remarks.length > 0 && settings.showRemarks) {
+        @if (term().remark; as remark) {
+          @if (settings.showRemarks) {
             <div [id]="remarkId()">
-              @for (remark of remarks; track remark) {
-                <app-cii-form-remark [highlight]="isTermHighlighted() || isRemarkHighlighted()">
-                  <ng-container [ngTemplateOutlet]="remark"></ng-container>
-                </app-cii-form-remark>
-              }
+              <app-cii-form-remark [remark]="remark" [highlight]="isTermHighlighted() || isRemarkHighlighted()" />
             </div>
           }
         }
 
-        @if (chorusProRemarks(); as chorusProRemarks) {
-          @if (chorusProRemarks.length > 0 && settings.showChorusProRemarks) {
+        @if (term().chorusProRemark; as chorusProRemark) {
+          @if (settings.showChorusProRemarks) {
             <div [id]="chorusProRemarkId()">
-              @for (chorusProRemark of chorusProRemarks; track chorusProRemark) {
-                <app-cii-form-remark title="CHORUSPRO" [highlight]="isTermHighlighted() || isChorusProRemarkHighlighted()">
-                  <ng-container [ngTemplateOutlet]="chorusProRemark"></ng-container>
-                </app-cii-form-remark>
-              }
+              <app-cii-form-remark [remark]="chorusProRemark" title="CHORUSPRO" [highlight]="isTermHighlighted() || isChorusProRemarkHighlighted()" />
             </div>
           }
         }
@@ -67,16 +60,21 @@ import { CiiTerm } from '../../constants/cii-terms';
 })
 export class CiiFormParentContainerComponent {
   term = input.required<CiiTerm>();
-  description = input<TemplateRef<any>>();
-  businessRules = input<BusinessRuleTemplate[]>();
-  remarks = input<TemplateRef<any>[]>();
-  chorusProRemarks = input<TemplateRef<any>[]>();
   settings = input<EditorSettings>();
   depth = input.required({ transform: numberAttribute });
 
   public businessRulesId = computed(() => this.term().term + '-rules');
   public remarkId = computed(() => this.term().term + '-remarks');
   public chorusProRemarkId = computed(() => this.term().term + '-cpro-remarks');
+
+  public businessRules: Signal<BusinessRule[]> = computed(() => {
+    const ruleNames = this.term().businessRules;
+    if (ruleNames === undefined) {
+      return [];
+    }
+
+    return ruleNames.map((r) => requireRule(r));
+  });
 
   protected topPx = computed(() => {
     const depth = this.depth();

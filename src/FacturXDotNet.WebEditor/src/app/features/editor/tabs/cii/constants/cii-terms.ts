@@ -1,3 +1,5 @@
+import { BusinessRuleIdentifier } from './cii-business-rules';
+
 export type BusinessTermIdentifier = keyof typeof ciiTerms;
 
 export interface CiiTerm {
@@ -5,7 +7,7 @@ export interface CiiTerm {
   name: string;
   description?: string;
   kind: 'group' | 'field';
-  businessRules?: readonly string[];
+  businessRules?: readonly BusinessRuleIdentifier[];
   remark?: string;
   chorusProRemark?: string;
 }

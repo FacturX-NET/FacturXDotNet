@@ -17,13 +17,7 @@ import { ciiTerms, requireTerm } from '../constants/cii-terms';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control [term]="bt13" [description]="description" [chorusProRemarks]="[chorusProRemark]" [settings]="settings()" #control>
-        <ng-template #description>An identifier of a referenced purchase order, issued by the Buyer.</ng-template>
-        <ng-template #chorusProRemark>
-          For the public sector, this is the "Engagement Juridique" (Legal Commitment). It is mandatory for some buyers. You should refer to the ChorusPro Directory to identify
-          these public entity buyers that make it mandatory.
-        </ng-template>
-
+      <app-cii-form-control [term]="bt13" [settings]="settings()" #control>
         <input [id]="control.controlId()" class="form-control" formControlName="issuerAssignedId" />
       </app-cii-form-control>
     </div>

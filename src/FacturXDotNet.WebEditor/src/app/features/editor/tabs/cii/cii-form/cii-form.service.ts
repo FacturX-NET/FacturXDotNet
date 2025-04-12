@@ -11,7 +11,7 @@ import { debounceTime, firstValueFrom, from, Subject, switchMap, tap } from 'rxj
 import { EditorSavedState, EditorStateService } from '../../../editor-state.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidateApi } from '../../../../../core/api/validate.api';
-import { ciiBusinessRules } from '../constants/cii-business-rules';
+import { BusinessRuleIdentifier, ciiBusinessRules } from '../constants/cii-business-rules';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +27,7 @@ export class CiiFormService {
 
   private saveSubject = new Subject<EditorSavedState>();
   private stateInternal = signal<CiiFormState>('pristine');
-  private businessRulesInternal = signal<Record<string, 'valid' | 'invalid'>>({});
+  private businessRulesInternal = signal<Partial<Record<BusinessRuleIdentifier, 'valid' | 'invalid'>>>({});
 
   private validateApi = inject(ValidateApi);
   private editorStateService = inject(EditorStateService);
