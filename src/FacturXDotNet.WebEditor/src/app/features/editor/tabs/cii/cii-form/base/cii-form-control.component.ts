@@ -8,10 +8,11 @@ import { CiiFormHighlightRemarkService } from '../../cii-form-highlight-remark.s
 import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight-chorus-pro-remark.service';
 import { CiiTerm } from '../../constants/cii-terms';
 import { BusinessRule, requireRule } from '../../constants/cii-business-rules';
+import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
   selector: 'app-cii-form-control',
-  imports: [ReactiveFormsModule, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
+  imports: [ReactiveFormsModule, CiiFormRemarkComponent, CiiFormBusinessRulesComponent, MarkdownComponent],
   template: `
     <div class="overflow-hidden px-1">
       <div class="editor__control">
@@ -24,7 +25,7 @@ import { BusinessRule, requireRule } from '../../constants/cii-business-rules';
 
       @if (term().description !== undefined) {
         <p [id]="controlHelpId()" class="form-text" [class.text-primary]="isTermHighlighted()">
-          {{ term().description }}
+          <markdown ngPreserveWhitespaces>{{ term().description }}</markdown>
         </p>
       } @else {
         <div class="pb-3"><!--spacer--></div>

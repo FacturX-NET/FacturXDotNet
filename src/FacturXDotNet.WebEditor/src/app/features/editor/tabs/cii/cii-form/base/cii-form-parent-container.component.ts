@@ -8,10 +8,11 @@ import { CiiFormHighlightRemarkService } from '../../cii-form-highlight-remark.s
 import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight-chorus-pro-remark.service';
 import { CiiTerm } from '../../constants/cii-terms';
 import { BusinessRule, requireRule } from '../../constants/cii-business-rules';
+import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
   selector: 'app-cii-form-parent-container',
-  imports: [ReactiveFormsModule, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
+  imports: [ReactiveFormsModule, CiiFormRemarkComponent, CiiFormBusinessRulesComponent, MarkdownComponent],
   template: `
     <h6 #title [id]="term()" class="py-2 m-0 sticky-top bg-body" style="top: {{ topPx() }}px; z-index: {{ zIndex() }}" [class.text-primary]="isTermHighlighted()">
       {{ term().term }} - {{ term().name }}
@@ -20,7 +21,7 @@ import { BusinessRule, requireRule } from '../../constants/cii-business-rules';
     <div class="ps-3 border-start border-2" [class.border-primary]="isTermHighlighted()">
       @if (term().description !== undefined) {
         <p class="form-text" [class.text-primary]="isTermHighlighted()">
-          {{ term().description }}
+          <markdown ngPreserveWhitespaces>{{ term().description }}</markdown>
         </p>
       }
 

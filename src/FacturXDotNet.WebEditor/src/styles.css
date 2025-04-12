@@ -64,6 +64,10 @@ a {
   text-decoration: none !important;
 }
 
+markdown p:last-of-type {
+  margin: 0;
+}
+
 .render-whitespaces {
   white-space: pre-wrap;
 }
