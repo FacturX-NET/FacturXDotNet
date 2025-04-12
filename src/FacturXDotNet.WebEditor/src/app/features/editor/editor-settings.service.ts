@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { EditorTab } from './editor-header.component';
 
 @Injectable({
@@ -6,53 +6,56 @@ import { EditorTab } from './editor-header.component';
 })
 export class EditorSettingsService {
   private localStorageKey: string = 'editor-settings';
+  private defaultSettings: EditorSettings = {
+    tab: 'cii',
+    foldSummary: false,
+    showBusinessRules: true,
+    showRemarks: true,
+    showChorusProRemarks: true,
+  };
 
-  settings = signal<EditorSettings>({});
+  get settings(): Signal<EditorSettings> {
+    return this.settingsInternal.asReadonly();
+  }
+  private settingsInternal: WritableSignal<EditorSettings>;
 
   constructor() {
-    this.settings.set(this.loadSettings());
+    this.settingsInternal = signal<EditorSettings>(this.loadSettings());
   }
 
   saveFoldSummary(value: boolean) {
     const settings = this.settings();
     const newSettings: EditorSettings = { ...settings, foldSummary: value };
     this.saveSettings(newSettings);
-    this.settings.set(newSettings);
+    this.settingsInternal.set(newSettings);
   }
 
   saveTab(value: EditorTab) {
     const settings = this.settings();
     const newSettings: EditorSettings = { ...settings, tab: value };
     this.saveSettings(newSettings);
-    this.settings.set(newSettings);
+    this.settingsInternal.set(newSettings);
   }
 
   saveShowBusinessRules(value: boolean) {
     const settings = this.settings();
     const newSettings: EditorSettings = { ...settings, showBusinessRules: value };
     this.saveSettings(newSettings);
-    this.settings.set(newSettings);
+    this.settingsInternal.set(newSettings);
   }
 
   saveShowRemarks(value: boolean) {
     const settings = this.settings();
     const newSettings: EditorSettings = { ...settings, showRemarks: value };
     this.saveSettings(newSettings);
-    this.settings.set(newSettings);
+    this.settingsInternal.set(newSettings);
   }
 
   saveShowChorusProRemarks(value: boolean) {
     const settings = this.settings();
     const newSettings: EditorSettings = { ...settings, showChorusProRemarks: value };
     this.saveSettings(newSettings);
-    this.settings.set(newSettings);
-  }
-
-  saveRightPaneWidth(value: number) {
-    const settings = this.settings();
-    const newSettings: EditorSettings = { ...settings, rightPaneWidth: value };
-    this.saveSettings(newSettings);
-    this.settings.set(newSettings);
+    this.settingsInternal.set(newSettings);
   }
 
   private saveSettings(settings: EditorSettings): void {
@@ -62,7 +65,7 @@ export class EditorSettingsService {
 
   private loadSettings(): EditorSettings {
     const jsonSettings = localStorage.getItem(this.localStorageKey);
-    return jsonSettings == null ? {} : (JSON.parse(jsonSettings) as EditorSettings);
+    return jsonSettings == null ? this.defaultSettings : (JSON.parse(jsonSettings) as EditorSettings);
   }
 }
 
@@ -72,5 +75,4 @@ export interface EditorSettings {
   readonly showBusinessRules?: boolean;
   readonly showRemarks?: boolean;
   readonly showChorusProRemarks?: boolean;
-  readonly rightPaneWidth?: number;
 }
