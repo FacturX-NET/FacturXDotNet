@@ -51,25 +51,25 @@ import { ciiTerms } from '../constants/cii-terms';
             }
           }
 
-          @if (node().hasRemarks && settings.showRemarks) {
+          @if (term().remark !== undefined && settings.showRemarks) {
             <a
               [scrollTo]="term().term + '-remarks'"
               class="hoverlink"
-              [class.fw-bold]="highlightedRemark() === node().term"
-              (mouseenter)="highlightRemark(node().term, true)"
-              (mouseleave)="highlightRemark(node().term, false)"
+              [class.fw-bold]="highlightedRemark() === term().term"
+              (mouseenter)="highlightRemark(term().term, true)"
+              (mouseleave)="highlightRemark(term().term, false)"
             >
               <i class="bi bi-info-circle"></i>
             </a>
           }
 
-          @if (node().hasChorusProRemarks && settings.showChorusProRemarks) {
+          @if (term().chorusProRemark !== undefined && settings.showChorusProRemarks) {
             <a
               [scrollTo]="term().term + '-cpro-remarks'"
               class="hoverlink"
-              [class.fw-bold]="highlightedChorusProRemark() === node().term"
-              (mouseenter)="highlightChorusProRemark(node().term, true)"
-              (mouseleave)="highlightChorusProRemark(node().term, false)"
+              [class.fw-bold]="highlightedChorusProRemark() === term().term"
+              (mouseenter)="highlightChorusProRemark(term().term, true)"
+              (mouseleave)="highlightChorusProRemark(term().term, false)"
             >
               CPRO
             </a>

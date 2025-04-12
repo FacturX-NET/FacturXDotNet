@@ -157,7 +157,6 @@ export class CiiFormService {
         {
           term: 'BT-24',
           control: this.form.controls.exchangedDocumentContext.controls.guidelineSpecifiedDocumentContextParameterId,
-          hasRemarks: true,
         },
       ],
     },
@@ -168,19 +167,14 @@ export class CiiFormService {
         {
           term: 'BT-1',
           control: this.form.controls.exchangedDocument.controls.id,
-          hasRemarks: true,
-          hasChorusProRemarks: true,
         },
         {
           term: 'BT-3',
           control: this.form.controls.exchangedDocument.controls.typeCode,
-          hasRemarks: true,
-          hasChorusProRemarks: true,
         },
         {
           term: 'BT-2',
           control: this.form.controls.exchangedDocument.controls.issueDateTime,
-          hasChorusProRemarks: true,
           children: [
             {
               term: 'BT-2-0',
@@ -201,8 +195,6 @@ export class CiiFormService {
             {
               term: 'BT-10',
               control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerReference,
-              hasRemarks: true,
-              hasChorusProRemarks: true,
             },
             {
               term: 'BR-04',
@@ -227,7 +219,6 @@ export class CiiFormService {
                           control:
                             this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedLegalOrganization
                               .controls.idSchemeId,
-                          hasRemarks: true,
                         },
                       ],
                     },
@@ -236,14 +227,12 @@ export class CiiFormService {
                 {
                   term: 'BR-05',
                   control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.postalTradeAddress,
-                  hasRemarks: true,
                   children: [
                     {
                       term: 'BT-40',
                       control:
                         this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.postalTradeAddress.controls
                           .countryId,
-                      hasRemarks: true,
                     },
                   ],
                 },
@@ -256,14 +245,12 @@ export class CiiFormService {
                       control:
                         this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration.controls
                           .id,
-                      hasRemarks: true,
                       children: [
                         {
                           term: 'BT-31-0',
                           control:
                             this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration
                               .controls.idSchemeId,
-                          hasRemarks: true,
                         },
                       ],
                     },
@@ -288,15 +275,12 @@ export class CiiFormService {
                       control:
                         this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.specifiedLegalOrganization.controls
                           .id,
-                      hasRemarks: true,
-                      hasChorusProRemarks: true,
                       children: [
                         {
                           term: 'BT-47-1',
                           control:
                             this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.specifiedLegalOrganization
                               .controls.idSchemeId,
-                          hasRemarks: true,
                         },
                       ],
                     },
@@ -311,7 +295,6 @@ export class CiiFormService {
                 {
                   term: 'BT-13',
                   control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerOrderReferencedDocument.controls.issuerAssignedId,
-                  hasChorusProRemarks: true,
                 },
               ],
             },
@@ -324,41 +307,32 @@ export class CiiFormService {
         {
           term: 'BG-19',
           control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement,
-          hasRemarks: true,
-          hasChorusProRemarks: true,
           children: [
             {
               term: 'BT-5',
               control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.invoiceCurrencyCode,
-              hasRemarks: true,
-              hasChorusProRemarks: true,
             },
             {
               term: 'BG-22',
               control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation,
-              hasRemarks: true,
-              hasChorusProRemarks: true,
               children: [
                 {
                   term: 'BT-109',
                   control:
                     this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
                       .taxBasisTotalAmount,
-                  hasRemarks: true,
                 },
                 {
                   term: 'BT-110',
                   control:
                     this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
                       .taxTotalAmount,
-                  hasRemarks: true,
                   children: [
                     {
                       term: 'BT-110-1',
                       control:
                         this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
                           .taxTotalAmountCurrencyId,
-                      hasRemarks: true,
                     },
                   ],
                 },
@@ -367,14 +341,12 @@ export class CiiFormService {
                   control:
                     this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
                       .grandTotalAmount,
-                  hasRemarks: true,
                 },
                 {
                   term: 'BT-115',
                   control:
                     this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
                       .duePayableAmount,
-                  hasRemarks: true,
                 },
               ],
             },
@@ -507,16 +479,6 @@ interface CiiFormControlBase {
    * The term of the element.
    */
   term: string;
-
-  /**
-   * Whether the element has remarks.
-   */
-  hasRemarks?: boolean;
-
-  /**
-   * Whether the element has Chorus Pro remarks.
-   */
-  hasChorusProRemarks?: boolean;
 
   /**
    * The children of this element.
