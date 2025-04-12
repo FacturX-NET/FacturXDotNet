@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-exchanged-document-context',
@@ -16,7 +17,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control term="BT-23" name="Business process type" [description]="bt23Description" [settings]="settings()" #bt23Control>
+      <app-cii-form-control [term]="bt23" [description]="bt23Description" [settings]="settings()" #bt23Control>
         <ng-template #bt23Description
           >Identifies the business process context in which the transaction appears, to enable the Buyer to process the Invoice in an appropriate way.
         </ng-template>
@@ -25,8 +26,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
       </app-cii-form-control>
 
       <app-cii-form-control
-        term="BT-24"
-        name="Specification identifier"
+        [term]="bt24"
         [description]="bt24Description"
         [businessRules]="[{ id: 'BR-01', template: br1 }]"
         [remarks]="[bt24Remark]"
@@ -58,4 +58,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
 export class CiiFormExchangedDocumentContextComponent {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt23 = requireTerm('BT-23');
+  protected bt24 = requireTerm('BT-24');
 }

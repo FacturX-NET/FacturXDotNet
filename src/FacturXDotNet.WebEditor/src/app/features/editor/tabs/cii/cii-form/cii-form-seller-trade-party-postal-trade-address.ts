@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-postal-trade-address',
@@ -17,8 +18,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
   template: `
     <div [formGroupName]="formGroupName()">
       <app-cii-form-control
-        term="BT-40"
-        name="Seller country code"
+        [term]="bt40"
         [description]="bt40Description"
         [businessRules]="[{ id: 'BR-09', template: br9 }]"
         [remarks]="[bt40Remark]"
@@ -40,4 +40,6 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
 export class CiiFormSellerTradePartyPostalTradeAddress {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt40 = requireTerm('BT-40');
 }

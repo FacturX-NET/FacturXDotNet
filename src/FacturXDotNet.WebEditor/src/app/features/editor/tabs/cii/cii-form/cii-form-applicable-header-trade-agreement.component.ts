@@ -6,6 +6,7 @@ import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-o
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-agreement',
@@ -29,15 +30,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control
-        term="BT-10"
-        name="Buyer reference"
-        [description]="description"
-        [remarks]="[remark]"
-        [chorusProRemarks]="[chorusProRemark]"
-        [settings]="settings()"
-        #control
-      >
+      <app-cii-form-control [term]="bt10" [description]="description" [remarks]="[remark]" [chorusProRemarks]="[chorusProRemark]" [settings]="settings()" #control>
         <ng-template #description>An identifier assigned by the Buyer used for internal routing purposes.</ng-template>
         <ng-template #remark>The identifier is defined by the Buyer (e.g. contact ID, department, office id, project code), but provided by the Seller in the Invoice.</ng-template>
         <ng-template #chorusProRemark>The invoice number is limited to 20 characters.</ng-template>
@@ -45,17 +38,17 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
         <input [id]="control.controlId()" class="form-control" formControlName="buyerReference" placeholder="SERVEXEC" />
       </app-cii-form-control>
 
-      <app-cii-form-parent-container term="BR-04" name="SELLER" [description]="description" [settings]="settings()" depth="3">
+      <app-cii-form-parent-container [term]="br04" [description]="description" [settings]="settings()" depth="3">
         <ng-template #description>A group of business terms providing information about the Seller.</ng-template>
         <app-cii-form-seller-trade-party formGroupName="sellerTradeParty" [settings]="settings()"></app-cii-form-seller-trade-party>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container term="BR-07" name="BUYER" [description]="description" [settings]="settings()" depth="3">
+      <app-cii-form-parent-container [term]="br07" [description]="description" [settings]="settings()" depth="3">
         <ng-template #description>A group of business terms providing information about the Buyer.</ng-template>
         <app-cii-form-buyer-trade-party formGroupName="buyerTradeParty" [settings]="settings()"></app-cii-form-buyer-trade-party>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container term="BT-13-00" name="PURCHASE ORDER REFERENCE" [settings]="settings()" depth="3">
+      <app-cii-form-parent-container [term]="bt1300" [settings]="settings()" depth="3">
         <app-cii-form-buyer-order-referenced-document formGroupName="buyerOrderReferencedDocument" [settings]="settings()"></app-cii-form-buyer-order-referenced-document>
       </app-cii-form-parent-container>
     </div>
@@ -64,4 +57,9 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
 export class CiiFormApplicableHeaderTradeAgreementComponent {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt10 = requireTerm('BT-10');
+  protected br04 = requireTerm('BR-04');
+  protected br07 = requireTerm('BR-07');
+  protected bt1300 = requireTerm('BT-13-00');
 }

@@ -5,6 +5,7 @@ import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
 import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-applicable-header-trade-settlement',
@@ -20,8 +21,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
   template: `
     <div [formGroupName]="formGroupName()">
       <app-cii-form-control
-        term="BT-5"
-        name="Invoice currency code"
+        [term]="bt5"
         [description]="description"
         [businessRules]="[{ id: 'BR-05', template: br5 }]"
         [remarks]="[remark]"
@@ -41,15 +41,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
         <input [id]="control.controlId()" class="form-control" formControlName="invoiceCurrencyCode" placeholder="EUR" />
       </app-cii-form-control>
 
-      <app-cii-form-parent-container
-        term="BG-22"
-        name="DOCUMENT TOTALS"
-        [description]="description"
-        [remarks]="[remark]"
-        [chorusProRemarks]="[chorusProRemark]"
-        [settings]="settings()"
-        depth="3"
-      >
+      <app-cii-form-parent-container [term]="bg22" [description]="description" [remarks]="[remark]" [chorusProRemarks]="[chorusProRemark]" [settings]="settings()" depth="3">
         <ng-template #description> A group of business terms providing the monetary totals for the Invoice.</ng-template>
         <ng-template #remark>
           This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with the
@@ -70,4 +62,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
 export class CiiFormApplicableHeaderTradeSettlementComponent {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt5 = requireTerm('BT-5');
+  protected bg22 = requireTerm('BG-22');
 }

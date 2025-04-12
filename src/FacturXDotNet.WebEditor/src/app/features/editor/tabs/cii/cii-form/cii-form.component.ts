@@ -7,6 +7,7 @@ import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormService } from './cii-form.service';
 import { ICrossIndustryInvoice } from '../../../../../core/api/api.models';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form',
@@ -19,17 +20,17 @@ import { ICrossIndustryInvoice } from '../../../../../core/api/api.models';
   ],
   template: `
     <form [formGroup]="form">
-      <app-cii-form-parent-container term="BR-02" name="EXCHANGED DOCUMENT CONTEXT" [description]="description" [settings]="settings()" depth="1">
+      <app-cii-form-parent-container [term]="br2" [description]="description" [settings]="settings()" depth="1">
         <ng-template #description>A group of business terms providing information on the business process and rules applicable to the Invoice document.</ng-template>
 
         <app-cii-form-exchanged-document-context formGroupName="exchangedDocumentContext" [settings]="settings()"></app-cii-form-exchanged-document-context>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container term="BT-1-00" name="EXCHANGED DOCUMENT" [settings]="settings()" depth="1">
+      <app-cii-form-parent-container [term]="bt100" [settings]="settings()" depth="1">
         <app-cii-form-exchanged-document formGroupName="exchangedDocument" [settings]="settings()"></app-cii-form-exchanged-document>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container term="BG-25-00" name="SUPPLY CHAIN TRADE TRANSACTION" [settings]="settings()" depth="1">
+      <app-cii-form-parent-container [term]="bg2500" [settings]="settings()" depth="1">
         <app-cii-form-supply-chain-trade-transaction formGroupName="supplyChainTradeTransaction" [settings]="settings()"></app-cii-form-supply-chain-trade-transaction>
       </app-cii-form-parent-container>
     </form>
@@ -38,6 +39,10 @@ import { ICrossIndustryInvoice } from '../../../../../core/api/api.models';
 export class CiiFormComponent {
   value = model.required<ICrossIndustryInvoice>();
   settings = input<EditorSettings>();
+
+  protected br2 = requireTerm('BR-02');
+  protected bt100 = requireTerm('BT-1-00');
+  protected bg2500 = requireTerm('BG-25-00');
 
   private ciiFormService = inject(CiiFormService);
 

@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-exchanged-document',
@@ -17,8 +18,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
   template: `
     <div [formGroupName]="formGroupName()">
       <app-cii-form-control
-        term="BT-1"
-        name="Invoice number"
+        [term]="bt1"
         [description]="bt1Description"
         [businessRules]="[{ id: 'BR-02', template: br2 }]"
         [remarks]="[bt1Remark]"
@@ -38,8 +38,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
       </app-cii-form-control>
 
       <app-cii-form-control
-        term="BT-3"
-        name="Invoice type code"
+        [term]="bt3"
         [description]="bt3Description"
         [businessRules]="[{ id: 'BR-04', template: br4 }]"
         [remarks]="[bt3Remark]"
@@ -128,8 +127,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
 
       <div class="d-flex flex-wrap column-gap-4">
         <app-cii-form-control
-          term="BT-2"
-          name="Invoice issue date"
+          [term]="bt2"
           [description]="bt2Description"
           [businessRules]="[{ id: 'BR-03', template: br3 }]"
           [chorusProRemarks]="[bt2ChorusProRemark]"
@@ -143,7 +141,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
           <input [id]="bt2Control.controlId()" class="form-control" formControlName="issueDateTime" type="date" />
         </app-cii-form-control>
 
-        <app-cii-form-control term="BT-2-0" name="Date, format" [description]="bt20Description" [settings]="settings()" #bt20Control>
+        <app-cii-form-control [term]="bt20" [description]="bt20Description" [settings]="settings()" #bt20Control>
           <ng-template #bt20Description>Only value "102"</ng-template>
 
           <select [id]="bt20Control.controlId()" class="form-select" formControlName="issueDateTimeFormat">
@@ -157,4 +155,9 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
 export class CiiFormExchangedDocumentComponent {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt1 = requireTerm('BT-1');
+  protected bt2 = requireTerm('BT-2');
+  protected bt20 = requireTerm('BT-2-0');
+  protected bt3 = requireTerm('BT-3');
 }

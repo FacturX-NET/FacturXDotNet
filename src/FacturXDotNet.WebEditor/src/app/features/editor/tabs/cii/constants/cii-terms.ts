@@ -1,17 +1,33 @@
-interface CiiTerm {
-  term: string;
+export type BusinessTermIdentifier = keyof typeof ciiTerms;
+
+export interface CiiTerm {
+  term: BusinessTermIdentifier;
   name: string;
   description?: string;
   kind: 'group' | 'field';
-  businessRules?: string[];
+  businessRules?: readonly string[];
   remark?: string;
   chorusProRemark?: string;
+}
+
+export function getTerm(term: string): CiiTerm | undefined {
+  const key = term as BusinessTermIdentifier;
+  return ciiTerms[key];
+}
+
+export function requireTerm(term: BusinessTermIdentifier): CiiTerm {
+  const result = ciiTerms[term];
+  if (result === undefined) {
+    throw new Error(`Could not find term ${term}.`);
+  }
+
+  return result;
 }
 
 /**
  * The list of all the controls in the Cross-Industry Invoice form, with their name, term, description, business rules and remarks.
  */
-export const ciiTerms: Record<string, CiiTerm> = {
+export const ciiTerms = {
   'BR-02': {
     term: 'BR-02',
     name: 'EXCHANGE DOCUMENT CONTEXT',
@@ -294,4 +310,4 @@ export const ciiTerms: Record<string, CiiTerm> = {
       'This amount is the Invoice total amount with VAT minus the paid amount that has been paid in advance. ' +
       'The amount is zero in case of a fully paid Invoice. The amount may be negative; in that case the Seller owes the amount to the Buyer.',
   },
-};
+} as const;

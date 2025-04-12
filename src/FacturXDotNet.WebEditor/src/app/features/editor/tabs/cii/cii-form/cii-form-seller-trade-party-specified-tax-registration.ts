@@ -3,6 +3,7 @@ import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
 import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-specified-tax-registration',
@@ -20,8 +21,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
       <div class="row">
         <div class="col">
           <app-cii-form-control
-            term="BT-31"
-            name="Seller VAT identifier"
+            [term]="bt31"
             [description]="bt31Description"
             [businessRules]="[
               { id: 'BR-CO-09', template: brCo9 },
@@ -50,7 +50,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
         </div>
 
         <div class="col">
-          <app-cii-form-control term="BT-31-0" name="Tax Scheme identifier" [description]="bt310Description" [remarks]="[bt310Remark]" [settings]="settings()" #bt310Control>
+          <app-cii-form-control [term]="bt310" [description]="bt310Description" [remarks]="[bt310Remark]" [settings]="settings()" #bt310Control>
             <ng-template #bt310Description>Scheme identifier for supplier VAT identifier.</ng-template>
             <ng-template #bt310Remark>Value = VA</ng-template>
 
@@ -66,4 +66,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
 export class CiiFormSellerTradePartySpecifiedTaxRegistration {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt31 = requireTerm('BT-31');
+  protected bt310 = requireTerm('BT-31-0');
 }

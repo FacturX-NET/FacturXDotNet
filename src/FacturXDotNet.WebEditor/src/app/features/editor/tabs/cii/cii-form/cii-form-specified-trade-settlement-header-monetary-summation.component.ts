@@ -3,6 +3,7 @@ import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
 import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-specified-trade-settlement-header-monetary-summation',
@@ -18,8 +19,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
   template: `
     <div [formGroupName]="formGroupName()" xmlns="http://www.w3.org/1999/html">
       <app-cii-form-control
-        term="BT-109"
-        name="Total amount without VAT"
+        [term]="bt109"
         [description]="bt109Description"
         [businessRules]="[
           { id: 'BR-13', template: br13 },
@@ -61,8 +61,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
       <div class="row">
         <div class="col">
           <app-cii-form-control
-            term="BT-110"
-            name="Total VAT amount"
+            [term]="bt110"
             [description]="bt110Description"
             [businessRules]="[{ id: 'BR-CO-14', template: brCo14 }]"
             [remarks]="[bt110Remark]"
@@ -88,7 +87,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
           </app-cii-form-control>
         </div>
         <div class="col">
-          <app-cii-form-control term="BT-110-1" name="VAT currency" [remarks]="[bt1101Remark]" [settings]="settings()" #bt1101Control>
+          <app-cii-form-control [term]="bt1101" [remarks]="[bt1101Remark]" [settings]="settings()" #bt1101Control>
             <ng-template #bt1101Remark> The currency is mandatory to differentiate between VAT amount and VAT amount in accounting currency.</ng-template>
 
             <input [id]="bt1101Control.controlId()" class="form-control" formControlName="taxTotalAmountCurrencyId" placeholder="EUR" />
@@ -97,8 +96,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
       </div>
 
       <app-cii-form-control
-        term="BT-112"
-        name="Total amount with VAT"
+        [term]="bt112"
         [description]="bt112Description"
         [businessRules]="[
           { id: 'BR-14', template: br14 },
@@ -138,8 +136,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
       </app-cii-form-control>
 
       <app-cii-form-control
-        term="BT-115"
-        name="Amount due for payment"
+        [term]="bt115"
         [description]="bt115Description"
         [businessRules]="[
           { id: 'BR-15', template: br15 },
@@ -187,4 +184,10 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
 export class CiiFormSpecifiedTradeSettlementHeaderMonetarySummation {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt109 = requireTerm('BT-109');
+  protected bt110 = requireTerm('BT-110');
+  protected bt1101 = requireTerm('BT-110-1');
+  protected bt112 = requireTerm('BT-112');
+  protected bt115 = requireTerm('BT-115');
 }

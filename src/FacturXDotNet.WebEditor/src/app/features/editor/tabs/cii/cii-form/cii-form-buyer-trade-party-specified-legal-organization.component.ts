@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-buyer-trade-party-specified-legal-organization',
@@ -19,8 +20,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
       <div class="row">
         <div class="col">
           <app-cii-form-control
-            term="BT-47"
-            name="Buyer legal registration identifier"
+            [term]="bt47"
             [description]="bt47Description"
             [remarks]="[bt47Remark]"
             [chorusProRemarks]="[bt47ChorusProRemark]"
@@ -38,7 +38,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
         </div>
 
         <div class="col">
-          <app-cii-form-control term="BT-47-1" name="Schema identifier" [description]="bt471Description" [remarks]="[bt471Description]" [settings]="settings()" #bt470Control>
+          <app-cii-form-control [term]="bt471" [description]="bt471Description" [remarks]="[bt471Description]" [settings]="settings()" #bt470Control>
             <ng-template #bt471Description>The identification scheme identifier of the Buyer legal registration identifier.</ng-template>
             <ng-template #bt471Description>
               If used, the identification scheme shall be chosen from the entries of the list published by the ISO 6523 maintenance agency. For a SIREN or a SIRET, the value of
@@ -55,4 +55,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
 export class CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt47 = requireTerm('BT-47');
+  protected bt471 = requireTerm('BT-47-1');
 }

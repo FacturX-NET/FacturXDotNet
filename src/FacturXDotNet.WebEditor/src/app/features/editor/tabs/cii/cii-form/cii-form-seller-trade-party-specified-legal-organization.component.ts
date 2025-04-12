@@ -3,6 +3,7 @@ import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
 import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party-specified-legal-organization',
@@ -19,14 +20,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
     <div [formGroupName]="formGroupName()">
       <div class="row">
         <div class="col">
-          <app-cii-form-control
-            term="BT-30"
-            name="Seller legal registration identifier"
-            [description]="bt30Description"
-            [businessRules]="[{ id: 'BR-CO-26', template: brCo26 }]"
-            [settings]="settings()"
-            #bt30Control
-          >
+          <app-cii-form-control [term]="bt30" [description]="bt30Description" [businessRules]="[{ id: 'BR-CO-26', template: brCo26 }]" [settings]="settings()" #bt30Control>
             <ng-template #bt30Description> An identifier issued by an official registrar that identifies the Seller as a legal entity or person.</ng-template>
             <ng-template #brCo26>
               In order for the buyer to automatically identify a supplier, the <a [scrollTo]="'BT-29'">Seller identifier (BT-29)</a>, the
@@ -38,7 +32,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
         </div>
         <div class="col">
           <div class="mb-3">
-            <app-cii-form-control term="BT-30-1" name="Scheme identifier" [description]="bt301Description" [remarks]="[bt301remark]" [settings]="settings()" #bt301Control>
+            <app-cii-form-control [term]="bt301" [description]="bt301Description" [remarks]="[bt301remark]" [settings]="settings()" #bt301Control>
               <ng-template #bt301Description> The identification scheme identifier of the Seller legal registration identifier.</ng-template>
               <ng-template #bt301remark>
                 If used, the identification scheme shall be chosen from the entries of the list published by the ISO/IEC 6523 maintenance agency. For a SIREN or a SIRET, the value
@@ -56,4 +50,7 @@ import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.direc
 export class CiiFormSellerTradePartySpecifiedLegalOrganizationComponent {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt30 = requireTerm('BT-30');
+  protected bt301 = requireTerm('BT-30-1');
 }

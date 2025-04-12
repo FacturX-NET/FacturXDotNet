@@ -6,6 +6,7 @@ import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-sell
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
+import { ciiTerms, requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-seller-trade-party',
@@ -27,7 +28,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control term="BT-27" name="Seller name" [description]="bt27Description" [businessRules]="[{ id: 'BR-06', template: br6 }]" [settings]="settings()" #bt27Control>
+      <app-cii-form-control [term]="bt27" [description]="bt27Description" [businessRules]="[{ id: 'BR-06', template: br6 }]" [settings]="settings()" #bt27Control>
         <ng-template #bt27Description>
           The full formal name by which the Seller is registered in the national registry of legal entities or as a Taxable person or otherwise trades as a person or persons.
         </ng-template>
@@ -36,7 +37,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
         <input [id]="bt27Control.controlId()" class="form-control" formControlName="name" placeholder="LE FOURNISSEUR" />
       </app-cii-form-control>
 
-      <app-cii-form-parent-container term="BT-30-00" name="SELLER LEGAL ORGANIZATION" [description]="description" [settings]="settings()" depth="4">
+      <app-cii-form-parent-container [term]="bt3000" [description]="description" [settings]="settings()" depth="4">
         <ng-template #description>Details about the organization.</ng-template>
 
         <app-cii-form-seller-trade-party-specified-legal-organization
@@ -46,8 +47,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
       </app-cii-form-parent-container>
 
       <app-cii-form-parent-container
-        term="BR-05"
-        name="SELLER POSTAL ADDRESS"
+        [term]="br05"
         [description]="description"
         [remarks]="[remark]"
         [businessRules]="[{ id: 'BR-08', template: br8 }]"
@@ -64,7 +64,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
         <app-cii-form-seller-trade-party-postal-trade-address formGroupName="postalTradeAddress" [settings]="settings()"></app-cii-form-seller-trade-party-postal-trade-address>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container term="BT-31-00" name="SELLER VAT IDENTIFIER" [description]="description" [settings]="settings()" depth="4">
+      <app-cii-form-parent-container [term]="bt3100" [description]="description" [settings]="settings()" depth="4">
         <ng-template #description>Detailed information on tax information of the seller.</ng-template>
 
         <app-cii-form-seller-trade-party-specified-tax-registration
@@ -78,4 +78,9 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
 export class CiiFormSellerTradePartyComponent {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected br05 = requireTerm('BR-05');
+  protected bt27 = requireTerm('BT-27');
+  protected bt3000 = requireTerm('BT-30-00');
+  protected bt3100 = requireTerm('BT-31-00');
 }
