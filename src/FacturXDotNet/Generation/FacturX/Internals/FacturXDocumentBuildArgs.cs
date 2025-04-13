@@ -1,4 +1,6 @@
-﻿using FacturXDotNet.Generation.PDF;
+﻿using FacturXDotNet.Generation.CII.Internals.Providers;
+using FacturXDotNet.Generation.PDF;
+using FacturXDotNet.Generation.XMP.Internals.Providers;
 using Microsoft.Extensions.Logging;
 
 namespace FacturXDotNet.Generation.FacturX.Internals;
@@ -9,30 +11,18 @@ namespace FacturXDotNet.Generation.FacturX.Internals;
 class FacturXDocumentBuildArgs
 {
     /// <summary>
-    ///     The base PDF stream used to build the FacturX document. This represents the primary PDF
-    ///     document onto which additional metadata and attachments will be added during the document generation process.
+    ///     The PDF generator responsible for creating PDF documents from provided data and settings.
+    ///     This is an implementation of the IPdfGenerator interface, which defines methods for building
+    ///     PDF documents based on structured invoice information.
     /// </summary>
-    public Stream? BasePdf { get; set; }
+    public IPdfGenerator? PdfGenerator { get; set; }
 
     /// <summary>
-    ///     The password used to decrypt the base PDF stream. This is required when the base PDF is password-protected
-    ///     and needs to be accessed during the FacturX document building process.
+    ///     The provider responsible for generating Cross-Industry Invoice (CII) data streams used in the construction
+    ///     of FacturX documents. This property is an implementation of the ICrossIndustryInvoiceDataProvider interface,
+    ///     which provides methods to retrieve structured invoice data in CII format.
     /// </summary>
-    public string? BasePdfPassword { get; set; }
-
-    /// <summary>
-    ///     The property indicating whether the base PDF stream should be left open after processing.
-    ///     This controls whether the provided stream remains accessible for further operations or is
-    ///     automatically closed after it is read and processed during the FacturX document generation.
-    /// </summary>
-    public bool BasePdfLeaveOpen { get; set; }
-
-    /// <summary>
-    ///     The stream containing the Cross-Industry Invoice (CII) data to be added to the FacturX document.
-    ///     This data is used to embed the structured invoice information as a compliant XML attachment.
-    ///     This property can be omitted if the base PDF already includes CII data as an attached file.
-    /// </summary>
-    public Stream? Cii { get; set; }
+    public ICrossIndustryInvoiceDataProvider? CiiProvider { get; set; }
 
     /// <summary>
     ///     The name of the attachment for the Cross-Industry Invoice (CII) file in the FacturX document.
@@ -41,25 +31,11 @@ class FacturXDocumentBuildArgs
     public string CiiAttachmentName { get; set; } = "factur-x.xml";
 
     /// <summary>
-    ///     The property indicating whether the Cross-Industry Invoice data stream should be left open after processing.
-    ///     This controls whether the provided stream remains accessible for further operations or is
-    ///     automatically closed after it is read and processed during the FacturX document generation.
+    ///     The XMP provider responsible for generating and supplying XMP metadata
+    ///     for a FacturX document. This is an implementation of the IXmpDataProvider
+    ///     interface, which defines methods for retrieving XMP metadata and its stream representation.
     /// </summary>
-    public bool CiiLeaveOpen { get; set; }
-
-    /// <summary>
-    ///     The optional XMP metadata stream to be included in the FacturX document. This stream provides
-    ///     additional descriptive information for the PDF, following the XMP (Extensible Metadata Platform) standard.
-    ///     The provided metadata will be used in addition to the ones that are generated automatically during the document creation process.
-    /// </summary>
-    public Stream? Xmp { get; set; }
-
-    /// <summary>
-    ///     The property indicating whether the XMP metadata stream should be left open after processing.
-    ///     This controls whether the provided stream remains accessible for further operations or is
-    ///     automatically closed after it is read and processed during the FacturX document generation.
-    /// </summary>
-    public bool XmpLeaveOpen { get; set; }
+    public IXmpDataProvider? XmpProvider { get; set; }
 
     /// <summary>
     ///     The property that determines whether XMP metadata auto-generation should be disabled.
