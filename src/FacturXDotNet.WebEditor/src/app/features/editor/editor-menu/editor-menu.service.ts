@@ -56,9 +56,7 @@ export class EditorMenuService {
         }
 
         const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        return from(
-          this.editorStateService.new({ name: nameWithoutExtension, xmp: result.xmp, cii: result.cii, pdf: result.file, autoGeneratePdf: false, attachments: result.attachments }),
-        );
+        return from(this.editorStateService.new({ name: nameWithoutExtension, xmp: result.xmp, cii: result.cii, pdf: result.file, attachments: result.attachments }));
       }),
       takeUntilDestroyed(this.destroyRef),
     );
@@ -77,8 +75,15 @@ export class EditorMenuService {
           return throwError(() => `Could not extract CII data from file ${result.file.name}.`);
         }
 
+        return this.generateApi.generateStandardPdf(result.cii).pipe(map((pdf) => ({ ...result, pdf })));
+      }),
+      switchMap((result) => {
+        if (result.pdf === undefined) {
+          return throwError(() => `Could not generate PDF data for file ${result.file.name}.`);
+        }
+
         const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        return from(this.editorStateService.new({ name: nameWithoutExtension, cii: result.cii }));
+        return from(this.editorStateService.new({ name: nameWithoutExtension, cii: result.cii, pdf: result.pdf }));
       }),
       takeUntilDestroyed(this.destroyRef),
     );
@@ -96,7 +101,7 @@ export class EditorMenuService {
       }),
       switchMap((result) => {
         const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        return from(this.editorStateService.new({ name: nameWithoutExtension, xmp: result.xmp, pdf: result.file, autoGeneratePdf: false, attachments: result.attachments }));
+        return from(this.editorStateService.new({ name: nameWithoutExtension, xmp: result.xmp, pdf: result.file, attachments: result.attachments }));
       }),
       takeUntilDestroyed(this.destroyRef),
     );
@@ -139,7 +144,7 @@ export class EditorMenuService {
       switchMap((file) => {
         return from(this.extractPdfAttachments(file)).pipe(map((attachments) => ({ file, attachments })));
       }),
-      switchMap((result) => from(this.editorStateService.updatePdf(result.file, false))),
+      switchMap((result) => from(this.editorStateService.updatePdf(result.file))),
     );
   }
 
@@ -224,6 +229,11 @@ export class EditorMenuService {
     const pdfDocumentLoadingTask = pdf.getDocument(buffer);
     const pdfDocument = await pdfDocumentLoadingTask.promise;
     const attachmentsObj = await pdfDocument.getAttachments();
+
+    if (attachmentsObj === null || attachmentsObj === undefined) {
+      return [];
+    }
+
     const attachments: { filename: string; description: string; content: Uint8Array }[] = Object.values(attachmentsObj);
     return attachments.filter((a) => a.filename !== 'factur-x.xml').map((a) => ({ name: a.filename, description: a.description, content: a.content }));
   }

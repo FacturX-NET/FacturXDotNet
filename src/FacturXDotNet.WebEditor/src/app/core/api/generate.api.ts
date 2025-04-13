@@ -76,4 +76,21 @@ export class GenerateApi {
       }),
     );
   }
+
+  generateStandardPdf(cii: ICrossIndustryInvoice): Observable<File> {
+    const url = `${this.baseUrl}/generate/pdf/standard`;
+    const ciiObj = new CrossIndustryInvoice(cii);
+
+    return this.httpClient.post(url, ciiObj.toJSON(), { observe: 'response', responseType: 'blob' }).pipe(
+      map((response): File => {
+        if (response.body === null) {
+          throw new Error('No response body');
+        }
+
+        const contentDisposition = response.headers.get('content-disposition');
+        const filename = contentDisposition?.split(';')[1].split('filename')[1].split('=')[1].trim();
+        return new File([response.body], filename ?? 'invoice.pdf');
+      }),
+    );
+  }
 }

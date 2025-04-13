@@ -6,7 +6,7 @@ import { EditorMenuComponent } from './editor-menu/editor-menu.component';
 import { FormsModule } from '@angular/forms';
 import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
 import { EditorSavedState, EditorStateService } from './editor-state.service';
-import { PdfViewerComponent } from './pdf-viewer.component';
+import { PdfViewerComponent } from './editor-pdf-viewer/pdf-viewer.component';
 import { EditorHeaderComponent } from './editor-header/editor-header.component';
 import { EditorWelcomeComponent } from './editor-welcome.component';
 import { API_BASE_URL } from '../../app.config';
@@ -17,6 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditorMenuService } from './editor-menu/editor-menu.service';
 import { ToastService } from '../../core/toasts/toast.service';
 import { RouterOutlet } from '@angular/router';
+import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.component';
 
 @Component({
   selector: 'app-editor',
@@ -30,6 +31,7 @@ import { RouterOutlet } from '@angular/router';
     EditorWelcomeComponent,
     ApiServerStatusComponent,
     RouterOutlet,
+    EditorPdfViewerComponent,
   ],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
@@ -68,20 +70,7 @@ import { RouterOutlet } from '@angular/router';
                 <router-outlet></router-outlet>
               </div>
               <div class="h-100" right>
-                @if (value.pdf; as pdf) {
-                  <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
-                } @else {
-                  <div class="h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
-                    <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5" (click)="importPdfImage()">
-                      <i class="bi bi-filetype-pdf text-primary fs-1"></i>
-                      <div class="lead text-primary">Import PDF image</div>
-                    </button>
-                    <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5">
-                      <i class="bi bi-filetype-pdf text-primary fs-1"></i>
-                      <div class="lead text-primary">Auto-generate PDF image</div>
-                    </button>
-                  </div>
-                }
+                <app-editor-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
               </div>
             </app-two-columns>
           </div>
@@ -121,9 +110,6 @@ import { RouterOutlet } from '@angular/router';
 export class EditorPage {
   protected readonly environment = environment;
 
-  private editorMenuService = inject(EditorMenuService);
-  private toastService = inject(ToastService);
-  private destroyRef = inject(DestroyRef);
   private apiConstantsService = inject(ApiConstantsService);
   protected apiUrl = inject(API_BASE_URL);
   private editorStateService = inject(EditorStateService);
@@ -134,14 +120,4 @@ export class EditorPage {
 
   protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
   protected disablePointerEvents = signal<boolean>(false);
-
-  importPdfImage() {
-    this.editorMenuService
-      .importPdfImageData()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not create PDF image: ${message}`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
-  }
 }

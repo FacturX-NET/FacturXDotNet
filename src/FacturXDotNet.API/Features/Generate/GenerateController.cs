@@ -23,7 +23,7 @@ static class GenerateController
         routes.MapPost("/facturx", PostFacturX)
             .WithSummary("Generate FacturX Document")
             .WithDescription("Generate a FacturX Document from a base PDF and Cross-Industry Invoice data.")
-            .Produces<IFormFile>()
+            .Produces<IFormFile>(StatusCodes.Status200OK, "application/pdf")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
@@ -31,7 +31,7 @@ static class GenerateController
         routes.MapPost("/cii", PostCii)
             .WithSummary("Generate Cross-Industry Invoice")
             .WithDescription("Generate a Cross-Industry Invoice XML file from structured data.")
-            .Produces<IFormFile>()
+            .Produces<IFormFile>(StatusCodes.Status200OK, "text/xml")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
@@ -39,7 +39,7 @@ static class GenerateController
         routes.MapGet("/pdf/models", GetPdfModels)
             .WithSummary("Get PDF models")
             .WithDescription("Get the available PDF models that can be used to generate a PDF image from Cross-Industry Invoice data.")
-            .Produces<IFormFile>()
+            .Produces<IReadOnlyCollection<string>>()
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
@@ -48,7 +48,7 @@ static class GenerateController
         routes.MapPost("/pdf/{model}", PostPdf)
             .WithSummary("Generate PDF")
             .WithDescription("Generate a PDF file from the Cross-Industry Invoice structured data.")
-            .Produces<IFormFile>()
+            .Produces<IFormFile>(StatusCodes.Status200OK, "application/pdf")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
