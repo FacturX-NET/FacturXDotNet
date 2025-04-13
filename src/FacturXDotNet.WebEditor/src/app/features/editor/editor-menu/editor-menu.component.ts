@@ -20,7 +20,7 @@ import { EditorMenuService } from './editor-menu.service';
         <app-editor-export-menu #exportMenu (exporting)="exporting.emit($event)"></app-editor-export-menu>
       }
 
-      <app-editor-about-menu #aboutMenu></app-editor-about-menu>
+      <app-editor-about-menu [showSelfHostingMenu]="showSelfHostingMenu()" #aboutMenu></app-editor-about-menu>
     </ul>
   `,
 })

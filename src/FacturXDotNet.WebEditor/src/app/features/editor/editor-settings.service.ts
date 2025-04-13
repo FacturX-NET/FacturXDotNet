@@ -1,5 +1,5 @@
 import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { EditorTab } from './editor-header.component';
+import { EditorTab } from './editor-header/editor-header.component';
 
 @Injectable({
   providedIn: 'root',
