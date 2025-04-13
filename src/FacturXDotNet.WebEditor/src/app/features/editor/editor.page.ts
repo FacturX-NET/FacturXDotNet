@@ -8,7 +8,7 @@ import { TwoColumnsComponent } from '../../core/two-columns/two-columns.componen
 import { CiiTab } from './tabs/cii/cii.tab';
 import { EditorSavedState, EditorStateService } from './editor-state.service';
 import { PdfViewerComponent } from './pdf-viewer.component';
-import { EditorHeaderComponent, EditorTab } from './editor-header.component';
+import { EditorHeaderComponent, EditorTab } from './editor-header/editor-header.component';
 import { EditorWelcomeComponent } from './editor-welcome.component';
 import { AttachmentsTab } from './tabs/attachments/attachments.tab';
 import { XmpTab } from './tabs/xmp/xmp.tab';
