@@ -1,4 +1,4 @@
-import { inject, Injectable, resource, Resource } from '@angular/core';
+import { inject, Injectable, resource, Resource, signal, Signal } from '@angular/core';
 import { IDBPDatabase, IDBPTransaction, openDB, StoreNames } from 'idb';
 import { ICrossIndustryInvoice, IXmpMetadata } from '../../core/api/api.models';
 import { GenerateApi } from '../../core/api/generate.api';

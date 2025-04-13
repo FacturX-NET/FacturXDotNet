@@ -23,7 +23,6 @@ import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.
   selector: 'app-editor',
   imports: [
     NgOptimizedImage,
-    PdfViewerComponent,
     EditorMenuComponent,
     FormsModule,
     EditorHeaderComponent,
@@ -59,31 +58,33 @@ import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.
       </header>
 
       <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
-        @if (state.value(); as value) {
-          <header>
-            <app-editor-header [state]="value" [settings]="settings()"></app-editor-header>
-          </header>
-
-          <div class="flex-grow-1 overflow-hidden">
-            <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
-              <div class="h-100 overflow-hidden" left>
-                <router-outlet></router-outlet>
-              </div>
-              <div class="h-100" right>
-                <app-editor-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
-              </div>
-            </app-two-columns>
-          </div>
-        } @else if (state.isLoading()) {
+        @if (state.isLoading()) {
           <div class="w-100 h-100 d-flex justify-content-center align-items-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
           </div>
         } @else {
-          <div class="w-100 h-100">
-            <app-editor-welcome></app-editor-welcome>
-          </div>
+          @if (state.value(); as value) {
+            <header>
+              <app-editor-header [state]="value" [settings]="settings()"></app-editor-header>
+            </header>
+
+            <div class="flex-grow-1 overflow-hidden">
+              <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
+                <div class="h-100 overflow-hidden" left>
+                  <router-outlet></router-outlet>
+                </div>
+                <div class="h-100" right>
+                  <app-editor-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
+                </div>
+              </app-two-columns>
+            </div>
+          } @else {
+            <div class="w-100 h-100">
+              <app-editor-welcome></app-editor-welcome>
+            </div>
+          }
         }
       </main>
 
