@@ -25,17 +25,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup .NET 10
+      - name: Setup .NET 9 (for dotnet-releaser, lib, and apps)
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: 9.0.x
 
-      - name: Setup .NET 8
+      - name: Setup .NET 8 (for minver-cli)
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
-      - name: Setup .NET 6
+      - name: Setup .NET 6 (for dotnet-project-licenses)
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 6.0.x
