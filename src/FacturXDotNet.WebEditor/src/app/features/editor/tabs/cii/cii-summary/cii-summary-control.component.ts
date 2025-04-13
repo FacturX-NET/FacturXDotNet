@@ -6,8 +6,7 @@ import { CiiFormHighlightChorusProRemarkService } from '../cii-form-highlight-ch
 import { CiiFormHighlightTermService } from '../cii-form-highlight-term.service';
 import { CiiFormHighlightRemarkService } from '../cii-form-highlight-remark.service';
 import { CiiFormHighlightBusinessRuleService } from '../cii-form-highlight-business-rule.service';
-import { BusinessTermIdentifier, getTerm } from '../constants/cii-terms';
-import { BusinessRuleIdentifier } from '../constants/cii-business-rules';
+import { BusinessRuleIdentifier } from '../constants/cii-rules';
 
 @Component({
   selector: 'app-cii-summary-node',
@@ -23,8 +22,8 @@ import { BusinessRuleIdentifier } from '../constants/cii-business-rules';
           <a
             [scrollTo]="node.term.term"
             [class.fw-bold]="isNodeHighlighted()"
-            [class.text-success]="isValid"
-            [class.text-danger]="isInvalid"
+            [class.text-success]="isValid()"
+            [class.text-danger]="isInvalid()"
             data-bs-dismiss="offcanvas"
             data-bs-target="#editor__cii-summary"
             (mouseenter)="this.highlightTerm(true)"
@@ -93,18 +92,23 @@ export class CiiSummaryControlComponent {
   node = input.required<CiiFormNode>();
   settings = input.required<EditorSettings>();
 
-  protected get isValid(): boolean {
-    const node = this.node();
-    return node.control.touched && !node.control.invalid;
-  }
-
-  protected get isInvalid(): boolean {
-    const node = this.node();
-    return node.control.touched && node.control.invalid;
-  }
-
   private ciiFormService = inject(CiiFormService);
-  protected businessRuleStatuses = this.ciiFormService.businessRules;
+  protected businessRuleStatuses = this.ciiFormService.businessRulesValidation;
+  private termValidation = this.ciiFormService.businessTermsValidation;
+
+  protected isValid = computed(() => {
+    const node = this.node();
+    const validation = this.termValidation()[node.term.term];
+
+    return validation === 'valid';
+  });
+
+  protected isInvalid = computed(() => {
+    const node = this.node();
+    const validation = this.termValidation()[node.term.term];
+
+    return validation === 'invalid';
+  });
 
   private highlightTermService = inject(CiiFormHighlightTermService);
   protected isNodeHighlighted = computed(() => this.highlightTermService.highlightedTerm() === this.node().term.term);

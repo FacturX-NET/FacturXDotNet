@@ -53,7 +53,7 @@ export class CiiFormApplicableHeaderTradeAgreementComponent {
   settings = input<EditorSettings>();
 
   protected bt10 = requireTerm('BT-10');
-  protected br04 = requireTerm('BR-04');
-  protected br07 = requireTerm('BR-07');
+  protected br04 = requireTerm('BG-4');
+  protected br07 = requireTerm('BG-7');
   protected bt1300 = requireTerm('BT-13-00');
 }

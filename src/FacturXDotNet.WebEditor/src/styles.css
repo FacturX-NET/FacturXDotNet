@@ -42,13 +42,18 @@ body {
   min-height: 100%;
 }
 
+.editor__control.invalid input.ng-touched,
+.editor__control.invalid select.ng-touched {
+  border: 1px solid var(--bs-danger);
+}
+
 input.ng-invalid.ng-touched,
 select.ng-invalid.ng-touched {
   border: 1px solid var(--bs-danger);
 }
 
-input.ng-valid.ng-touched,
-select.ng-valid.ng-touched {
+.editor__control.valid input.ng-touched,
+.editor__control.valid select.ng-touched {
   border: 1px solid var(--bs-success);
 }
 

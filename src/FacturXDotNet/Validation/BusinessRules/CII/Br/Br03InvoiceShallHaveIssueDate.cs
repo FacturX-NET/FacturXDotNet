@@ -4,13 +4,13 @@ using FacturXDotNet.Models.CII;
 namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 
 /// <summary>
-///     BR-03: An Invoice shall have an Invoice issue date (BT-2).
+///     BR-3: An Invoice shall have an Invoice issue date (BT-2).
 /// </summary>
 public record Br03InvoiceShallHaveIssueDate() : CrossIndustryInvoiceBusinessRule(
-    "BR-03",
+    "BR-3",
     "An Invoice shall have an Invoice issue date (BT-2).",
     FacturXProfile.Minimum.AndHigher(),
-    [$"{nameof(CrossIndustryInvoice.ExchangedDocument)}.{nameof(ExchangedDocument.IssueDateTime)}"]
+    ["BT-2"]
 )
 {
     /// <inheritdoc />

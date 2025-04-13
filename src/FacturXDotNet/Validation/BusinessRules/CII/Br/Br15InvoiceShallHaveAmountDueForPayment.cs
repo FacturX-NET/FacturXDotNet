@@ -10,9 +10,7 @@ public record Br15InvoiceShallHaveAmountDueForPayment() : CrossIndustryInvoiceBu
     "BR-15",
     "An Invoice shall have the Amount due for payment (BT- 115).",
     FacturXProfile.Minimum.AndHigher(),
-    [
-        $"{nameof(CrossIndustryInvoice.SupplyChainTradeTransaction)}.{nameof(SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement)}.{nameof(ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation)}.{nameof(SpecifiedTradeSettlementHeaderMonetarySummation.DuePayableAmount)}"
-    ]
+    ["BT-115"]
 )
 {
     /// <inheritdoc />

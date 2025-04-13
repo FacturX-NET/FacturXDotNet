@@ -7,7 +7,7 @@ import { CiiFormHighlightTermService } from '../../cii-form-highlight-term.servi
 import { CiiFormHighlightRemarkService } from '../../cii-form-highlight-remark.service';
 import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight-chorus-pro-remark.service';
 import { CiiTerm } from '../../constants/cii-terms';
-import { BusinessRule, requireRule } from '../../constants/cii-business-rules';
+import { CiiRule, requireBusinessRule } from '../../constants/cii-rules';
 import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
@@ -67,13 +67,13 @@ export class CiiFormParentContainerComponent {
   public remarkId = computed(() => this.term().term + '-remarks');
   public chorusProRemarkId = computed(() => this.term().term + '-cpro-remarks');
 
-  public businessRules: Signal<BusinessRule[]> = computed(() => {
+  public businessRules: Signal<CiiRule[]> = computed(() => {
     const ruleNames = this.term().businessRules;
     if (ruleNames === undefined) {
       return [];
     }
 
-    return ruleNames.map((r) => requireRule(r));
+    return ruleNames.map((r) => requireBusinessRule(r));
   });
 
   protected topPx = computed(() => {

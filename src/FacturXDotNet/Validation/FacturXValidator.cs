@@ -55,7 +55,7 @@ public class FacturXValidator(FacturXValidationOptions? options = null)
     ///     Determines wheter the given invoice satisfies the specified business rule.
     /// </summary>
     /// <param name="invoice">The invoice to validate.</param>
-    /// <param name="businessRuleName">The name of the business rule to validate, e.g. <c>BR-01</c>.</param>
+    /// <param name="businessRuleName">The name of the business rule to validate, e.g. <c>BR-1</c>.</param>
     /// <param name="ciiAttachmentName">The name of the attachment containing the Cross-Industry Invoice XML file. If not specified, the default name 'factur-x.xml' will be used.</param>
     /// <param name="password">The password to open the PDF document.</param>
     /// <param name="cancellationToken">The cancellation token.</param>

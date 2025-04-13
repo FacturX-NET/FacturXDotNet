@@ -56,7 +56,7 @@ export class CiiFormSellerTradePartyComponent {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
 
-  protected br05 = requireTerm('BR-05');
+  protected br05 = requireTerm('BG-5');
   protected bt27 = requireTerm('BT-27');
   protected bt3000 = requireTerm('BT-30-00');
   protected bt3100 = requireTerm('BT-31-00');

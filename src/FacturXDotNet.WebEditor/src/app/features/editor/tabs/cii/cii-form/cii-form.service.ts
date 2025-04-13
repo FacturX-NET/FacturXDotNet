@@ -11,8 +11,8 @@ import { debounceTime, firstValueFrom, from, Subject, switchMap, tap } from 'rxj
 import { EditorSavedState, EditorStateService } from '../../../editor-state.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidateApi } from '../../../../../core/api/validate.api';
-import { BusinessRuleIdentifier, ciiBusinessRules } from '../constants/cii-business-rules';
-import { BusinessTermIdentifier, CiiTerm, requireTerm } from '../constants/cii-terms';
+import { BusinessRuleIdentifier, getBusinessRuleIdentifiers, isBusinessRuleIdentifier, requireBusinessRule } from '../constants/cii-rules';
+import { BusinessTermIdentifier, CiiTerm, getBusinessTermIdentifiers, requireTerm } from '../constants/cii-terms';
 
 @Injectable({
   providedIn: 'root',
@@ -22,13 +22,18 @@ export class CiiFormService {
     return this.stateInternal.asReadonly();
   }
 
-  get businessRules() {
-    return this.businessRulesInternal.asReadonly();
+  get businessTermsValidation() {
+    return this.businessTermsValidationInternal.asReadonly();
+  }
+
+  get businessRulesValidation() {
+    return this.businessRulesValidationInternal.asReadonly();
   }
 
   private saveSubject = new Subject<EditorSavedState>();
   private stateInternal = signal<CiiFormState>('pristine');
-  private businessRulesInternal = signal<Partial<Record<BusinessRuleIdentifier, 'valid' | 'invalid'>>>({});
+  private businessTermsValidationInternal = signal<Partial<Record<BusinessTermIdentifier, 'valid' | 'invalid'>>>({});
+  private businessRulesValidationInternal = signal<Partial<Record<BusinessRuleIdentifier, 'valid' | 'invalid'>>>({});
 
   private validateApi = inject(ValidateApi);
   private editorStateService = inject(EditorStateService);
@@ -129,23 +134,57 @@ export class CiiFormService {
    * @returns {Promise<boolean>} `true` if the form is valid and business rules are satisfied, otherwise `false`.
    */
   async validate(): Promise<boolean> {
+    const businessTermIdentifiers = getBusinessTermIdentifiers();
+    const businessRuleIdentifiers = getBusinessRuleIdentifiers();
+
     this.form.markAllAsTouched();
     if (!this.form.valid) {
+      const termsStatuses: Partial<Record<BusinessTermIdentifier, 'invalid' | 'valid'>> = {};
+      for (const termId of businessTermIdentifiers) {
+        const termControl = this.getControl(termId);
+        if (termControl?.invalid) {
+          termsStatuses[termId] = 'invalid';
+        }
+      }
+
+      this.businessTermsValidationInternal.set(termsStatuses);
+      this.businessRulesValidationInternal.set({});
+
       return false;
     }
 
     const cii: ICrossIndustryInvoice = this.fromFormValue(this.form.getRawValue());
     const validationResult = await firstValueFrom(this.validateApi.validateCrossIndustryInvoice(cii).pipe(takeUntilDestroyed(this.destroyRef)));
 
-    const rulesStatuses: Record<string, 'invalid' | 'valid'> = Object.fromEntries(Object.keys(ciiBusinessRules).map((r) => [r, 'valid']));
+    const termsStatuses: Partial<Record<BusinessTermIdentifier, 'invalid' | 'valid'>> = {};
+    for (const termId of businessTermIdentifiers) {
+      termsStatuses[termId] = 'valid';
+    }
+
+    const rulesStatuses: Partial<Record<BusinessRuleIdentifier, 'invalid' | 'valid'>> = {};
+    for (const ruleId of businessRuleIdentifiers) {
+      rulesStatuses[ruleId] = 'valid';
+    }
+
     if (validationResult.errors !== undefined) {
       for (const [_, errors] of Object.entries(validationResult.errors)) {
-        for (const rule of errors) {
-          rulesStatuses[rule] = 'invalid';
+        for (const ruleName of errors) {
+          if (!isBusinessRuleIdentifier(ruleName)) {
+            continue;
+          }
+
+          rulesStatuses[ruleName] = 'invalid';
+
+          const rule = requireBusinessRule(ruleName);
+          for (const term of rule.termsInvolved) {
+            termsStatuses[term] = 'invalid';
+          }
         }
       }
     }
-    this.businessRulesInternal.set(rulesStatuses);
+
+    this.businessTermsValidationInternal.set(termsStatuses);
+    this.businessRulesValidationInternal.set(rulesStatuses);
 
     return validationResult.valid;
   }
@@ -231,7 +270,7 @@ export class CiiFormService {
    * - Validation and interaction with specific parts of the CII form hierarchy.
    */
   controls: Record<BusinessTermIdentifier, AbstractControl> = {
-    'BR-02': this.form.controls.exchangedDocumentContext,
+    'BG-2': this.form.controls.exchangedDocumentContext,
     'BT-23': this.form.controls.exchangedDocumentContext.controls.businessProcessSpecifiedDocumentContextParameterId,
     'BT-24': this.form.controls.exchangedDocumentContext.controls.guidelineSpecifiedDocumentContextParameterId,
     'BT-1-00': this.form.controls.exchangedDocument,
@@ -242,19 +281,19 @@ export class CiiFormService {
     'BG-25-00': this.form.controls.supplyChainTradeTransaction,
     'BT-10-00': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement,
     'BT-10': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerReference,
-    'BR-04': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty,
+    'BG-4': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty,
     'BT-27': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.name,
     'BT-30-00': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedLegalOrganization,
     'BT-30': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedLegalOrganization.controls.id,
     'BT-30-1':
       this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedLegalOrganization.controls.idSchemeId,
-    'BR-05': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.postalTradeAddress,
+    'BG-5': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.postalTradeAddress,
     'BT-40': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.postalTradeAddress.controls.countryId,
     'BT-31-00': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration,
     'BT-31': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration.controls.id,
     'BT-31-0':
       this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration.controls.idSchemeId,
-    'BR-07': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty,
+    'BG-7': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty,
     'BT-44': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.name,
     'BT-47-00': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.specifiedLegalOrganization,
     'BT-47': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.specifiedLegalOrganization.controls.id,
@@ -310,8 +349,8 @@ export class CiiFormService {
    */
   hierarchy: CiiFormNode[] = [
     {
-      term: requireTerm('BR-02'),
-      control: this.requireControl('BR-02'),
+      term: requireTerm('BG-2'),
+      control: this.requireControl('BG-2'),
       children: [
         { term: requireTerm('BT-23'), control: this.requireControl('BT-23') },
         { term: requireTerm('BT-24'), control: this.requireControl('BT-24') },
@@ -340,8 +379,8 @@ export class CiiFormService {
           children: [
             { term: requireTerm('BT-10'), control: this.requireControl('BT-10') },
             {
-              term: requireTerm('BR-04'),
-              control: this.requireControl('BR-04'),
+              term: requireTerm('BG-4'),
+              control: this.requireControl('BG-4'),
               children: [
                 { term: requireTerm('BT-27'), control: this.requireControl('BT-27') },
                 {
@@ -356,8 +395,8 @@ export class CiiFormService {
                   ],
                 },
                 {
-                  term: requireTerm('BR-05'),
-                  control: this.requireControl('BR-05'),
+                  term: requireTerm('BG-5'),
+                  control: this.requireControl('BG-5'),
                   children: [{ term: requireTerm('BT-40'), control: this.requireControl('BT-40') }],
                 },
                 {
@@ -374,8 +413,8 @@ export class CiiFormService {
               ],
             },
             {
-              term: requireTerm('BR-07'),
-              control: this.requireControl('BR-07'),
+              term: requireTerm('BG-7'),
+              control: this.requireControl('BG-7'),
               children: [
                 { term: requireTerm('BT-44'), control: this.requireControl('BT-44') },
                 {

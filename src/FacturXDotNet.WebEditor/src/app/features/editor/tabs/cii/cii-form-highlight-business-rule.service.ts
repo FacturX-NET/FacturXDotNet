@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { debounceTime, Subject } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BusinessRuleIdentifier } from './constants/cii-business-rules';
+import { BusinessRuleIdentifier } from './constants/cii-rules';
 
 @Injectable({
   providedIn: 'root',

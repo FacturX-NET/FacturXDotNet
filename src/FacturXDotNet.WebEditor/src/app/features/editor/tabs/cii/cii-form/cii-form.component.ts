@@ -38,7 +38,7 @@ export class CiiFormComponent {
   value = model.required<ICrossIndustryInvoice>();
   settings = input<EditorSettings>();
 
-  protected br2 = requireTerm('BR-02');
+  protected br2 = requireTerm('BG-2');
   protected bt100 = requireTerm('BT-1-00');
   protected bg2500 = requireTerm('BG-25-00');
 

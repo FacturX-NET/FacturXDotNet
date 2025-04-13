@@ -7,7 +7,6 @@ import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-toast',
-  imports: [NgbToast],
   template: `
     @let colorScheme = toast().type === 'success' ? 'text-bg-success' : toast().type == 'error' ? 'text-bg-danger' : '';
 

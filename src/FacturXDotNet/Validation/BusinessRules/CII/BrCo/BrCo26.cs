@@ -14,10 +14,7 @@ public record BrCo26() : CrossIndustryInvoiceBusinessRule(
     and/or the Seller VAT identifier (BT-31) shall be present.
     """,
     FacturXProfile.Minimum.AndHigher(),
-    [
-        $"{nameof(CrossIndustryInvoice.SupplyChainTradeTransaction)}.{nameof(SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement)}.{nameof(ApplicableHeaderTradeAgreement.SellerTradeParty)}.{nameof(SellerTradeParty.SpecifiedLegalOrganization)}.{nameof(SellerTradePartySpecifiedLegalOrganization.Id)}",
-        $"{nameof(CrossIndustryInvoice.SupplyChainTradeTransaction)}.{nameof(SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement)}.{nameof(ApplicableHeaderTradeAgreement.SellerTradeParty)}.{nameof(SellerTradeParty.SpecifiedTaxRegistration)}.{nameof(SellerTradePartySpecifiedTaxRegistration.Id)}"
-    ]
+    ["BT-30", "BT-31"]
 )
 {
     /// <inheritdoc />

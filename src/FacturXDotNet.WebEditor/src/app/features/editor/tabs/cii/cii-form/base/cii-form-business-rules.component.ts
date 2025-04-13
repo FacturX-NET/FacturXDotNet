@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, input, TemplateRef } from '@angular/core';
 import { CiiFormHighlightBusinessRuleService } from '../../cii-form-highlight-business-rule.service';
 import { CiiFormService } from '../cii-form.service';
-import { BusinessRule } from '../../constants/cii-business-rules';
+import { CiiRule } from '../../constants/cii-rules';
 import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
 import { CiiFormBusinessRuleStatusIconComponent } from './cii-form-business-rule-status-icon.component';
 
@@ -30,12 +30,12 @@ import { CiiFormBusinessRuleStatusIconComponent } from './cii-form-business-rule
   `,
 })
 export class CiiFormBusinessRulesComponent {
-  businessRules = input.required<BusinessRule[]>();
+  businessRules = input.required<CiiRule[]>();
   highlight = input<boolean>(false);
 
   private highlightService = inject(CiiFormHighlightBusinessRuleService);
   protected highlightedRule = this.highlightService.highlightedBusinessRule;
 
   private ciiFormService = inject(CiiFormService);
-  protected statuses = this.ciiFormService.businessRules;
+  protected statuses = this.ciiFormService.businessRulesValidation;
 }

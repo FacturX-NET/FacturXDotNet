@@ -1,4 +1,4 @@
-import { BusinessRuleIdentifier } from './cii-business-rules';
+import { CiiRule, BusinessRuleIdentifier, ciiRules } from './cii-rules';
 
 export type BusinessTermIdentifier = keyof typeof ciiTerms;
 
@@ -12,9 +12,20 @@ export interface CiiTerm {
   chorusProRemark?: string;
 }
 
-export function getTerm(term: string): CiiTerm | undefined {
-  const key = term as BusinessTermIdentifier;
-  return ciiTerms[key];
+export function getBusinessTermIdentifiers(): BusinessTermIdentifier[] {
+  return Object.keys(ciiTerms) as BusinessTermIdentifier[];
+}
+
+export function isBusinessTermIdentifier(term: string): term is BusinessTermIdentifier {
+  return Object.keys(ciiTerms).includes(term);
+}
+
+export function getBusinessTerm(term: string): CiiTerm | undefined {
+  if (!isBusinessTermIdentifier(term)) {
+    return undefined;
+  }
+
+  return ciiTerms[term];
 }
 
 export function requireTerm(term: BusinessTermIdentifier): CiiTerm {
@@ -30,8 +41,8 @@ export function requireTerm(term: BusinessTermIdentifier): CiiTerm {
  * The list of all the controls in the Cross-Industry Invoice form, with their name, term, description, business rules and remarks.
  */
 export const ciiTerms = {
-  'BR-02': {
-    term: 'BR-02',
+  'BG-2': {
+    term: 'BG-2',
     name: 'EXCHANGE DOCUMENT CONTEXT',
     description: 'A group of business terms providing information on the business process and rules applicable to the Invoice document.',
     kind: 'group',
@@ -48,7 +59,7 @@ export const ciiTerms = {
     description: `An identification of the specification containing the total set of rules regarding semantic content, cardinalities and business rules to which the data contained
       in the instance document conforms.`,
     kind: 'field',
-    businessRules: ['BR-01'],
+    businessRules: ['BR-1'],
     remark: `This identifies compliance or conformance to the specification. Conformant invoices specify: urn:cen.eu:en16931:2017.
       Invoices, compliant to a user specification may identify that user specification here. No identification scheme is to be used.`,
   },
@@ -62,7 +73,7 @@ export const ciiTerms = {
     name: 'Invoice number',
     description: 'A unique identification of the Invoice.',
     kind: 'field',
-    businessRules: ['BR-02'],
+    businessRules: ['BR-2'],
     remark: `The sequential number required in Article 226(2) of the directive 2006/112/EC, to uniquely identify the Invoice within the business context, time-frame,
        operating systems and records of the Seller.
        It may be based on one or more series of numbers, which may include alphanumeric characters. No identification scheme is to be used.`,
@@ -73,7 +84,7 @@ export const ciiTerms = {
     name: 'Invoice type code',
     description: 'A code specifying the functional type of the Invoice.',
     kind: 'field',
-    businessRules: ['BR-04'],
+    businessRules: ['BR-4'],
     remark: `Commercial invoices and credit notes are defined according the entries in UNTDID 1001.
     Other entries of UNTDID 1001 with specific invoices or credit notes may be used if applicable.`,
     chorusProRemark: `The types of documents used are:
@@ -90,7 +101,7 @@ export const ciiTerms = {
     name: 'Invoice issue date',
     description: 'The date when the Invoice was issued.',
     kind: 'field',
-    businessRules: ['BR-03'],
+    businessRules: ['BR-3'],
     chorusProRemark: 'The issue date must be before or equal to the deposit date.',
   },
   'BT-2-0': {
@@ -117,8 +128,8 @@ export const ciiTerms = {
     remark: 'The identifier is defined by the Buyer (e.g. contact ID, department, office id, project code), but provided by the Seller in the Invoice.',
     chorusProRemark: 'The invoice number is limited to 20 characters.',
   },
-  'BR-04': {
-    term: 'BR-04',
+  'BG-4': {
+    term: 'BG-4',
     name: 'SELLER',
     description: 'An identifier assigned by the Buyer used for internal routing purposes.',
     kind: 'group',
@@ -129,7 +140,7 @@ export const ciiTerms = {
     description:
       'The full formal name by which the Seller is registered in the national registry of legal entities or as a Taxable person or otherwise trades as a person or persons.',
     kind: 'field',
-    businessRules: ['BR-06'],
+    businessRules: ['BR-6'],
   },
   'BT-30-00': {
     term: 'BT-30-00',
@@ -152,12 +163,12 @@ export const ciiTerms = {
     remark: `If used, the identification scheme shall be chosen from the entries of the list published by the ISO/IEC 6523 maintenance agency.
     For a SIREN or a SIRET, the value of this field is "0002".`,
   },
-  'BR-05': {
-    term: 'BR-05',
+  'BG-5': {
+    term: 'BG-5',
     name: 'SELLER POSTAL ADDRESS',
     description: 'Details about the organization.',
     kind: 'group',
-    businessRules: ['BR-08'],
+    businessRules: ['BR-8'],
     remark: `Sufficient components of the address are to be filled in order to comply to legal requirements.
     Like any address, the fields necessary to define the address must appear. The country code is mandatory.`,
   },
@@ -166,7 +177,7 @@ export const ciiTerms = {
     name: 'Seller country code',
     description: 'A code that identifies the country.',
     kind: 'field',
-    businessRules: ['BR-09'],
+    businessRules: ['BR-9'],
     remark: `If no tax representative is specified, this is the country where VAT is liable.
     The lists of valid countries are registered with the ISO 3166-1 Maintenance agency, "Codes for the representation of names of countries and their subdivisions".`,
   },
@@ -181,7 +192,7 @@ export const ciiTerms = {
     name: 'Seller VAT identifier',
     description: "The Seller's VAT identifier (also known as Seller VAT identification number).",
     kind: 'field',
-    businessRules: ['BR-CO-09', 'BR-CO-26'],
+    businessRules: ['BR-CO-9', 'BR-CO-26'],
     remark: 'VAT number prefixed by a country code. A VAT registered Supplier shall include his VAT ID, except when he uses a tax representative.',
   },
   'BT-31-0': {
@@ -191,12 +202,12 @@ export const ciiTerms = {
     kind: 'field',
     remark: 'Value = VAT',
   },
-  'BR-07': {
-    term: 'BR-07',
+  'BG-7': {
+    term: 'BG-7',
     name: 'BUYER',
     description: 'An identifier assigned by the Buyer used for internal routing purposes.',
     kind: 'group',
-    businessRules: ['BR-07'],
+    businessRules: ['BR-7'],
   },
   'BT-44': {
     term: 'BT-44',
@@ -258,7 +269,7 @@ export const ciiTerms = {
     name: 'Invoice currency code',
     description: 'The currency in which all Invoice amounts are given, except for the Total VAT amount in accounting currency.',
     kind: 'field',
-    businessRules: ['BR-05'],
+    businessRules: ['BR-5'],
     remark: `Only one currency shall be used in the Invoice, except for the Total VAT amount in accounting currency (BT-111) in accordance with article 230 of Directive 2006/112/EC on VAT.
     The lists of valid currencies are registered with the ISO 4217 Maintenance Agency "Codes for the representation of currencies and funds".`,
     chorusProRemark: 'Invoices and credit notes or Chorus Pro are mono-currencies only.',

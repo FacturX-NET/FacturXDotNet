@@ -45,7 +45,7 @@ public class CrossIndustryInvoiceValidator(CrossIndustryInvoiceValidationOptions
     ///     Determines wheter the given invoice satisfies the specified business rule.
     /// </summary>
     /// <param name="cii">The invoice to validate.</param>
-    /// <param name="businessRuleName">The name of the business rule to validate, e.g. <c>BR-01</c>.</param>
+    /// <param name="businessRuleName">The name of the business rule to validate, e.g. <c>BR-1</c>.</param>
     /// <returns><c>true</c> if the invoice meets the specified business rule; otherwise, <c>false</c>.</returns>
     public bool ValidateRule(CrossIndustryInvoice cii, string businessRuleName)
     {

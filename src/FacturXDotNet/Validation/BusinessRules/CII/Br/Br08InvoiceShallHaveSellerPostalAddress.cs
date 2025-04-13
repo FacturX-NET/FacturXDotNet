@@ -4,15 +4,13 @@ using FacturXDotNet.Models.CII;
 namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 
 /// <summary>
-///     BR-08: An Invoice shall contain the Seller postal address (BG-5).
+///     BR-8: An Invoice shall contain the Seller postal address (BG-5).
 /// </summary>
 public record Br08InvoiceShallHaveSellerPostalAddress() : CrossIndustryInvoiceBusinessRule(
-    "BR-08",
+    "BR-8",
     "An Invoice shall contain the Seller postal address (BG-5).",
     FacturXProfile.Minimum.AndHigher(),
-    [
-        $"{nameof(CrossIndustryInvoice.SupplyChainTradeTransaction)}.{nameof(SupplyChainTradeTransaction.ApplicableHeaderTradeAgreement)}.{nameof(ApplicableHeaderTradeAgreement.SellerTradeParty)}.{nameof(SellerTradeParty.PostalTradeAddress)}"
-    ]
+    ["BG-5"]
 )
 {
     /// <inheritdoc />

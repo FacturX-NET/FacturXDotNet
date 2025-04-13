@@ -10,9 +10,7 @@ public record Br14InvoiceShallHaveTotalAmountWithVat() : CrossIndustryInvoiceBus
     "BR-14",
     "An Invoice shall have the Invoice total amount with VAT (BT-112).",
     FacturXProfile.Minimum.AndHigher(),
-    [
-        $"{nameof(CrossIndustryInvoice.SupplyChainTradeTransaction)}.{nameof(SupplyChainTradeTransaction.ApplicableHeaderTradeSettlement)}.{nameof(ApplicableHeaderTradeSettlement.SpecifiedTradeSettlementHeaderMonetarySummation)}.{nameof(SpecifiedTradeSettlementHeaderMonetarySummation.GrandTotalAmount)}"
-    ]
+    ["BT-112"]
 )
 {
     /// <inheritdoc />

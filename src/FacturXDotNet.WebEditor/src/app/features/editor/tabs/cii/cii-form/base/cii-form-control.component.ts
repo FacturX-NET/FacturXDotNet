@@ -7,15 +7,16 @@ import { CiiFormHighlightTermService } from '../../cii-form-highlight-term.servi
 import { CiiFormHighlightRemarkService } from '../../cii-form-highlight-remark.service';
 import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight-chorus-pro-remark.service';
 import { CiiTerm } from '../../constants/cii-terms';
-import { BusinessRule, requireRule } from '../../constants/cii-business-rules';
+import { CiiRule, requireBusinessRule } from '../../constants/cii-rules';
 import { MarkdownComponent } from 'ngx-markdown';
+import { CiiFormService } from '../cii-form.service';
 
 @Component({
   selector: 'app-cii-form-control',
   imports: [ReactiveFormsModule, CiiFormRemarkComponent, CiiFormBusinessRulesComponent, MarkdownComponent],
   template: `
     <div class="overflow-hidden px-1">
-      <div class="editor__control">
+      <div class="editor__control" [class.valid]="isValid()" [class.invalid]="isInvalid()">
         <label [id]="id()" class="form-label text-truncate" [class.text-primary]="isTermHighlighted()" [for]="controlId()">
           <span class="fw-semibold">{{ term().term }}</span> - {{ term().name }}
         </label>
@@ -70,13 +71,30 @@ export class CiiFormControlComponent {
   public remarkId = computed(() => this.term().term + '-remarks');
   public chorusProRemarkId = computed(() => this.term().term + '-cpro-remarks');
 
-  public businessRules: Signal<BusinessRule[]> = computed(() => {
+  private ciiFormService = inject(CiiFormService);
+  private termValidation = this.ciiFormService.businessTermsValidation;
+
+  protected isValid = computed(() => {
+    const term = this.term();
+    const validation = this.termValidation()[term.term];
+
+    return validation === 'valid';
+  });
+
+  protected isInvalid = computed(() => {
+    const term = this.term();
+    const validation = this.termValidation()[term.term];
+
+    return validation === 'invalid';
+  });
+
+  public businessRules: Signal<CiiRule[]> = computed(() => {
     const ruleNames = this.term().businessRules;
     if (ruleNames === undefined) {
       return [];
     }
 
-    return ruleNames.map((r) => requireRule(r));
+    return ruleNames.map((r) => requireBusinessRule(r));
   });
 
   private highlightService = inject(CiiFormHighlightTermService);
