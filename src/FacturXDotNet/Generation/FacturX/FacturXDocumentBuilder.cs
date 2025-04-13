@@ -33,13 +33,26 @@ public class FacturXDocumentBuilder
     }
 
     /// <summary>
+    ///     Sets the PDF generator to be used for creating the Factur-X document.
+    ///     Using this method will replace the currently set PDF generator and cancel any previous calls to
+    ///     <see cref="UsePdfGenerator" />, <see cref="WithStandardPdf" /> or <see cref="WithBasePdf" />.
+    /// </summary>
+    /// <param name="generator">The PDF generator to use.</param>
+    /// <returns>The builder itself for chaining.</returns>
+    public FacturXDocumentBuilder UsePdfGenerator(IPdfGenerator generator)
+    {
+        _args.PdfGenerator = generator;
+        return this;
+    }
+
+    /// <summary>
     ///     Sets the PDF generator of the builder to the standard generator.
     ///     The standard generator is the default generator used when no custom generator is provided.
     /// </summary>
     /// <returns>The builder itself for chaining.</returns>
     public FacturXDocumentBuilder WithStandardPdf()
     {
-        _args.PdfGenerator = new StandardPdfGenerator();
+        UsePdfGenerator(new StandardPdfGenerator());
         return this;
     }
 
@@ -58,7 +71,7 @@ public class FacturXDocumentBuilder
         BasePdfStreamOptions options = new();
         configure?.Invoke(options);
 
-        _args.PdfGenerator = new PdfFromFileGenerator(pdfImageStream, options.Password, options.LeaveOpen);
+        UsePdfGenerator(new PdfFromFileGenerator(pdfImageStream, options.Password, options.LeaveOpen));
         return this;
     }
 
