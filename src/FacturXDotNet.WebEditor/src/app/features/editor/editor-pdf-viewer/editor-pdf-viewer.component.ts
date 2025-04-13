@@ -47,21 +47,17 @@ export class EditorPdfViewerComponent {
         return undefined;
       }
 
-      if (state.request.pdfTab === 'imported') {
+      if (state.request.pdfTab === 'imported' && state.request.value.pdf !== undefined) {
         return state.request.value.pdf;
       }
 
-      if (state.request.pdfTab === 'generated') {
-        return await firstValueFrom(
-          this.generateApi.generateStandardPdf(state.request.value.cii).pipe(
-            map((file) => ({ id: idGenerator(), content: file })),
-            toastError(this.toastService, (message) => `Error while generating PDF: ${message}`),
-            takeUntilDestroyed(this.destroyRef),
-          ),
-        );
-      }
-
-      return undefined;
+      return await firstValueFrom(
+        this.generateApi.generateStandardPdf(state.request.value.cii).pipe(
+          map((file) => ({ id: idGenerator(), content: file })),
+          toastError(this.toastService, (message) => `Error while generating PDF: ${message}`),
+          takeUntilDestroyed(this.destroyRef),
+        ),
+      );
     },
   });
   protected pdfAlwaysSet = linkedSignal<{ id?: string; content: Blob } | undefined, { id?: string; content: Blob }>({

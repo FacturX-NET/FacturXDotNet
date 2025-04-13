@@ -85,6 +85,24 @@ export class EditorStateService {
     await this.saveLast(newState);
   }
 
+  async updatePdfAndAttachments(pdf: Blob, attachments: EditorStateAttachment[]): Promise<void> {
+    const currentState = this.savedState.value();
+    if (!currentState) {
+      throw new Error('No saved state found to update.');
+    }
+
+    const newState = {
+      ...currentState,
+      pdf: {
+        id: this.idGenerator(),
+        content: pdf,
+      },
+      attachments,
+    };
+
+    await this.saveLast(newState);
+  }
+
   async updateAttachments(attachments: EditorStateAttachment[]): Promise<void> {
     const currentState = this.savedState.value();
     if (!currentState) {

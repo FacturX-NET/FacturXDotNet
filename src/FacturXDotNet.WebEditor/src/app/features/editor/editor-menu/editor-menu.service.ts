@@ -97,13 +97,8 @@ export class EditorMenuService {
         throw new Error(`Could not extract data from file ${xmlFile.name}.`);
       }
 
-      const pdf = await firstValueFrom(this.generateApi.generateStandardPdf(cii).pipe(takeUntilDestroyed(this.destroyRef)));
-      if (pdf === undefined) {
-        throw new Error(`Could not generate PDF data for file ${xmlFile.name}.`);
-      }
-
       const nameWithoutExtension = xmlFile.name.replace(/\.[^/.]+$/, '');
-      await this.editorStateService.new({ name: nameWithoutExtension, cii: cii, pdf: pdf });
+      await this.editorStateService.new({ name: nameWithoutExtension, cii: cii });
     } finally {
       this.isImportingInternal.set(false);
     }
@@ -177,9 +172,7 @@ export class EditorMenuService {
     this.isImportingInternal.set(true);
     try {
       const attachments = await this.extractPdfAttachments(pdfFile);
-
-      await this.editorStateService.updatePdf(pdfFile);
-      await this.editorStateService.updateAttachments(attachments);
+      await this.editorStateService.updatePdfAndAttachments(pdfFile, attachments);
     } finally {
       this.isImportingInternal.set(false);
     }
