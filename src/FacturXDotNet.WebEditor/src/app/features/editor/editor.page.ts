@@ -1,7 +1,7 @@
-import { Component, computed, DestroyRef, effect, HostListener, inject, linkedSignal, Resource, signal, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, HostListener, inject, linkedSignal, Resource, signal, Signal, untracked } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
-import { EditorSettings, EditorSettingsService } from './editor-settings.service';
+import { EditorSettings, EditorSettingsService, PdfModel } from './editor-settings.service';
 import { EditorMenuComponent } from './editor-menu/editor-menu.component';
 import { FormsModule } from '@angular/forms';
 import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
@@ -19,6 +19,7 @@ import { ToastService } from '../../core/toasts/toast.service';
 import { RouterOutlet } from '@angular/router';
 import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.component';
 import { EditorHeaderNameComponent } from './editor-header/editor-header-name.component';
+import { EditorRightPaneHeaderComponent } from './editor-header/editor-right-pane-header.component';
 
 @Component({
   selector: 'app-editor',
@@ -33,6 +34,7 @@ import { EditorHeaderNameComponent } from './editor-header/editor-header-name.co
     RouterOutlet,
     EditorPdfViewerComponent,
     EditorHeaderNameComponent,
+    EditorRightPaneHeaderComponent,
   ],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
@@ -85,7 +87,9 @@ import { EditorHeaderNameComponent } from './editor-header/editor-header-name.co
                   <div class="h-100" left>
                     <app-editor-left-pane-header [state]="value" [settings]="settings()"></app-editor-left-pane-header>
                   </div>
-                  <div class="h-100" right></div>
+                  <div class="h-100" right>
+                    <app-editor-right-pane-header [tab]="pdfTab()" (tabChange)="changePdfTab($event)" [showImported]="hasImportedPdf()"></app-editor-right-pane-header>
+                  </div>
                 </app-two-columns>
               </div>
             </header>
@@ -140,11 +144,14 @@ export class EditorPage {
   private apiConstantsService = inject(ApiConstantsService);
   private editorStateService = inject(EditorStateService);
   private editorMenuService = inject(EditorMenuService);
+  private editorSettingsService = inject(EditorSettingsService);
   private settingsService = inject(EditorSettingsService);
 
   protected apiUrl = inject(API_BASE_URL);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
+  protected pdfTab = computed(() => this.settings().pdfTab);
+  protected hasImportedPdf = computed(() => this.state.value()?.pdf !== undefined);
 
   protected isImporting = this.editorMenuService.isImporting;
   protected isExporting = this.editorMenuService.isExporting;
@@ -178,6 +185,10 @@ export class EditorPage {
       return this.loadRightColumnWidth(this.rightColumnWidthLocalStorageKey) ?? input / 2;
     },
   });
+
+  protected changePdfTab(tab: PdfModel) {
+    this.editorSettingsService.savePdfTab(tab);
+  }
 
   private saveRightColumnWidth(key: string, width: number) {
     const localStorageKey = `two-columns-${key}`;

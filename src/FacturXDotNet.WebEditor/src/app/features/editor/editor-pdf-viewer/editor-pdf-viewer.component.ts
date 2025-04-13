@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input, linkedSignal, resource, Resource } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, linkedSignal, resource, Resource } from '@angular/core';
 import { PdfViewerComponent } from './pdf-viewer.component';
 import { EditorSavedState, EditorStateService } from '../editor-state.service';
 import { GenerateApi } from '../../../core/api/generate.api';
@@ -6,6 +6,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { toastError } from '../../../core/toasts/toast-error';
 import { ToastService } from '../../../core/toasts/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EditorSettingsService } from '../editor-settings.service';
 
 @Component({
   selector: 'app-editor-pdf-viewer',
@@ -31,29 +32,36 @@ export class EditorPdfViewerComponent {
   disablePointerEvents = input<boolean>(false);
 
   private editorStateService = inject(EditorStateService);
+  private editorSettingsService = inject(EditorSettingsService);
   private generateApi = inject(GenerateApi);
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
+  protected settings = this.editorSettingsService.settings;
+  protected pdfTab = computed(() => this.settings().pdfTab);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
   protected pdf = resource({
-    request: this.state.value,
+    request: () => ({ value: this.state.value(), pdfTab: this.pdfTab() }),
     loader: async (state): Promise<{ id?: string; content: Blob } | undefined> => {
-      if (state.request === null || state.request === undefined) {
+      if (state.request.value === null || state.request.value === undefined) {
         return undefined;
       }
 
-      if (state.request.pdf !== undefined) {
-        return state.request.pdf;
+      if (state.request.pdfTab === 'imported') {
+        return state.request.value.pdf;
       }
 
-      return await firstValueFrom(
-        this.generateApi.generateStandardPdf(state.request.cii).pipe(
-          map((file) => ({ id: idGenerator(), content: file })),
-          toastError(this.toastService, (message) => `Error while generating PDF: ${message}`),
-          takeUntilDestroyed(this.destroyRef),
-        ),
-      );
+      if (state.request.pdfTab === 'generated') {
+        return await firstValueFrom(
+          this.generateApi.generateStandardPdf(state.request.value.cii).pipe(
+            map((file) => ({ id: idGenerator(), content: file })),
+            toastError(this.toastService, (message) => `Error while generating PDF: ${message}`),
+            takeUntilDestroyed(this.destroyRef),
+          ),
+        );
+      }
+
+      return undefined;
     },
   });
   protected pdfAlwaysSet = linkedSignal<{ id?: string; content: Blob } | undefined, { id?: string; content: Blob }>({
