@@ -6,16 +6,19 @@ import { PdfModel } from '../editor-settings.service';
   selector: 'app-editor-right-pane-header',
   imports: [NgbNav, NgbNavItem, NgbNavLinkButton],
   template: `
-    <ul ngbNav [activeId]="actualTab()" (activeIdChange)="tab.set($event)" class="nav-underline small ps-4">
-      @if (showImported()) {
-        <li ngbNavItem="imported">
-          <button ngbNavLink>Imported File</button>
+    <div class="d-flex align-items-center">
+      <span class="fw-semibold"><i class="bi bi-file-pdf"></i> PDF</span>
+      <ul ngbNav [activeId]="actualTab()" (activeIdChange)="tab.set($event)" class="nav-underline small ps-4">
+        @if (showImported()) {
+          <li ngbNavItem="imported">
+            <button ngbNavLink>Imported</button>
+          </li>
+        }
+        <li ngbNavItem="generated">
+          <button ngbNavLink>Standard</button>
         </li>
-      }
-      <li ngbNavItem="generated">
-        <button ngbNavLink>Standard PDF</button>
-      </li>
-    </ul>
+      </ul>
+    </div>
   `,
   styles: ``,
 })
