@@ -66,7 +66,7 @@ export class CiiFormService {
         if (bt !== undefined) {
           this.businessTermsValidationInternal.update((current) => {
             const newValue = { ...current };
-            newValue[bt.term] = undefined;
+            newValue[bt.id] = undefined;
             return newValue;
           });
 

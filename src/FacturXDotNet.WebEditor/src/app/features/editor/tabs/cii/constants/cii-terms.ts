@@ -3,7 +3,7 @@ import { CiiRule, BusinessRuleIdentifier, ciiRules } from './cii-rules';
 export type BusinessTermIdentifier = keyof typeof ciiTerms;
 
 export interface CiiTerm {
-  term: BusinessTermIdentifier;
+  id: BusinessTermIdentifier;
   name: string;
   description?: string;
   kind: 'group' | 'field';
@@ -16,22 +16,22 @@ export function getBusinessTermIdentifiers(): BusinessTermIdentifier[] {
   return Object.keys(ciiTerms) as BusinessTermIdentifier[];
 }
 
-export function isBusinessTermIdentifier(term: string): term is BusinessTermIdentifier {
-  return Object.keys(ciiTerms).includes(term);
+export function isBusinessTermIdentifier(id: string): id is BusinessTermIdentifier {
+  return Object.keys(ciiTerms).includes(id);
 }
 
-export function getBusinessTerm(term: string): CiiTerm | undefined {
-  if (!isBusinessTermIdentifier(term)) {
+export function getBusinessTerm(id: string): CiiTerm | undefined {
+  if (!isBusinessTermIdentifier(id)) {
     return undefined;
   }
 
-  return ciiTerms[term];
+  return ciiTerms[id];
 }
 
-export function requireTerm(term: BusinessTermIdentifier): CiiTerm {
-  const result = ciiTerms[term];
+export function requireTerm(id: BusinessTermIdentifier): CiiTerm {
+  const result = ciiTerms[id];
   if (result === undefined) {
-    throw new Error(`Could not find term ${term}.`);
+    throw new Error(`Could not find term ${id}.`);
   }
 
   return result;
@@ -42,19 +42,19 @@ export function requireTerm(term: BusinessTermIdentifier): CiiTerm {
  */
 export const ciiTerms = {
   'BG-2': {
-    term: 'BG-2',
+    id: 'BG-2',
     name: 'EXCHANGE DOCUMENT CONTEXT',
     description: 'A group of business terms providing information on the business process and rules applicable to the Invoice document.',
     kind: 'group',
   },
   'BT-23': {
-    term: 'BT-23',
+    id: 'BT-23',
     name: 'Business process type',
     description: 'Identifies the business process context in which the transaction appears, to enable the Buyer to process the Invoice in an appropriate way.',
     kind: 'field',
   },
   'BT-24': {
-    term: 'BT-24',
+    id: 'BT-24',
     name: 'Specification identifier',
     description: `An identification of the specification containing the total set of rules regarding semantic content, cardinalities and business rules to which the data contained
       in the instance document conforms.`,
@@ -64,12 +64,12 @@ export const ciiTerms = {
       Invoices, compliant to a user specification may identify that user specification here. No identification scheme is to be used.`,
   },
   'BT-1-00': {
-    term: 'BT-1-00',
+    id: 'BT-1-00',
     name: 'EXCHANGED DOCUMENT',
     kind: 'group',
   },
   'BT-1': {
-    term: 'BT-1',
+    id: 'BT-1',
     name: 'Invoice number',
     description: 'A unique identification of the Invoice.',
     kind: 'field',
@@ -80,7 +80,7 @@ export const ciiTerms = {
     chorusProRemark: 'The invoice number is limited to 20 characters.',
   },
   'BT-3': {
-    term: 'BT-3',
+    id: 'BT-3',
     name: 'Invoice type code',
     description: 'A code specifying the functional type of the Invoice.',
     kind: 'field',
@@ -97,7 +97,7 @@ export const ciiTerms = {
       - 751: Invoice information for accounting purposes (not accepted by CHORUSPRO)`,
   },
   'BT-2': {
-    term: 'BT-2',
+    id: 'BT-2',
     name: 'Invoice issue date',
     description: 'The date when the Invoice was issued.',
     kind: 'field',
@@ -105,23 +105,23 @@ export const ciiTerms = {
     chorusProRemark: 'The issue date must be before or equal to the deposit date.',
   },
   'BT-2-0': {
-    term: 'BT-2-0',
+    id: 'BT-2-0',
     name: 'Date, format',
     description: 'Only value "102"',
     kind: 'field',
   },
   'BG-25-00': {
-    term: 'BG-25-00',
+    id: 'BG-25-00',
     name: 'SUPPLY CHAIN TRADE TRANSACTION',
     kind: 'group',
   },
   'BT-10-00': {
-    term: 'BT-10-00',
+    id: 'BT-10-00',
     name: 'HEADER TRADE AGREEMENT',
     kind: 'group',
   },
   'BT-10': {
-    term: 'BT-10',
+    id: 'BT-10',
     name: 'Buyer reference',
     description: 'An identifier assigned by the Buyer used for internal routing purposes.',
     kind: 'field',
@@ -129,13 +129,13 @@ export const ciiTerms = {
     chorusProRemark: 'The invoice number is limited to 20 characters.',
   },
   'BG-4': {
-    term: 'BG-4',
+    id: 'BG-4',
     name: 'SELLER',
     description: 'An identifier assigned by the Buyer used for internal routing purposes.',
     kind: 'group',
   },
   'BT-27': {
-    term: 'BT-27',
+    id: 'BT-27',
     name: 'Seller name',
     description:
       'The full formal name by which the Seller is registered in the national registry of legal entities or as a Taxable person or otherwise trades as a person or persons.',
@@ -143,20 +143,20 @@ export const ciiTerms = {
     businessRules: ['BR-6'],
   },
   'BT-30-00': {
-    term: 'BT-30-00',
+    id: 'BT-30-00',
     name: 'SELLER LEGAL ORGANIZATION',
     description: 'Details about the organization.',
     kind: 'group',
   },
   'BT-30': {
-    term: 'BT-30',
+    id: 'BT-30',
     name: 'Seller legal registration identifier',
     description: 'An identifier issued by an official registrar that identifies the Seller as a legal entity or person.',
     kind: 'field',
     businessRules: ['BR-CO-26'],
   },
   'BT-30-1': {
-    term: 'BT-30-1',
+    id: 'BT-30-1',
     name: 'Scheme identifier',
     description: 'The identification scheme identifier of the Seller legal registration identifier.',
     kind: 'field',
@@ -164,7 +164,7 @@ export const ciiTerms = {
     For a SIREN or a SIRET, the value of this field is "0002".`,
   },
   'BG-5': {
-    term: 'BG-5',
+    id: 'BG-5',
     name: 'SELLER POSTAL ADDRESS',
     description: 'Details about the organization.',
     kind: 'group',
@@ -173,7 +173,7 @@ export const ciiTerms = {
     Like any address, the fields necessary to define the address must appear. The country code is mandatory.`,
   },
   'BT-40': {
-    term: 'BT-40',
+    id: 'BT-40',
     name: 'Seller country code',
     description: 'A code that identifies the country.',
     kind: 'field',
@@ -182,13 +182,13 @@ export const ciiTerms = {
     The lists of valid countries are registered with the ISO 3166-1 Maintenance agency, "Codes for the representation of names of countries and their subdivisions".`,
   },
   'BT-31-00': {
-    term: 'BT-31-00',
+    id: 'BT-31-00',
     name: 'SELLER VAT IDENTIFIER',
     description: 'Details about the organization.',
     kind: 'group',
   },
   'BT-31': {
-    term: 'BT-31',
+    id: 'BT-31',
     name: 'Seller VAT identifier',
     description: "The Seller's VAT identifier (also known as Seller VAT identification number).",
     kind: 'field',
@@ -196,33 +196,33 @@ export const ciiTerms = {
     remark: 'VAT number prefixed by a country code. A VAT registered Supplier shall include his VAT ID, except when he uses a tax representative.',
   },
   'BT-31-0': {
-    term: 'BT-31-0',
+    id: 'BT-31-0',
     name: 'Tax Scheme identifier',
     description: 'Scheme identifier for supplier VAT identifier.',
     kind: 'field',
     remark: 'Value = VAT',
   },
   'BG-7': {
-    term: 'BG-7',
+    id: 'BG-7',
     name: 'BUYER',
     description: 'An identifier assigned by the Buyer used for internal routing purposes.',
     kind: 'group',
     businessRules: ['BR-7'],
   },
   'BT-44': {
-    term: 'BT-44',
+    id: 'BT-44',
     name: 'Buyer name',
     description: 'The full name of the Buyer.',
     kind: 'field',
   },
   'BT-47-00': {
-    term: 'BT-47-00',
+    id: 'BT-47-00',
     name: 'BUYER LEGAL REGISTRATION IDENTIFIER',
     description: 'Details about the organization.',
     kind: 'group',
   },
   'BT-47': {
-    term: 'BT-47',
+    id: 'BT-47',
     name: 'Buyer legal registration identifier',
     description: 'An identifier issued by an official registrar that identifies the Buyer as a legal entity or person.',
     kind: 'field',
@@ -230,19 +230,19 @@ export const ciiTerms = {
     chorusProRemark: 'The identifier of the buyer (public entity) is mandatory and is always a SIRET number.',
   },
   'BT-47-1': {
-    term: 'BT-47-1',
+    id: 'BT-47-1',
     name: 'Scheme identifier',
     description: 'The identification scheme identifier of the Buyer legal registration identifier.',
     kind: 'field',
     remark: 'The identification scheme identifier of the Buyer legal registration identifier.',
   },
   'BT-13-00': {
-    term: 'BT-13-00',
+    id: 'BT-13-00',
     name: 'PURCHASE ORDER REFERENCE',
     kind: 'group',
   },
   'BT-13': {
-    term: 'BT-13',
+    id: 'BT-13',
     name: 'Purchase order reference',
     description: 'An identifier of a referenced purchase order, issued by the Buyer.',
     kind: 'field',
@@ -250,13 +250,13 @@ export const ciiTerms = {
     It is mandatory for some buyers. You should refer to the ChorusPro Directory to identify these public entity buyers that make it mandatory.`,
   },
   'BG-13-00': {
-    term: 'BG-13-00',
+    id: 'BG-13-00',
     name: 'DELIVERY INFORMATION',
     description: 'A group of business terms providing information about where and when the goods and services invoiced are delivered.',
     kind: 'group',
   },
   'BG-19': {
-    term: 'BG-19',
+    id: 'BG-19',
     name: 'HEADER TRADE SETTLEMENT DIRECT DEBIT',
     description: 'A group of business terms providing information about where and when the goods and services invoiced are delivered.',
     kind: 'group',
@@ -265,7 +265,7 @@ export const ciiTerms = {
     chorusProRemark: 'Not used.',
   },
   'BT-5': {
-    term: 'BT-5',
+    id: 'BT-5',
     name: 'Invoice currency code',
     description: 'The currency in which all Invoice amounts are given, except for the Total VAT amount in accounting currency.',
     kind: 'field',
@@ -275,7 +275,7 @@ export const ciiTerms = {
     chorusProRemark: 'Invoices and credit notes or Chorus Pro are mono-currencies only.',
   },
   'BG-22': {
-    term: 'BG-22',
+    id: 'BG-22',
     name: 'DOCUMENT TOTALS',
     description: 'The currency in which all Invoice amounts are given, except for the Total VAT amount in accounting currency.',
     kind: 'group',
@@ -284,7 +284,7 @@ export const ciiTerms = {
     chorusProRemark: 'Invoices and credit notes or Chorus Pro are mono-currencies only.',
   },
   'BT-109': {
-    term: 'BT-109',
+    id: 'BT-109',
     name: 'Total amount without VAT',
     description: 'The total amount of the Invoice without VAT.',
     kind: 'field',
@@ -292,7 +292,7 @@ export const ciiTerms = {
     remark: 'The Invoice total amount without VAT is the Sum of Invoice line net amount minus Sum of allowances on document level plus Sum of charges on document level.',
   },
   'BT-110': {
-    term: 'BT-110',
+    id: 'BT-110',
     name: 'Total VAT amount',
     description: 'The total VAT amount for the Invoice.',
     kind: 'field',
@@ -300,13 +300,13 @@ export const ciiTerms = {
     remark: 'The Invoice total VAT amount is the sum of all VAT category tax amounts.',
   },
   'BT-110-1': {
-    term: 'BT-110-1',
+    id: 'BT-110-1',
     name: 'VAT currency',
     kind: 'field',
     remark: 'The currency is mandatory to differentiate between VAT amount and VAT amount in accounting currency.',
   },
   'BT-112': {
-    term: 'BT-112',
+    id: 'BT-112',
     name: 'Total amount with VAT',
     description: 'The total amount of the Invoice with VAT.',
     kind: 'field',
@@ -314,7 +314,7 @@ export const ciiTerms = {
     remark: 'The Invoice total amount with VAT is the Invoice total amount without VAT plus the Invoice total VAT amount.',
   },
   'BT-115': {
-    term: 'BT-115',
+    id: 'BT-115',
     name: 'Amount due for payment',
     description: 'The outstanding amount that is requested to be paid.',
     kind: 'field',

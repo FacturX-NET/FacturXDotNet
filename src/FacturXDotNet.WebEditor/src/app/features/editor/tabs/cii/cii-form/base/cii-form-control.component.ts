@@ -18,7 +18,7 @@ import { CiiFormService } from '../cii-form.service';
     <div class="overflow-hidden px-1">
       <div class="editor__control" [class.valid]="isValid()" [class.invalid]="isInvalid()">
         <label [id]="id()" class="form-label text-truncate" [class.text-primary]="isTermHighlighted()" [for]="controlId()">
-          <span class="fw-semibold">{{ term().term }}</span> - {{ term().name }}
+          <span class="fw-semibold">{{ term().id }}</span> - {{ term().name }}
         </label>
 
         <ng-content></ng-content>
@@ -64,26 +64,26 @@ export class CiiFormControlComponent {
   term = input.required<CiiTerm>();
   settings = input<EditorSettings>();
 
-  public id = computed(() => this.term().term);
-  public controlId = computed(() => this.term().term + '-control');
-  public controlHelpId = computed(() => this.term().term + '-control-help');
-  public businessRulesId = computed(() => this.term().term + '-rules');
-  public remarkId = computed(() => this.term().term + '-remarks');
-  public chorusProRemarkId = computed(() => this.term().term + '-cpro-remarks');
+  public id = computed(() => this.term().id);
+  public controlId = computed(() => this.term().id + '-control');
+  public controlHelpId = computed(() => this.term().id + '-control-help');
+  public businessRulesId = computed(() => this.term().id + '-rules');
+  public remarkId = computed(() => this.term().id + '-remarks');
+  public chorusProRemarkId = computed(() => this.term().id + '-cpro-remarks');
 
   private ciiFormService = inject(CiiFormService);
   private termValidation = this.ciiFormService.businessTermsValidation;
 
   protected isValid = computed(() => {
     const term = this.term();
-    const validation = this.termValidation()[term.term];
+    const validation = this.termValidation()[term.id];
 
     return validation === 'valid';
   });
 
   protected isInvalid = computed(() => {
     const term = this.term();
-    const validation = this.termValidation()[term.term];
+    const validation = this.termValidation()[term.id];
 
     return validation === 'invalid';
   });
@@ -98,11 +98,11 @@ export class CiiFormControlComponent {
   });
 
   private highlightService = inject(CiiFormHighlightTermService);
-  protected isTermHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term().term);
+  protected isTermHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term().id);
 
   private remarkHighlightService = inject(CiiFormHighlightRemarkService);
-  protected isRemarkHighlighted = computed(() => this.remarkHighlightService.highlightedRemark() === this.term().term);
+  protected isRemarkHighlighted = computed(() => this.remarkHighlightService.highlightedRemark() === this.term().id);
 
   private chorusProRemarkHighlightService = inject(CiiFormHighlightChorusProRemarkService);
-  protected isChorusProRemarkHighlighted = computed(() => this.chorusProRemarkHighlightService.highlightedChorusProRemark() === this.term().term);
+  protected isChorusProRemarkHighlighted = computed(() => this.chorusProRemarkHighlightService.highlightedChorusProRemark() === this.term().id);
 }

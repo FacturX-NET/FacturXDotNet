@@ -15,7 +15,7 @@ import { MarkdownComponent } from 'ngx-markdown';
   imports: [ReactiveFormsModule, CiiFormRemarkComponent, CiiFormBusinessRulesComponent, MarkdownComponent],
   template: `
     <h6 #title [id]="term()" class="py-2 m-0 sticky-top bg-body" style="top: {{ topPx() }}px; z-index: {{ zIndex() }}" [class.text-primary]="isTermHighlighted()">
-      {{ term().term }} - {{ term().name }}
+      {{ term().id }} - {{ term().name }}
     </h6>
 
     <div class="ps-3 border-start border-2" [class.border-primary]="isTermHighlighted()">
@@ -63,9 +63,9 @@ export class CiiFormParentContainerComponent {
   settings = input<EditorSettings>();
   depth = input.required({ transform: numberAttribute });
 
-  public businessRulesId = computed(() => this.term().term + '-rules');
-  public remarkId = computed(() => this.term().term + '-remarks');
-  public chorusProRemarkId = computed(() => this.term().term + '-cpro-remarks');
+  public businessRulesId = computed(() => this.term().id + '-rules');
+  public remarkId = computed(() => this.term().id + '-remarks');
+  public chorusProRemarkId = computed(() => this.term().id + '-cpro-remarks');
 
   public businessRules: Signal<CiiRule[]> = computed(() => {
     const ruleNames = this.term().businessRules;
@@ -91,11 +91,11 @@ export class CiiFormParentContainerComponent {
   private titleElement = viewChild<ElementRef>('title');
 
   private highlightService = inject(CiiFormHighlightTermService);
-  protected isTermHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term().term);
+  protected isTermHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term().id);
 
   private remarkHighlightService = inject(CiiFormHighlightRemarkService);
-  protected isRemarkHighlighted = computed(() => this.remarkHighlightService.highlightedRemark() === this.term().term);
+  protected isRemarkHighlighted = computed(() => this.remarkHighlightService.highlightedRemark() === this.term().id);
 
   private chorusProRemarkHighlightService = inject(CiiFormHighlightChorusProRemarkService);
-  protected isChorusProRemarkHighlighted = computed(() => this.chorusProRemarkHighlightService.highlightedChorusProRemark() === this.term().term);
+  protected isChorusProRemarkHighlighted = computed(() => this.chorusProRemarkHighlightService.highlightedChorusProRemark() === this.term().id);
 }
