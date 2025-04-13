@@ -25,13 +25,4 @@ import { Component, effect, input } from '@angular/core';
 export class CiiFormBusinessRuleStatusIconComponent {
   highlighted = input.required<boolean>();
   status = input.required<'valid' | 'invalid' | undefined>();
-
-  constructor() {
-    effect(() => {
-      console.log(this.highlighted());
-    });
-    effect(() => {
-      console.log(this.status());
-    });
-  }
 }

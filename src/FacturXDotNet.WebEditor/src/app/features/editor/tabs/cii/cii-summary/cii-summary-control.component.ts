@@ -1,5 +1,5 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { CiiFormControl, CiiFormService } from '../cii-form/cii-form.service';
+import { CiiFormControl, CiiFormNode, CiiFormService } from '../cii-form/cii-form.service';
 import { EditorSettings } from '../../../editor-settings.service';
 import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
 import { CiiFormHighlightChorusProRemarkService } from '../cii-form-highlight-chorus-pro-remark.service';
@@ -13,15 +13,15 @@ import { BusinessRuleIdentifier } from '../constants/cii-business-rules';
   selector: 'app-cii-summary-node',
   imports: [ScrollToDirective],
   template: `
-    @if (term(); as term) {
+    @if (node(); as node) {
       <div class="text-truncate d-flex gap-1">
-        @if (term.kind === 'group') {
+        @if (node.term.kind === 'group') {
           <span [class.fw-bold]="isNodeHighlighted()" (mouseenter)="this.highlightTerm(true)" (mouseleave)="this.highlightTerm(false)">
-            <span class="fw-semibold"> {{ term.term }} </span> - {{ term.name }}
+            <span class="fw-semibold"> {{ node.term.term }} </span> - {{ node.term.name }}
           </span>
         } @else {
           <a
-            [scrollTo]="term.term"
+            [scrollTo]="node.term.term"
             [class.fw-bold]="isNodeHighlighted()"
             [class.text-success]="isValid"
             [class.text-danger]="isInvalid"
@@ -30,14 +30,14 @@ import { BusinessRuleIdentifier } from '../constants/cii-business-rules';
             (mouseenter)="this.highlightTerm(true)"
             (mouseleave)="this.highlightTerm(false)"
           >
-            <span class="fw-semibold"> {{ term.term }} </span> - {{ term.name }}
+            <span class="fw-semibold"> {{ node.term.term }} </span> - {{ node.term.name }}
           </a>
         }
 
         @if (settings(); as settings) {
           <div class="text-body-tertiary d-flex align-items-center gap-1" style="font-size: smaller">
             @if (settings.showBusinessRules) {
-              @if (term.businessRules; as businessRules) {
+              @if (node.term.businessRules; as businessRules) {
                 @for (rule of businessRules; track rule) {
                   <a
                     [scrollTo]="rule"
@@ -53,25 +53,25 @@ import { BusinessRuleIdentifier } from '../constants/cii-business-rules';
               }
             }
 
-            @if (term.remark !== undefined && settings.showRemarks) {
+            @if (node.term.remark !== undefined && settings.showRemarks) {
               <a
-                [scrollTo]="term.term + '-remarks'"
+                [scrollTo]="node.term.term + '-remarks'"
                 class="hoverlink"
-                [class.fw-bold]="highlightedRemark() === term.term"
-                (mouseenter)="highlightRemark(term.term, true)"
-                (mouseleave)="highlightRemark(term.term, false)"
+                [class.fw-bold]="highlightedRemark() === node.term.term"
+                (mouseenter)="highlightRemark(true)"
+                (mouseleave)="highlightRemark(false)"
               >
                 <i class="bi bi-info-circle"></i>
               </a>
             }
 
-            @if (term.chorusProRemark !== undefined && settings.showChorusProRemarks) {
+            @if (node.term.chorusProRemark !== undefined && settings.showChorusProRemarks) {
               <a
-                [scrollTo]="term.term + '-cpro-remarks'"
+                [scrollTo]="node.term.term + '-cpro-remarks'"
                 class="hoverlink"
-                [class.fw-bold]="highlightedChorusProRemark() === term.term"
-                (mouseenter)="highlightChorusProRemark(term.term, true)"
-                (mouseleave)="highlightChorusProRemark(term.term, false)"
+                [class.fw-bold]="highlightedChorusProRemark() === node.term.term"
+                (mouseenter)="highlightChorusProRemark(true)"
+                (mouseleave)="highlightChorusProRemark(false)"
               >
                 CPRO
               </a>
@@ -80,8 +80,8 @@ import { BusinessRuleIdentifier } from '../constants/cii-business-rules';
         }
       </div>
       <div class="border-start ps-2">
-        @if (node().children; as children) {
-          @for (child of node().children; track child.term) {
+        @if (node.children; as children) {
+          @for (child of node.children; track child.term) {
             <app-cii-summary-node [node]="child" [settings]="settings()" />
           }
         }
@@ -90,10 +90,8 @@ import { BusinessRuleIdentifier } from '../constants/cii-business-rules';
   `,
 })
 export class CiiSummaryControlComponent {
-  node = input.required<CiiFormControl>();
+  node = input.required<CiiFormNode>();
   settings = input.required<EditorSettings>();
-
-  protected term = computed(() => getTerm(this.node().term));
 
   protected get isValid(): boolean {
     const node = this.node();
@@ -109,7 +107,7 @@ export class CiiSummaryControlComponent {
   protected businessRuleStatuses = this.ciiFormService.businessRules;
 
   private highlightTermService = inject(CiiFormHighlightTermService);
-  protected isNodeHighlighted = computed(() => this.highlightTermService.highlightedTerm() === this.node().term);
+  protected isNodeHighlighted = computed(() => this.highlightTermService.highlightedTerm() === this.node().term.term);
 
   private highlightRemarkService = inject(CiiFormHighlightRemarkService);
   protected highlightedRemark = this.highlightRemarkService.highlightedRemark;
@@ -121,15 +119,15 @@ export class CiiSummaryControlComponent {
   protected highlightedBusinessRule = this.highlightBusinessRuleService.highlightedBusinessRule;
 
   protected highlightTerm(value: boolean) {
-    this.highlightTermService.highlightTerm(this.node().term, value);
+    this.highlightTermService.highlightTerm(this.node().term.term, value);
   }
 
-  protected highlightRemark(rule: BusinessTermIdentifier, value: boolean) {
-    this.highlightRemarkService.highlightRemark(rule, value);
+  protected highlightRemark(value: boolean) {
+    this.highlightRemarkService.highlightRemark(this.node().term.term, value);
   }
 
-  protected highlightChorusProRemark(rule: BusinessTermIdentifier, value: boolean) {
-    this.highlightChorusProRemarkService.highlightChorusProRemark(rule, value);
+  protected highlightChorusProRemark(value: boolean) {
+    this.highlightChorusProRemarkService.highlightChorusProRemark(this.node().term.term, value);
   }
 
   protected highlightBusinessRule(rule: BusinessRuleIdentifier, value: boolean) {

@@ -1,5 +1,5 @@
 import { DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   DateOnlyFormat,
   GuidelineSpecifiedDocumentContextParameterId,
@@ -12,6 +12,7 @@ import { EditorSavedState, EditorStateService } from '../../../editor-state.serv
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidateApi } from '../../../../../core/api/validate.api';
 import { BusinessRuleIdentifier, ciiBusinessRules } from '../constants/cii-business-rules';
+import { BusinessTermIdentifier, CiiTerm, requireTerm } from '../constants/cii-terms';
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +65,69 @@ export class CiiFormService {
     });
   }
 
+  /**
+   * Retrieves a form control by its business term identifier.
+   *
+   * This method returns the associated `AbstractControl` for a given business term identifier.
+   * If the control does not exist, it returns `undefined`.
+   *
+   * Example Usage:
+   * ```typescript
+   * const control = ciiFormService.getControl('BT-23');
+   * if (control) {
+   *   console.log(control.value); // Access the value of the control.
+   * }
+   * ```
+   *
+   * @param {BusinessTermIdentifier} term - The business term identifier of the control.
+   * @returns {AbstractControl | undefined} The form control if found, otherwise `undefined`.
+   */
+  getControl(term: string): AbstractControl | undefined {
+    const key = term as BusinessTermIdentifier;
+    return this.controls[key];
+  }
+
+  /**
+   * Retrieves a form control by its business term identifier, or throws an error if not found.
+   *
+   * Use this method when a control is expected to exist and you want to enforce strict validation.
+   *
+   * Example Usage:
+   * ```typescript
+   * const control = ciiFormService.requireControl('BT-23');
+   * control.setValue('New Value'); // Set a value directly.
+   * ```
+   *
+   * @param {BusinessTermIdentifier} term - The business term identifier of the control.
+   * @returns {AbstractControl} The form control if found.
+   */
+  requireControl(term: BusinessTermIdentifier): AbstractControl {
+    return this.controls[term];
+  }
+
+  /**
+   * Validates the Cross-Industry Invoice (CII) form and its business rules.
+   *
+   * This method performs the following actions:
+   * 1. Marks all fields in the form as touched to trigger validation feedback.
+   * 2. Checks if the form is valid based on built-in, synchronous validators. If invalid, returns `false`.
+   * 3. Transforms the form data into a CII model and sends it to the validation API.
+   * 4. Updates the statuses of business rules based on validation results.
+   *
+   * Returns a `Promise` indicating whether the form and its business rules are valid.
+   *
+   * Example Usage:
+   * ```typescript
+   * const isValid = await ciiFormService.validate();
+   * if (isValid) {
+   *   console.log('Form is valid and business rules are satisfied.');
+   * } else {
+   *   console.log('Form validation failed. Please review the errors.');
+   * }
+   * ```
+   *
+   * @returns {Promise<boolean>} `true` if the form is valid and business rules are satisfied, otherwise `false`.
+   */
   async validate(): Promise<boolean> {
     this.form.markAllAsTouched();
     if (!this.form.valid) {
@@ -86,6 +150,19 @@ export class CiiFormService {
     return validationResult.valid;
   }
 
+  /**
+   * The main `FormGroup` representing the Cross-Industry Invoice (CII) form.
+   *
+   * This form models the structure of the CII document, including nested groups and fields
+   * for document context, exchanged document details, and supply chain trade transactions.
+   * It incorporates validation and change detection for seamless integration with Angular's
+   * reactive forms module.
+   *
+   * Key Sections:
+   * - **`exchangedDocumentContext`**: Document context parameters.
+   * - **`exchangedDocument`**: Primary document details (e.g., ID and date).
+   * - **`supplyChainTradeTransaction`**: Trade agreements, settlements, and delivery details.
+   */
   form = new FormGroup({
     exchangedDocumentContext: new FormGroup({
       businessProcessSpecifiedDocumentContextParameterId: new FormControl('', { nonNullable: true }),
@@ -143,211 +220,202 @@ export class CiiFormService {
   });
 
   /**
-   * The list of all the controls in the Cross-Industry Invoice form, with their name, term, description, business rules and remarks.
+   * A mapping of business terms to their corresponding Angular form controls within the Cross-Industry Invoice (CII) form.
+   *
+   * Each business term identifier is associated with an instance of `AbstractControl`, which may represent
+   * a `FormGroup` or a `FormControl`. This provides direct access to manage and manipulate form data
+   * as per business requirements while preserving validation and input tracking functionality.
+   *
+   * The mapping facilitates:
+   * - Simplified retrieval of controls using business term identifiers.
+   * - Validation and interaction with specific parts of the CII form hierarchy.
    */
-  doc: CiiFormControl[] = [
+  controls: Record<BusinessTermIdentifier, AbstractControl> = {
+    'BR-02': this.form.controls.exchangedDocumentContext,
+    'BT-23': this.form.controls.exchangedDocumentContext.controls.businessProcessSpecifiedDocumentContextParameterId,
+    'BT-24': this.form.controls.exchangedDocumentContext.controls.guidelineSpecifiedDocumentContextParameterId,
+    'BT-1-00': this.form.controls.exchangedDocument,
+    'BT-1': this.form.controls.exchangedDocument.controls.id,
+    'BT-3': this.form.controls.exchangedDocument.controls.typeCode,
+    'BT-2': this.form.controls.exchangedDocument.controls.issueDateTime,
+    'BT-2-0': this.form.controls.exchangedDocument.controls.issueDateTimeFormat,
+    'BG-25-00': this.form.controls.supplyChainTradeTransaction,
+    'BT-10-00': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement,
+    'BT-10': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerReference,
+    'BR-04': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty,
+    'BT-27': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.name,
+    'BT-30-00': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedLegalOrganization,
+    'BT-30': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedLegalOrganization.controls.id,
+    'BT-30-1':
+      this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedLegalOrganization.controls.idSchemeId,
+    'BR-05': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.postalTradeAddress,
+    'BT-40': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.postalTradeAddress.controls.countryId,
+    'BT-31-00': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration,
+    'BT-31': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration.controls.id,
+    'BT-31-0':
+      this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration.controls.idSchemeId,
+    'BR-07': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty,
+    'BT-44': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.name,
+    'BT-47-00': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.specifiedLegalOrganization,
+    'BT-47': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.specifiedLegalOrganization.controls.id,
+    'BT-47-1':
+      this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.specifiedLegalOrganization.controls.idSchemeId,
+    'BT-13-00': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerOrderReferencedDocument,
+    'BT-13': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerOrderReferencedDocument.controls.issuerAssignedId,
+    'BG-13-00': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeDelivery,
+    'BG-19': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement,
+    'BT-5': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.invoiceCurrencyCode,
+    'BG-22': this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation,
+    'BT-109':
+      this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls.taxBasisTotalAmount,
+    'BT-110':
+      this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls.taxTotalAmount,
+    'BT-110-1':
+      this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
+        .taxTotalAmountCurrencyId,
+    'BT-112':
+      this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls.grandTotalAmount,
+    'BT-115':
+      this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls.duePayableAmount,
+  };
+
+  /**
+   * An ordered, hierarchical representation of all form elements within the Cross-Industry Invoice (CII) form,
+   * structured as a tree with nodes representing groups, fields, or nested elements.
+   *
+   * Each node in the hierarchy contains:
+   * - A `term` representing the business term identifier.
+   * - A `control` referencing the associated `AbstractControl` (either `FormGroup` or `FormControl`).
+   * - An optional list of `children`, which captures the nested structure of form groups and fields.
+   *
+   * The hierarchy provides a structured organization of form controls, reflecting the underlying
+   * business logic and semantics of the invoice. This allows for streamlined access to related controls
+   * and simplifies recursive operations, such as rendering or validation across multiple levels.
+   *
+   * Example Usage:
+   * ```typescript
+   * const topLevelNode = ciiFormService.hierarchy[0];
+   * console.log(topLevelNode.term);  // Access business term of the top-level node.
+   *
+   * const childNode = topLevelNode.children?.[0];
+   * console.log(childNode?.control.value);  // Get the value of a nested control.
+   * ```
+   *
+   * Key Features:
+   * - Reflects the business structure of the CII document.
+   * - Serves as a navigable representation of the form's controls.
+   *
+   * Use this property to traverse the form logically or to align form operations with the
+   * business rules defined for the Cross-Industry Invoice.
+   */
+  hierarchy: CiiFormNode[] = [
     {
-      term: 'BR-02',
-      control: this.form.controls.exchangedDocumentContext,
+      term: requireTerm('BR-02'),
+      control: this.requireControl('BR-02'),
       children: [
+        { term: requireTerm('BT-23'), control: this.requireControl('BT-23') },
+        { term: requireTerm('BT-24'), control: this.requireControl('BT-24') },
+      ],
+    },
+    {
+      term: requireTerm('BT-1-00'),
+      control: this.requireControl('BT-1-00'),
+      children: [
+        { term: requireTerm('BT-1'), control: this.requireControl('BT-1') },
+        { term: requireTerm('BT-3'), control: this.requireControl('BT-3') },
         {
-          term: 'BT-23',
-          control: this.form.controls.exchangedDocumentContext.controls.businessProcessSpecifiedDocumentContextParameterId,
-        },
-        {
-          term: 'BT-24',
-          control: this.form.controls.exchangedDocumentContext.controls.guidelineSpecifiedDocumentContextParameterId,
+          term: requireTerm('BT-2'),
+          control: this.requireControl('BT-2'),
+          children: [{ term: requireTerm('BT-2-0'), control: this.requireControl('BT-2-0') }],
         },
       ],
     },
     {
-      term: 'BT-1-00',
-      control: this.form.controls.exchangedDocument,
+      term: requireTerm('BG-25-00'),
+      control: this.requireControl('BG-25-00'),
       children: [
         {
-          term: 'BT-1',
-          control: this.form.controls.exchangedDocument.controls.id,
-        },
-        {
-          term: 'BT-3',
-          control: this.form.controls.exchangedDocument.controls.typeCode,
-        },
-        {
-          term: 'BT-2',
-          control: this.form.controls.exchangedDocument.controls.issueDateTime,
+          term: requireTerm('BT-10-00'),
+          control: this.requireControl('BT-10-00'),
           children: [
+            { term: requireTerm('BT-10'), control: this.requireControl('BT-10') },
             {
-              term: 'BT-2-0',
-              control: this.form.controls.exchangedDocument.controls.issueDateTimeFormat,
+              term: requireTerm('BR-04'),
+              control: this.requireControl('BR-04'),
+              children: [
+                { term: requireTerm('BT-27'), control: this.requireControl('BT-27') },
+                {
+                  term: requireTerm('BT-30-00'),
+                  control: this.requireControl('BT-30-00'),
+                  children: [
+                    {
+                      term: requireTerm('BT-30'),
+                      control: this.requireControl('BT-30'),
+                      children: [{ term: requireTerm('BT-30-1'), control: this.requireControl('BT-30-1') }],
+                    },
+                  ],
+                },
+                {
+                  term: requireTerm('BR-05'),
+                  control: this.requireControl('BR-05'),
+                  children: [{ term: requireTerm('BT-40'), control: this.requireControl('BT-40') }],
+                },
+                {
+                  term: requireTerm('BT-31-00'),
+                  control: this.requireControl('BT-31-00'),
+                  children: [
+                    {
+                      term: requireTerm('BT-31'),
+                      control: this.requireControl('BT-31'),
+                      children: [{ term: requireTerm('BT-31-0'), control: this.requireControl('BT-31-0') }],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              term: requireTerm('BR-07'),
+              control: this.requireControl('BR-07'),
+              children: [
+                { term: requireTerm('BT-44'), control: this.requireControl('BT-44') },
+                {
+                  term: requireTerm('BT-47-00'),
+                  control: this.requireControl('BT-47-00'),
+                  children: [
+                    {
+                      term: requireTerm('BT-47'),
+                      control: this.requireControl('BT-47'),
+                      children: [{ term: requireTerm('BT-47-1'), control: this.requireControl('BT-47-1') }],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              term: requireTerm('BT-13-00'),
+              control: this.requireControl('BT-13-00'),
+              children: [{ term: requireTerm('BT-13'), control: this.requireControl('BT-13') }],
             },
           ],
         },
-      ],
-    },
-    {
-      term: 'BG-25-00',
-      control: this.form.controls.supplyChainTradeTransaction,
-      children: [
+        { term: requireTerm('BG-13-00'), control: this.requireControl('BG-13-00') },
         {
-          term: 'BT-10-00',
-          control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement,
+          term: requireTerm('BG-19'),
+          control: this.requireControl('BG-19'),
           children: [
+            { term: requireTerm('BT-5'), control: this.requireControl('BT-5') },
             {
-              term: 'BT-10',
-              control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerReference,
-            },
-            {
-              term: 'BR-04',
-              control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty,
+              term: requireTerm('BG-22'),
+              control: this.requireControl('BG-22'),
               children: [
+                { term: requireTerm('BT-109'), control: this.requireControl('BT-109') },
                 {
-                  term: 'BT-27',
-                  control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.name,
+                  term: requireTerm('BT-110'),
+                  control: this.requireControl('BT-110'),
+                  children: [{ term: requireTerm('BT-110-1'), control: this.requireControl('BT-110-1') }],
                 },
-                {
-                  term: 'BT-30-00',
-                  control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedLegalOrganization,
-                  children: [
-                    {
-                      term: 'BT-30',
-                      control:
-                        this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedLegalOrganization
-                          .controls.id,
-                      children: [
-                        {
-                          term: 'BT-30-1',
-                          control:
-                            this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedLegalOrganization
-                              .controls.idSchemeId,
-                        },
-                      ],
-                    },
-                  ],
-                },
-                {
-                  term: 'BR-05',
-                  control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.postalTradeAddress,
-                  children: [
-                    {
-                      term: 'BT-40',
-                      control:
-                        this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.postalTradeAddress.controls
-                          .countryId,
-                    },
-                  ],
-                },
-                {
-                  term: 'BT-31-00',
-                  control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration,
-                  children: [
-                    {
-                      term: 'BT-31',
-                      control:
-                        this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration.controls
-                          .id,
-                      children: [
-                        {
-                          term: 'BT-31-0',
-                          control:
-                            this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.sellerTradeParty.controls.specifiedTaxRegistration
-                              .controls.idSchemeId,
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              term: 'BR-07',
-              control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty,
-              children: [
-                {
-                  term: 'BT-44',
-                  control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.name,
-                },
-                {
-                  term: 'BT-47-00',
-                  control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.specifiedLegalOrganization,
-                  children: [
-                    {
-                      term: 'BT-47',
-                      control:
-                        this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.specifiedLegalOrganization.controls
-                          .id,
-                      children: [
-                        {
-                          term: 'BT-47-1',
-                          control:
-                            this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerTradeParty.controls.specifiedLegalOrganization
-                              .controls.idSchemeId,
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              term: 'BT-13-00',
-              control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerOrderReferencedDocument,
-              children: [
-                {
-                  term: 'BT-13',
-                  control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeAgreement.controls.buyerOrderReferencedDocument.controls.issuerAssignedId,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          term: 'BG-13-00',
-          control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeDelivery,
-        },
-        {
-          term: 'BG-19',
-          control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement,
-          children: [
-            {
-              term: 'BT-5',
-              control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.invoiceCurrencyCode,
-            },
-            {
-              term: 'BG-22',
-              control: this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation,
-              children: [
-                {
-                  term: 'BT-109',
-                  control:
-                    this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
-                      .taxBasisTotalAmount,
-                },
-                {
-                  term: 'BT-110',
-                  control:
-                    this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
-                      .taxTotalAmount,
-                  children: [
-                    {
-                      term: 'BT-110-1',
-                      control:
-                        this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
-                          .taxTotalAmountCurrencyId,
-                    },
-                  ],
-                },
-                {
-                  term: 'BT-112',
-                  control:
-                    this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
-                      .grandTotalAmount,
-                },
-                {
-                  term: 'BT-115',
-                  control:
-                    this.form.controls.supplyChainTradeTransaction.controls.applicableHeaderTradeSettlement.controls.specifiedTradeSettlementHeaderMonetarySummation.controls
-                      .duePayableAmount,
-                },
+                { term: requireTerm('BT-112'), control: this.requireControl('BT-112') },
+                { term: requireTerm('BT-115'), control: this.requireControl('BT-115') },
               ],
             },
           ],
@@ -469,6 +537,23 @@ export class CiiFormService {
 
 export type CiiFormState = 'pristine' | 'dirty' | 'saving';
 
+export interface CiiFormNode {
+  /**
+   * The term of the element.
+   */
+  term: CiiTerm;
+
+  /**
+   * The form control for this element.
+   */
+  control: AbstractControl;
+
+  /**
+   * The children of this element.
+   */
+  children?: CiiFormNode[];
+}
+
 export type CiiFormControl = CiiFormGroup | CiiFormField;
 
 /**
@@ -478,7 +563,7 @@ interface CiiFormControlBase {
   /**
    * The term of the element.
    */
-  term: string;
+  term: BusinessTermIdentifier;
 
   /**
    * The children of this element.

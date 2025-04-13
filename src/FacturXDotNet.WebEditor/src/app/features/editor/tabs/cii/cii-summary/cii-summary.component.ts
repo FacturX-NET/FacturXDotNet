@@ -9,7 +9,7 @@ import { EditorSettings } from '../../../editor-settings.service';
   imports: [CiiSummaryControlComponent],
   template: `
     <div>
-      @for (node of doc; track node.term) {
+      @for (node of hierarchy; track node.term) {
         <app-cii-summary-node [node]="node" [settings]="settings()" />
       }
     </div>
@@ -20,5 +20,5 @@ export class CiiSummaryComponent {
   settings = input.required<EditorSettings>();
 
   private ciiFormService = inject(CiiFormService);
-  protected doc = this.ciiFormService.doc;
+  protected hierarchy = this.ciiFormService.hierarchy;
 }
