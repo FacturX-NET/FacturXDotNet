@@ -58,7 +58,21 @@ import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.
       </header>
 
       <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
-        @if (state.isLoading()) {
+        @if (isImporting()) {
+          <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            Importing...
+          </div>
+        } @else if (isExporting()) {
+          <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            Exporting...
+          </div>
+        } @else if (state.isLoading()) {
           <div class="w-100 h-100 d-flex justify-content-center align-items-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Loading...</span>
@@ -112,12 +126,16 @@ export class EditorPage {
   protected readonly environment = environment;
 
   private apiConstantsService = inject(ApiConstantsService);
-  protected apiUrl = inject(API_BASE_URL);
   private editorStateService = inject(EditorStateService);
+  private editorMenuService = inject(EditorMenuService);
   private settingsService = inject(EditorSettingsService);
 
+  protected apiUrl = inject(API_BASE_URL);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
+
+  protected isImporting = this.editorMenuService.isImporting;
+  protected isExporting = this.editorMenuService.isExporting;
 
   protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
   protected disablePointerEvents = signal<boolean>(false);

@@ -1,7 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, signal, Signal } from '@angular/core';
 import { ImportFileService } from '../../../core/import-file/import-file.service';
 import { ExtractApi } from '../../../core/api/extract.api';
-import { filter, first, firstValueFrom, from, map, of, switchMap, throwError } from 'rxjs';
+import { delay, filter, first, firstValueFrom, from, map, of, switchMap, throwError } from 'rxjs';
 import { ICrossIndustryInvoice } from '../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { downloadBlob, downloadFile } from '../../../core/utils/download-blob';
@@ -53,25 +53,20 @@ export class EditorMenuService {
    * Create a new, blank state.
    */
   async createNewDocument(): Promise<void> {
-    this.isImportingInternal.set(true);
-    try {
-      await this.editorStateService.new({ name: 'New Invoice' });
-    } finally {
-      this.isImportingInternal.set(false);
-    }
+    await this.editorStateService.new({ name: 'New Invoice' });
   }
 
   /**
    * Import the PDF data, the Cross-Industry Invoice data and the attachments into a new document.
    */
   async createNewDocumentFromFacturX(): Promise<void> {
+    const pdfFile = await this.importFileService.importFile('.pdf');
+    if (pdfFile === undefined) {
+      return;
+    }
+
     this.isImportingInternal.set(true);
     try {
-      const pdfFile = await this.importFileService.importFile('.pdf');
-      if (pdfFile === undefined) {
-        return;
-      }
-
       const result = await firstValueFrom(this.extractApi.extractXmpAndCrossIndustryInvoice(pdfFile).pipe(takeUntilDestroyed(this.destroyRef)));
       if (result === undefined || result.crossIndustryInvoice === undefined) {
         throw new Error(`Could not extract data from file ${pdfFile.name}.`);
@@ -90,13 +85,13 @@ export class EditorMenuService {
    * Import the Cross-Industry Invoice data into a new document.
    */
   async createNewDocumentFromCrossIndustryInvoice(): Promise<void> {
+    const xmlFile = await this.importFileService.importFile('.xml');
+    if (xmlFile === undefined) {
+      return;
+    }
+
     this.isImportingInternal.set(true);
     try {
-      const xmlFile = await this.importFileService.importFile('.xml');
-      if (xmlFile === undefined) {
-        return;
-      }
-
       const cii = await firstValueFrom(this.extractApi.extractCrossIndustryInvoice(xmlFile).pipe(takeUntilDestroyed(this.destroyRef)));
       if (cii === undefined) {
         throw new Error(`Could not extract data from file ${xmlFile.name}.`);
@@ -118,13 +113,13 @@ export class EditorMenuService {
    * Import the PDF data into a new document.
    */
   async createNewDocumentFromPdf(): Promise<void> {
+    const pdfFile = await this.importFileService.importFile('.pdf');
+    if (pdfFile === undefined) {
+      return;
+    }
+
     this.isImportingInternal.set(true);
     try {
-      const pdfFile = await this.importFileService.importFile('.pdf');
-      if (pdfFile === undefined) {
-        return;
-      }
-
       const xmp = await firstValueFrom(this.extractApi.extractXmpMetadata(pdfFile).pipe(takeUntilDestroyed(this.destroyRef)));
       if (xmp === undefined) {
         throw new Error(`Could not extract data from file ${pdfFile.name}.`);
@@ -147,13 +142,13 @@ export class EditorMenuService {
       throw new Error('Internal Error: no saved state available');
     }
 
+    const file = await this.importFileService.importFile('.xml');
+    if (file === undefined) {
+      return;
+    }
+
     this.isImportingInternal.set(true);
     try {
-      const file = await this.importFileService.importFile('.xml');
-      if (file === undefined) {
-        return;
-      }
-
       const cii = await firstValueFrom(this.extractApi.extractCrossIndustryInvoice(file).pipe(takeUntilDestroyed(this.destroyRef)));
       if (cii === undefined) {
         throw new Error(`Could not extract data from file ${file.name}.`);
@@ -174,13 +169,13 @@ export class EditorMenuService {
       throw new Error('Internal Error: no saved state available');
     }
 
+    const pdfFile = await this.importFileService.importFile('.pdf');
+    if (pdfFile === undefined) {
+      return;
+    }
+
     this.isImportingInternal.set(true);
     try {
-      const pdfFile = await this.importFileService.importFile('.pdf');
-      if (pdfFile === undefined) {
-        return;
-      }
-
       const attachments = await this.extractPdfAttachments(pdfFile);
 
       await this.editorStateService.updatePdf(pdfFile);
@@ -204,13 +199,13 @@ export class EditorMenuService {
       throw new Error('Internal Error: the PDF is not set');
     }
 
+    const cii = await this.getValidCii();
+    if (cii === undefined) {
+      throw new Error('Invalid Cross-Industry Invoice data');
+    }
+
     this.isExportingInternal.set(true);
     try {
-      const cii = await this.getValidCii();
-      if (cii === undefined) {
-        throw new Error('Invalid Cross-Industry Invoice data');
-      }
-
       const facturXFile = await firstValueFrom(this.generateApi.generateFacturX(value.xmp, value.pdf.content, cii, ...value.attachments).pipe(takeUntilDestroyed(this.destroyRef)));
       downloadFile(facturXFile, `${value.name}.pdf`);
     } finally {
@@ -228,13 +223,13 @@ export class EditorMenuService {
       throw new Error('Internal Error: no saved state available');
     }
 
+    const cii = await this.getValidCii();
+    if (cii === undefined) {
+      throw new Error('Invalid Cross-Industry Invoice data');
+    }
+
     this.isExportingInternal.set(true);
     try {
-      const cii = await this.getValidCii();
-      if (cii === undefined) {
-        throw new Error('Invalid Cross-Industry Invoice data');
-      }
-
       const ciiFile = await firstValueFrom(this.generateApi.generateCrossIndustryInvoice(cii).pipe(takeUntilDestroyed(this.destroyRef)));
       downloadFile(ciiFile, `${value.name}.xml`);
     } finally {
