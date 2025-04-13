@@ -55,7 +55,7 @@ export class GenerateApi {
 
         const contentDisposition = response.headers.get('Content-Disposition');
         const filename = contentDisposition?.split(';')[1].split('filename')[1].split('=')[1].trim();
-        return new File([response.body], filename ?? 'invoice.pdf');
+        return new File([response.body], filename ?? 'invoice.pdf', { type: 'application/pdf' });
       }),
     );
   }
@@ -72,7 +72,7 @@ export class GenerateApi {
 
         const contentDisposition = response.headers.get('content-disposition');
         const filename = contentDisposition?.split(';')[1].split('filename')[1].split('=')[1].trim();
-        return new File([response.body], filename ?? 'factur-x.xml');
+        return new File([response.body], filename ?? 'factur-x.xml', { type: 'text/xml' });
       }),
     );
   }
@@ -89,7 +89,7 @@ export class GenerateApi {
 
         const contentDisposition = response.headers.get('content-disposition');
         const filename = contentDisposition?.split(';')[1].split('filename')[1].split('=')[1].trim();
-        return new File([response.body], filename ?? 'invoice.pdf');
+        return new File([response.body], filename ?? 'invoice.pdf', { type: 'application/pdf' });
       }),
     );
   }
