@@ -5,7 +5,7 @@ import { EditorSettings, EditorSettingsService } from '../../../editor-settings.
   selector: 'app-cii-menu-details-dropdown',
   template: `
     @if (settings(); as settings) {
-      <div class="dropdown">
+      <div class="dropdown" data-bs-toggle="tooltip" data-bs-title="Display settings">
         <button class="btn btn-link" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-eye"></i></button>
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
