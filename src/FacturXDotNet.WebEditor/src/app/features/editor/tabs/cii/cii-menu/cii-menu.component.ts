@@ -26,7 +26,13 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
       <app-cii-menu-details-dropdown [settings]="settings()" />
 
       <button class="btn btn-link" (click)="validate()" ngbTooltip="Validate">
-        <i class="bi bi-check-all"></i>
+        @if (validating()) {
+          <div class="spinner-border spinner-border-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        } @else {
+          <i class="bi bi-check-all"></i>
+        }
       </button>
     </div>
   `,
@@ -41,6 +47,8 @@ export class CiiMenuComponent {
 
   private editorSettingsService = inject(EditorSettingsService);
   private ciiFormService = inject(CiiFormService);
+
+  protected validating = this.ciiFormService.validating;
 
   foldSummary() {
     this.editorSettingsService.saveFoldSummary(true);

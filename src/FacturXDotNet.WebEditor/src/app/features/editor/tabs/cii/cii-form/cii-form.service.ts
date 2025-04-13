@@ -9,10 +9,11 @@ import {
 } from '../../../../../core/api/api.models';
 import { debounceTime, firstValueFrom, from, Subject, switchMap, tap } from 'rxjs';
 import { EditorSavedState, EditorStateService } from '../../../editor-state.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ValidateApi } from '../../../../../core/api/validate.api';
 import { BusinessRuleIdentifier, getBusinessRuleIdentifiers, isBusinessRuleIdentifier, requireBusinessRule } from '../constants/cii-rules';
 import { BusinessTermIdentifier, CiiTerm, getBusinessTermIdentifiers, requireTerm } from '../constants/cii-terms';
+import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,10 @@ import { BusinessTermIdentifier, CiiTerm, getBusinessTermIdentifiers, requireTer
 export class CiiFormService {
   get state() {
     return this.stateInternal.asReadonly();
+  }
+
+  get validating() {
+    return this.validatingInternal.asReadonly();
   }
 
   get businessTermsValidation() {
@@ -32,6 +37,7 @@ export class CiiFormService {
 
   private saveSubject = new Subject<EditorSavedState>();
   private stateInternal = signal<CiiFormState>('pristine');
+  private validatingInternal = signal<boolean>(false);
   private businessTermsValidationInternal = signal<Partial<Record<BusinessTermIdentifier, 'valid' | 'invalid'>>>({});
   private businessRulesValidationInternal = signal<Partial<Record<BusinessRuleIdentifier, 'valid' | 'invalid'>>>({});
 
@@ -156,6 +162,12 @@ export class CiiFormService {
    * @returns {Promise<boolean>} `true` if the form is valid and business rules are satisfied, otherwise `false`.
    */
   async validate(): Promise<boolean> {
+    if (this.validating()) {
+      return firstValueFrom(toObservable(this.validatingInternal).pipe(takeUntilDestroyed(this.destroyRef)));
+    }
+
+    this.validatingInternal.set(true);
+
     const businessTermIdentifiers = getBusinessTermIdentifiers();
     const businessRuleIdentifiers = getBusinessRuleIdentifiers();
 
@@ -171,6 +183,8 @@ export class CiiFormService {
 
       this.businessTermsValidationInternal.set(termsStatuses);
       this.businessRulesValidationInternal.set({});
+
+      this.validatingInternal.set(false);
 
       return false;
     }
@@ -207,6 +221,8 @@ export class CiiFormService {
 
     this.businessTermsValidationInternal.set(termsStatuses);
     this.businessRulesValidationInternal.set(rulesStatuses);
+
+    this.validatingInternal.set(false);
 
     return validationResult.valid;
   }

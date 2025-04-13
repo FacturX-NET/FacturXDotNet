@@ -1,4 +1,4 @@
-import { Component, computed, inject, Resource, signal, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, Resource, signal, Signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
@@ -15,6 +15,10 @@ import { XmpTab } from './tabs/xmp/xmp.tab';
 import { API_BASE_URL } from '../../app.config';
 import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
 import { ApiConstantsService } from '../../core/api/services/api-constants.service';
+import { toastError } from '../../core/utils/toast-error';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EditorMenuService } from './editor-menu/editor-menu.service';
+import { ToastService } from '../../core/toasts/toast.service';
 
 @Component({
   selector: 'app-editor',
@@ -82,10 +86,7 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
                   <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
                 } @else {
                   <div class="h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
-                    <button
-                      class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5"
-                      (click)="appMenu.importMenu()?.importPdfImage()"
-                    >
+                    <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5" (click)="importPdfImage()">
                       <i class="bi bi-filetype-pdf text-primary fs-1"></i>
                       <div class="lead text-primary">Import PDF image</div>
                     </button>
@@ -135,7 +136,10 @@ export class EditorPage {
   protected readonly environment = environment;
 
   private settingsService = inject(EditorSettingsService);
+  private editorMenuService = inject(EditorMenuService);
   private editorStateService = inject(EditorStateService);
+  private toastService = inject(ToastService);
+  private destroyRef = inject(DestroyRef);
   private apiConstantsService = inject(ApiConstantsService);
   protected apiUrl = inject(API_BASE_URL);
 
@@ -147,5 +151,15 @@ export class EditorPage {
 
   changeTab(tab: EditorTab) {
     this.settingsService.saveTab(tab);
+  }
+
+  importPdfImage() {
+    this.editorMenuService
+      .importPdfImageData()
+      .pipe(
+        toastError(this.toastService, (message) => `Could not create PDF image: ${message}`),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 }
