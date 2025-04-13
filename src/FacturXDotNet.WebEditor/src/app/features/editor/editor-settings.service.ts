@@ -15,6 +15,7 @@ export class EditorSettingsService {
   get settings(): Signal<EditorSettings> {
     return this.settingsInternal.asReadonly();
   }
+
   private settingsInternal: WritableSignal<EditorSettings>;
 
   constructor() {

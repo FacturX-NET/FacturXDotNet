@@ -1,4 +1,4 @@
-import { Component, inject, input, output, viewChild } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { EditorFileMenuComponent } from './editor-file-menu.component';
 import { EditorImportMenuComponent } from './editor-import-menu.component';
 import { EditorExportMenuComponent } from './editor-export-menu.component';

@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, input, Resource, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, Resource } from '@angular/core';
 import { EditorSavedState, EditorStateAttachment, EditorStateService } from '../../editor-state.service';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { ImportFileService } from '../../../../core/import-file/import-file.service';
@@ -9,7 +9,6 @@ import { ToastService } from '../../../../core/toasts/toast.service';
 import { downloadBlob } from '../../../../core/utils/download-blob';
 import { AttachmentComponent } from './attachment.component';
 import { DeletedAttachment, DeletedAttachmentsService } from './deleted-attachments.service';
-import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
 
 @Component({
   selector: 'app-attachments',

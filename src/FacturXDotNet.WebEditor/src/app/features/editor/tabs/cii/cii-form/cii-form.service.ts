@@ -13,7 +13,6 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ValidateApi } from '../../../../../core/api/validate.api';
 import { BusinessRuleIdentifier, getBusinessRuleIdentifiers, isBusinessRuleIdentifier, requireBusinessRule } from '../constants/cii-rules';
 import { BusinessTermIdentifier, CiiTerm, getBusinessTermIdentifiers, requireTerm } from '../constants/cii-terms';
-import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 
 @Injectable({
   providedIn: 'root',
@@ -644,38 +643,3 @@ export interface CiiFormNode {
    */
   children?: CiiFormNode[];
 }
-
-export type CiiFormControl = CiiFormGroup | CiiFormField;
-
-/**
- * An element of a Cross Industry Invoice form.
- */
-interface CiiFormControlBase {
-  /**
-   * The term of the element.
-   */
-  term: BusinessTermIdentifier;
-
-  /**
-   * The children of this element.
-   */
-  children?: CiiFormControl[];
-}
-
-interface CiiFormGroup extends CiiFormControlBase {
-  /**
-   * The form control for this element.
-   */
-  control: FormGroup;
-}
-
-interface CiiFormField extends CiiFormControlBase {
-  /**
-   * The form control for this element.
-   */
-  control: FormControl;
-}
-
-type ExtractFormControl<T> = {
-  [K in keyof T]: T[K] extends FormControl<infer U> ? U : T[K];
-};

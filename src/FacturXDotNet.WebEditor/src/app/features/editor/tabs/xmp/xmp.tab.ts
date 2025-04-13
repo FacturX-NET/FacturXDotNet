@@ -1,5 +1,4 @@
-import { Component, computed, inject, input, Resource, Signal } from '@angular/core';
-import { IXmpMetadata } from '../../../../core/api/api.models';
+import { Component, computed, inject, Resource, Signal } from '@angular/core';
 import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
 import { XmpFormComponent } from './xmp-form/xmp-form.component';
 import { XmpSummaryComponent } from './xmp-summary.component';

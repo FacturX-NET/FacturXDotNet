@@ -1,11 +1,9 @@
-import { Component, effect, inject, input, model } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { EditorSavedState } from '../editor-state.service';
 import { EditorSettings } from '../editor-settings.service';
-import { CiiFormService } from '../tabs/cii/cii-form/cii-form.service';
 import { EditorHeaderNameComponent } from './editor-header-name.component';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NgbNav, NgbNavItem, NgbNavLink } from '@ng-bootstrap/ng-bootstrap';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-editor-header',
