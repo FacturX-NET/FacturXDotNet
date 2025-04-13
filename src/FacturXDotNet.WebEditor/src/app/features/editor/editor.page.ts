@@ -15,7 +15,7 @@ import { XmpTab } from './tabs/xmp/xmp.tab';
 import { API_BASE_URL } from '../../app.config';
 import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
 import { ApiConstantsService } from '../../core/api/services/api-constants.service';
-import { toastError } from '../../core/utils/toast-error';
+import { toastError } from '../../core/toasts/toast-error';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditorMenuService } from './editor-menu/editor-menu.service';
 import { ToastService } from '../../core/toasts/toast.service';
