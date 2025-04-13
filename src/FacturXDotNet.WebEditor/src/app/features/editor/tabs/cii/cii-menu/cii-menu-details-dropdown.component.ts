@@ -1,13 +1,13 @@
 import { Component, inject, input } from '@angular/core';
 import { EditorSettings, EditorSettingsService } from '../../../editor-settings.service';
-import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-cii-menu-details-dropdown',
-  imports: [NgbDropdown, NgbDropdownMenu, NgbDropdownToggle, NgbDropdownItem],
+  imports: [NgbDropdown, NgbDropdownMenu, NgbDropdownToggle, NgbDropdownItem, NgbTooltip],
   template: `
     @if (settings(); as settings) {
-      <div ngbDropdown data-bs-toggle="tooltip" data-bs-title="Display settings">
+      <div ngbDropdown ngbTooltip="Display settings">
         <button id="cii-menu-details" class="btn btn-link hide-toggle" ngbDropdownToggle><i class="bi bi-eye"></i></button>
         <div ngbDropdownMenu aria-labelledby="cii-menu-details">
           <button (click)="toggleBusinessRules()" [class.text-body-tertiary]="settings.showBusinessRules !== true" ngbDropdownItem>
