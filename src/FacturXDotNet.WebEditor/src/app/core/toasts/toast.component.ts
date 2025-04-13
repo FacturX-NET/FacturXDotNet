@@ -3,7 +3,6 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Toast } from 'bootstrap';
 import { fromEvent, of, switchMap, take, tap } from 'rxjs';
 import { ToastInstance } from './toast.service';
-import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-toast',

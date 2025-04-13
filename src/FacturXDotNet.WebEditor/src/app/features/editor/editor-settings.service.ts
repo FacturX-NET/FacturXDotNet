@@ -1,5 +1,4 @@
 import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { EditorTab } from './editor-header/editor-header.component';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +6,6 @@ import { EditorTab } from './editor-header/editor-header.component';
 export class EditorSettingsService {
   private localStorageKey: string = 'editor-settings';
   private defaultSettings: EditorSettings = {
-    tab: 'cii',
     foldSummary: false,
     showBusinessRules: true,
     showRemarks: true,
@@ -17,6 +15,7 @@ export class EditorSettingsService {
   get settings(): Signal<EditorSettings> {
     return this.settingsInternal.asReadonly();
   }
+
   private settingsInternal: WritableSignal<EditorSettings>;
 
   constructor() {
@@ -26,13 +25,6 @@ export class EditorSettingsService {
   saveFoldSummary(value: boolean) {
     const settings = this.settings();
     const newSettings: EditorSettings = { ...settings, foldSummary: value };
-    this.saveSettings(newSettings);
-    this.settingsInternal.set(newSettings);
-  }
-
-  saveTab(value: EditorTab) {
-    const settings = this.settings();
-    const newSettings: EditorSettings = { ...settings, tab: value };
     this.saveSettings(newSettings);
     this.settingsInternal.set(newSettings);
   }
@@ -71,7 +63,6 @@ export class EditorSettingsService {
 
 export interface EditorSettings {
   readonly foldSummary?: boolean;
-  readonly tab?: EditorTab;
   readonly showBusinessRules?: boolean;
   readonly showRemarks?: boolean;
   readonly showChorusProRemarks?: boolean;

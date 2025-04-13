@@ -1,8 +1,8 @@
-import { Component, input } from '@angular/core';
-import { IXmpMetadata } from '../../../../core/api/api.models';
-import { EditorSettings } from '../../editor-settings.service';
+import { Component, computed, inject, Resource, Signal } from '@angular/core';
+import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
 import { XmpFormComponent } from './xmp-form/xmp-form.component';
 import { XmpSummaryComponent } from './xmp-summary.component';
+import { EditorSavedState, EditorStateService } from '../../editor-state.service';
 
 @Component({
   selector: 'app-xmp',
@@ -20,7 +20,7 @@ import { XmpSummaryComponent } from './xmp-summary.component';
             </div>
           </div>
 
-          <app-xmp-form [value]="value() ?? {}" [settings]="settings()"></app-xmp-form>
+          <app-xmp-form [value]="xmp()" [settings]="settings()"></app-xmp-form>
         </div>
       </div>
     </div>
@@ -36,6 +36,10 @@ import { XmpSummaryComponent } from './xmp-summary.component';
   `,
 })
 export class XmpTab {
-  value = input.required<IXmpMetadata | undefined>();
-  settings = input.required<EditorSettings>();
+  private editorStateService = inject(EditorStateService);
+  private settingsService = inject(EditorSettingsService);
+
+  protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
+  protected xmp = computed(() => this.state.value()?.xmp ?? {});
+  protected settings: Signal<EditorSettings> = this.settingsService.settings;
 }

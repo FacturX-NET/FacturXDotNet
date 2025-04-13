@@ -13,9 +13,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
         <button class="btn btn-light" type="button" (click)="discardNewName()">Cancel</button>
       </form>
     } @else {
-      <div class="ps-1 d-flex align-items-center">
-        <span class="fs-5 pe-4">{{ name() }}</span>
-        <button class="btn btn-sm btn-light" (click)="startEditName()">Edit</button>
+      <div class="ps-1 d-flex">
+        <span class="fs-5 pe-1">{{ name() }}</span>
+        <button class="btn btn-sm btn-link" (click)="startEditName()">Edit</button>
       </div>
     }
   `,

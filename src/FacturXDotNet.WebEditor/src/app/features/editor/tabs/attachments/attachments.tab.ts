@@ -1,5 +1,5 @@
-import { Component, DestroyRef, inject, input } from '@angular/core';
-import { EditorStateAttachment, EditorStateService } from '../../editor-state.service';
+import { Component, computed, DestroyRef, inject, Resource } from '@angular/core';
+import { EditorSavedState, EditorStateAttachment, EditorStateService } from '../../editor-state.service';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { ImportFileService } from '../../../../core/import-file/import-file.service';
 import { filter, from, map, switchMap } from 'rxjs';
@@ -77,15 +77,15 @@ import { DeletedAttachment, DeletedAttachmentsService } from './deleted-attachme
   imports: [NgxFilesizeModule, AttachmentComponent],
 })
 export class AttachmentsTab {
-  attachments = input.required<EditorStateAttachment[]>();
-
   private editorStateService = inject(EditorStateService);
   private importFileService = inject(ImportFileService);
   private deletedAttachmentsService = inject(DeletedAttachmentsService);
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
+  protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
   protected deletedAttachments = this.deletedAttachmentsService.deletedAttachments;
+  protected attachments = computed(() => this.state.value()?.attachments ?? []);
 
   constructor() {
     this.deletedAttachmentsService.refresh();

@@ -1,8 +1,8 @@
-import { Component, computed, effect, inject, input, TemplateRef } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CiiFormHighlightBusinessRuleService } from '../../cii-form-highlight-business-rule.service';
 import { CiiFormService } from '../cii-form.service';
 import { CiiRule } from '../../constants/cii-rules';
-import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
+import { MarkdownComponent } from 'ngx-markdown';
 import { CiiFormBusinessRuleStatusIconComponent } from './cii-form-business-rule-status-icon.component';
 
 @Component({

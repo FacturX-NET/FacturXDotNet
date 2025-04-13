@@ -1,4 +1,4 @@
-import { BusinessTermIdentifier, ciiTerms } from './cii-terms';
+import { BusinessTermIdentifier } from './cii-terms';
 
 export type BusinessRuleIdentifier = keyof typeof ciiRules;
 

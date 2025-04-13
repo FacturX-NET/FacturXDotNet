@@ -5,13 +5,10 @@ import { EditorSettings, EditorSettingsService } from './editor-settings.service
 import { EditorMenuComponent } from './editor-menu/editor-menu.component';
 import { FormsModule } from '@angular/forms';
 import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
-import { CiiTab } from './tabs/cii/cii.tab';
 import { EditorSavedState, EditorStateService } from './editor-state.service';
 import { PdfViewerComponent } from './pdf-viewer.component';
-import { EditorHeaderComponent, EditorTab } from './editor-header/editor-header.component';
+import { EditorHeaderComponent } from './editor-header/editor-header.component';
 import { EditorWelcomeComponent } from './editor-welcome.component';
-import { AttachmentsTab } from './tabs/attachments/attachments.tab';
-import { XmpTab } from './tabs/xmp/xmp.tab';
 import { API_BASE_URL } from '../../app.config';
 import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
 import { ApiConstantsService } from '../../core/api/services/api-constants.service';
@@ -19,6 +16,7 @@ import { toastError } from '../../core/toasts/toast-error';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditorMenuService } from './editor-menu/editor-menu.service';
 import { ToastService } from '../../core/toasts/toast.service';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-editor',
@@ -29,11 +27,9 @@ import { ToastService } from '../../core/toasts/toast.service';
     FormsModule,
     EditorHeaderComponent,
     TwoColumnsComponent,
-    CiiTab,
     EditorWelcomeComponent,
-    AttachmentsTab,
-    XmpTab,
     ApiServerStatusComponent,
+    RouterOutlet,
   ],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
@@ -63,23 +59,13 @@ import { ToastService } from '../../core/toasts/toast.service';
       <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
         @if (state.value(); as value) {
           <header>
-            <app-editor-header [state]="value" [tab]="tab()" (tabChange)="changeTab($event)" [settings]="settings()"></app-editor-header>
+            <app-editor-header [state]="value" [settings]="settings()"></app-editor-header>
           </header>
 
           <div class="flex-grow-1 overflow-hidden">
             <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
               <div class="h-100 overflow-hidden" left>
-                @switch (tab()) {
-                  @case ('xmp') {
-                    <app-xmp [value]="value.xmp" [settings]="settings()" />
-                  }
-                  @case ('cii') {
-                    <app-cii [value]="value.cii" [settings]="settings()" />
-                  }
-                  @case ('attachments') {
-                    <app-attachments [attachments]="value.attachments"></app-attachments>
-                  }
-                }
+                <router-outlet></router-outlet>
               </div>
               <div class="h-100" right>
                 @if (value.pdf; as pdf) {
@@ -135,23 +121,19 @@ import { ToastService } from '../../core/toasts/toast.service';
 export class EditorPage {
   protected readonly environment = environment;
 
-  private settingsService = inject(EditorSettingsService);
   private editorMenuService = inject(EditorMenuService);
-  private editorStateService = inject(EditorStateService);
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
   private apiConstantsService = inject(ApiConstantsService);
   protected apiUrl = inject(API_BASE_URL);
+  private editorStateService = inject(EditorStateService);
+  private settingsService = inject(EditorSettingsService);
+
+  protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
+  protected settings: Signal<EditorSettings> = this.settingsService.settings;
 
   protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
-  protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected disablePointerEvents = signal<boolean>(false);
-  protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
-  protected tab = computed(() => this.settings().tab ?? 'cii');
-
-  changeTab(tab: EditorTab) {
-    this.settingsService.saveTab(tab);
-  }
 
   importPdfImage() {
     this.editorMenuService
