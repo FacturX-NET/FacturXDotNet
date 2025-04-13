@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, input, resource, Resource } from '@angular/core';
+import { Component, DestroyRef, inject, input, linkedSignal, resource, Resource } from '@angular/core';
 import { PdfViewerComponent } from './pdf-viewer.component';
 import { EditorSavedState, EditorStateService } from '../editor-state.service';
 import { GenerateApi } from '../../../core/api/generate.api';
@@ -11,19 +11,18 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-editor-pdf-viewer',
   imports: [PdfViewerComponent],
   template: `
-    <div class="h-100" [class.pe-none]="disablePointerEvents()">
-      @if (pdf.value(); as pdf) {
-        <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
-      } @else {
-        <div class="h-100 d-flex align-items-center justify-content-center">
-          <div class="d-flex gap-1 align-items-end">
-            <div class="spinner-border spinner-border-sm text-body-tertiary mb-2" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-            <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
+    <div class="h-100 position-relative">
+      <div class="h-100" [class.visually-hidden]="pdf.value() === undefined">
+        <app-pdf-viewer [pdf]="pdfAlwaysSet()" [disablePointerEvents]="disablePointerEvents()" />
+      </div>
+      <div class="h-100 d-flex align-items-center justify-content-center" [class.d-none]="pdf.value() !== undefined">
+        <div class="d-flex gap-1 align-items-end">
+          <div class="spinner-border spinner-border-sm text-body-tertiary mb-2" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
+          <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
         </div>
-      }
+      </div>
     </div>
   `,
   styles: ``,
@@ -55,6 +54,16 @@ export class EditorPdfViewerComponent {
           takeUntilDestroyed(this.destroyRef),
         ),
       );
+    },
+  });
+  protected pdfAlwaysSet = linkedSignal<{ id?: string; content: Blob } | undefined, { id?: string; content: Blob }>({
+    source: () => this.pdf.value(),
+    computation: (source, previous) => {
+      if (source === undefined) {
+        return previous?.value ?? { content: new Blob([]) };
+      }
+
+      return source;
     },
   });
 }

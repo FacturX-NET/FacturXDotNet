@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, Resource, signal, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, HostListener, inject, linkedSignal, Resource, signal, Signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { EditorSettings, EditorSettingsService } from './editor-settings.service';
@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
 import { EditorSavedState, EditorStateService } from './editor-state.service';
 import { PdfViewerComponent } from './editor-pdf-viewer/pdf-viewer.component';
-import { EditorHeaderComponent } from './editor-header/editor-header.component';
+import { EditorLeftPaneHeaderComponent } from './editor-header/editor-left-pane-header.component';
 import { EditorWelcomeComponent } from './editor-welcome.component';
 import { API_BASE_URL } from '../../app.config';
 import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
@@ -18,6 +18,7 @@ import { EditorMenuService } from './editor-menu/editor-menu.service';
 import { ToastService } from '../../core/toasts/toast.service';
 import { RouterOutlet } from '@angular/router';
 import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.component';
+import { EditorHeaderNameComponent } from './editor-header/editor-header-name.component';
 
 @Component({
   selector: 'app-editor',
@@ -25,12 +26,13 @@ import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.
     NgOptimizedImage,
     EditorMenuComponent,
     FormsModule,
-    EditorHeaderComponent,
+    EditorLeftPaneHeaderComponent,
     TwoColumnsComponent,
     EditorWelcomeComponent,
     ApiServerStatusComponent,
     RouterOutlet,
     EditorPdfViewerComponent,
+    EditorHeaderNameComponent,
   ],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
@@ -72,20 +74,24 @@ import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.
             </div>
             Exporting...
           </div>
-        } @else if (state.isLoading()) {
-          <div class="w-100 h-100 d-flex justify-content-center align-items-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
         } @else {
           @if (state.value(); as value) {
             <header>
-              <app-editor-header [state]="value" [settings]="settings()"></app-editor-header>
+              <div class="px-3 pt-3 pb-2">
+                <app-editor-header-name [name]="value.name" />
+              </div>
+              <div>
+                <app-two-columns [rightColumnWidth]="rightColumnWidth()">
+                  <div class="h-100" left>
+                    <app-editor-left-pane-header [state]="value" [settings]="settings()"></app-editor-left-pane-header>
+                  </div>
+                  <div class="h-100" right></div>
+                </app-two-columns>
+              </div>
             </header>
 
             <div class="flex-grow-1 overflow-hidden">
-              <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
+              <app-two-columns [(rightColumnWidth)]="rightColumnWidth" (dragging)="disablePointerEvents.set($event)" draggable>
                 <div class="h-100 overflow-hidden" left>
                   <router-outlet></router-outlet>
                 </div>
@@ -93,6 +99,12 @@ import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.
                   <app-editor-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
                 </div>
               </app-two-columns>
+            </div>
+          } @else if (state.isLoading()) {
+            <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
             </div>
           } @else {
             <div class="w-100 h-100">
@@ -123,7 +135,7 @@ import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.
   `,
 })
 export class EditorPage {
-  protected readonly environment = environment;
+  private rightColumnWidthLocalStorageKey = 'editor';
 
   private apiConstantsService = inject(ApiConstantsService);
   private editorStateService = inject(EditorStateService);
@@ -139,4 +151,47 @@ export class EditorPage {
 
   protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
   protected disablePointerEvents = signal<boolean>(false);
+
+  protected totalWidth = signal(window.innerWidth);
+
+  constructor() {
+    effect(() => {
+      const rightColumnWidth = this.rightColumnWidth();
+      this.saveRightColumnWidth(this.rightColumnWidthLocalStorageKey, rightColumnWidth);
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  resize(event: Event) {
+    const target = event.target as Window;
+    const width = target?.innerWidth ?? 0;
+    this.totalWidth.set(width);
+  }
+
+  protected rightColumnWidth = linkedSignal<number, number>({
+    source: () => this.totalWidth(),
+    computation: (input, previous) => {
+      if (previous !== undefined) {
+        return previous?.value;
+      }
+
+      return this.loadRightColumnWidth(this.rightColumnWidthLocalStorageKey) ?? input / 2;
+    },
+  });
+
+  private saveRightColumnWidth(key: string, width: number) {
+    const localStorageKey = `two-columns-${key}`;
+    localStorage.setItem(localStorageKey, width.toString());
+  }
+
+  private loadRightColumnWidth(key: string): number | undefined {
+    const localStorageKey = `two-columns-${key}`;
+
+    const widthString = localStorage.getItem(localStorageKey);
+    if (widthString === null) {
+      return undefined;
+    }
+
+    return parseInt(widthString, 10);
+  }
 }

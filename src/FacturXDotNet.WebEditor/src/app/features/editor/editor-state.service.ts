@@ -112,7 +112,7 @@ export class EditorStateService {
   }
 
   private async saveLast(state: EditorSavedState) {
-    this.writeSavedState('last', state);
+    await this.writeSavedState('last', state);
     this.savedState.reload();
   }
 
@@ -128,13 +128,7 @@ export class EditorStateService {
 
   private async openDb(): Promise<IDBPDatabase> {
     return await openDB(this.indexedDbName, 1, {
-      upgrade: (
-        database: IDBPDatabase<unknown>,
-        oldVersion: number,
-        newVersion: number | null,
-        transaction: IDBPTransaction<unknown, StoreNames<unknown>[], 'versionchange'>,
-        event: IDBVersionChangeEvent,
-      ) => database.createObjectStore(this.storeName),
+      upgrade: (database: IDBPDatabase) => database.createObjectStore(this.storeName),
     });
   }
 
