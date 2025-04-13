@@ -62,59 +62,63 @@ import { EditorRightPaneHeaderComponent } from './editor-header/editor-right-pan
       </header>
 
       <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
-        @if (isImporting()) {
-          <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-            Importing...
-          </div>
-        } @else if (isExporting()) {
-          <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-            Exporting...
-          </div>
-        } @else {
-          @if (state.value(); as value) {
-            <header>
-              <div class="px-3 pt-3 pb-2">
-                <app-editor-header-name [name]="value.name" />
-              </div>
-              <div>
-                <app-two-columns [rightColumnWidth]="rightColumnWidth()">
-                  <div class="h-100" left>
-                    <app-editor-left-pane-header [state]="value" [settings]="settings()"></app-editor-left-pane-header>
+        @if (isImporting() || isExporting()) {
+          <div class="position-absolute top-0 bottom-0 start-0 end-0 d-flex flex-column justify-content-center align-items-center backdrop" style="z-index: 9999">
+            <div class="card">
+              <div class="card-body">
+                @if (isImporting()) {
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
                   </div>
-                  <div class="h-100" right>
-                    <app-editor-right-pane-header [tab]="pdfTab()" (tabChange)="changePdfTab($event)" [showImported]="hasImportedPdf()"></app-editor-right-pane-header>
+                  Importing...
+                } @else if (isExporting()) {
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
                   </div>
-                </app-two-columns>
+                  Exporting...
+                }
               </div>
-            </header>
+            </div>
+          </div>
+        }
 
-            <div class="flex-grow-1 overflow-hidden">
-              <app-two-columns [(rightColumnWidth)]="rightColumnWidth" (dragging)="disablePointerEvents.set($event)" draggable>
-                <div class="h-100 overflow-hidden" left>
-                  <router-outlet></router-outlet>
+        @if (state.value(); as value) {
+          <header>
+            <div class="px-3 pt-3 pb-2">
+              <app-editor-header-name [name]="value.name" />
+            </div>
+            <div>
+              <app-two-columns [rightColumnWidth]="rightColumnWidth()">
+                <div class="h-100" left>
+                  <app-editor-left-pane-header [state]="value" [settings]="settings()"></app-editor-left-pane-header>
                 </div>
                 <div class="h-100" right>
-                  <app-editor-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
+                  <app-editor-right-pane-header [tab]="pdfTab()" (tabChange)="changePdfTab($event)" [showImported]="hasImportedPdf()"></app-editor-right-pane-header>
                 </div>
               </app-two-columns>
             </div>
-          } @else if (state.isLoading()) {
-            <div class="w-100 h-100 d-flex justify-content-center align-items-center">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
+          </header>
+
+          <div class="flex-grow-1 overflow-hidden">
+            <app-two-columns [(rightColumnWidth)]="rightColumnWidth" (dragging)="disablePointerEvents.set($event)" draggable>
+              <div class="h-100 overflow-hidden" left>
+                <router-outlet></router-outlet>
               </div>
+              <div class="h-100" right>
+                <app-editor-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
+              </div>
+            </app-two-columns>
+          </div>
+        } @else if (state.isLoading()) {
+          <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
             </div>
-          } @else {
-            <div class="w-100 h-100">
-              <app-editor-welcome></app-editor-welcome>
-            </div>
-          }
+          </div>
+        } @else {
+          <div class="w-100 h-100">
+            <app-editor-welcome></app-editor-welcome>
+          </div>
         }
       </main>
 
@@ -136,6 +140,11 @@ import { EditorRightPaneHeaderComponent } from './editor-header/editor-right-pan
         </div>
       </div>
     </div>
+  `,
+  styles: `
+    .backdrop {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
   `,
 })
 export class EditorPage {
