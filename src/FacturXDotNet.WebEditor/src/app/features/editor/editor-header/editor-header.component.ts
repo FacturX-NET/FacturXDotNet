@@ -1,16 +1,15 @@
 import { Component, inject, input, model } from '@angular/core';
-import { EditorSavedState } from './editor-state.service';
-import { EditorSettings } from './editor-settings.service';
-import { CiiFormService } from './tabs/cii/cii-form/cii-form.service';
+import { EditorSavedState } from '../editor-state.service';
+import { EditorSettings } from '../editor-settings.service';
+import { CiiFormService } from '../tabs/cii/cii-form/cii-form.service';
+import { EditorHeaderNameComponent } from './editor-header-name.component';
 
 @Component({
   selector: 'app-editor-header',
   template: `
     <div>
-      <div class="navbar justify-content-start gap-3 px-3 pb-0">
-        <div class="navbar-brand h5">
-          {{ state().name }}
-        </div>
+      <div class="px-3 pt-3 pb-2">
+        <app-editor-header-name [name]="state().name" />
       </div>
 
       <div>
@@ -38,6 +37,7 @@ import { CiiFormService } from './tabs/cii/cii-form/cii-form.service';
       </div>
     </div>
   `,
+  imports: [EditorHeaderNameComponent],
 })
 export class EditorHeaderComponent {
   state = input.required<EditorSavedState>();
