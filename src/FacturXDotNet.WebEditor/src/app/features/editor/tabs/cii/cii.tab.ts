@@ -1,10 +1,11 @@
-import { Component, inject, input } from '@angular/core';
-import { EditorSettings } from '../../editor-settings.service';
+import { Component, computed, inject, input, Resource, Signal } from '@angular/core';
+import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
 import { CiiFormComponent } from './cii-form/cii-form.component';
 import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
 import { CiiMenuComponent } from './cii-menu/cii-menu.component';
 import { CiiFormService } from './cii-form/cii-form.service';
 import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
+import { EditorSavedState, EditorStateService } from '../../editor-state.service';
 
 @Component({
   selector: 'app-cii',
@@ -19,7 +20,7 @@ import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
           </div>
 
           <div class="offcanvas-body small">
-            <app-cii-summary [value]="value()" [settings]="settings()" />
+            <app-cii-summary [value]="cii()" [settings]="settings()" />
           </div>
         </div>
       } @else {
@@ -28,7 +29,7 @@ import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
             <div class="justify-content-between">
               <h6>Cross-Industry Invoice</h6>
             </div>
-            <app-cii-summary [value]="value()" [settings]="settings()" />
+            <app-cii-summary [value]="cii()" [settings]="settings()" />
           </div>
         </div>
       }
@@ -44,7 +45,7 @@ import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
         tabindex="0"
       >
         <div class="container ms-0">
-          <app-cii-form [value]="value()" [settings]="settings()" />
+          <app-cii-form [value]="cii()" [settings]="settings()" />
         </div>
       </div>
 
@@ -72,9 +73,12 @@ import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
   `,
 })
 export class CiiTab {
-  value = input.required<ICrossIndustryInvoice>();
-  settings = input.required<EditorSettings>();
-
+  private editorStateService = inject(EditorStateService);
   private ciiFormService = inject(CiiFormService);
+  private settingsService = inject(EditorSettingsService);
+
+  protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
+  protected cii = computed(() => this.state.value()?.cii ?? {});
+  protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected formState = this.ciiFormService.state;
 }
