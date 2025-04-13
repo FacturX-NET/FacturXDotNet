@@ -48,12 +48,17 @@ public class FacturXDocumentBuilder
     ///     The builder will edit this PDF image to add the XMP metadata, the Cross Industry Invoice and other attachments, then save it to the output stream.
     /// </summary>
     /// <param name="pdfImageStream">The stream containing the base PDF image.</param>
-    /// <param name="password">The password to open the PDF image.</param>
-    /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
+    /// <param name="configure">
+    ///     An optional action to configure the base PDF stream options, such as setting a password or indicating whether the stream should remain open after
+    ///     processing.
+    /// </param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithBasePdf(Stream pdfImageStream, string? password = null, bool leaveOpen = true)
+    public FacturXDocumentBuilder WithBasePdf(Stream pdfImageStream, Action<BasePdfStreamOptions>? configure = null)
     {
-        _args.PdfGenerator = new PdfFromFileGenerator(pdfImageStream, password, leaveOpen);
+        BasePdfStreamOptions options = new();
+        configure?.Invoke(options);
+
+        _args.PdfGenerator = new PdfFromFileGenerator(pdfImageStream, options.Password, options.LeaveOpen);
         return this;
     }
 
@@ -64,13 +69,16 @@ public class FacturXDocumentBuilder
     /// <remarks>
     ///     This method takes the structured CII data.
     /// </remarks>
-    /// <param name="cii">The Cross Industry Invoice data.</param>
-    /// <param name="ciiAttachmentName">The name of the attachment.</param>
+    /// <param name="cii">The Cross Industry Invoice (CII) data that contains the structured invoice details to be attached to the Factur-X document.</param>
+    /// <param name="configure">An optional action to configure additional options for the invoice attachment.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithCrossIndustryInvoice(CrossIndustryInvoice cii, string? ciiAttachmentName = null)
+    public FacturXDocumentBuilder WithCrossIndustryInvoice(CrossIndustryInvoice cii, Action<CrossIndustryInvoiceOptions>? configure = null)
     {
+        CrossIndustryInvoiceOptions options = new();
+        configure?.Invoke(options);
+
         _args.CiiProvider = new CrossIndustryInvoiceFromStructuredDataProvider(cii);
-        _args.CiiAttachmentName = ciiAttachmentName ?? _args.CiiAttachmentName;
+        _args.CiiAttachmentName = options.CiiAttachmentName ?? _args.CiiAttachmentName;
         return this;
     }
 
@@ -82,13 +90,15 @@ public class FacturXDocumentBuilder
     ///     This method takes the raw CII data as a stream.
     /// </remarks>
     /// <param name="cii">The Cross Industry Invoice data.</param>
-    /// <param name="ciiAttachmentName">The name of the attachment.</param>
-    /// <param name="leaveOpen">Wheter to leave the stream open after the Factur-X document is built.</param>
+    /// <param name="configure">An optional action to configure additional options for the invoice attachment.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithCrossIndustryInvoice(Stream cii, string? ciiAttachmentName = null, bool leaveOpen = true)
+    public FacturXDocumentBuilder WithCrossIndustryInvoice(Stream cii, Action<CrossIndustryInvoiceStreamOptions>? configure = null)
     {
-        _args.CiiProvider = new CrossIndustryInvoiceFromStreamDataProvider(cii, leaveOpen);
-        _args.CiiAttachmentName = ciiAttachmentName ?? _args.CiiAttachmentName;
+        CrossIndustryInvoiceStreamOptions options = new();
+        configure?.Invoke(options);
+
+        _args.CiiProvider = new CrossIndustryInvoiceFromStreamDataProvider(cii, options.LeaveOpen);
+        _args.CiiAttachmentName = options.CiiAttachmentName ?? _args.CiiAttachmentName;
         return this;
     }
 
@@ -110,11 +120,14 @@ public class FacturXDocumentBuilder
     ///     The metadata will be added as-is to the PDF document, it will replace any existing metadata found in the document.
     /// </summary>
     /// <param name="xmpStream">The stream containing the XMP metadata.</param>
-    /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
+    /// <param name="configure">An optional action to configure additional options for the invoice attachment.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithXmpMetadata(Stream xmpStream, bool leaveOpen = true)
+    public FacturXDocumentBuilder WithXmpMetadata(Stream xmpStream, Action<XmpMetadataStreamOptions>? configure = null)
     {
-        _args.XmpProvider = new XmpFromStreamDataProvider(xmpStream, leaveOpen);
+        XmpMetadataStreamOptions options = new();
+        configure?.Invoke(options);
+
+        _args.XmpProvider = new XmpFromStreamDataProvider(xmpStream, options.LeaveOpen);
         _args.DisableXmpMetadataAutoGeneration = true;
         return this;
     }
@@ -136,14 +149,14 @@ public class FacturXDocumentBuilder
     ///     Add an attachment to the Factur-X document.
     /// </summary>
     /// <param name="attachment">The attachment to add.</param>
-    /// <param name="conflictResolution">The action to take when an attachment with the same name already exists in the base document.</param>
+    /// <param name="configure">An optional action to configure additional options for the invoice attachment.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithAttachment(
-        PdfAttachmentData attachment,
-        FacturXDocumentBuilderAttachmentConflictResolution conflictResolution = FacturXDocumentBuilderAttachmentConflictResolution.Overwrite
-    )
+    public FacturXDocumentBuilder WithAttachment(PdfAttachmentData attachment, Action<AttachmentOptions>? configure = null)
     {
-        _args.Attachments.Add((attachment, conflictResolution));
+        AttachmentOptions options = new();
+        configure?.Invoke(options);
+
+        _args.Attachments.Add((attachment, options.ConflictResolution));
         return this;
     }
 

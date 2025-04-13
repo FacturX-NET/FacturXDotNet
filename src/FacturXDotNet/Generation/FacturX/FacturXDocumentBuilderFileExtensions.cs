@@ -13,7 +13,14 @@ public static class FacturXDocumentBuilderFileExtensions
     /// <param name="password">The password to open the PDF document.</param>
     /// <returns>The builder itself, for chaining.</returns>
     public static FacturXDocumentBuilder WithBasePdfFile(this FacturXDocumentBuilder builder, string path, string? password = null) =>
-        builder.WithBasePdf(File.OpenRead(path), password, false);
+        builder.WithBasePdf(
+            File.OpenRead(path),
+            opt =>
+            {
+                opt.Password = password;
+                opt.LeaveOpen = false;
+            }
+        );
 
     /// <summary>
     ///     Reads the XMP metadata file from the specified path.
@@ -21,7 +28,8 @@ public static class FacturXDocumentBuilderFileExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="path">The path to the XMP metadata file.</param>
     /// <returns>The builder itself, for chaining.</returns>
-    public static FacturXDocumentBuilder WithXmpMetadataFile(this FacturXDocumentBuilder builder, string path) => builder.WithXmpMetadata(File.OpenRead(path), false);
+    public static FacturXDocumentBuilder WithXmpMetadataFile(this FacturXDocumentBuilder builder, string path) =>
+        builder.WithXmpMetadata(File.OpenRead(path), opt => { opt.LeaveOpen = false; });
 
     /// <summary>
     ///     Reads the Cross-Industry Invoice file from the specified path.
@@ -31,5 +39,12 @@ public static class FacturXDocumentBuilderFileExtensions
     /// <param name="ciiAttachmentName">The name of the attachment containing the Cross-Industry Invoice XML file. If not specified, the default name 'factur-x.xml' will be used.</param>
     /// <returns>The builder itself, for chaining.</returns>
     public static FacturXDocumentBuilder WithCrossIndustryInvoiceFile(this FacturXDocumentBuilder builder, string path, string? ciiAttachmentName = null) =>
-        builder.WithCrossIndustryInvoice(File.OpenRead(path), ciiAttachmentName, false);
+        builder.WithCrossIndustryInvoice(
+            File.OpenRead(path),
+            opt =>
+            {
+                opt.CiiAttachmentName = ciiAttachmentName;
+                opt.LeaveOpen = false;
+            }
+        );
 }

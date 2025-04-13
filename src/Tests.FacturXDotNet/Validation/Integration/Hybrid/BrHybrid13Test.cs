@@ -20,7 +20,10 @@ public class BrHybrid13Test
         ReadOnlyMemory<byte> ciiContent = await ciiAttachment!.ReadAsync();
         await using Stream ciiStream = ciiContent.AsStream();
 
-        FacturXDocument invoice = await FacturXDocument.Create().WithBasePdfFile("TestFiles/facturx.pdf").WithCrossIndustryInvoice(ciiStream, ciiAttachmentName).BuildAsync();
+        FacturXDocument invoice = await FacturXDocument.Create()
+            .WithBasePdfFile("TestFiles/facturx.pdf")
+            .WithCrossIndustryInvoice(ciiStream, opt => opt.CiiAttachmentName = ciiAttachmentName)
+            .BuildAsync();
 
         FacturXValidator validator = new();
         FacturXValidationResult result = await validator.GetValidationResultAsync(invoice, ciiAttachmentName);
