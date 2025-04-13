@@ -1,5 +1,5 @@
 import { DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators, ValueChangeEvent } from '@angular/forms';
 import {
   DateOnlyFormat,
   GuidelineSpecifiedDocumentContextParameterId,
@@ -60,13 +60,35 @@ export class CiiFormService {
       this.form.patchValue(this.toFormValue(value), { emitEvent: false });
     });
 
-    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
-      const value = this.editorStateService.savedState.value();
-      if (value === null) {
-        return;
-      }
+    this.form.events.pipe(takeUntilDestroyed()).subscribe((evt) => {
+      if (evt instanceof ValueChangeEvent) {
+        const bt = this.findBusinessTerm(evt.source);
+        if (bt !== undefined) {
+          this.businessTermsValidationInternal.update((current) => {
+            const newValue = { ...current };
+            newValue[bt.term] = undefined;
+            return newValue;
+          });
 
-      this.saveSubject.next({ ...value, cii: this.form.getRawValue() });
+          const rules = bt.businessRules;
+          if (rules !== undefined) {
+            this.businessRulesValidationInternal.update((current) => {
+              const newValue = { ...current };
+              for (const rule of rules) {
+                newValue[rule] = undefined;
+              }
+              return newValue;
+            });
+          }
+        }
+
+        const value = this.editorStateService.savedState.value();
+        if (value === null) {
+          return;
+        }
+
+        this.saveSubject.next({ ...value, cii: this.form.getRawValue() });
+      }
     });
   }
 
@@ -462,6 +484,15 @@ export class CiiFormService {
       ],
     },
   ];
+
+  private findBusinessTerm(control: AbstractControl): CiiTerm | undefined {
+    const businessTermIdentifier = getBusinessTermIdentifiers().find((key) => this.controls[key] === control);
+    if (businessTermIdentifier === undefined) {
+      return undefined;
+    }
+
+    return requireTerm(businessTermIdentifier);
+  }
 
   private fromFormValue(value: Required<typeof this.form.value>): ICrossIndustryInvoice {
     return {
