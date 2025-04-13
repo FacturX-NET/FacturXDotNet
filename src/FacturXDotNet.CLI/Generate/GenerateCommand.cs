@@ -99,7 +99,7 @@ class GenerateCommand() : CommandBase<GenerateCommandOptions>(
         };
         RulesToSkipOption = new Option<IEnumerable<string>>("--skip-rule", "-s")
         {
-            Description = "The business rules that should be skipped. Example: --skip-rule \"BR-01\" --skip-rule \"BR-02\"",
+            Description = "The business rules that should be skipped. Example: --skip-rule \"BR-1\" --skip-rule \"BR-2\"",
             Arity = ArgumentArity.ZeroOrMore
         };
     }

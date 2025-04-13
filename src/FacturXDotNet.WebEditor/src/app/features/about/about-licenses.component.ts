@@ -1,5 +1,5 @@
-import {Component, computed, input, Signal} from '@angular/core';
-import {IPackageDto} from '../../core/api/api.models';
+import { Component, computed, input, Signal } from '@angular/core';
+import { IPackageDto } from '../../core/api/api.models';
 
 @Component({
   selector: 'app-about-licenses',

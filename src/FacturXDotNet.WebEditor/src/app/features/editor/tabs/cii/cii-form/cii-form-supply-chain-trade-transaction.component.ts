@@ -5,6 +5,7 @@ import { CiiFormApplicableHeaderTradeDeliveryComponent } from './cii-form-applic
 import { CiiFormApplicableHeaderTradeSettlementComponent } from './cii-form-applicable-header-trade-settlement.component';
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
+import { requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-supply-chain-trade-transaction',
@@ -25,32 +26,16 @@ import { CiiFormParentContainerComponent } from './base/cii-form-parent-containe
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-parent-container term="BT-10-00" name="HEADER TRADE AGREEMENT" [settings]="settings()" depth="2">
+      <app-cii-form-parent-container [term]="bt1000" [settings]="settings()" depth="2">
         <app-cii-form-applicable-header-trade-agreement formGroupName="applicableHeaderTradeAgreement" [settings]="settings()"></app-cii-form-applicable-header-trade-agreement>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container term="BG-13-00" name="DELIVERY INFORMATION" [description]="description" [settings]="settings()" depth="2">
-        <ng-template #description>A group of business terms providing information about where and when the goods and services invoiced are delivered.</ng-template>
-
+      <app-cii-form-parent-container [term]="bg1300" [settings]="settings()" depth="2">
         <app-cii-form-applicable-header-trade-delivery formGroupName="applicableHeaderTradeDelivery" [settings]="settings()"></app-cii-form-applicable-header-trade-delivery>
       </app-cii-form-parent-container>
 
-      <app-cii-form-parent-container
-        term="BG-19"
-        name="HEADER TRADE SETTLEMENT DIRECT DEBIT"
-        [description]="description"
-        [remarks]="[remark]"
-        [chorusProRemarks]="[chorusProRemark]"
-        [settings]="settings()"
-        depth="2"
-      >
-        <ng-template #description>A group of business terms to specify a direct debit.</ng-template>
-        <ng-template #remark>
-          This group may be used to give prior notice in the invoice that payment will be made through a SEPA or other direct debit initiated by the Seller, in accordance with the
-          rules of the SEPA or other direct debit scheme.
-        </ng-template>
-        <ng-template #chorusProRemark> Not used.</ng-template>
-
+      <app-cii-form-parent-container [term]="bg19" [settings]="settings()" depth="2">
+        <app-cii-form-applicable-header-trade-settlement formGroupName="applicableHeaderTradeSettlement" [settings]="settings()"></app-cii-form-applicable-header-trade-settlement>
         <app-cii-form-applicable-header-trade-settlement formGroupName="applicableHeaderTradeSettlement" [settings]="settings()"></app-cii-form-applicable-header-trade-settlement>
       </app-cii-form-parent-container>
     </div>
@@ -59,4 +44,8 @@ import { CiiFormParentContainerComponent } from './base/cii-form-parent-containe
 export class CiiFormSupplyChainTradeTransactionComponent {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt1000 = requireTerm('BT-10-00');
+  protected bg1300 = requireTerm('BG-13-00');
+  protected bg19 = requireTerm('BG-19');
 }

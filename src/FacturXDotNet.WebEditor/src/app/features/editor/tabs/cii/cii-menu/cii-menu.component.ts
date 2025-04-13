@@ -1,14 +1,16 @@
 import { Component, inject, input } from '@angular/core';
 import { CiiMenuDetailsDropdownComponent } from './cii-menu-details-dropdown.component';
 import { EditorSettings, EditorSettingsService } from '../../../editor-settings.service';
+import { CiiFormService } from '../cii-form/cii-form.service';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-cii-menu',
-  imports: [CiiMenuDetailsDropdownComponent],
+  imports: [CiiMenuDetailsDropdownComponent, NgbTooltip],
   template: `
     <div class="d-flex flex-column align-items-center py-2">
       @if (settings().foldSummary) {
-        <button class="btn btn-link" (click)="unfoldSummary()">
+        <button class="btn btn-link" (click)="unfoldSummary()" ngbTooltip="Unfold summary">
           <i class="bi bi-chevron-right"></i>
         </button>
 
@@ -16,12 +18,22 @@ import { EditorSettings, EditorSettingsService } from '../../../editor-settings.
           <i class="bi bi-body-text"></i>
         </button>
       } @else {
-        <button class="btn btn-link" (click)="foldSummary()">
+        <button class="btn btn-link" (click)="foldSummary()" ngbTooltip="Fold summary">
           <i class="bi bi-chevron-left"></i>
         </button>
       }
 
       <app-cii-menu-details-dropdown [settings]="settings()" />
+
+      <button class="btn btn-link" (click)="validate()" ngbTooltip="Validate">
+        @if (validating()) {
+          <div class="spinner-border spinner-border-sm" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        } @else {
+          <i class="bi bi-check-all"></i>
+        }
+      </button>
     </div>
   `,
   styles: `
@@ -34,6 +46,9 @@ export class CiiMenuComponent {
   settings = input.required<EditorSettings>();
 
   private editorSettingsService = inject(EditorSettingsService);
+  private ciiFormService = inject(CiiFormService);
+
+  protected validating = this.ciiFormService.validating;
 
   foldSummary() {
     this.editorSettingsService.saveFoldSummary(true);
@@ -41,5 +56,9 @@ export class CiiMenuComponent {
 
   unfoldSummary() {
     this.editorSettingsService.saveFoldSummary(false);
+  }
+
+  async validate() {
+    await this.ciiFormService.validate();
   }
 }

@@ -28,11 +28,6 @@ export class EditorMenuComponent {
   showSelfHostingMenu = input<boolean>(false);
   exporting = output<boolean>();
 
-  fileMenu = viewChild<EditorFileMenuComponent>('fileMenu');
-  importMenu = viewChild<EditorImportMenuComponent>('importMenu');
-  exportMenu = viewChild<EditorExportMenuComponent>('exportMenu');
-  aboutMenu = viewChild<EditorAboutMenuComponent>('aboutMenu');
-
   private editorMenuService = inject(EditorMenuService);
   protected canImport = this.editorMenuService.canImport;
   protected canExport = this.editorMenuService.canExport;

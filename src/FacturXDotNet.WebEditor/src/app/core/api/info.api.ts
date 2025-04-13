@@ -1,8 +1,8 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {API_BASE_URL} from '../../app.config';
-import {IBuildInformationDto, IHostingInformationDto, IPackageDto} from './api.models';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../../app.config';
+import { IBuildInformationDto, IHostingInformationDto, IPackageDto } from './api.models';
 
 @Injectable({
   providedIn: 'root',

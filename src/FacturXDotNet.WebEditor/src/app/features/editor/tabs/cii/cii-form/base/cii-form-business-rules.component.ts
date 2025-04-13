@@ -1,33 +1,41 @@
-import { Component, inject, input, TemplateRef } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
+import { Component, computed, effect, inject, input, TemplateRef } from '@angular/core';
 import { CiiFormHighlightBusinessRuleService } from '../../cii-form-highlight-business-rule.service';
+import { CiiFormService } from '../cii-form.service';
+import { CiiRule } from '../../constants/cii-rules';
+import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
+import { CiiFormBusinessRuleStatusIconComponent } from './cii-form-business-rule-status-icon.component';
 
 @Component({
   selector: 'app-cii-form-business-rules',
-  imports: [NgTemplateOutlet],
+  imports: [MarkdownComponent, CiiFormBusinessRuleStatusIconComponent],
   template: `
     <div class="form-text" [class.text-primary]="highlight()">
       <div class="fw-semibold">Business Rules</div>
-      <ul>
+      <div class="ps-2 pb-2">
         @for (rule of businessRules(); track rule.id) {
-          <li [class.text-primary]="highlightedRule() == rule.id">
-            <span [id]="rule.id" class="fw-semibold" [class.fw-bold]="highlight() || highlightedRule() == rule.id">{{ rule.id }} </span>:
-            <ng-container [ngTemplateOutlet]="rule.template"></ng-container>
-          </li>
+          <div
+            class="d-flex gap-1"
+            [id]="rule.id"
+            [class.text-primary]="highlightedRule() === rule.id && statuses()[rule.id] !== 'invalid' && statuses()[rule.id] !== 'valid'"
+            [class.text-danger]="statuses()[rule.id] === 'invalid'"
+            [class.text-success]="statuses()[rule.id] === 'valid'"
+          >
+            <app-cii-form-business-rule-status-icon [highlighted]="highlightedRule() === rule.id" [status]="statuses()[rule.id]" />
+            <span [id]="rule.id" class="fw-semibold text-nowrap" [class.fw-bold]="highlight() || highlightedRule() == rule.id">{{ rule.id }} </span>:
+            <markdown ngPreserveWhitespaces>{{ rule.description }}</markdown>
+          </div>
         }
-      </ul>
+      </div>
     </div>
   `,
 })
 export class CiiFormBusinessRulesComponent {
-  businessRules = input.required<BusinessRuleTemplate[]>();
+  businessRules = input.required<CiiRule[]>();
   highlight = input<boolean>(false);
 
   private highlightService = inject(CiiFormHighlightBusinessRuleService);
   protected highlightedRule = this.highlightService.highlightedBusinessRule;
-}
 
-export interface BusinessRuleTemplate {
-  readonly id: string;
-  readonly template: TemplateRef<any>;
+  private ciiFormService = inject(CiiFormService);
+  protected statuses = this.ciiFormService.businessRulesValidation;
 }

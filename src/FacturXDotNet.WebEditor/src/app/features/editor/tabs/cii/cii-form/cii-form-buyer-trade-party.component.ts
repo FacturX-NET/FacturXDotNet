@@ -4,6 +4,7 @@ import { CiiFormBuyerTradePartySpecifiedLegalOrganizationComponent } from './cii
 import { EditorSettings } from '../../../editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
+import { requireTerm } from '../constants/cii-terms';
 
 @Component({
   selector: 'app-cii-form-buyer-trade-party',
@@ -18,16 +19,11 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
   ],
   template: `
     <div [formGroupName]="formGroupName()">
-      <app-cii-form-control term="BT-44" name="Buyer name" [description]="description" [businessRules]="[{ id: 'BR-7', template: br7 }]" [settings]="settings()" #control>
-        <ng-template #description>The full name of the Buyer.</ng-template>
-        <ng-template #br7>An Invoice shall contain the Buyer name.</ng-template>
-
+      <app-cii-form-control [term]="bt44" [settings]="settings()" #control>
         <input [id]="control.controlId()" class="form-control" formControlName="name" placeholder="LE CLIENT" />
       </app-cii-form-control>
 
-      <app-cii-form-parent-container term="BT-47-00" name="BUYER LEGAL REGISTRATION IDENTIFIER" [description]="description" [settings]="settings()" depth="4">
-        <ng-template #description>Details about the organization.</ng-template>
-
+      <app-cii-form-parent-container [term]="bt4700" [settings]="settings()" depth="4">
         <app-cii-form-buyer-trade-party-specified-legal-organization
           formGroupName="specifiedLegalOrganization"
           [settings]="settings()"
@@ -39,4 +35,7 @@ import { CiiFormControlComponent } from './base/cii-form-control.component';
 export class CiiFormBuyerTradePartyComponent {
   formGroupName = input.required<string>();
   settings = input<EditorSettings>();
+
+  protected bt44 = requireTerm('BT-44');
+  protected bt4700 = requireTerm('BT-47-00');
 }

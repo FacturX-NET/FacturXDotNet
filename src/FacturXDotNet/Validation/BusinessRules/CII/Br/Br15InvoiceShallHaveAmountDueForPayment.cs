@@ -9,7 +9,8 @@ namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 public record Br15InvoiceShallHaveAmountDueForPayment() : CrossIndustryInvoiceBusinessRule(
     "BR-15",
     "An Invoice shall have the Amount due for payment (BT- 115).",
-    FacturXProfile.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher(),
+    ["BT-115"]
 )
 {
     /// <inheritdoc />

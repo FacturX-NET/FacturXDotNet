@@ -6,7 +6,7 @@ public class Br09InvoiceShallHaveSellerPostalAddressWithCountryCodeTest
     [TestMethod]
     public async Task ShouldFail() =>
         await ValidationIntegrationTestUtils.CheckRuleFails(
-            "BR-09",
+            "BR-9",
             cii: """
                  <?xml version='1.0' encoding='UTF-8'?>
                  <rsm:CrossIndustryInvoice xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"

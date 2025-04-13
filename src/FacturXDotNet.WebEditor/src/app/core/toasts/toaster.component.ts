@@ -6,7 +6,13 @@ import { ToastInstance, ToastService } from './toast.service';
 @Component({
   selector: 'app-toaster',
   imports: [ToastComponent],
-  templateUrl: './toaster.component.html',
+  template: `
+    <div aria-atomic="true" aria-live="assertive" class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+      @for (toast of currentToasts(); track toast.id) {
+        <app-toast (closed)="close(toast)" [toast]="toast"></app-toast>
+      }
+    </div>
+  `,
 })
 export class ToasterComponent {
   protected currentToasts = signal<ToastInstance[]>([]);

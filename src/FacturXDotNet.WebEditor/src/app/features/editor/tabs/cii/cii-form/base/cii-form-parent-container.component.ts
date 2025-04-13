@@ -1,59 +1,53 @@
-import { Component, computed, ElementRef, inject, input, numberAttribute, TemplateRef, viewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, input, numberAttribute, Signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgTemplateOutlet } from '@angular/common';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
-import { BusinessRuleTemplate, CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
+import { CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
 import { EditorSettings } from '../../../../editor-settings.service';
 import { CiiFormHighlightTermService } from '../../cii-form-highlight-term.service';
 import { CiiFormHighlightRemarkService } from '../../cii-form-highlight-remark.service';
 import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight-chorus-pro-remark.service';
+import { CiiTerm } from '../../constants/cii-terms';
+import { CiiRule, requireBusinessRule } from '../../constants/cii-rules';
+import { MarkdownComponent } from 'ngx-markdown';
 
 @Component({
   selector: 'app-cii-form-parent-container',
-  imports: [ReactiveFormsModule, NgTemplateOutlet, CiiFormRemarkComponent, CiiFormBusinessRulesComponent],
+  imports: [ReactiveFormsModule, CiiFormRemarkComponent, CiiFormBusinessRulesComponent, MarkdownComponent],
   template: `
     <h6 #title [id]="term()" class="py-2 m-0 sticky-top bg-body" style="top: {{ topPx() }}px; z-index: {{ zIndex() }}" [class.text-primary]="isTermHighlighted()">
-      {{ term() }} - {{ name() }}
+      {{ term().id }} - {{ term().name }}
     </h6>
 
     <div class="ps-3 border-start border-2" [class.border-primary]="isTermHighlighted()">
-      <div class="form-text" [class.text-primary]="isTermHighlighted()">
-        @if (description(); as description) {
-          <ng-container [ngTemplateOutlet]="description"></ng-container>
-        }
-      </div>
+      @if (term().description !== undefined) {
+        <p class="form-text" [class.text-primary]="isTermHighlighted()">
+          <markdown ngPreserveWhitespaces>{{ term().description }}</markdown>
+        </p>
+      }
 
       <div class="pb-2"><!--spacer--></div>
 
       @if (settings(); as settings) {
-        @if (settings?.showBusinessRules === true) {
-          @if (businessRules(); as businessRules) {
-            <div [id]="term() + '-rules'">
-              <app-cii-form-business-rules [businessRules]="businessRules" [highlight]="isTermHighlighted()"></app-cii-form-business-rules>
+        @if (businessRules().length > 0) {
+          @if (settings?.showBusinessRules === true) {
+            <div [id]="businessRulesId()">
+              <app-cii-form-business-rules [businessRules]="businessRules()" [highlight]="isTermHighlighted()"></app-cii-form-business-rules>
             </div>
           }
         }
 
-        @if (remarks(); as remarks) {
-          @if (remarks.length > 0 && settings.showRemarks) {
-            <div [id]="term() + '-remarks'">
-              @for (remark of remarks; track remark) {
-                <app-cii-form-remark [highlight]="isTermHighlighted() || isRemarkHighlighted()">
-                  <ng-container [ngTemplateOutlet]="remark"></ng-container>
-                </app-cii-form-remark>
-              }
+        @if (term().remark; as remark) {
+          @if (settings.showRemarks) {
+            <div [id]="remarkId()">
+              <app-cii-form-remark [remark]="remark" [highlight]="isTermHighlighted() || isRemarkHighlighted()" />
             </div>
           }
         }
 
-        @if (chorusProRemarks(); as chorusProRemarks) {
-          @if (chorusProRemarks.length > 0 && settings.showChorusProRemarks) {
-            <div [id]="term() + '-cpro-remarks'">
-              @for (chorusProRemark of chorusProRemarks; track chorusProRemark) {
-                <app-cii-form-remark title="CHORUSPRO" [highlight]="isTermHighlighted() || isChorusProRemarkHighlighted()">
-                  <ng-container [ngTemplateOutlet]="chorusProRemark"></ng-container>
-                </app-cii-form-remark>
-              }
+        @if (term().chorusProRemark; as chorusProRemark) {
+          @if (settings.showChorusProRemarks) {
+            <div [id]="chorusProRemarkId()">
+              <app-cii-form-remark [remark]="chorusProRemark" title="CHORUSPRO" [highlight]="isTermHighlighted() || isChorusProRemarkHighlighted()" />
             </div>
           }
         }
@@ -65,14 +59,22 @@ import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight
   `,
 })
 export class CiiFormParentContainerComponent {
-  term = input.required<string>();
-  name = input.required<string>();
-  description = input<TemplateRef<any>>();
-  businessRules = input<BusinessRuleTemplate[]>();
-  remarks = input<TemplateRef<any>[]>();
-  chorusProRemarks = input<TemplateRef<any>[]>();
+  term = input.required<CiiTerm>();
   settings = input<EditorSettings>();
   depth = input.required({ transform: numberAttribute });
+
+  public businessRulesId = computed(() => this.term().id + '-rules');
+  public remarkId = computed(() => this.term().id + '-remarks');
+  public chorusProRemarkId = computed(() => this.term().id + '-cpro-remarks');
+
+  public businessRules: Signal<CiiRule[]> = computed(() => {
+    const ruleNames = this.term().businessRules;
+    if (ruleNames === undefined) {
+      return [];
+    }
+
+    return ruleNames.map((r) => requireBusinessRule(r));
+  });
 
   protected topPx = computed(() => {
     const depth = this.depth();
@@ -89,11 +91,11 @@ export class CiiFormParentContainerComponent {
   private titleElement = viewChild<ElementRef>('title');
 
   private highlightService = inject(CiiFormHighlightTermService);
-  protected isTermHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term());
+  protected isTermHighlighted = computed(() => this.highlightService.highlightedTerm() === this.term().id);
 
   private remarkHighlightService = inject(CiiFormHighlightRemarkService);
-  protected isRemarkHighlighted = computed(() => this.remarkHighlightService.highlightedRemark() === this.term());
+  protected isRemarkHighlighted = computed(() => this.remarkHighlightService.highlightedRemark() === this.term().id);
 
   private chorusProRemarkHighlightService = inject(CiiFormHighlightChorusProRemarkService);
-  protected isChorusProRemarkHighlighted = computed(() => this.chorusProRemarkHighlightService.highlightedChorusProRemark() === this.term());
+  protected isChorusProRemarkHighlighted = computed(() => this.chorusProRemarkHighlightService.highlightedChorusProRemark() === this.term().id);
 }

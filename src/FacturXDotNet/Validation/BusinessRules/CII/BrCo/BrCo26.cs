@@ -13,7 +13,8 @@ public record BrCo26() : CrossIndustryInvoiceBusinessRule(
     In order for the buyer to automatically identify a supplier, the Seller identifier (BT-29), the Seller legal registration identifier (BT-30) 
     and/or the Seller VAT identifier (BT-31) shall be present.
     """,
-    FacturXProfile.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher(),
+    ["BT-30", "BT-31"]
 )
 {
     /// <inheritdoc />

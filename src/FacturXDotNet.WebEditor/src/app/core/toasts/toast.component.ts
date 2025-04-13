@@ -3,10 +3,23 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Toast } from 'bootstrap';
 import { fromEvent, of, switchMap, take, tap } from 'rxjs';
 import { ToastInstance } from './toast.service';
+import { NgbToast } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-toast',
-  templateUrl: './toast.component.html',
+  template: `
+    @let colorScheme = toast().type === 'success' ? 'text-bg-success' : toast().type == 'error' ? 'text-bg-danger' : '';
+
+    <div #toastElt aria-atomic="true" aria-live="assertive" class="toast {{ colorScheme }}" data-bs-autohide="true" data-bs-delay="10000" role="alert">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{ toast().message }}
+        </div>
+
+        <button aria-label="Close" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" type="button"></button>
+      </div>
+    </div>
+  `,
 })
 export class ToastComponent {
   public readonly toast = input.required<ToastInstance>();

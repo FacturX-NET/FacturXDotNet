@@ -4,21 +4,21 @@ import { ToastService } from '../../../core/toasts/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditorMenuService } from './editor-menu.service';
 import { toastError } from '../../../core/utils/toast-error';
+import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-editor-export-menu',
   template: `
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle px-4 text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">Export</a>
-      <ul class="dropdown-menu">
-        <li>
-          <a class="dropdown-item" href="javascript:void 0;" (click)="exportFacturX()">Download FacturX document</a>
-          <a class="dropdown-item" href="javascript:void 0;" (click)="exportCrossIndustryInvoice()">Download Cross-Industry Invoice XML file</a>
-          <a class="dropdown-item" href="javascript:void 0;" (click)="exportPdfImage()">Download PDF file</a>
-        </li>
-      </ul>
+    <li class="nav-item" ngbDropdown>
+      <button id="editor-export-menu" class="nav-link px-4 text-light" ngbDropdownToggle>Export</button>
+      <div ngbDropdownMenu aria-labelledby="editor-export-menu">
+        <button (click)="exportFacturX()" ngbDropdownItem>Download FacturX document</button>
+        <button (click)="exportCrossIndustryInvoice()" ngbDropdownItem>Download Cross-Industry Invoice XML file</button>
+        <button (click)="exportPdfImage()" ngbDropdownItem>Download PDF file</button>
+      </div>
     </li>
   `,
+  imports: [NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem],
 })
 export class EditorExportMenuComponent {
   exporting = output<boolean>();
@@ -33,7 +33,7 @@ export class EditorExportMenuComponent {
     this.editorMenuService
       .exportFacturX()
       .pipe(
-        toastError(this.toastService, 'Could not export FacturX document.'),
+        toastError(this.toastService, (message) => `Could not export Factur-X document: ${message}.`),
         finalize(() => {
           this.exporting.emit(false);
         }),
@@ -48,7 +48,7 @@ export class EditorExportMenuComponent {
     this.editorMenuService
       .exportCrossIndustryInvoice()
       .pipe(
-        toastError(this.toastService, 'Could not export Cross-Industry Invoice data.'),
+        toastError(this.toastService, (message) => `Could not export Cross-Industry Invoice data: ${message}.`),
         finalize(() => {
           this.exporting.emit(false);
         }),
@@ -63,7 +63,7 @@ export class EditorExportMenuComponent {
     this.editorMenuService
       .exportPdfImage()
       .pipe(
-        toastError(this.toastService, 'Could not export PDF image.'),
+        toastError(this.toastService, (message) => `Could not export PDF image: ${message}.`),
         finalize(() => {
           this.exporting.emit(false);
         }),

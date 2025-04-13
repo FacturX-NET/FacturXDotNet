@@ -5,12 +5,13 @@ using FacturXDotNet.Validation.Utils;
 namespace FacturXDotNet.Validation.BusinessRules.CII.Br;
 
 /// <summary>
-///     BR-09: The Seller postal address (BG-5) shall contain a Seller country code (BT-40).
+///     BR-9: The Seller postal address (BG-5) shall contain a Seller country code (BT-40).
 /// </summary>
 public record Br09InvoiceShallHaveSellerPostalAddressWithCountryCode() : CrossIndustryInvoiceBusinessRule(
-    "BR-09",
+    "BR-9",
     "The Seller postal address (BG-5) shall contain a Seller country code (BT-40).",
-    FacturXProfile.Minimum.AndHigher()
+    FacturXProfile.Minimum.AndHigher(),
+    ["BT-40"]
 )
 {
     /// <inheritdoc />

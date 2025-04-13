@@ -6,7 +6,7 @@ public class Br07InvoiceShallHaveBuyerNameTest
     [TestMethod]
     public async Task ShouldFail() =>
         await ValidationIntegrationTestUtils.CheckRuleFails(
-            "BR-07",
+            "BR-7",
             cii: """
                  <?xml version='1.0' encoding='UTF-8'?>
                  <rsm:CrossIndustryInvoice xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
