@@ -3,6 +3,7 @@ import { CiiMenuDetailsDropdownComponent } from './cii-menu-details-dropdown.com
 import { EditorSettings, EditorSettingsService } from '../../../editor-settings.service';
 import { CiiFormService } from '../cii-form/cii-form.service';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { ToastService } from '../../../../../core/toasts/toast.service';
 
 @Component({
   selector: 'app-cii-menu',
@@ -47,6 +48,7 @@ export class CiiMenuComponent {
 
   private editorSettingsService = inject(EditorSettingsService);
   private ciiFormService = inject(CiiFormService);
+  private toastService = inject(ToastService);
 
   protected validating = this.ciiFormService.validating;
 
@@ -59,6 +61,10 @@ export class CiiMenuComponent {
   }
 
   async validate() {
-    await this.ciiFormService.validate();
+    try {
+      await this.ciiFormService.validate();
+    } catch (error: unknown) {
+      this.toastService.showError(error, (message) => `Validation attempt failed: ${message}.`);
+    }
   }
 }

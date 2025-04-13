@@ -168,63 +168,68 @@ export class CiiFormService {
 
     this.validatingInternal.set(true);
 
-    const businessTermIdentifiers = getBusinessTermIdentifiers();
-    const businessRuleIdentifiers = getBusinessRuleIdentifiers();
+    try {
+      const businessTermIdentifiers = getBusinessTermIdentifiers();
+      const businessRuleIdentifiers = getBusinessRuleIdentifiers();
 
-    this.form.markAllAsTouched();
-    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      if (!this.form.valid) {
+        const termsStatuses: Partial<Record<BusinessTermIdentifier, 'invalid' | 'valid'>> = {};
+        for (const termId of businessTermIdentifiers) {
+          const termControl = this.getControl(termId);
+          if (termControl?.invalid) {
+            termsStatuses[termId] = 'invalid';
+          }
+        }
+
+        this.businessTermsValidationInternal.set(termsStatuses);
+        this.businessRulesValidationInternal.set({});
+
+        this.validatingInternal.set(false);
+
+        return false;
+      }
+
+      const cii: ICrossIndustryInvoice = this.fromFormValue(this.form.getRawValue());
+      const validationResult = await firstValueFrom(this.validateApi.validateCrossIndustryInvoice(cii).pipe(takeUntilDestroyed(this.destroyRef)));
+
       const termsStatuses: Partial<Record<BusinessTermIdentifier, 'invalid' | 'valid'>> = {};
       for (const termId of businessTermIdentifiers) {
-        const termControl = this.getControl(termId);
-        if (termControl?.invalid) {
-          termsStatuses[termId] = 'invalid';
+        termsStatuses[termId] = 'valid';
+      }
+
+      const rulesStatuses: Partial<Record<BusinessRuleIdentifier, 'invalid' | 'valid'>> = {};
+      for (const ruleId of businessRuleIdentifiers) {
+        rulesStatuses[ruleId] = 'valid';
+      }
+
+      if (validationResult.errors !== undefined) {
+        for (const [_, errors] of Object.entries(validationResult.errors)) {
+          for (const ruleName of errors) {
+            if (!isBusinessRuleIdentifier(ruleName)) {
+              continue;
+            }
+
+            rulesStatuses[ruleName] = 'invalid';
+
+            const rule = requireBusinessRule(ruleName);
+            for (const term of rule.termsInvolved) {
+              termsStatuses[term] = 'invalid';
+            }
+          }
         }
       }
 
       this.businessTermsValidationInternal.set(termsStatuses);
-      this.businessRulesValidationInternal.set({});
+      this.businessRulesValidationInternal.set(rulesStatuses);
 
       this.validatingInternal.set(false);
 
-      return false;
+      return validationResult.valid;
+    } catch (error) {
+      this.validatingInternal.set(false);
+      throw error;
     }
-
-    const cii: ICrossIndustryInvoice = this.fromFormValue(this.form.getRawValue());
-    const validationResult = await firstValueFrom(this.validateApi.validateCrossIndustryInvoice(cii).pipe(takeUntilDestroyed(this.destroyRef)));
-
-    const termsStatuses: Partial<Record<BusinessTermIdentifier, 'invalid' | 'valid'>> = {};
-    for (const termId of businessTermIdentifiers) {
-      termsStatuses[termId] = 'valid';
-    }
-
-    const rulesStatuses: Partial<Record<BusinessRuleIdentifier, 'invalid' | 'valid'>> = {};
-    for (const ruleId of businessRuleIdentifiers) {
-      rulesStatuses[ruleId] = 'valid';
-    }
-
-    if (validationResult.errors !== undefined) {
-      for (const [_, errors] of Object.entries(validationResult.errors)) {
-        for (const ruleName of errors) {
-          if (!isBusinessRuleIdentifier(ruleName)) {
-            continue;
-          }
-
-          rulesStatuses[ruleName] = 'invalid';
-
-          const rule = requireBusinessRule(ruleName);
-          for (const term of rule.termsInvolved) {
-            termsStatuses[term] = 'invalid';
-          }
-        }
-      }
-    }
-
-    this.businessTermsValidationInternal.set(termsStatuses);
-    this.businessRulesValidationInternal.set(rulesStatuses);
-
-    this.validatingInternal.set(false);
-
-    return validationResult.valid;
   }
 
   /**

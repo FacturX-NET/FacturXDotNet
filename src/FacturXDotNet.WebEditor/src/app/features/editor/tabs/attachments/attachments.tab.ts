@@ -4,7 +4,7 @@ import { NgxFilesizeModule } from 'ngx-filesize';
 import { ImportFileService } from '../../../../core/import-file/import-file.service';
 import { filter, from, map, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { toastError } from '../../../../core/utils/toast-error';
+import { toastError } from '../../../../core/toasts/toast-error';
 import { ToastService } from '../../../../core/toasts/toast.service';
 import { downloadBlob } from '../../../../core/utils/download-blob';
 import { AttachmentComponent } from './attachment.component';
