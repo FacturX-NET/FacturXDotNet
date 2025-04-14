@@ -1,4 +1,5 @@
-﻿using FacturXDotNet.Models.CII;
+﻿using System.Globalization;
+using FacturXDotNet.Models.CII;
 using PdfSharp;
 using PdfSharp.Drawing;
 using PdfSharp.Fonts;
@@ -85,10 +86,10 @@ public class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) :
     static StandardPdfGenerator()
     {
         GlobalFontSettings.UseWindowsFontsUnderWindows = true;
-        SmallFont = new XFont(FontName, 6);
-        NormalFont = new XFont(FontName, 8);
-        NormalBoldFont = new XFont(FontName, 8, XFontStyleEx.Bold);
-        BigFont = new XFont(FontName, 11);
+        SmallFont = new XFont(FontName, 4);
+        NormalFont = new XFont(FontName, 6);
+        NormalBoldFont = new XFont(FontName, 6, XFontStyleEx.Bold);
+        BigFont = new XFont(FontName, 9);
 
         TopMarginRect = new XRect(LeftMarginPt, MarginPadding, ContentWidth, TopMarginPt - TwoMarginPaddings);
         BottomMarginRect = new XRect(LeftMarginPt, Height - BottomMarginPt + MarginPadding, ContentWidth, BottomMarginPt - TwoMarginPaddings);
@@ -163,11 +164,15 @@ public class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) :
             .KeyValue($"{sellerLegalIdType}: ", invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.SpecifiedLegalOrganization?.Id, RedBrush);
         CellDrawer.Create(page, SellerInfoRect, 8)
             .Background(GreenLineBg)
-            .KeyValue("VAT ID: ", invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.SpecifiedTaxRegistration?.Id, RedBrush);
+            .KeyValue(
+                $"{_options.LanguagePack.VatNumberLabel}: ",
+                invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.SpecifiedTaxRegistration?.Id,
+                RedBrush
+            );
 
-        CellDrawer.Create(page, SellerReferencesRect, 0).Text("Our references", font: NormalBoldFont);
+        CellDrawer.Create(page, SellerReferencesRect, 0).Text(_options.LanguagePack.OurReferencesLabel, font: NormalBoldFont);
 
-        CellDrawer.Create(page, BuyerReferencesRect, 0).Text("Your references", font: NormalBoldFont);
+        CellDrawer.Create(page, BuyerReferencesRect, 0).Text(_options.LanguagePack.YourReferencesLabel, font: NormalBoldFont);
         CellDrawer.Create(page, BuyerReferencesRect, 1)
             .Background(GreenLineBg)
             .Text(invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerReference, BlueBrush);
@@ -175,24 +180,31 @@ public class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) :
         CellDrawer.Create(page, BuyerReferencesRect, 5).Background(BlueLineBg);
         CellDrawer.Create(page, BuyerReferencesRect, 6)
             .Background(GreenLineBg)
-            .KeyValue("Order: ", invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerOrderReferencedDocument?.IssuerAssignedId, BlueBrush);
+            .KeyValue(
+                $"{_options.LanguagePack.OrderLabel}: ",
+                invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerOrderReferencedDocument?.IssuerAssignedId,
+                BlueBrush
+            );
 
-        CellDrawer.Create(page, InvoiceReferencesRect, 0).Text("Invoice references", font: NormalBoldFont);
+        CellDrawer.Create(page, InvoiceReferencesRect, 0).Text(_options.LanguagePack.InvoiceReferencesLabel, font: NormalBoldFont);
         CellDrawer.Create(page, InvoiceReferencesRect, 3).Background(BlueLineBg);
         CellDrawer.Create(page, InvoiceReferencesRect, 4).Background(BlueLineBg);
         CellDrawer.Create(page, InvoiceReferencesRect, 5)
             .Background(GreenLineBg)
-            .KeyValue("Business process: ", invoice.ExchangedDocumentContext?.BusinessProcessSpecifiedDocumentContextParameterId, BlueBrush);
+            .KeyValue($"{_options.LanguagePack.BusinessProcessLabel}: ", invoice.ExchangedDocumentContext?.BusinessProcessSpecifiedDocumentContextParameterId, BlueBrush);
 
-        string documentName = invoice.ExchangedDocument?.TypeCode?.ToDocumentName() ?? "Invoice";
+        string documentTypeName = invoice.ExchangedDocument?.TypeCode == null
+            ? _options.LanguagePack.DefaultDocumentTypeName
+            : _options.LanguagePack.DocumentTypeNames.GetValueOrDefault(invoice.ExchangedDocument.TypeCode.Value) ?? _options.LanguagePack.DefaultDocumentTypeName;
         int? typeCode = invoice.ExchangedDocument?.TypeCode?.ToSpecificationIdentifier();
-        string documentNameAndTypeCode = typeCode is not null ? $"{documentName} ({typeCode})" : documentName;
+        string documentNameAndTypeCode = typeCode is not null ? $"{documentTypeName} ({typeCode})" : documentTypeName;
         CellDrawer.Create(page, DocumentInfoRect, 0).Background(GreenLineBg).Text($"{documentNameAndTypeCode}", font: NormalBoldFont);
         CellDrawer.Create(page, DocumentInfoRect, 1).Background(GreenLineBg).KeyValue("N° ", invoice.ExchangedDocument?.Id, RedBrush);
 
-        CellDrawer.Create(page, DocumentInfoRect, 2).KeyValue("Date: ", invoice.ExchangedDocument?.IssueDateTime?.ToString("d"), RedBrush);
+        CellDrawer.Create(page, DocumentInfoRect, 2)
+            .KeyValue($"{_options.LanguagePack.DateLabel}: ", invoice.ExchangedDocument?.IssueDateTime?.ToString("d", _options.LanguagePack.Culture), RedBrush);
 
-        CellDrawer.Create(page, BuyerInfoRect, 0).Text("Client address", font: NormalBoldFont);
+        CellDrawer.Create(page, BuyerInfoRect, 0).Text(_options.LanguagePack.ClientAddressLabel, font: NormalBoldFont);
         CellDrawer.Create(page, BuyerInfoRect, 1).Background(BlueLineBg);
         CellDrawer.Create(page, BuyerInfoRect, 2)
             .Background(GreenLineBg)
@@ -203,37 +215,32 @@ public class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) :
         CellDrawer.Create(page, BuyerInfoRect, 7).Background(BlueLineBg);
         CellDrawer.Create(page, BuyerInfoRect, 8).Background(GreenLineBg);
 
-        CellDrawer.Create(page, BuyerIdentifiersRect, 0).Text("Your identifiers", font: NormalBoldFont);
+        CellDrawer.Create(page, BuyerIdentifiersRect, 0).Text(_options.LanguagePack.YourIdentifiersLabel, font: NormalBoldFont);
         string buyerLegalIdType = GetLegalIdType(invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.SpecifiedLegalOrganization?.IdSchemeId);
         CellDrawer.Create(page, BuyerIdentifiersRect, 2)
             .Background(GreenLineBg)
             .KeyValue($"{buyerLegalIdType}: ", invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.SpecifiedLegalOrganization?.Id, BrownBrush);
         CellDrawer.Create(page, BuyerIdentifiersRect, 3).Background(BlueLineBg);
 
-        CellDrawer.Create(page, DeliveryInformationIdentifiersRect, 0).Text("Delivery information", font: NormalBoldFont);
+        CellDrawer.Create(page, DeliveryInformationIdentifiersRect, 0).Text(_options.LanguagePack.DeliveryInformationLabel, font: NormalBoldFont);
         CellDrawer.Create(page, DeliveryInformationIdentifiersRect, 8).Background(BlueLineBg);
         CellDrawer.Create(page, DeliveryInformationIdentifiersRect, 9).Background(BlueLineBg);
 
         CellDrawer.Create(page, CurrencyRect)
             .Background(GreenLineBg)
-            .KeyValue("Currency: ", invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.InvoiceCurrencyCode, RedBrush);
+            .KeyValue($"{_options.LanguagePack.CurrencyLabel}: ", invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.InvoiceCurrencyCode, RedBrush);
 
-        CellDrawer.Create(page, BottomMarginRect)
-            .Text(
-                $"This PDF has been generated using FacturX.NET v{BuildInformation.Version.WithoutPrereleaseOrMetadata()} and is still a work in progress.",
-                font: SmallFont,
-                format: XStringFormats.Center
-            );
+        CellDrawer.Create(page, BottomMarginRect).Text(_options.LanguagePack.WipLabel, font: SmallFont, format: XStringFormats.Center);
 
         return document;
     }
 
-    static string GetLegalIdType(string? idSchemeId) =>
+    string GetLegalIdType(string? idSchemeId) =>
         idSchemeId switch
         {
             "0002" => "SIREN",
             "0009" => "SIRET",
-            _ => "Legal ID"
+            _ => _options.LanguagePack.DefaultLegalIdType
         };
 
     static void DrawDebugFrames(PdfPage page)
@@ -296,7 +303,13 @@ public class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) :
             if (text is not null)
             {
                 using XGraphics gfx = XGraphics.FromPdfPage(page);
-                gfx.DrawString(text, font ?? NormalFont, brush ?? BlackBrush, rect, format ?? XStringFormats.CenterLeft);
+                gfx.DrawString(
+                    text,
+                    font ?? NormalFont,
+                    brush ?? BlackBrush,
+                    new XRect(rect.X + MarginPadding, rect.Y, rect.Width - TwoMarginPaddings, rect.Height),
+                    format ?? XStringFormats.CenterLeft
+                );
             }
 
             return this;
@@ -306,11 +319,13 @@ public class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) :
         {
             if (value is not null)
             {
+                key = key.EndsWith(' ') ? key : $"{key} ";
+
                 XSize keySize;
                 using (XGraphics gfx = XGraphics.FromPdfPage(page))
                 {
                     keySize = gfx.MeasureString(key, font ?? NormalFont);
-                    gfx.DrawString(key, font ?? NormalFont, BlackBrush, new XRect(rect.X, rect.Y, keySize.Width, rect.Height), format ?? XStringFormats.CenterLeft);
+                    gfx.DrawString(key, font ?? NormalFont, BlackBrush, new XRect(rect.X + MarginPadding, rect.Y, keySize.Width, rect.Height), format ?? XStringFormats.CenterLeft);
                 }
 
                 using (XGraphics gfx = XGraphics.FromPdfPage(page))
@@ -319,7 +334,7 @@ public class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) :
                         value,
                         font ?? NormalFont,
                         brush ?? BlackBrush,
-                        new XRect(rect.X + keySize.Width, rect.Y, rect.Width - keySize.Width, rect.Height),
+                        new XRect(rect.X + MarginPadding + keySize.Width, rect.Y, rect.Width - keySize.Width - TwoMarginPaddings, rect.Height),
                         format ?? XStringFormats.CenterLeft
                     );
                 }
@@ -344,4 +359,256 @@ public class StandardPdfGeneratorOptions
     ///     The logo to be displayed in the generated PDF document as a byte array.
     /// </summary>
     public ReadOnlyMemory<byte>? Logo { get; set; }
+
+    /// <summary>
+    ///     The language pack that contains localized resources for generating the standard PDF.
+    /// </summary>
+    public StandardPdfGeneratorLanguagePack LanguagePack { get; set; } = StandardPdfGeneratorLanguagePack.English;
+}
+
+/// <summary>
+///     Represents a language pack containing localized resources used by the StandardPdfGenerator.
+/// </summary>
+public class StandardPdfGeneratorLanguagePack
+{
+    /// <summary>
+    ///     The culture associated with the language pack, which defines language and regional settings for the StandardPdfGenerator.
+    /// </summary>
+    public required CultureInfo Culture { get; init; }
+
+    /// <summary>
+    ///     The label used to denote the VAT (Value Added Tax) number in the generated PDF.
+    /// </summary>
+    public required string VatNumberLabel { get; init; }
+
+    /// <summary>
+    ///     The label representing "Our References" in the localized language pack, typically used to identify the document references associated with the sender.
+    /// </summary>
+    public required string OurReferencesLabel { get; init; }
+
+    /// <summary>
+    ///     The label used for the "Your references" field in the localized resources of the StandardPdfGenerator.
+    /// </summary>
+    public required string YourReferencesLabel { get; init; }
+
+    /// <summary>
+    ///     The label used for the order reference in the StandardPdfGenerator.
+    /// </summary>
+    public required string OrderLabel { get; init; }
+
+    /// <summary>
+    ///     The label representing invoice references, used to identify and localize these references in the generated PDF.
+    /// </summary>
+    public required string InvoiceReferencesLabel { get; init; }
+
+    /// <summary>
+    ///     The label used to represent a business process in the generated PDF.
+    /// </summary>
+    public required string BusinessProcessLabel { get; init; }
+
+    /// <summary>
+    ///     The collection of names for document types, keyed by their invoice type codes.
+    /// </summary>
+    public required Dictionary<InvoiceTypeCode, string> DocumentTypeNames { get; init; }
+
+    /// <summary>
+    ///     The name of the document type used in the StandardPdfGenerator.
+    /// </summary>
+    public required string DefaultDocumentTypeName { get; init; }
+
+    /// <summary>
+    ///     The label representing the date field in the language pack used by the StandardPdfGenerator.
+    /// </summary>
+    public required string DateLabel { get; init; }
+
+    /// <summary>
+    ///     The label used to identify the client's address in the generated PDF.
+    /// </summary>
+    public required string ClientAddressLabel { get; init; }
+
+    /// <summary>
+    ///     The label associated with the recipient's identifiers in the context of generating a PDF.
+    /// </summary>
+    public required string YourIdentifiersLabel { get; init; }
+
+    /// <summary>
+    ///     The label for delivery information, used to display or identify delivery-related details in the PDF document.
+    /// </summary>
+    public required string DeliveryInformationLabel { get; init; }
+
+    /// <summary>
+    ///     The label used to represent or display the currency in the StandardPdfGenerator's output.
+    /// </summary>
+    public required string CurrencyLabel { get; init; }
+
+    /// <summary>
+    ///     The default label or identifier used to represent the legal ID type in the language pack for the StandardPdfGenerator.
+    /// </summary>
+    public required string DefaultLegalIdType { get; init; }
+
+    /// <summary>
+    ///     The label indicating that the PDF document is in progress, generated with FacturX.NET, and subject to further changes.
+    /// </summary>
+    public required string WipLabel { get; init; }
+
+    /// <summary>
+    ///     The predefined English language pack for the StandardPdfGenerator containing labels and culture-specific settings.
+    /// </summary>
+    public static StandardPdfGeneratorLanguagePack English { get; } = new()
+    {
+        Culture = CultureInfo.GetCultureInfo("en-EN"),
+        VatNumberLabel = "VAT N°",
+        OurReferencesLabel = "Our references",
+        YourReferencesLabel = "Your references",
+        OrderLabel = "Order",
+        InvoiceReferencesLabel = "Invoice references",
+        BusinessProcessLabel = "Business process",
+        DocumentTypeNames = new Dictionary<InvoiceTypeCode, string>
+        {
+            { InvoiceTypeCode.RequestForPayment, "Request for payment" },
+            { InvoiceTypeCode.DebitNoteRelatedToGoodsOrServices, "Debit note related to goods or services" },
+            { InvoiceTypeCode.CreditNoteRelatedToGoodsOrServices, "Credit note related to goods or services" },
+            { InvoiceTypeCode.MeteredServicesInvoice, "Metered services invoice" },
+            { InvoiceTypeCode.CreditNoteRelatedToFinancialAdjustments, "Credit note related to financial adjustments" },
+            { InvoiceTypeCode.DebitNoteRelatedToFinancialAdjustments, "Debit note related to financial adjustments" },
+            { InvoiceTypeCode.TaxNotification, "Tax notification" },
+            { InvoiceTypeCode.InvoicingDataSheet, "Invoicing data sheet" },
+            { InvoiceTypeCode.DirectPaymentValuation, "Direct payment valuation" },
+            { InvoiceTypeCode.ProvisionalPaymentValuation, "Provisional payment valuation" },
+            { InvoiceTypeCode.PaymentValuation, "Payment valuation" },
+            { InvoiceTypeCode.InterimApplicationForPayment, "Interim application for payment" },
+            { InvoiceTypeCode.FinalPaymentRequestBasedOnCompletionOfWork, "Final payment request based on completion of work" },
+            { InvoiceTypeCode.PaymentRequestForCompletedUnits, "Payment request for completed units" },
+            { InvoiceTypeCode.SelfBilledCreditNote, "Self billed credit note" },
+            { InvoiceTypeCode.ConsolidatedCreditNoteGoodsAndServices, "Consolidated credit note - goods and services" },
+            { InvoiceTypeCode.PriceVariationInvoice, "Price variation invoice" },
+            { InvoiceTypeCode.CreditNoteForPriceVariation, "Credit note for price variation" },
+            { InvoiceTypeCode.DelcredereCreditNote, "Delcredere credit note" },
+            { InvoiceTypeCode.ProformaInvoice, "Proforma invoice" },
+            { InvoiceTypeCode.PartialInvoice, "Partial invoice" },
+            { InvoiceTypeCode.CommercialInvoiceWhichIncludesPackingList, "Commercial invoice which includes a packing list" },
+            { InvoiceTypeCode.CommercialInvoice, "Commercial invoice" },
+            { InvoiceTypeCode.CreditNote, "Credit note" },
+            { InvoiceTypeCode.CommissionNote, "Commission note" },
+            { InvoiceTypeCode.DebitNote, "Debit note" },
+            { InvoiceTypeCode.CorrectedInvoice, "Corrected invoice" },
+            { InvoiceTypeCode.ConsolidatedInvoice, "Consolidated invoice" },
+            { InvoiceTypeCode.PrepaymentInvoice, "Prepayment invoice" },
+            { InvoiceTypeCode.HireInvoice, "Hire invoice" },
+            { InvoiceTypeCode.TaxInvoice, "Tax invoice" },
+            { InvoiceTypeCode.SelfBilledInvoice, "Self-billed invoice" },
+            { InvoiceTypeCode.DelcredereInvoice, "Delcredere invoice" },
+            { InvoiceTypeCode.FactoredInvoice, "Factored invoice" },
+            { InvoiceTypeCode.LeaseInvoice, "Lease invoice" },
+            { InvoiceTypeCode.ConsignmentInvoice, "Consignment invoice" },
+            { InvoiceTypeCode.FactoredCreditNote, "Factored credit note" },
+            { InvoiceTypeCode.OcrPaymentCreditNote, "Optical Character Reading (OCR) payment credit note" },
+            { InvoiceTypeCode.DebitAdvice, "Debit advice" },
+            { InvoiceTypeCode.ReversalOfDebit, "Reversal of debit" },
+            { InvoiceTypeCode.ReversalOfCredit, "Reversal of credit" },
+            { InvoiceTypeCode.SelfBilledDebitNote, "Self billed debit note" },
+            { InvoiceTypeCode.ForwardersCreditNote, "Forwarder's credit note" },
+            { InvoiceTypeCode.ForwardersInvoiceDiscrepancyReport, "Forwarder's invoice discrepancy report" },
+            { InvoiceTypeCode.InsurersInvoice, "Insurer's invoice" },
+            { InvoiceTypeCode.ForwardersInvoice, "Forwarder's invoice" },
+            { InvoiceTypeCode.PortChargesDocuments, "Port charges documents" },
+            { InvoiceTypeCode.InvoiceInformationForAccountingPurposes, "Invoice information for accounting purposes" },
+            { InvoiceTypeCode.FreightInvoice, "Freight invoice" },
+            { InvoiceTypeCode.ClaimNotification, "Claim notification" },
+            { InvoiceTypeCode.ConsularInvoice, "Consular invoice" },
+            { InvoiceTypeCode.PartialConstructionInvoice, "Partial construction invoice" },
+            { InvoiceTypeCode.PartialFinalConstructionInvoice, "Partial final construction invoice" },
+            { InvoiceTypeCode.FinalConstructionInvoice, "Final construction invoice" },
+            { InvoiceTypeCode.CustomsInvoice, "Customs invoice" }
+        },
+        DefaultDocumentTypeName = "Invoice",
+        DateLabel = "Date",
+        ClientAddressLabel = "Client address",
+        YourIdentifiersLabel = "Your identifiers",
+        DeliveryInformationLabel = "Delivery information",
+        CurrencyLabel = "Currency",
+        DefaultLegalIdType = "Legal ID",
+        WipLabel = $"This PDF has been generated using FacturX.NET v{BuildInformation.Version.WithoutPrereleaseOrMetadata()} and is still a work in progress."
+    };
+
+    /// <summary>
+    ///     The predefined French language pack for the StandardPdfGenerator containing labels and culture-specific settings.
+    /// </summary>
+    public static StandardPdfGeneratorLanguagePack French { get; } = new()
+    {
+        Culture = CultureInfo.GetCultureInfo("fr-FR"),
+        VatNumberLabel = "N° TVA",
+        OurReferencesLabel = "Nos references",
+        YourReferencesLabel = "Vos references",
+        OrderLabel = "Commande",
+        InvoiceReferencesLabel = "Références sur la facture",
+        BusinessProcessLabel = "Type de processus",
+        DocumentTypeNames = new Dictionary<InvoiceTypeCode, string>
+        {
+
+            { InvoiceTypeCode.RequestForPayment, "Demande de paiement" },
+            { InvoiceTypeCode.DebitNoteRelatedToGoodsOrServices, "Note de débit liée aux biens ou services" },
+            { InvoiceTypeCode.CreditNoteRelatedToGoodsOrServices, "Avoir liée aux biens ou services" },
+            { InvoiceTypeCode.MeteredServicesInvoice, "Facture de services mesurés" },
+            { InvoiceTypeCode.CreditNoteRelatedToFinancialAdjustments, "Avoir liée aux ajustements financiers" },
+            { InvoiceTypeCode.DebitNoteRelatedToFinancialAdjustments, "Note de débit liée aux ajustements financiers" },
+            { InvoiceTypeCode.TaxNotification, "Notification fiscale" },
+            { InvoiceTypeCode.InvoicingDataSheet, "Fiche de données de facturation" },
+            { InvoiceTypeCode.DirectPaymentValuation, "Évaluation de paiement direct" },
+            { InvoiceTypeCode.ProvisionalPaymentValuation, "Évaluation de paiement provisoire" },
+            { InvoiceTypeCode.PaymentValuation, "Évaluation de paiement" },
+            { InvoiceTypeCode.InterimApplicationForPayment, "Demande de paiement intermédiaire" },
+            { InvoiceTypeCode.FinalPaymentRequestBasedOnCompletionOfWork, "Demande finale de paiement basée sur l'achèvement des travaux" },
+            { InvoiceTypeCode.PaymentRequestForCompletedUnits, "Demande de paiement pour unités terminées" },
+            { InvoiceTypeCode.SelfBilledCreditNote, "Avoir auto-facturée" },
+            { InvoiceTypeCode.ConsolidatedCreditNoteGoodsAndServices, "Avoir consolidée - biens et services" },
+            { InvoiceTypeCode.PriceVariationInvoice, "Facture de variation de prix" },
+            { InvoiceTypeCode.CreditNoteForPriceVariation, "Avoir pour variation de prix" },
+            { InvoiceTypeCode.DelcredereCreditNote, "Avoir delcredere" },
+            { InvoiceTypeCode.ProformaInvoice, "Facture proforma" },
+            { InvoiceTypeCode.PartialInvoice, "Facture partielle" },
+            { InvoiceTypeCode.CommercialInvoiceWhichIncludesPackingList, "Facture commerciale incluant la liste de colisage" },
+            { InvoiceTypeCode.CommercialInvoice, "Facture commerciale" },
+            { InvoiceTypeCode.CreditNote, "Avoir" },
+            { InvoiceTypeCode.CommissionNote, "Note de commission" },
+            { InvoiceTypeCode.DebitNote, "Note de débit" },
+            { InvoiceTypeCode.CorrectedInvoice, "Facture corrigée" },
+            { InvoiceTypeCode.ConsolidatedInvoice, "Facture consolidée" },
+            { InvoiceTypeCode.PrepaymentInvoice, "Facture d'acompte" },
+            { InvoiceTypeCode.HireInvoice, "Facture de location" },
+            { InvoiceTypeCode.TaxInvoice, "Facture fiscale" },
+            { InvoiceTypeCode.SelfBilledInvoice, "Facture auto-facturée" },
+            { InvoiceTypeCode.DelcredereInvoice, "Facture delcredere" },
+            { InvoiceTypeCode.FactoredInvoice, "Facture factorisée" },
+            { InvoiceTypeCode.LeaseInvoice, "Facture de leasing" },
+            { InvoiceTypeCode.ConsignmentInvoice, "Facture de consignation" },
+            { InvoiceTypeCode.FactoredCreditNote, "Avoir factorisée" },
+            { InvoiceTypeCode.OcrPaymentCreditNote, "Avoir de paiement OCR" },
+            { InvoiceTypeCode.DebitAdvice, "Avis de débit" },
+            { InvoiceTypeCode.ReversalOfDebit, "Annulation de débit" },
+            { InvoiceTypeCode.ReversalOfCredit, "Annulation de crédit" },
+            { InvoiceTypeCode.SelfBilledDebitNote, "Note de débit auto-facturée" },
+            { InvoiceTypeCode.ForwardersCreditNote, "Avoir du transitaire" },
+            { InvoiceTypeCode.ForwardersInvoiceDiscrepancyReport, "Rapport de disparité de facture du transitaire" },
+            { InvoiceTypeCode.InsurersInvoice, "Facture de l'assureur" },
+            { InvoiceTypeCode.ForwardersInvoice, "Facture du transitaire" },
+            { InvoiceTypeCode.PortChargesDocuments, "Documents de frais portuaires" },
+            { InvoiceTypeCode.InvoiceInformationForAccountingPurposes, "Informations de facturation à des fins comptables" },
+            { InvoiceTypeCode.FreightInvoice, "Facture de fret" },
+            { InvoiceTypeCode.ClaimNotification, "Notification de réclamation" },
+            { InvoiceTypeCode.ConsularInvoice, "Facture consulaire" },
+            { InvoiceTypeCode.PartialConstructionInvoice, "Facture partielle de construction" },
+            { InvoiceTypeCode.PartialFinalConstructionInvoice, "Facture finale partielle de construction" },
+            { InvoiceTypeCode.FinalConstructionInvoice, "Facture finale de construction" },
+            { InvoiceTypeCode.CustomsInvoice, "Facture douanière" }
+        },
+        DefaultDocumentTypeName = "Facture",
+        DateLabel = "Date",
+        ClientAddressLabel = "Adresse du client",
+        YourIdentifiersLabel = "Vos identifiants",
+        DeliveryInformationLabel = "Livraison",
+        CurrencyLabel = "Devise",
+        DefaultLegalIdType = "Identifiant",
+        WipLabel = $"Ce PDF a été généré par FacturX.NET v{BuildInformation.Version.WithoutPrereleaseOrMetadata()} et est toujours en cours de construction."
+    };
 }
