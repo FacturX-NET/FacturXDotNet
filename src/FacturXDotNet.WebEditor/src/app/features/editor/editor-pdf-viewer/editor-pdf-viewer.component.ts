@@ -6,7 +6,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { toastError } from '../../../core/toasts/toast-error';
 import { ToastService } from '../../../core/toasts/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { EditorSettingsService } from '../editor-settings.service';
+import { EditorSettingsService, PdfModel } from '../editor-settings.service';
 import { EditorMenuService } from '../editor-menu/editor-menu.service';
 
 @Component({
@@ -82,14 +82,14 @@ export class EditorPdfViewerComponent {
     },
   });
 
-  protected pdfAlwaysSet = linkedSignal<{ id?: string; content: Blob } | undefined, { id?: string; content: Blob } | undefined>({
-    source: () => this.pdf.value(),
+  protected pdfAlwaysSet = linkedSignal<{ pdf: { id?: string; content: Blob } | undefined; tab: PdfModel }, { id?: string; content: Blob } | undefined>({
+    source: () => ({ pdf: this.pdf.value(), tab: this.pdfTab() }),
     computation: (source, previous) => {
-      if (source === undefined) {
+      if (previous?.source.tab === 'imported' && source.pdf === undefined) {
         return previous?.value;
       }
 
-      return source;
+      return source.pdf;
     },
   });
 
