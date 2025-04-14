@@ -93,7 +93,7 @@ import { EditorRightPaneHeaderComponent } from './editor-header/editor-right-pan
                   <app-editor-left-pane-header [state]="value" [settings]="settings()"></app-editor-left-pane-header>
                 </div>
                 <div class="h-100" right>
-                  <app-editor-right-pane-header [tab]="pdfTab()" (tabChange)="changePdfTab($event)" [showImported]="hasImportedPdf()"></app-editor-right-pane-header>
+                  <app-editor-right-pane-header [tab]="pdfTab()" (tabChange)="changePdfTab($event)"></app-editor-right-pane-header>
                 </div>
               </app-two-columns>
             </div>
@@ -160,7 +160,6 @@ export class EditorPage {
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected pdfTab = computed(() => this.settings().pdfTab);
-  protected hasImportedPdf = computed(() => this.state.value()?.pdf !== undefined);
 
   protected isImporting = this.editorMenuService.isImporting;
   protected isExporting = this.editorMenuService.isExporting;
