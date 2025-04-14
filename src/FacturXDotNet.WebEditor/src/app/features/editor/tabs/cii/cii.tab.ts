@@ -48,7 +48,7 @@ import { EditorSavedState, EditorStateService } from '../../editor-state.service
         </div>
       </div>
 
-      <div class="position-absolute top-0 end-0 pe-4">
+      <div class="position-absolute top-0 end-0 pe-4" style="z-index:5555;">
         @switch (formState()) {
           @case ('pristine') {}
           @case ('dirty') {
