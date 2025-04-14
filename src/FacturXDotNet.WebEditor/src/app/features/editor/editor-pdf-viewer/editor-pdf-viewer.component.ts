@@ -14,7 +14,7 @@ import { EditorMenuService } from '../editor-menu/editor-menu.service';
   imports: [PdfViewerComponent],
   template: `
     <div class="h-100 position-relative">
-      @if (pdf.value(); as pdf) {
+      @if (pdfAlwaysSet(); as pdf) {
         <div class="h-100">
           <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
         </div>
@@ -79,6 +79,17 @@ export class EditorPdfViewerComponent {
       }
 
       return undefined;
+    },
+  });
+
+  protected pdfAlwaysSet = linkedSignal<{ id?: string; content: Blob } | undefined, { id?: string; content: Blob } | undefined>({
+    source: () => this.pdf.value(),
+    computation: (source, previous) => {
+      if (source === undefined) {
+        return previous?.value;
+      }
+
+      return source;
     },
   });
 
