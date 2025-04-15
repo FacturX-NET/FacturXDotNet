@@ -32,6 +32,9 @@ public class StandardPdfGeneratorLanguagePack
         YourIdentifiersLabel = pack.YourIdentifiersLabel;
         DeliveryInformationLabel = pack.DeliveryInformationLabel;
         CurrencyLabel = pack.CurrencyLabel;
+        TotalWithoutVatLabel = pack.TotalWithoutVatLabel;
+        TotalVatLabel = pack.TotalVatLabel;
+        TotalWithVatLabel = pack.TotalWithVatLabel;
         PrepaidAmountLabel = pack.PrepaidAmountLabel;
         DueDateLabel = pack.DueDateLabel;
         DueAmountLabel = pack.DueAmountLabel;
@@ -111,6 +114,21 @@ public class StandardPdfGeneratorLanguagePack
     public required string CurrencyLabel { get; init; }
 
     /// <summary>
+    ///     The label representing the total amount excluding VAT, used in the StandardPdfGenerator.
+    /// </summary>
+    public required string TotalWithoutVatLabel { get; init; }
+
+    /// <summary>
+    ///     The label used to represent the total VAT amount in the StandardPdfGenerator.
+    /// </summary>
+    public required string TotalVatLabel { get; init; }
+
+    /// <summary>
+    ///     The label representing the total amount including VAT in the StandardPdfGenerator.
+    /// </summary>
+    public required string TotalWithVatLabel { get; init; }
+
+    /// <summary>
     ///     The label representing the prepaid amount in the generated PDF, used for localization purposes in the StandardPdfGenerator.
     /// </summary>
     public required string PrepaidAmountLabel { get; set; }
@@ -159,6 +177,9 @@ public class StandardPdfGeneratorLanguagePack
         YourIdentifiersLabel = "",
         DeliveryInformationLabel = "",
         CurrencyLabel = "",
+        TotalWithoutVatLabel = "",
+        TotalVatLabel = "",
+        TotalWithVatLabel = "",
         PrepaidAmountLabel = "",
         DueDateLabel = "",
         DueAmountLabel = "",
@@ -243,6 +264,9 @@ public class StandardPdfGeneratorLanguagePack
         YourIdentifiersLabel = "Your identifiers",
         DeliveryInformationLabel = "Delivery information",
         CurrencyLabel = "Currency",
+        TotalWithoutVatLabel = "Total net",
+        TotalVatLabel = "Total VAT",
+        TotalWithVatLabel = "Total gross",
         PrepaidAmountLabel = "Prepaid",
         DueDateLabel = "Due date",
         DueAmountLabel = "Due for payment",
@@ -328,6 +352,9 @@ public class StandardPdfGeneratorLanguagePack
         YourIdentifiersLabel = "Vos identifiants",
         DeliveryInformationLabel = "Livraison",
         CurrencyLabel = "Devise",
+        TotalWithoutVatLabel = "Total HT",
+        TotalVatLabel = "Total TVA",
+        TotalWithVatLabel = "Total TTC",
         PrepaidAmountLabel = "Acompte",
         DueDateLabel = "Date d'échéance",
         DueAmountLabel = "Net à payer",

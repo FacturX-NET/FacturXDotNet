@@ -248,6 +248,44 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
             .Text(invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.InvoiceCurrencyCode, RedBrush, NormalFont);
         CellDrawer.Create(page, CurrencyRect).DrawLeftBorder(BorderBrush);
 
+        GridDrawer vatAmountsTable = GridDrawer.Create(page, TotalAmountsTableRect, 2, 3);
+        vatAmountsTable.Cell(0, 0).Text(_options.LanguagePack.TotalWithoutVatLabel, font: BigBoldFont, format: XStringFormats.Center);
+        vatAmountsTable.Cell(1, 0)
+            .Background(GreenLineBg)
+            .Text(
+                FormatMoney(
+                    invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.TaxBasisTotalAmount,
+                    invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.InvoiceCurrencyCode
+                ),
+                RedBrush,
+                BigBoldFont,
+                XStringFormats.Center
+            );
+        vatAmountsTable.Cell(0, 1).Text(_options.LanguagePack.TotalVatLabel, font: BigBoldFont, format: XStringFormats.Center);
+        vatAmountsTable.Cell(1, 1)
+            .Background(GreenLineBg)
+            .Text(
+                FormatMoney(
+                    invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.TaxTotalAmount,
+                    invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.TaxTotalAmountCurrencyId
+                ),
+                RedBrush,
+                BigBoldFont,
+                XStringFormats.Center
+            );
+        vatAmountsTable.Cell(0, 2).Text(_options.LanguagePack.TotalWithVatLabel, font: BigBoldFont, format: XStringFormats.Center);
+        vatAmountsTable.Cell(1, 2)
+            .Background(GreenLineBg)
+            .Text(
+                FormatMoney(
+                    invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.GrandTotalAmount,
+                    invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.InvoiceCurrencyCode
+                ),
+                font: BigBoldFont,
+                format: XStringFormats.Center
+            );
+        vatAmountsTable.DrawBorders(BlackBrush, 0.5);
+
         CellDrawer.Create(page, PrepaidAmountRect).Key(_options.LanguagePack.PrepaidAmountLabel, BlackBrush, NormalFont).Text("", BlackBrush, NormalFont);
 
         CellDrawer.Create(page, DueDateRect)
