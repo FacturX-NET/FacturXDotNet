@@ -36,7 +36,6 @@ import { requireTerm } from '../constants/cii-terms';
 
       <app-cii-form-parent-container [term]="bg19" [settings]="settings()" depth="2">
         <app-cii-form-applicable-header-trade-settlement formGroupName="applicableHeaderTradeSettlement" [settings]="settings()"></app-cii-form-applicable-header-trade-settlement>
-        <app-cii-form-applicable-header-trade-settlement formGroupName="applicableHeaderTradeSettlement" [settings]="settings()"></app-cii-form-applicable-header-trade-settlement>
       </app-cii-form-parent-container>
     </div>
   `,
