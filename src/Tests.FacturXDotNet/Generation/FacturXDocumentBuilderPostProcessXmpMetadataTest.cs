@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.HighPerformance;
 using FacturXDotNet;
+using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Models.XMP;
 using FluentAssertions;
 using PdfSharp.Pdf;
@@ -17,6 +18,7 @@ public class FacturXDocumentBuilderPostProcessXmpMetadataTest
 
         FacturXDocument newFacturXDocument = await FacturXDocument.Create()
             .WithBasePdf(basePdf)
+            .WithCrossIndustryInvoiceFile("TestFiles/cii.xml")
             .PostProcess(
                 pp => pp.XmpMetadata(
                     xmp =>
@@ -305,6 +307,7 @@ public class FacturXDocumentBuilderPostProcessXmpMetadataTest
 
         FacturXDocument newFacturXDocument = await FacturXDocument.Create()
             .WithBasePdf(basePdf)
+            .WithCrossIndustryInvoiceFile("TestFiles/cii.xml")
             .PostProcess(
                 pp => pp.XmpMetadata(
                     xmp =>

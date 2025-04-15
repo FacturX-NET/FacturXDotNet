@@ -45,6 +45,7 @@
     &lt;TestAncestor&gt;&#xD;
       &lt;TestId&gt;MSTest::801B25B9-F3D5-4390-8F9B-B6A3975D93A0::net9.0::Tests.FacturXDotNet.Validation.Hybrid.BrHybrid14Test&lt;/TestId&gt;&#xD;
       &lt;TestId&gt;MSTest::801B25B9-F3D5-4390-8F9B-B6A3975D93A0::net9.0::Tests.FacturXDotNet.Validation.Integration.Hybrid.BrHybrid14Test.ShouldFail&lt;/TestId&gt;&#xD;
+      &lt;TestId&gt;MSTest::801B25B9-F3D5-4390-8F9B-B6A3975D93A0::net9.0::Tests.FacturXDotNet.Generation.FacturXDocumentBuilderPostProcessXmpMetadataTest&lt;/TestId&gt;&#xD;
     &lt;/TestAncestor&gt;&#xD;
     &lt;ProjectFolder&gt;801B25B9-F3D5-4390-8F9B-B6A3975D93A0/d:Validation/d:Integration&lt;/ProjectFolder&gt;&#xD;
   &lt;/Or&gt;&#xD;
