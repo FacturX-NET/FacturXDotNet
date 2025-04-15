@@ -83,6 +83,13 @@ public partial class StandardPdfGenerator
             return this;
         }
 
+        public CellDrawer DrawTopBorder(XBrush brush, int width = 1)
+        {
+            using XGraphics gfx = XGraphics.FromPdfPage(page);
+            gfx.DrawRectangle(brush, new XRect(rect.X - width, rect.Y - width, rect.Width + 2 * width, width));
+            return this;
+        }
+
         public CellDrawer DrawLeftBorder(XBrush brush, int width = 1)
         {
             using XGraphics gfx = XGraphics.FromPdfPage(page);

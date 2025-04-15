@@ -79,6 +79,11 @@ public class StandardPdfGeneratorLanguagePack
     public required string CurrencyLabel { get; init; }
 
     /// <summary>
+    ///     The label representing the prepaid amount in the generated PDF, used for localization purposes in the StandardPdfGenerator.
+    /// </summary>
+    public required string PrepaidAmountLabel { get; set; }
+    
+    /// <summary>
     ///     The label representing the due date text in the generated PDF document.
     /// </summary>
     public required string DueDateLabel { get; set; }
@@ -93,6 +98,11 @@ public class StandardPdfGeneratorLanguagePack
     /// </summary>
     public required string DefaultLegalIdType { get; init; }
 
+    /// <summary>
+    ///     The label used to denote or identify a page within the StandardPdfGenerator.
+    /// </summary>
+    public required string PageLabel { get; init; }
+    
     /// <summary>
     ///     The label indicating that the PDF document is in progress, generated with FacturX.NET, and subject to further changes.
     /// </summary>
@@ -174,9 +184,11 @@ public class StandardPdfGeneratorLanguagePack
         YourIdentifiersLabel = "Your identifiers",
         DeliveryInformationLabel = "Delivery information",
         CurrencyLabel = "Currency",
+        PrepaidAmountLabel = "Prepaid",
         DueDateLabel = "Due date",
         DueAmountLabel = "Due for payment",
         DefaultLegalIdType = "Legal ID",
+        PageLabel = "Page",
         WipLabel = $"This PDF has been generated using FacturX.NET v{BuildInformation.Version.WithoutPrereleaseOrMetadata()} and is still a work in progress."
     };
 
@@ -257,9 +269,11 @@ public class StandardPdfGeneratorLanguagePack
         YourIdentifiersLabel = "Vos identifiants",
         DeliveryInformationLabel = "Livraison",
         CurrencyLabel = "Devise",
+        PrepaidAmountLabel = "Acompte",
         DueDateLabel = "Date d'échéance",
         DueAmountLabel = "Net à payer",
         DefaultLegalIdType = "Identifiant",
+        PageLabel = "Page",
         WipLabel = $"Ce PDF a été généré par FacturX.NET v{BuildInformation.Version.WithoutPrereleaseOrMetadata()} et est toujours en cours de construction."
     };
 }

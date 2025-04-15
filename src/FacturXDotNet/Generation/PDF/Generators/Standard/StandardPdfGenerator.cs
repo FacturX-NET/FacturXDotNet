@@ -73,7 +73,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
     static readonly XRect LinesTableRect;
     static readonly XRect AdjustmentsTableRect;
     static readonly XRect VatBreakdownTableRect;
-    static readonly XRect LegalMentionsTableRect;
+    static readonly XRect PaymentTermsRect;
     static readonly XRect TotalAmountsTableRect;
     static readonly XRect PrepaidAmountRect;
     static readonly XRect DueDateRect;
@@ -83,6 +83,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
     static readonly XRect PayeeRectColumn2;
 
     static readonly XRect FooterRect;
+    static readonly XRect LegalMentions;
     static readonly XRect PageRect;
 
     static StandardPdfGenerator()
@@ -129,7 +130,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         LinesTableRect = new XRect(LeftMarginPt, TopMarginPt + 38 * LineHeight, ContentWidth, 10 * LineHeight);
         AdjustmentsTableRect = new XRect(LeftMarginPt, TopMarginPt + 49 * LineHeight, ContentWidth, 2 * LineHeight);
         VatBreakdownTableRect = new XRect(LeftMarginPt, TopMarginPt + 52 * LineHeight, ContentWidth, 5 * LineHeight);
-        LegalMentionsTableRect = new XRect(LeftMarginPt, TopMarginPt + 58 * LineHeight, columnWidth, 4 * LineHeight);
+        PaymentTermsRect = new XRect(LeftMarginPt, TopMarginPt + 58 * LineHeight, columnWidth, 4 * LineHeight);
         TotalAmountsTableRect = new XRect(LeftMarginPt + columnWidth + 2 * TwoMarginPaddings, TopMarginPt + 58 * LineHeight, columnWidth, 4 * LineHeight);
         PrepaidAmountRect = new XRect(LeftMarginPt + columnWidth + 2 * TwoMarginPaddings, TopMarginPt + 62 * LineHeight, columnWidth, LineHeight);
         DueDateRect = new XRect(LeftMarginPt, TopMarginPt + 63 * LineHeight, columnWidth, 2 * LineHeight);
@@ -138,7 +139,8 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         PayeeRectColumn1 = new XRect(LeftMarginPt, TopMarginPt + 66 * LineHeight, columnWidth, 4 * LineHeight);
         PayeeRectColumn2 = new XRect(LeftMarginPt + columnWidth, TopMarginPt + 66 * LineHeight, columnWidth + 2 * TwoMarginPaddings, 4 * LineHeight);
 
-        FooterRect = new XRect(LeftMarginPt, TopMarginPt + 71 * LineHeight, ContentWidth - PageNumberWidth, 2 * LineHeight);
+        FooterRect = new XRect(LeftMarginPt, TopMarginPt + 71 * LineHeight, ContentWidth, 2 * LineHeight);
+        LegalMentions = new XRect(LeftMarginPt, TopMarginPt + 71 * LineHeight, ContentWidth - PageNumberWidth, 2 * LineHeight);
         PageRect = new XRect(LeftMarginPt + ContentWidth - PageNumberWidth, TopMarginPt + 71 * LineHeight, PageNumberWidth, 2 * LineHeight);
     }
 
@@ -240,6 +242,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
             .KeyValue($"{_options.LanguagePack.CurrencyLabel}: ", invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.InvoiceCurrencyCode, RedBrush);
         CellDrawer.Create(page, CurrencyRect).DrawLeftBorder(BorderBrush);
 
+        CellDrawer.Create(page, PrepaidAmountRect).KeyValue($"{_options.LanguagePack.PrepaidAmountLabel}: ", "");
 
         CellDrawer.Create(page, DueDateRect).Background(BlueLineBg).KeyValue($"{_options.LanguagePack.DueDateLabel}: ", "", BigBoldFont, HugeBoldFont, XStringFormats.Center);
         CellDrawer.Create(page, DueDateRect).DrawLeftBorder(BorderBrush, 2);
@@ -257,6 +260,9 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
                 XStringFormats.Center
             );
         CellDrawer.Create(page, DueAmountRect).DrawLeftBorder(BorderBrush, 2);
+
+        CellDrawer.Create(page, FooterRect).DrawTopBorder(BorderBrush);
+        CellDrawer.Create(page, PageRect).Text($"{_options.LanguagePack.PageLabel} 1 / 1", format: XStringFormats.CenterRight);
 
         CellDrawer.Create(page, BottomMarginRect).Text(_options.LanguagePack.WipLabel, font: SmallFont, format: XStringFormats.Center);
 
@@ -351,7 +357,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         DrawDebugFrame(gfx, LinesTableRect);
         DrawDebugFrame(gfx, AdjustmentsTableRect);
         DrawDebugFrame(gfx, VatBreakdownTableRect);
-        DrawDebugFrame(gfx, LegalMentionsTableRect);
+        DrawDebugFrame(gfx, PaymentTermsRect);
         DrawDebugFrame(gfx, TotalAmountsTableRect);
         DrawDebugFrame(gfx, PrepaidAmountRect);
         DrawDebugFrame(gfx, DueDateRect);
