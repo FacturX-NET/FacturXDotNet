@@ -44,6 +44,7 @@ public class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) :
     static readonly XFont NormalFont;
     static readonly XFont NormalBoldFont;
     static readonly XFont BigFont;
+    static readonly XFont BigBoldFont;
 
     static readonly XRect TopMarginRect;
     static readonly XRect BottomMarginRect;
@@ -89,7 +90,8 @@ public class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) :
         SmallFont = new XFont(FontName, 4);
         NormalFont = new XFont(FontName, 6);
         NormalBoldFont = new XFont(FontName, 6, XFontStyleEx.Bold);
-        BigFont = new XFont(FontName, 9);
+        BigFont = new XFont(FontName, 8);
+        BigBoldFont = new XFont(FontName, 8, XFontStyleEx.Bold);
 
         TopMarginRect = new XRect(LeftMarginPt, MarginPadding, ContentWidth, TopMarginPt - TwoMarginPaddings);
         BottomMarginRect = new XRect(LeftMarginPt, Height - BottomMarginPt + MarginPadding, ContentWidth, BottomMarginPt - TwoMarginPaddings);
@@ -198,12 +200,10 @@ public class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) :
         string documentTypeName = invoice.ExchangedDocument?.TypeCode == null
             ? _options.LanguagePack.DefaultDocumentTypeName
             : _options.LanguagePack.DocumentTypeNames.GetValueOrDefault(invoice.ExchangedDocument.TypeCode.Value) ?? _options.LanguagePack.DefaultDocumentTypeName;
-        int? typeCode = invoice.ExchangedDocument?.TypeCode?.ToSpecificationIdentifier();
-        string documentNameAndTypeCode = typeCode is not null ? $"{documentTypeName} ({typeCode})" : documentTypeName;
-        CellDrawer.Create(page, DocumentInfoRect, 0).Background(GreenLineBg).Text($"{documentNameAndTypeCode}", font: NormalBoldFont);
-        CellDrawer.Create(page, DocumentInfoRect, 1).Background(GreenLineBg).KeyValue("N° ", invoice.ExchangedDocument?.Id, RedBrush);
+        CellDrawer.Create(page, DocumentInfoRect, 0).Background(GreenLineBg).Text($"{documentTypeName}", font: BigBoldFont);
+        CellDrawer.Create(page, DocumentInfoRect, 1).Background(GreenLineBg).KeyValue("N° ", invoice.ExchangedDocument?.Id, RedBrush, BigFont);
         CellDrawer.Create(page, DocumentInfoRect, 2)
-            .KeyValue($"{_options.LanguagePack.DateLabel}: ", invoice.ExchangedDocument?.IssueDateTime?.ToString("d", _options.LanguagePack.Culture), RedBrush);
+            .KeyValue($"{_options.LanguagePack.DateLabel}: ", invoice.ExchangedDocument?.IssueDateTime?.ToString("d", _options.LanguagePack.Culture), RedBrush, BigFont);
         CellDrawer.Create(page, DocumentInfoRect).DrawLeftBorder(BorderBrush);
 
         CellDrawer.Create(page, BuyerInfoRect, 0).Text(_options.LanguagePack.ClientAddressLabel, font: NormalBoldFont);
