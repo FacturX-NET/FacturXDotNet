@@ -10,7 +10,7 @@ namespace FacturXDotNet.API.Features.Generate.Models;
 public class StandardPdfGeneratorLanguagePackDto
 {
     /// <summary>
-    ///     The culture associated with the language pack, which defines language and regional settings for the StandardPdfGenerator.
+    ///     The culture associated with the language pack, which defines language and regional settings for the generator.
     /// </summary>
     public string? Culture { get; init; }
 
@@ -25,12 +25,12 @@ public class StandardPdfGeneratorLanguagePackDto
     public string? OurReferencesLabel { get; init; }
 
     /// <summary>
-    ///     The label used for the "Your references" field in the localized resources of the StandardPdfGenerator.
+    ///     The label used for the "Your references" field in the localized resources of the generator.
     /// </summary>
     public string? YourReferencesLabel { get; init; }
 
     /// <summary>
-    ///     The label used for the order reference in the StandardPdfGenerator.
+    ///     The label used for the order reference in the generator.
     /// </summary>
     public string? OrderLabel { get; init; }
 
@@ -50,12 +50,12 @@ public class StandardPdfGeneratorLanguagePackDto
     public Dictionary<InvoiceTypeCode, string>? DocumentTypeNames { get; init; }
 
     /// <summary>
-    ///     The name of the document type used in the StandardPdfGenerator.
+    ///     The name of the document type used in the generator.
     /// </summary>
     public string? DefaultDocumentTypeName { get; init; }
 
     /// <summary>
-    ///     The label representing the date field in the language pack used by the StandardPdfGenerator.
+    ///     The label representing the date field in the language pack used by the generator.
     /// </summary>
     public string? DateLabel { get; init; }
 
@@ -75,27 +75,27 @@ public class StandardPdfGeneratorLanguagePackDto
     public string? DeliveryInformationLabel { get; init; }
 
     /// <summary>
-    ///     The label used to represent or display the currency in the StandardPdfGenerator's output.
+    ///     The label used to represent or display the currency in the generator's output.
     /// </summary>
     public string? CurrencyLabel { get; init; }
 
     /// <summary>
-    ///     The label representing the total amount excluding VAT, used in the StandardPdfGenerator.
+    ///     The label representing the total amount excluding VAT, used in the generator.
     /// </summary>
     public string? TotalWithoutVatLabel { get; init; }
 
     /// <summary>
-    ///     The label used to represent the total VAT amount in the StandardPdfGenerator.
+    ///     The label used to represent the total VAT amount in the generator.
     /// </summary>
     public string? TotalVatLabel { get; init; }
 
     /// <summary>
-    ///     The label representing the total amount including VAT in the StandardPdfGenerator.
+    ///     The label representing the total amount including VAT in the generator.
     /// </summary>
     public string? TotalWithVatLabel { get; init; }
 
     /// <summary>
-    ///     The label representing the prepaid amount in the generated PDF, used for localization purposes in the StandardPdfGenerator.
+    ///     The label representing the prepaid amount in the generated PDF, used for localization purposes in the generator.
     /// </summary>
     public string? PrepaidAmountLabel { get; set; }
 
@@ -110,12 +110,12 @@ public class StandardPdfGeneratorLanguagePackDto
     public string? DueAmountLabel { get; set; }
 
     /// <summary>
-    ///     The default label or identifier used to represent the legal ID type in the language pack for the StandardPdfGenerator.
+    ///     The default label or identifier used to represent the legal ID type in the language pack for the generator.
     /// </summary>
     public string? DefaultLegalIdType { get; init; }
 
     /// <summary>
-    ///     The label used to denote or identify a page within the StandardPdfGenerator.
+    ///     The label used to denote or identify a page within the generator.
     /// </summary>
     public string? PageLabel { get; init; }
 }
@@ -147,5 +147,32 @@ static class StandardPdfGeneratorLanguagePackMappingExtensions
             DueAmountLabel = pack.DueAmountLabel ?? "",
             DefaultLegalIdType = pack.DefaultLegalIdType ?? "",
             PageLabel = pack.PageLabel ?? ""
+        };
+
+    public static StandardPdfGeneratorLanguagePackDto ToStandardPdfGeneratorLanguagePackDto(this StandardPdfGeneratorLanguagePack pack) =>
+        new()
+        {
+            Culture = pack.Culture.Name,
+            VatNumberLabel = pack.VatNumberLabel,
+            OurReferencesLabel = pack.OurReferencesLabel,
+            YourReferencesLabel = pack.YourReferencesLabel,
+            OrderLabel = pack.OrderLabel,
+            InvoiceReferencesLabel = pack.InvoiceReferencesLabel,
+            BusinessProcessLabel = pack.BusinessProcessLabel,
+            DocumentTypeNames = pack.DocumentTypeNames,
+            DefaultDocumentTypeName = pack.DefaultDocumentTypeName,
+            DateLabel = pack.DateLabel,
+            ClientAddressLabel = pack.ClientAddressLabel,
+            YourIdentifiersLabel = pack.YourIdentifiersLabel,
+            DeliveryInformationLabel = pack.DeliveryInformationLabel,
+            CurrencyLabel = pack.CurrencyLabel,
+            TotalWithoutVatLabel = pack.TotalWithoutVatLabel,
+            TotalVatLabel = pack.TotalVatLabel,
+            TotalWithVatLabel = pack.TotalWithVatLabel,
+            PrepaidAmountLabel = pack.PrepaidAmountLabel,
+            DueDateLabel = pack.DueDateLabel,
+            DueAmountLabel = pack.DueAmountLabel,
+            DefaultLegalIdType = pack.DefaultLegalIdType,
+            PageLabel = pack.PageLabel
         };
 }

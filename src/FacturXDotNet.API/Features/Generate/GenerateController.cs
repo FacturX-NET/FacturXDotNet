@@ -48,7 +48,7 @@ static class GenerateController
         routes.MapGet("/pdf/standard/language-packs", GetStandardPdfLanguagePacks)
             .WithSummary("Get predefined language packs")
             .WithDescription("Get the predefined language packs for the standard PDF generator. These packs can serve as a starting point for custom language packs.")
-            .Produces<IReadOnlyCollection<StandardPdfGeneratorLanguagePack>>()
+            .Produces<IReadOnlyCollection<StandardPdfGeneratorLanguagePackDto>>()
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
@@ -146,7 +146,7 @@ static class GenerateController
 
     static async Task<IResult> PostStandardPdf(PostPdfRequest request, CancellationToken cancellationToken = default)
     {
-        StandardPdfGeneratorOptions generatorOptions = request.Options.ToStandardPdfGeneratorOptions();
+        StandardPdfGeneratorOptions? generatorOptions = request.Options?.ToStandardPdfGeneratorOptions();
         StandardPdfGenerator generator = new(generatorOptions);
         using PdfDocument pdfDocument = generator.Build(request.CrossIndustryInvoice);
 
@@ -161,9 +161,9 @@ static class GenerateController
         return Results.File(pdfStream, "application/pdf", $"Invoice {invoiceNumber} - {sellerName} - {buyerName}.pdf", DateTimeOffset.Now);
     }
 
-    static IReadOnlyCollection<StandardPdfGeneratorLanguagePack> GetStandardPdfLanguagePacks(HttpContext context) =>
+    static IReadOnlyCollection<StandardPdfGeneratorLanguagePackDto> GetStandardPdfLanguagePacks(HttpContext context) =>
     [
-        StandardPdfGeneratorLanguagePack.English,
-        StandardPdfGeneratorLanguagePack.French
+        StandardPdfGeneratorLanguagePack.English.ToStandardPdfGeneratorLanguagePackDto(),
+        StandardPdfGeneratorLanguagePack.French.ToStandardPdfGeneratorLanguagePackDto()
     ];
 }
