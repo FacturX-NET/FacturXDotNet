@@ -7,7 +7,7 @@ using FacturXDotNet.API.Features.Generate.Services;
 using FacturXDotNet.API.Features.Information;
 using FacturXDotNet.API.Features.Information.Services;
 using FacturXDotNet.API.Features.Validate;
-using FacturXDotNet.Generation.PDF.Generators;
+using FacturXDotNet.Generation.PDF.Generators.Standard;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using Serilog;

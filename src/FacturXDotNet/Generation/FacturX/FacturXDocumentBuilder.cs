@@ -1,7 +1,7 @@
 ﻿using FacturXDotNet.Generation.CII.Internals.Providers;
 using FacturXDotNet.Generation.FacturX.Internals;
 using FacturXDotNet.Generation.PDF;
-using FacturXDotNet.Generation.PDF.Generators;
+using FacturXDotNet.Generation.PDF.Generators.Standard;
 using FacturXDotNet.Generation.PDF.Internals.Generators;
 using FacturXDotNet.Generation.XMP.Internals.Providers;
 using FacturXDotNet.Models.CII;
