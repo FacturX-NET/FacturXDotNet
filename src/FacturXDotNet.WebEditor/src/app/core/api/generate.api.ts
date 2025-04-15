@@ -1,9 +1,9 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
-import {API_BASE_URL} from '../../app.config';
-import {CrossIndustryInvoice, ICrossIndustryInvoice, IXmpMetadata} from './api.models';
-import {EditorStateAttachment} from '../../features/editor/editor-state.service';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { from, map, Observable, of, switchMap } from 'rxjs';
+import { API_BASE_URL } from '../../app.config';
+import { CrossIndustryInvoice, ICrossIndustryInvoice, IXmpMetadata } from './api.models';
+import { EditorStateAttachment } from '../../features/editor/editor-state.service';
 
 @Injectable({
   providedIn: 'root',
@@ -77,12 +77,19 @@ export class GenerateApi {
     );
   }
 
-  generateStandardPdf(cii: ICrossIndustryInvoice): Observable<File> {
-    const url = `${this.baseUrl}/generate/pdf/standard`;
-    const ciiObj = new CrossIndustryInvoice(cii);
-    const request = {crossIndustryInvoice: ciiObj.toJSON()};
+  generateStandardPdf(cii: ICrossIndustryInvoice, options?: GenerateStandardPdfOptions): Observable<File> {
+    return from(options?.logo?.arrayBuffer() ?? of(undefined)).pipe(
+      switchMap((logoBytes) => {
+        const url = `${this.baseUrl}/generate/pdf/standard`;
+        const ciiObj = new CrossIndustryInvoice(cii);
+        const request: { crossIndustryInvoice: CrossIndustryInvoice; options: { logo?: string } } = { crossIndustryInvoice: ciiObj.toJSON(), options: {} };
 
-    return this.httpClient.post(url, request, {observe: 'response', responseType: 'blob'}).pipe(
+        if (logoBytes !== undefined) {
+          request.options.logo = btoa(String.fromCharCode(...new Uint8Array(logoBytes)));
+        }
+
+        return this.httpClient.post(url, request, { observe: 'response', responseType: 'blob' });
+      }),
       map((response): File => {
         if (response.body === null) {
           throw new Error('No response body');
@@ -94,4 +101,8 @@ export class GenerateApi {
       }),
     );
   }
+}
+
+interface GenerateStandardPdfOptions {
+  readonly logo?: Blob;
 }

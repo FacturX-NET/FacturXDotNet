@@ -159,6 +159,8 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         PdfPage page = document.AddPage();
         page.Size = PageSize;
 
+        CellDrawer.Create(page, SellerLogoRect).Image(_options.Logo);
+
         CellDrawer.Create(page, SellerInfoRect, 0).Background(BlueLineBg);
         CellDrawer.Create(page, SellerInfoRect, 1)
             .Background(GreenLineBg)

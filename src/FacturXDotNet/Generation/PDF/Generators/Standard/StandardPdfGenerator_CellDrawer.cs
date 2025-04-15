@@ -1,4 +1,5 @@
-﻿using PdfSharp.Drawing;
+﻿using CommunityToolkit.HighPerformance;
+using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 
 namespace FacturXDotNet.Generation.PDF.Generators.Standard;
@@ -55,6 +56,34 @@ public partial class StandardPdfGenerator
             );
 
             return this;
+        }
+
+        public void Image(ReadOnlyMemory<byte>? imageBytes)
+        {
+            if (imageBytes is null || imageBytes.Value.Length == 0)
+            {
+                return;
+            }
+
+            using XGraphics gfx = XGraphics.FromPdfPage(page);
+            using Stream imageStream = imageBytes.Value.AsStream();
+
+            XImage image = XImage.FromStream(imageStream);
+
+            XRect imageRect;
+            if (image.PointWidth > _rect.Width || image.PointHeight > _rect.Height)
+            {
+                double xFactor = _rect.Width / image.PointWidth;
+                double yFactor = _rect.Height / image.PointHeight;
+                double actualFactor = Math.Min(xFactor, yFactor);
+                imageRect = new XRect(_rect.X, _rect.Y, image.PointWidth * actualFactor, image.PointHeight * actualFactor);
+            }
+            else
+            {
+                imageRect = new XRect(_rect.X, _rect.Y, image.PointWidth, image.PointHeight);
+            }
+
+            gfx.DrawImage(image, imageRect);
         }
 
         public CellDrawer DrawBorders(XBrush brush, int width = 1)

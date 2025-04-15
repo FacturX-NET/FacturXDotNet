@@ -11,7 +11,7 @@ public class StandardPdfGeneratorOptionsDto
     /// <summary>
     ///     The logo to be displayed in the generated PDF document as a byte array.
     /// </summary>
-    public ReadOnlyMemory<byte>? Logo { get; set; }
+    public byte[]? Logo { get; set; }
 
     /// <summary>
     ///     The footer text to be displayed in the generated PDF document.
