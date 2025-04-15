@@ -12,7 +12,14 @@ namespace FacturXDotNet.Generation.PDF.Generators.Standard;
 /// </summary>
 public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options = null) : IPdfGenerator
 {
-    readonly StandardPdfGeneratorOptions _options = options ?? new StandardPdfGeneratorOptions();
+    readonly StandardPdfGeneratorOptions _options = options
+                                                    ?? new StandardPdfGeneratorOptions
+                                                    {
+                                                        Footer = """
+                                                                 Ma société. Société anonyme au capital de xx.xxx EUROS - R.C.S. MAVILLE 123 456 789 - NAF ZZZZZ
+                                                                 136 ma rue a moi, code postal Ville Pays – contact@masociete.fr - www.masociete.fr  – N° TVA : FR32 123 456 789
+                                                                 """
+                                                    };
 
     const PageSize PageSize = PdfSharp.PageSize.A4;
     const int Width = 595;
@@ -29,7 +36,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
     const int ContentHeight = Height - TopMarginPt - BottomMarginPt;
 
     const int LineHeight = 11;
-    const int PageNumberWidth = 90;
+    const int PageNumberWidth = 45;
 
     static readonly XColor DebugFrameColor = new() { R = 255, G = 226, B = 226 };
     static readonly XColor BlueLineBg = new() { R = 221, G = 235, B = 247 };
@@ -83,7 +90,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
     static readonly XRect PayeeRectColumn2;
 
     static readonly XRect FooterRect;
-    static readonly XRect LegalMentions;
+    static readonly XRect LegalMentionsRect;
     static readonly XRect PageRect;
 
     static StandardPdfGenerator()
@@ -140,8 +147,8 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         PayeeRectColumn2 = new XRect(LeftMarginPt + columnWidth, TopMarginPt + 66 * LineHeight, columnWidth + 2 * TwoMarginPaddings, 4 * LineHeight);
 
         FooterRect = new XRect(LeftMarginPt, TopMarginPt + 71 * LineHeight, ContentWidth, 2 * LineHeight);
-        LegalMentions = new XRect(LeftMarginPt, TopMarginPt + 71 * LineHeight, ContentWidth - PageNumberWidth, 2 * LineHeight);
-        PageRect = new XRect(LeftMarginPt + ContentWidth - PageNumberWidth, TopMarginPt + 71 * LineHeight, PageNumberWidth, 2 * LineHeight);
+        LegalMentionsRect = new XRect(LeftMarginPt, TopMarginPt + 71 * LineHeight + 1, ContentWidth - PageNumberWidth, 2 * LineHeight);
+        PageRect = new XRect(LeftMarginPt + ContentWidth - PageNumberWidth, TopMarginPt + 71 * LineHeight + 1, PageNumberWidth, 2 * LineHeight);
     }
 
     /// <inheritdoc />
@@ -151,10 +158,6 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
 
         PdfPage page = document.AddPage();
         page.Size = PageSize;
-
-#if DEBUG
-        // DrawDebugFrames(page);
-#endif
 
         CellDrawer.Create(page, SellerInfoRect, 0).Background(BlueLineBg);
         CellDrawer.Create(page, SellerInfoRect, 1)
@@ -263,8 +266,17 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
             .Text(value, BlackBrush, HugeBoldFont, XStringFormats.Center);
         CellDrawer.Create(page, DueAmountRect).DrawLeftBorder(BorderBrush, 2);
 
+        if (!string.IsNullOrWhiteSpace(_options.Footer))
+        {
+            string[] footerLines = _options.Footer.ReplaceLineEndings().Split(Environment.NewLine);
+            for (int i = 0; i < footerLines.Length; i++)
+            {
+                CellDrawer.Create(page, LegalMentionsRect, i, 6).Text(footerLines[i].Trim(), font: SmallFont, format: XStringFormats.Center);
+            }
+        }
+
+        CellDrawer.Create(page, PageRect).Text($"{_options.LanguagePack.PageLabel} 1 / 1", format: XStringFormats.TopRight);
         CellDrawer.Create(page, FooterRect).DrawTopBorder(BorderBrush);
-        CellDrawer.Create(page, PageRect).Text($"{_options.LanguagePack.PageLabel} 1 / 1", format: XStringFormats.CenterRight);
 
         CellDrawer.Create(page, BottomMarginRect).Text(_options.LanguagePack.WipLabel, font: SmallFont, format: XStringFormats.Center);
 
@@ -327,51 +339,4 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         Money money = new(amount.Value, currencyCode ?? "XXX");
         return money.ToString();
     }
-
-    static void DrawDebugFrames(PdfPage page)
-    {
-        using XGraphics gfx = XGraphics.FromPdfPage(page);
-
-        DrawDebugFrame(gfx, TopMarginRect);
-        DrawDebugFrame(gfx, BottomMarginRect);
-        DrawDebugFrame(gfx, LeftMarginRect);
-        DrawDebugFrame(gfx, RightMarginRect);
-        DrawDebugFrame(gfx, TopLeftMarginRect);
-        DrawDebugFrame(gfx, TopRightMarginRect);
-        DrawDebugFrame(gfx, BottomLeftMarginRect);
-        DrawDebugFrame(gfx, BottomRightMarginRect);
-        DrawDebugFrame(gfx, ContentRect);
-
-        DrawDebugFrame(gfx, SellerLogoRect);
-        DrawDebugFrame(gfx, SellerInfoRect);
-        DrawDebugFrame(gfx, SellerTaxRepresentativeInfoRect);
-        DrawDebugFrame(gfx, SellerReferencesRect);
-        DrawDebugFrame(gfx, BuyerReferencesRect);
-        DrawDebugFrame(gfx, InvoiceReferencesRect);
-
-        DrawDebugFrame(gfx, DocumentInfoRect);
-        DrawDebugFrame(gfx, BuyerInfoRect);
-        DrawDebugFrame(gfx, BuyerContactInfoRect);
-        DrawDebugFrame(gfx, BuyerIdentifiersRect);
-        DrawDebugFrame(gfx, DeliveryInformationIdentifiersRect);
-        DrawDebugFrame(gfx, CurrencyRect);
-
-        DrawDebugFrame(gfx, LinesTableRect);
-        DrawDebugFrame(gfx, AdjustmentsTableRect);
-        DrawDebugFrame(gfx, VatBreakdownTableRect);
-        DrawDebugFrame(gfx, PaymentTermsRect);
-        DrawDebugFrame(gfx, TotalAmountsTableRect);
-        DrawDebugFrame(gfx, PrepaidAmountRect);
-        DrawDebugFrame(gfx, DueDateRect);
-        DrawDebugFrame(gfx, DueAmountRect);
-
-        DrawDebugFrame(gfx, PayeeRectColumn1);
-        DrawDebugFrame(gfx, PayeeRectColumn2);
-
-        DrawDebugFrame(gfx, FooterRect);
-        DrawDebugFrame(gfx, LegalMentions);
-        DrawDebugFrame(gfx, PageRect);
-    }
-
-    static void DrawDebugFrame(XGraphics gfx, XRect rect) => gfx.DrawRectangle(new XPen(DebugFrameColor, 1), rect);
 }
