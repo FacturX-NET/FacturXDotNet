@@ -49,45 +49,36 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class EditorWelcomeComponent {
   private editorMenuService = inject(EditorMenuService);
   private toastService = inject(ToastService);
-  private destroyRef = inject(DestroyRef);
 
-  createNewDocument() {
-    this.editorMenuService
-      .createNewDocument()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not create blank document: ${message}.`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  async createNewDocument() {
+    try {
+      await this.editorMenuService.createNewDocument();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not create blank document: ${message}.`);
+    }
   }
 
-  createNewDocumentFromFacturX() {
-    this.editorMenuService
-      .createNewDocumentFromFacturX()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not import FacturX file: ${message}.`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  async createNewDocumentFromFacturX() {
+    try {
+      await this.editorMenuService.createNewDocumentFromFacturX();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not import FacturX file: ${message}.`);
+    }
   }
 
-  createNewDocumentFromCrossIndustryInvoice() {
-    this.editorMenuService
-      .createNewDocumentFromCrossIndustryInvoice()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not import Cross-Industry Invoice file: ${message}.`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  async createNewDocumentFromCrossIndustryInvoice() {
+    try {
+      await this.editorMenuService.createNewDocumentFromCrossIndustryInvoice();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not import Cross-Industry Invoice file: ${message}.`);
+    }
   }
 
-  createNewDocumentFromPdf() {
-    this.editorMenuService
-      .createNewDocumentFromPdf()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not import PDF file: ${message}.`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  async createNewDocumentFromPdf() {
+    try {
+      await this.editorMenuService.createNewDocumentFromPdf();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not import PDF file: ${message}.`);
+    }
   }
 }

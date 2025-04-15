@@ -3,7 +3,7 @@ using System.Xml;
 using FacturXDotNet.Generation.Internals;
 using FacturXDotNet.Models.XMP;
 
-namespace FacturXDotNet.Generation.XMP.Internals;
+namespace FacturXDotNet.Generation.XMP.Internals.Writers;
 
 class XmpBasicMetadataWriter
 {

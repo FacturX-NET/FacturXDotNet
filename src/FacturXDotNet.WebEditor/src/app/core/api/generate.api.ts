@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { from, map, Observable, of, switchMap } from 'rxjs';
 import { API_BASE_URL } from '../../app.config';
 import { CrossIndustryInvoice, ICrossIndustryInvoice, IXmpMetadata } from './api.models';
 import { EditorStateAttachment } from '../../features/editor/editor-state.service';
@@ -55,7 +55,7 @@ export class GenerateApi {
 
         const contentDisposition = response.headers.get('Content-Disposition');
         const filename = contentDisposition?.split(';')[1].split('filename')[1].split('=')[1].trim();
-        return new File([response.body], filename ?? 'invoice.pdf');
+        return new File([response.body], filename ?? 'invoice.pdf', { type: 'application/pdf' });
       }),
     );
   }
@@ -72,8 +72,37 @@ export class GenerateApi {
 
         const contentDisposition = response.headers.get('content-disposition');
         const filename = contentDisposition?.split(';')[1].split('filename')[1].split('=')[1].trim();
-        return new File([response.body], filename ?? 'factur-x.xml');
+        return new File([response.body], filename ?? 'factur-x.xml', { type: 'text/xml' });
       }),
     );
   }
+
+  generateStandardPdf(cii: ICrossIndustryInvoice, options?: GenerateStandardPdfOptions): Observable<File> {
+    return from(options?.logo?.arrayBuffer() ?? of(undefined)).pipe(
+      switchMap((logoBytes) => {
+        const url = `${this.baseUrl}/generate/pdf/standard`;
+        const ciiObj = new CrossIndustryInvoice(cii);
+        const request: { crossIndustryInvoice: CrossIndustryInvoice; options: { logo?: string } } = { crossIndustryInvoice: ciiObj.toJSON(), options: {} };
+
+        if (logoBytes !== undefined) {
+          request.options.logo = btoa(String.fromCharCode(...new Uint8Array(logoBytes)));
+        }
+
+        return this.httpClient.post(url, request, { observe: 'response', responseType: 'blob' });
+      }),
+      map((response): File => {
+        if (response.body === null) {
+          throw new Error('No response body');
+        }
+
+        const contentDisposition = response.headers.get('content-disposition');
+        const filename = contentDisposition?.split(';')[1].split('filename')[1].split('=')[1].trim();
+        return new File([response.body], filename ?? 'invoice.pdf', { type: 'application/pdf' });
+      }),
+    );
+  }
+}
+
+interface GenerateStandardPdfOptions {
+  readonly logo?: Blob;
 }

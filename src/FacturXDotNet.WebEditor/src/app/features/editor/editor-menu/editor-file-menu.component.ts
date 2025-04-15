@@ -23,45 +23,36 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
 export class EditorFileMenuComponent {
   private editorMenuService = inject(EditorMenuService);
   private toastService = inject(ToastService);
-  private destroyRef = inject(DestroyRef);
 
-  protected createNewDocument() {
-    this.editorMenuService
-      .backToWelcomePage()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not create new Factur-X document: ${message}`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  protected async createNewDocument() {
+    try {
+      await this.editorMenuService.backToWelcomePage();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not create new Factur-X document: ${message}`);
+    }
   }
 
-  protected createNewDocumentFromFacturX() {
-    this.editorMenuService
-      .createNewDocumentFromFacturX()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not open Factur-X document: ${message}`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  protected async createNewDocumentFromFacturX() {
+    try {
+      await this.editorMenuService.createNewDocumentFromFacturX();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not open Factur-X document: ${message}`);
+    }
   }
 
-  protected createNewDocumentFromCrossIndustryInvoice() {
-    this.editorMenuService
-      .createNewDocumentFromCrossIndustryInvoice()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not open Factur-X document: ${message}`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  protected async createNewDocumentFromCrossIndustryInvoice() {
+    try {
+      await this.editorMenuService.createNewDocumentFromCrossIndustryInvoice();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not open Factur-X document: ${message}`);
+    }
   }
 
-  protected createNewDocumentFromPdf() {
-    this.editorMenuService
-      .createNewDocumentFromPdf()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not open Factur-X document: ${message}`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  protected async createNewDocumentFromPdf() {
+    try {
+      await this.editorMenuService.createNewDocumentFromPdf();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not open Factur-X document: ${message}`);
+    }
   }
 }

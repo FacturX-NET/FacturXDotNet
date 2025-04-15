@@ -1,7 +1,7 @@
-import { computed, DestroyRef, inject, Injectable, Signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal, Signal } from '@angular/core';
 import { ImportFileService } from '../../../core/import-file/import-file.service';
 import { ExtractApi } from '../../../core/api/extract.api';
-import { filter, from, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { delay, filter, first, firstValueFrom, from, map, of, switchMap, throwError } from 'rxjs';
 import { ICrossIndustryInvoice } from '../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { downloadBlob, downloadFile } from '../../../core/utils/download-blob';
@@ -9,12 +9,14 @@ import { GenerateApi } from '../../../core/api/generate.api';
 import { CiiFormService } from '../tabs/cii/cii-form/cii-form.service';
 import { EditorStateService } from '../editor-state.service';
 import * as pdf from 'pdfjs-dist';
+import { EditorSettingsService } from '../editor-settings.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EditorMenuService {
   private editorStateService = inject(EditorStateService);
+  private editorSettingsService = inject(EditorSettingsService);
   private ciiFormService = inject(CiiFormService);
   private importFileService = inject(ImportFileService);
   private extractApi = inject(ExtractApi);
@@ -24,199 +26,254 @@ export class EditorMenuService {
   public canImport: Signal<boolean> = computed(() => this.editorStateService.savedState.value() !== null);
   public canExport: Signal<boolean> = computed(() => this.editorStateService.savedState.value() !== null);
 
+  public get isImporting() {
+    return this.isImportingInternal.asReadonly();
+  }
+
+  private isImportingInternal = signal(false);
+
+  public get isExporting() {
+    return this.isExportingInternal.asReadonly();
+  }
+
+  private isExportingInternal = signal(false);
+
   constructor() {
     pdf.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
   }
 
-  backToWelcomePage(): Observable<void> {
-    return from(this.editorStateService.clear());
+  async backToWelcomePage(): Promise<void> {
+    this.isImportingInternal.set(true);
+    try {
+      await this.editorStateService.clear();
+    } finally {
+      this.isImportingInternal.set(false);
+    }
   }
 
   /**
    * Create a new, blank state.
    */
-  createNewDocument(): Observable<void> {
-    return from(this.editorStateService.new({ name: 'New Invoice' }));
+  async createNewDocument(): Promise<void> {
+    await this.editorStateService.new({ name: 'New Invoice' });
   }
 
   /**
    * Import the PDF data, the Cross-Industry Invoice data and the attachments into a new document.
    */
-  createNewDocumentFromFacturX(): Observable<void> {
-    return from(this.importFileService.importFile('.pdf')).pipe(
-      filter((file) => file !== undefined),
-      switchMap((file) => this.extractApi.extractXmpAndCrossIndustryInvoice(file).pipe(map((result) => ({ file, xmp: result.xmpMetadata, cii: result.crossIndustryInvoice })))),
-      filter((result) => result !== undefined),
-      switchMap((result) => {
-        return from(this.extractPdfAttachments(result.file)).pipe(map((attachments) => ({ ...result, attachments })));
-      }),
-      switchMap((result) => {
-        if (result.cii === undefined) {
-          return throwError(() => `Could not extract data from file ${result.file.name}.`);
-        }
+  async createNewDocumentFromFacturX(): Promise<void> {
+    const pdfFile = await this.importFileService.importFile('.pdf');
+    if (pdfFile === undefined) {
+      return;
+    }
 
-        const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        return from(
-          this.editorStateService.new({ name: nameWithoutExtension, xmp: result.xmp, cii: result.cii, pdf: result.file, autoGeneratePdf: false, attachments: result.attachments }),
-        );
-      }),
-      takeUntilDestroyed(this.destroyRef),
-    );
+    this.isImportingInternal.set(true);
+    try {
+      const result = await firstValueFrom(this.extractApi.extractXmpAndCrossIndustryInvoice(pdfFile).pipe(takeUntilDestroyed(this.destroyRef)));
+      if (result === undefined || result.crossIndustryInvoice === undefined) {
+        throw new Error(`Could not extract data from file ${pdfFile.name}.`);
+      }
+
+      const attachments = await this.extractPdfAttachments(pdfFile);
+
+      const nameWithoutExtension = pdfFile.name.replace(/\.[^/.]+$/, '');
+      await this.editorStateService.new({ name: nameWithoutExtension, xmp: result.xmpMetadata, cii: result.crossIndustryInvoice, pdf: pdfFile, attachments: attachments });
+    } finally {
+      this.isImportingInternal.set(false);
+    }
   }
 
   /**
    * Import the Cross-Industry Invoice data into a new document.
    */
-  createNewDocumentFromCrossIndustryInvoice(): Observable<void> {
-    return from(this.importFileService.importFile('.xml')).pipe(
-      filter((file) => file !== undefined),
-      switchMap((file) => this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })))),
-      filter((result) => result !== undefined),
-      switchMap((result) => {
-        if (result.cii === undefined) {
-          return throwError(() => `Could not extract CII data from file ${result.file.name}.`);
-        }
+  async createNewDocumentFromCrossIndustryInvoice(): Promise<void> {
+    const xmlFile = await this.importFileService.importFile('.xml');
+    if (xmlFile === undefined) {
+      return;
+    }
 
-        const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        return from(this.editorStateService.new({ name: nameWithoutExtension, cii: result.cii }));
-      }),
-      takeUntilDestroyed(this.destroyRef),
-    );
+    this.isImportingInternal.set(true);
+    try {
+      const cii = await firstValueFrom(this.extractApi.extractCrossIndustryInvoice(xmlFile).pipe(takeUntilDestroyed(this.destroyRef)));
+      if (cii === undefined) {
+        throw new Error(`Could not extract data from file ${xmlFile.name}.`);
+      }
+
+      const nameWithoutExtension = xmlFile.name.replace(/\.[^/.]+$/, '');
+      await this.editorStateService.new({ name: nameWithoutExtension, cii: cii });
+    } finally {
+      this.isImportingInternal.set(false);
+    }
   }
 
   /**
    * Import the PDF data into a new document.
    */
-  createNewDocumentFromPdf(): Observable<void> {
-    return from(this.importFileService.importFile('.pdf')).pipe(
-      filter((file) => file !== undefined),
-      switchMap((file) => this.extractApi.extractXmpMetadata(file).pipe(map((xmp) => ({ file, xmp })))),
-      switchMap((result) => {
-        return from(this.extractPdfAttachments(result.file)).pipe(map((attachments) => ({ ...result, attachments })));
-      }),
-      switchMap((result) => {
-        const nameWithoutExtension = result.file.name.replace(/\.[^/.]+$/, '');
-        return from(this.editorStateService.new({ name: nameWithoutExtension, xmp: result.xmp, pdf: result.file, autoGeneratePdf: false, attachments: result.attachments }));
-      }),
-      takeUntilDestroyed(this.destroyRef),
-    );
+  async createNewDocumentFromPdf(): Promise<void> {
+    const pdfFile = await this.importFileService.importFile('.pdf');
+    if (pdfFile === undefined) {
+      return;
+    }
+
+    this.isImportingInternal.set(true);
+    try {
+      const xmp = await firstValueFrom(this.extractApi.extractXmpMetadata(pdfFile).pipe(takeUntilDestroyed(this.destroyRef)));
+      if (xmp === undefined) {
+        throw new Error(`Could not extract data from file ${pdfFile.name}.`);
+      }
+
+      const attachments = await this.extractPdfAttachments(pdfFile);
+
+      const nameWithoutExtension = pdfFile.name.replace(/\.[^/.]+$/, '');
+      await this.editorStateService.new({ name: nameWithoutExtension, xmp: xmp, pdf: pdfFile, attachments: attachments });
+    } finally {
+      this.isImportingInternal.set(false);
+    }
   }
 
   /**
    * Imports a Cross-Industry Invoice file and merge its data with the current state.
    */
-  importCrossIndustryInvoiceData(): Observable<void> {
+  async importCrossIndustryInvoiceData(): Promise<void> {
     if (!this.canImport()) {
-      return throwError(() => new Error('Internal Error: no saved state available'));
+      throw new Error('Internal Error: no saved state available');
     }
 
-    return from(this.importFileService.importFile('.xml')).pipe(
-      filter((file) => file !== undefined),
-      switchMap((file) => this.extractApi.extractCrossIndustryInvoice(file).pipe(map((cii) => ({ file, cii })))),
-      filter((result) => result !== undefined),
-      switchMap((result) => {
-        if (result.cii === undefined) {
-          return throwError(() => `Could not extract CII data from file ${result.file.name}.`);
-        }
+    const file = await this.importFileService.importFile('.xml');
+    if (file === undefined) {
+      return;
+    }
 
-        return from(this.editorStateService.updateCii(result.cii));
-      }),
-      takeUntilDestroyed(this.destroyRef),
-    );
+    this.isImportingInternal.set(true);
+    try {
+      const cii = await firstValueFrom(this.extractApi.extractCrossIndustryInvoice(file).pipe(takeUntilDestroyed(this.destroyRef)));
+      if (cii === undefined) {
+        throw new Error(`Could not extract data from file ${file.name}.`);
+      }
+
+      await this.editorStateService.updateCii(cii);
+    } finally {
+      this.isImportingInternal.set(false);
+    }
   }
 
   /**
    * Imports a PDF file and merge its data with the current state.
    * The attachments of the PDF are ignored.
    */
-  importPdfImageData(): Observable<void> {
+  async importPdfImageData(): Promise<void> {
     if (!this.canImport()) {
-      return throwError(() => new Error('Internal Error: no saved state available'));
+      throw new Error('Internal Error: no saved state available');
     }
 
-    return from(this.importFileService.importFile('.pdf')).pipe(
-      filter((file) => file != undefined),
-      switchMap((file) => {
-        return from(this.extractPdfAttachments(file)).pipe(map((attachments) => ({ file, attachments })));
-      }),
-      switchMap((result) => from(this.editorStateService.updatePdf(result.file, false))),
-    );
+    const pdfFile = await this.importFileService.importFile('.pdf');
+    if (pdfFile === undefined) {
+      return;
+    }
+
+    this.isImportingInternal.set(true);
+    try {
+      const attachments = await this.extractPdfAttachments(pdfFile);
+      await this.editorStateService.updatePdfAndAttachments(pdfFile, attachments);
+    } finally {
+      this.isImportingInternal.set(false);
+    }
   }
 
-  exportFacturX(): Observable<void> {
+  async exportFacturX(): Promise<void> {
     if (!this.canExport()) {
-      return throwError(() => new Error('Internal Error: no saved state available'));
+      throw new Error('Internal Error: no saved state available');
     }
 
     const value = this.editorStateService.savedState.value();
     if (value === null) {
-      return throwError(() => new Error('Internal Error: no saved state available'));
+      throw new Error('Internal Error: no saved state available');
     }
 
-    return from(this.getValidCii()).pipe(
-      switchMap((cii) => {
-        if (value?.pdf === undefined) {
-          return throwError(() => new Error('Internal Error: the PDF is not set'));
-        }
+    const cii = await this.getValidCii();
+    if (cii === undefined) {
+      throw new Error('Invalid Cross-Industry Invoice data');
+    }
 
-        if (cii === undefined) {
-          return throwError(() => new Error('Invalid Cross-Industry Invoice data'));
-        }
+    const pdf = await this.getPdf();
+    if (pdf === undefined) {
+      throw new Error('Internal Error: the PDF is not set');
+    }
 
-        return this.generateApi.generateFacturX(value.xmp, value.pdf.content, cii, ...value.attachments);
-      }),
-      map((file) => {
-        downloadFile(file, `${value.name}.pdf`);
-      }),
-      takeUntilDestroyed(this.destroyRef),
-    );
+    this.isExportingInternal.set(true);
+    try {
+      const facturXFile = await firstValueFrom(this.generateApi.generateFacturX(value.xmp, pdf, cii, ...value.attachments).pipe(takeUntilDestroyed(this.destroyRef)));
+      downloadFile(facturXFile, `${value.name}.pdf`);
+    } finally {
+      this.isExportingInternal.set(false);
+    }
   }
 
-  exportCrossIndustryInvoice(): Observable<void> {
+  async exportCrossIndustryInvoice(): Promise<void> {
     if (!this.canExport()) {
-      return throwError(() => new Error('Internal Error: no saved state available'));
+      throw new Error('Internal Error: no saved state available');
     }
 
     const value = this.editorStateService.savedState.value();
     if (value === null) {
-      return throwError(() => new Error('Internal Error: no saved state available'));
+      throw new Error('Internal Error: no saved state available');
     }
 
-    return from(this.getValidCii()).pipe(
-      switchMap((cii) => {
-        if (cii === undefined) {
-          return throwError(() => new Error('Invalid Cross-Industry Invoice data'));
-        }
+    const cii = await this.getValidCii();
+    if (cii === undefined) {
+      throw new Error('Invalid Cross-Industry Invoice data');
+    }
 
-        return this.generateApi.generateCrossIndustryInvoice(cii);
-      }),
-      map((file) => {
-        downloadFile(file, `${value.name}.xml`);
-      }),
-      takeUntilDestroyed(this.destroyRef),
-    );
+    this.isExportingInternal.set(true);
+    try {
+      const ciiFile = await firstValueFrom(this.generateApi.generateCrossIndustryInvoice(cii).pipe(takeUntilDestroyed(this.destroyRef)));
+      downloadFile(ciiFile, `${value.name}.xml`);
+    } finally {
+      this.isExportingInternal.set(false);
+    }
   }
 
-  exportPdfImage(): Observable<void> {
+  async exportPdfImage(): Promise<void> {
     if (!this.canExport()) {
-      return throwError(() => new Error('Internal Error: no saved state available'));
+      throw new Error('Internal Error: no saved state available');
     }
 
     const value = this.editorStateService.savedState.value();
-    if (value?.pdf === undefined) {
-      return throwError(() => new Error('Internal Error: the PDF is not set'));
+    if (value === undefined || value === null) {
+      throw new Error('Internal Error: no saved state available');
     }
 
-    downloadBlob(value.pdf.content, value.name ?? 'invoice.pdf');
-    return of(void 0);
+    const pdf = await this.getPdf();
+    if (pdf === undefined) {
+      throw new Error('Internal Error: the PDF is not set');
+    }
+
+    this.isExportingInternal.set(true);
+    downloadBlob(pdf, value.name ?? 'invoice.pdf');
+    this.isExportingInternal.set(false);
   }
 
   private async getValidCii(): Promise<ICrossIndustryInvoice | undefined> {
-    if (!(await this.ciiFormService.validate())) {
+    const valid = await this.ciiFormService.validate();
+    if (!valid) {
       return undefined;
     }
 
     return this.ciiFormService.form.getRawValue();
+  }
+
+  private async getPdf(): Promise<Blob | undefined> {
+    const value = this.editorStateService.savedState.value();
+    if (value === undefined || value === null) {
+      return undefined;
+    }
+
+    const tab = this.editorSettingsService.settings().pdfTab;
+    if (tab === 'imported' && value.pdf !== undefined) {
+      return value.pdf.content;
+    }
+
+    return firstValueFrom(this.generateApi.generateStandardPdf(value.cii).pipe(takeUntilDestroyed(this.destroyRef)));
   }
 
   private async extractPdfAttachments(file: File): Promise<{ name: string; description?: string; content: Uint8Array }[]> {
@@ -224,6 +281,11 @@ export class EditorMenuService {
     const pdfDocumentLoadingTask = pdf.getDocument(buffer);
     const pdfDocument = await pdfDocumentLoadingTask.promise;
     const attachmentsObj = await pdfDocument.getAttachments();
+
+    if (attachmentsObj === null || attachmentsObj === undefined) {
+      return [];
+    }
+
     const attachments: { filename: string; description: string; content: Uint8Array }[] = Object.values(attachmentsObj);
     return attachments.filter((a) => a.filename !== 'factur-x.xml').map((a) => ({ name: a.filename, description: a.description, content: a.content }));
   }

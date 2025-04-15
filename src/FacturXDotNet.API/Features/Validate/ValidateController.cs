@@ -29,7 +29,7 @@ static class ValidateController
                             continue;
                         }
 
-                        foreach (string fieldInvolved in ciiRule.FieldsInvolved)
+                        foreach (string fieldInvolved in ciiRule.TermsInvolved)
                         {
                             if (!result.TryGetValue(fieldInvolved, out List<string>? failedRules))
                             {

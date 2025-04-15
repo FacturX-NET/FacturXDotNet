@@ -21,25 +21,20 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
 export class EditorImportMenuComponent {
   private editorMenuService = inject(EditorMenuService);
   private toastService = inject(ToastService);
-  private destroyRef = inject(DestroyRef);
 
-  importCrossIndustryInvoice() {
-    this.editorMenuService
-      .importCrossIndustryInvoiceData()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not import Cross-Industry Invoice file: ${message}`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  async importCrossIndustryInvoice() {
+    try {
+      await this.editorMenuService.importCrossIndustryInvoiceData();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not import Cross-Industry Invoice file: ${message}`);
+    }
   }
 
-  importPdfImage() {
-    this.editorMenuService
-      .importPdfImageData()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not create PDF image: ${message}`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  async importPdfImage() {
+    try {
+      await this.editorMenuService.importPdfImageData();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not create PDF image: ${message}`);
+    }
   }
 }

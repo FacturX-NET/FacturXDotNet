@@ -1,5 +1,6 @@
 ﻿using FacturXDotNet;
 using FacturXDotNet.Generation.FacturX;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Parsing.CII.Exceptions;
 using FacturXDotNet.Parsing.XMP.Exceptions;
 using FacturXDotNet.Validation;
@@ -23,7 +24,7 @@ static class ValidationIntegrationTestUtils
             await streamWriter.WriteAsync(xmp);
             await streamWriter.FlushAsync();
             stream.Seek(0, SeekOrigin.Begin);
-            builder.WithXmpMetadata(stream, false);
+            builder.WithXmpMetadata(stream, opt => opt.LeaveOpen = false);
         }
 
         if (cii is not null)
@@ -33,7 +34,11 @@ static class ValidationIntegrationTestUtils
             await streamWriter.WriteAsync(cii);
             await streamWriter.FlushAsync();
             stream.Seek(0, SeekOrigin.Begin);
-            builder.WithCrossIndustryInvoice(stream, leaveOpen: false);
+            builder.WithCrossIndustryInvoice(stream, opt => opt.LeaveOpen = false);
+        }
+        else
+        {
+            builder.WithCrossIndustryInvoice(new CrossIndustryInvoice());
         }
 
         FacturXValidationResult result;

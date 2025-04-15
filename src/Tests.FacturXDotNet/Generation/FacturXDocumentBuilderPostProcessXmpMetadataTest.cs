@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.HighPerformance;
 using FacturXDotNet;
+using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Models.XMP;
 using FluentAssertions;
 using PdfSharp.Pdf;
@@ -13,10 +14,9 @@ public class FacturXDocumentBuilderPostProcessXmpMetadataTest
     [TestMethod]
     public async Task ShouldBuildDocument_WithOverridenData()
     {
-        await using FileStream basePdf = File.OpenRead("TestFiles/facturx.pdf");
-
         FacturXDocument newFacturXDocument = await FacturXDocument.Create()
-            .WithBasePdf(basePdf)
+            .WithBasePdfFile("TestFiles/facturx.pdf")
+            .WithCrossIndustryInvoiceFile("TestFiles/cii.xml")
             .PostProcess(
                 pp => pp.XmpMetadata(
                     xmp =>
@@ -301,10 +301,9 @@ public class FacturXDocumentBuilderPostProcessXmpMetadataTest
     [TestMethod]
     public async Task ShouldBuildDocument_WithoutOverridingData()
     {
-        await using FileStream basePdf = File.OpenRead("TestFiles/facturx.pdf");
-
         FacturXDocument newFacturXDocument = await FacturXDocument.Create()
-            .WithBasePdf(basePdf)
+            .WithBasePdfFile("TestFiles/facturx.pdf")
+            .WithCrossIndustryInvoiceFile("TestFiles/cii.xml")
             .PostProcess(
                 pp => pp.XmpMetadata(
                     xmp =>

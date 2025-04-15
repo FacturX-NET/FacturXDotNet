@@ -10,6 +10,7 @@ export class EditorSettingsService {
     showBusinessRules: true,
     showRemarks: true,
     showChorusProRemarks: true,
+    pdfTab: 'imported',
   };
 
   get settings(): Signal<EditorSettings> {
@@ -50,6 +51,13 @@ export class EditorSettingsService {
     this.settingsInternal.set(newSettings);
   }
 
+  savePdfTab(value: PdfModel) {
+    const settings = this.settings();
+    const newSettings: EditorSettings = { ...settings, pdfTab: value };
+    this.saveSettings(newSettings);
+    this.settingsInternal.set(newSettings);
+  }
+
   private saveSettings(settings: EditorSettings): void {
     const jsonSettings = JSON.stringify(settings);
     localStorage.setItem(this.localStorageKey, jsonSettings);
@@ -66,4 +74,7 @@ export interface EditorSettings {
   readonly showBusinessRules?: boolean;
   readonly showRemarks?: boolean;
   readonly showChorusProRemarks?: boolean;
+  readonly pdfTab: PdfModel;
 }
+
+export type PdfModel = 'imported' | 'generated';

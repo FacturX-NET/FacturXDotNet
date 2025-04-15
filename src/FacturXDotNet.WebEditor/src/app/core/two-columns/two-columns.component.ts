@@ -1,4 +1,4 @@
-import { Component, computed, HostListener, input, linkedSignal, output, signal } from '@angular/core';
+import { booleanAttribute, Component, computed, HostListener, input, linkedSignal, model, output, signal } from '@angular/core';
 import { NgStyle } from '@angular/common';
 
 @Component({
@@ -11,43 +11,33 @@ import { NgStyle } from '@angular/common';
       </div>
       <div
         class="d-flex align-items-center justify-content-center"
-        style="width: {{ resizeHandleWidth() }}px; cursor: col-resize;"
+        style="width: {{ resizeHandleWidth() }}px;"
+        [class.draggable]="draggable()"
         (mousedown)="dragStart($event)"
         (touchstart)="dragStart($event)"
       >
-        <i class="bi bi-grip-vertical text-body-secondary"></i>
+        @if (draggable()) {
+          <i class="bi bi-grip-vertical text-body-secondary"></i>
+        }
       </div>
       <div class="h-100" [ngStyle]="{ 'width.px': rightColumnWidth() }">
         <ng-content select="[right]" />
       </div>
     </div>
   `,
-  styles: ``,
+  styles: `
+    .draggable {
+      cursor: col-resize;
+    }
+  `,
 })
 export class TwoColumnsComponent {
-  /**
-   * The key used to store the width of the right column in the local storage. If not provided, the width will not be saved.
-   * @protected
-   */
-  key = input<string>();
+  rightColumnWidth = model.required<number>();
   resizeHandleWidth = input(16);
+  draggable = input(false, { transform: booleanAttribute });
   dragging = output<boolean>();
 
   protected totalWidth = signal(window.innerWidth);
-  protected rightColumnWidth = linkedSignal<{ key: string | undefined; totalWidth: number }, number>({
-    source: () => ({ key: this.key(), totalWidth: this.totalWidth() }),
-    computation: (input, previous) => {
-      if (previous !== undefined) {
-        return previous?.value;
-      }
-
-      if (input.key === undefined) {
-        return input.totalWidth / 2;
-      }
-
-      return this.loadRightColumnWidth(input.key) ?? input.totalWidth / 2;
-    },
-  });
   protected leftColumnWidth = computed(() => this.totalWidth() - this.rightColumnWidth() - this.resizeHandleWidth());
 
   private resizing = false;
@@ -93,6 +83,11 @@ export class TwoColumnsComponent {
 
   protected dragStart(event: Event) {
     event.preventDefault();
+
+    if (!this.draggable()) {
+      return;
+    }
+
     this.resizing = true;
     this.dragging.emit(true);
   }
@@ -100,16 +95,15 @@ export class TwoColumnsComponent {
   protected drag(event: Event) {
     event.preventDefault();
 
+    if (!this.draggable()) {
+      return;
+    }
+
     if (this.resizing) {
       const width = this.totalWidth();
       const x = event.type === 'mousemove' ? (event as MouseEvent).clientX : (event as TouchEvent).touches[0].clientX;
       const newWidth = width - x - this.resizeHandleWidth() / 2;
       this.rightColumnWidth.set(newWidth);
-
-      const key = this.key();
-      if (key !== undefined) {
-        this.saveRightColumnWidth(key, newWidth);
-      }
     }
   }
 
@@ -117,21 +111,5 @@ export class TwoColumnsComponent {
     event?.preventDefault();
     this.resizing = false;
     this.dragging.emit(false);
-  }
-
-  private saveRightColumnWidth(key: string, width: number) {
-    const localStorageKey = `two-columns-${key}`;
-    localStorage.setItem(localStorageKey, width.toString());
-  }
-
-  private loadRightColumnWidth(key: string): number | undefined {
-    const localStorageKey = `two-columns-${key}`;
-
-    const widthString = localStorage.getItem(localStorageKey);
-    if (widthString === null) {
-      return undefined;
-    }
-
-    return parseInt(widthString, 10);
   }
 }

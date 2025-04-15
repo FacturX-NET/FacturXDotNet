@@ -441,4 +441,70 @@ public static class FacturXTypeCodeMappingExtensions
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is not a valid <see cref="InvoiceTypeCode" />.</exception>
     public static InvoiceTypeCode ToSpecificationIdentifier(this int value) =>
         value.ToSpecificationIdentifierOrNull() ?? throw new ArgumentOutOfRangeException(nameof(InvoiceTypeCode), value, null);
+
+    /// <summary>
+    ///     Converts the <see cref="InvoiceTypeCode" /> to its corresponding document name as a string.
+    /// </summary>
+    /// <param name="invoiceTypeCode">The <see cref="InvoiceTypeCode" /> to be converted to a document name.</param>
+    /// <returns>The document name corresponding to the specified <see cref="InvoiceTypeCode" />, or null if no match is found.</returns>
+    public static string? ToDocumentName(this InvoiceTypeCode invoiceTypeCode) =>
+        invoiceTypeCode switch
+        {
+            InvoiceTypeCode.RequestForPayment => "Request for payment",
+            InvoiceTypeCode.DebitNoteRelatedToGoodsOrServices => "Debit note related to goods or services",
+            InvoiceTypeCode.CreditNoteRelatedToGoodsOrServices => "Credit note related to goods or services",
+            InvoiceTypeCode.MeteredServicesInvoice => "Metered services invoice",
+            InvoiceTypeCode.CreditNoteRelatedToFinancialAdjustments => "Credit note related to financial adjustments",
+            InvoiceTypeCode.DebitNoteRelatedToFinancialAdjustments => "Debit note related to financial adjustments",
+            InvoiceTypeCode.TaxNotification => "Tax notification",
+            InvoiceTypeCode.InvoicingDataSheet => "Invoicing data sheet",
+            InvoiceTypeCode.DirectPaymentValuation => "Direct payment valuation",
+            InvoiceTypeCode.ProvisionalPaymentValuation => "Provisional payment valuation",
+            InvoiceTypeCode.PaymentValuation => "Payment valuation",
+            InvoiceTypeCode.InterimApplicationForPayment => "Interim application for payment",
+            InvoiceTypeCode.FinalPaymentRequestBasedOnCompletionOfWork => "Final payment request based on completion of work",
+            InvoiceTypeCode.PaymentRequestForCompletedUnits => "Payment request for completed units",
+            InvoiceTypeCode.SelfBilledCreditNote => "Self billed credit note",
+            InvoiceTypeCode.ConsolidatedCreditNoteGoodsAndServices => "Consolidated credit note - goods and services",
+            InvoiceTypeCode.PriceVariationInvoice => "Price variation invoice",
+            InvoiceTypeCode.CreditNoteForPriceVariation => "Credit note for price variation",
+            InvoiceTypeCode.DelcredereCreditNote => "Delcredere credit note",
+            InvoiceTypeCode.ProformaInvoice => "Proforma invoice",
+            InvoiceTypeCode.PartialInvoice => "Partial invoice",
+            InvoiceTypeCode.CommercialInvoiceWhichIncludesPackingList => "Commercial invoice which includes a packing list",
+            InvoiceTypeCode.CommercialInvoice => "Commercial invoice",
+            InvoiceTypeCode.CreditNote => "Credit note",
+            InvoiceTypeCode.CommissionNote => "Commission note",
+            InvoiceTypeCode.DebitNote => "Debit note",
+            InvoiceTypeCode.CorrectedInvoice => "Corrected invoice",
+            InvoiceTypeCode.ConsolidatedInvoice => "Consolidated invoice",
+            InvoiceTypeCode.PrepaymentInvoice => "Prepayment invoice",
+            InvoiceTypeCode.HireInvoice => "Hire invoice",
+            InvoiceTypeCode.TaxInvoice => "Tax invoice",
+            InvoiceTypeCode.SelfBilledInvoice => "Self-billed invoice",
+            InvoiceTypeCode.DelcredereInvoice => "Delcredere invoice",
+            InvoiceTypeCode.FactoredInvoice => "Factored invoice",
+            InvoiceTypeCode.LeaseInvoice => "Lease invoice",
+            InvoiceTypeCode.ConsignmentInvoice => "Consignment invoice",
+            InvoiceTypeCode.FactoredCreditNote => "Factored credit note",
+            InvoiceTypeCode.OcrPaymentCreditNote => "Optical Character Reading (OCR) payment credit note",
+            InvoiceTypeCode.DebitAdvice => "Debit advice",
+            InvoiceTypeCode.ReversalOfDebit => "Reversal of debit",
+            InvoiceTypeCode.ReversalOfCredit => "Reversal of credit",
+            InvoiceTypeCode.SelfBilledDebitNote => "Self billed debit note",
+            InvoiceTypeCode.ForwardersCreditNote => "Forwarder's credit note",
+            InvoiceTypeCode.ForwardersInvoiceDiscrepancyReport => "Forwarder's invoice discrepancy report",
+            InvoiceTypeCode.InsurersInvoice => "Insurer's invoice",
+            InvoiceTypeCode.ForwardersInvoice => "Forwarder's invoice",
+            InvoiceTypeCode.PortChargesDocuments => "Port charges documents",
+            InvoiceTypeCode.InvoiceInformationForAccountingPurposes => "Invoice information for accounting purposes",
+            InvoiceTypeCode.FreightInvoice => "Freight invoice",
+            InvoiceTypeCode.ClaimNotification => "Claim notification",
+            InvoiceTypeCode.ConsularInvoice => "Consular invoice",
+            InvoiceTypeCode.PartialConstructionInvoice => "Partial construction invoice",
+            InvoiceTypeCode.PartialFinalConstructionInvoice => "Partial final construction invoice",
+            InvoiceTypeCode.FinalConstructionInvoice => "Final construction invoice",
+            InvoiceTypeCode.CustomsInvoice => "Customs invoice",
+            _ => null
+        };
 }

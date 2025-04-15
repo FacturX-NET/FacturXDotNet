@@ -4,6 +4,7 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
 
 @Component({
   selector: 'app-editor-about-menu',
+  imports: [RouterLink, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem],
   template: `
     <li class="nav-item" ngbDropdown>
       <button id="editor-about-menu" class="nav-link px-4 text-light" ngbDropdownToggle>About</button>
@@ -15,7 +16,6 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
       </div>
     </li>
   `,
-  imports: [RouterLink, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem],
 })
 export class EditorAboutMenuComponent {
   showSelfHostingMenu = input<boolean>(false);

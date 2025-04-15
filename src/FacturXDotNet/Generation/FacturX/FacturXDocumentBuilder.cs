@@ -1,10 +1,13 @@
-﻿using FacturXDotNet.Generation.FacturX.Internals;
+﻿using FacturXDotNet.Generation.CII.Internals.Providers;
+using FacturXDotNet.Generation.FacturX.Internals;
 using FacturXDotNet.Generation.PDF;
+using FacturXDotNet.Generation.PDF.Generators.Standard;
+using FacturXDotNet.Generation.PDF.Internals.Generators;
+using FacturXDotNet.Generation.XMP.Internals.Providers;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
 using Microsoft.Extensions.Logging;
 using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
 
 namespace FacturXDotNet.Generation.FacturX;
 
@@ -31,18 +34,65 @@ public class FacturXDocumentBuilder
     }
 
     /// <summary>
+    ///     Sets the PDF generator to be used for creating the Factur-X document.
+    ///     Using this method will replace the currently set PDF generator and cancel any previous calls to
+    ///     <see cref="UsePdfGenerator" />, <see cref="WithStandardPdf" /> or <see cref="WithBasePdf" />.
+    /// </summary>
+    /// <param name="generator">The PDF generator to use.</param>
+    /// <returns>The builder itself for chaining.</returns>
+    public FacturXDocumentBuilder UsePdfGenerator(IPdfGenerator generator)
+    {
+        _args.PdfGenerator = generator;
+        return this;
+    }
+
+    /// <summary>
+    ///     Sets the PDF generator of the builder to the standard generator.
+    ///     The standard generator is the default generator used when no custom generator is provided.
+    /// </summary>
+    /// <returns>The builder itself for chaining.</returns>
+    public FacturXDocumentBuilder WithStandardPdf()
+    {
+        UsePdfGenerator(new StandardPdfGenerator());
+        return this;
+    }
+
+    /// <summary>
     ///     Set the base PDF image for the Factur-X document.
     ///     The builder will edit this PDF image to add the XMP metadata, the Cross Industry Invoice and other attachments, then save it to the output stream.
     /// </summary>
     /// <param name="pdfImageStream">The stream containing the base PDF image.</param>
-    /// <param name="password">The password to open the PDF image.</param>
-    /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
+    /// <param name="configure">
+    ///     An optional action to configure the base PDF stream options, such as setting a password or indicating whether the stream should remain open after
+    ///     processing.
+    /// </param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithBasePdf(Stream pdfImageStream, string? password = null, bool leaveOpen = true)
+    public FacturXDocumentBuilder WithBasePdf(Stream pdfImageStream, Action<BasePdfStreamOptions>? configure = null)
     {
-        _args.BasePdf = pdfImageStream;
-        _args.BasePdfPassword = password;
-        _args.BasePdfLeaveOpen = leaveOpen;
+        BasePdfStreamOptions options = new();
+        configure?.Invoke(options);
+
+        UsePdfGenerator(new PdfFromFileGenerator(pdfImageStream, options.Password, options.LeaveOpen));
+        return this;
+    }
+
+    /// <summary>
+    ///     Set the Cross Industry Invoice data for the Factur-X document.
+    ///     The data will be added as an attachment to the PDF document.
+    /// </summary>
+    /// <remarks>
+    ///     This method takes the structured CII data.
+    /// </remarks>
+    /// <param name="cii">The Cross Industry Invoice (CII) data that contains the structured invoice details to be attached to the Factur-X document.</param>
+    /// <param name="configure">An optional action to configure additional options for the invoice attachment.</param>
+    /// <returns>The builder itself for chaining.</returns>
+    public FacturXDocumentBuilder WithCrossIndustryInvoice(CrossIndustryInvoice cii, Action<CrossIndustryInvoiceOptions>? configure = null)
+    {
+        CrossIndustryInvoiceOptions options = new();
+        configure?.Invoke(options);
+
+        _args.CiiProvider = new CrossIndustryInvoiceFromStructuredDataProvider(cii);
+        _args.CiiAttachmentName = options.CiiAttachmentName ?? _args.CiiAttachmentName;
         return this;
     }
 
@@ -53,15 +103,29 @@ public class FacturXDocumentBuilder
     /// <remarks>
     ///     This method takes the raw CII data as a stream.
     /// </remarks>
-    /// <param name="ciiStream">The stream containing the Cross Industry Invoice data.</param>
-    /// <param name="ciiAttachmentName">The name of the attachment.</param>
-    /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
+    /// <param name="cii">The Cross Industry Invoice data.</param>
+    /// <param name="configure">An optional action to configure additional options for the invoice attachment.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithCrossIndustryInvoice(Stream ciiStream, string? ciiAttachmentName = null, bool leaveOpen = true)
+    public FacturXDocumentBuilder WithCrossIndustryInvoice(Stream cii, Action<CrossIndustryInvoiceStreamOptions>? configure = null)
     {
-        _args.Cii = ciiStream;
-        _args.CiiAttachmentName = ciiAttachmentName ?? _args.CiiAttachmentName;
-        _args.CiiLeaveOpen = leaveOpen;
+        CrossIndustryInvoiceStreamOptions options = new();
+        configure?.Invoke(options);
+
+        _args.CiiProvider = new CrossIndustryInvoiceFromStreamDataProvider(cii, options.LeaveOpen);
+        _args.CiiAttachmentName = options.CiiAttachmentName ?? _args.CiiAttachmentName;
+        return this;
+    }
+
+    /// <summary>
+    ///     Set the XMP metadata for the Factur-X document.
+    ///     The metadata will be added as-is to the PDF document, it will replace any existing metadata found in the document.
+    /// </summary>
+    /// <param name="xmp">The XMP metadata.</param>
+    /// <returns>The builder itself for chaining.</returns>
+    public FacturXDocumentBuilder WithXmpMetadata(XmpMetadata xmp)
+    {
+        _args.XmpProvider = new XmpFromStructuredDataProvider(xmp);
+        _args.DisableXmpMetadataAutoGeneration = true;
         return this;
     }
 
@@ -70,19 +134,22 @@ public class FacturXDocumentBuilder
     ///     The metadata will be added as-is to the PDF document, it will replace any existing metadata found in the document.
     /// </summary>
     /// <param name="xmpStream">The stream containing the XMP metadata.</param>
-    /// <param name="leaveOpen">Whether to leave the stream open after the Factur-X document is built.</param>
+    /// <param name="configure">An optional action to configure additional options for the invoice attachment.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithXmpMetadata(Stream xmpStream, bool leaveOpen = true)
+    public FacturXDocumentBuilder WithXmpMetadata(Stream xmpStream, Action<XmpMetadataStreamOptions>? configure = null)
     {
-        _args.Xmp = xmpStream;
-        _args.XmpLeaveOpen = leaveOpen;
+        XmpMetadataStreamOptions options = new();
+        configure?.Invoke(options);
+
+        _args.XmpProvider = new XmpFromStreamDataProvider(xmpStream, options.LeaveOpen);
         _args.DisableXmpMetadataAutoGeneration = true;
         return this;
     }
 
     /// <summary>
     ///     Post-process the XMP metadata after it has been added to the PDF document.
-    ///     The metadata is either provided as-is using <see cref="WithXmpMetadata" />, or a combination of the existing metadata of the base PDF and the CII data.
+    ///     The metadata is either provided as-is using one of the <see cref="WithXmpMetadata(XmpMetadata)" /> overloads,
+    ///     or a combination of the existing metadata of the base PDF and the CII data.
     /// </summary>
     /// <param name="postProcess">The action to perform on the XMP metadata.</param>
     /// <returns>The builder itself for chaining.</returns>
@@ -96,14 +163,14 @@ public class FacturXDocumentBuilder
     ///     Add an attachment to the Factur-X document.
     /// </summary>
     /// <param name="attachment">The attachment to add.</param>
-    /// <param name="conflictResolution">The action to take when an attachment with the same name already exists in the base document.</param>
+    /// <param name="configure">An optional action to configure additional options for the invoice attachment.</param>
     /// <returns>The builder itself for chaining.</returns>
-    public FacturXDocumentBuilder WithAttachment(
-        PdfAttachmentData attachment,
-        FacturXDocumentBuilderAttachmentConflictResolution conflictResolution = FacturXDocumentBuilderAttachmentConflictResolution.Overwrite
-    )
+    public FacturXDocumentBuilder WithAttachment(PdfAttachmentData attachment, Action<AttachmentOptions>? configure = null)
     {
-        _args.Attachments.Add((attachment, conflictResolution));
+        AttachmentOptions options = new();
+        configure?.Invoke(options);
+
+        _args.Attachments.Add((attachment, options.ConflictResolution));
         return this;
     }
 
@@ -113,21 +180,19 @@ public class FacturXDocumentBuilder
     /// <returns>The Factur-X document.</returns>
     public async Task<FacturXDocument> BuildAsync()
     {
-        if (_args.BasePdf is null)
+        if (_args.CiiProvider == null)
         {
-            throw new InvalidOperationException("A base PDF image must be provided.");
+            throw new InvalidOperationException("The CII provider has not been provided.");
         }
+
+        _args.PdfGenerator ??= new StandardPdfGenerator();
 
         await using MemoryStream resultStream = new();
 
-        using PdfDocument pdfDocument = OpenPdfDocumentAsync(_args.BasePdf, _args.BasePdfPassword);
+        CrossIndustryInvoice cii = await _args.CiiProvider.GetCrossIndustryInvoiceAsync();
+        using PdfDocument pdfDocument = _args.PdfGenerator.Build(cii);
 
-        if (!_args.BasePdfLeaveOpen)
-        {
-            await _args.BasePdf.DisposeAsync();
-        }
-
-        CrossIndustryInvoice cii = await FacturXDocumentBuilderAddCrossIndustryInvoiceStep.RunAsync(pdfDocument, _args);
+        await FacturXDocumentBuilderAddCrossIndustryInvoiceAttachmentStep.AttachCiiStreamToPdf(pdfDocument, _args.CiiProvider, _args.CiiAttachmentName, _args.Logger);
         XmpMetadata xmp = await FacturXDocumentBuilderAddXmpMetadataStep.RunAsync(pdfDocument, cii, _args);
         FacturXDocumentBuilderAddAttachmentsStep.Run(pdfDocument, _args);
         await FacturXDocumentBuilderSetOutputIntentsStep.RunAsync(pdfDocument, _args);
@@ -154,22 +219,6 @@ public class FacturXDocumentBuilder
         await pdfDocument.SaveAsync(resultStream);
 
         return FacturXDocument.LoadFromBuffer(resultStream.GetBuffer().AsMemory(0, (int)resultStream.Length));
-    }
-
-    static PdfDocument OpenPdfDocumentAsync(Stream stream, string? password)
-    {
-        PdfDocument document;
-
-        if (password is not null)
-        {
-            document = PdfReader.Open(stream, PdfDocumentOpenMode.Modify, args => args.Password = password);
-        }
-        else
-        {
-            document = PdfReader.Open(stream, PdfDocumentOpenMode.Modify);
-        }
-
-        return document;
     }
 
     static string? FirstString(IEnumerable<string>? parts) => parts?.FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));

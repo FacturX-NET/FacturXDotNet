@@ -1,13 +1,13 @@
-import { Component, computed, DestroyRef, inject, Resource, signal, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, HostListener, inject, linkedSignal, Resource, signal, Signal, untracked } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { environment } from '../../../environments/environment';
-import { EditorSettings, EditorSettingsService } from './editor-settings.service';
+import { EditorSettings, EditorSettingsService, PdfModel } from './editor-settings.service';
 import { EditorMenuComponent } from './editor-menu/editor-menu.component';
 import { FormsModule } from '@angular/forms';
 import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
 import { EditorSavedState, EditorStateService } from './editor-state.service';
-import { PdfViewerComponent } from './pdf-viewer.component';
-import { EditorHeaderComponent } from './editor-header/editor-header.component';
+import { PdfViewerComponent } from './editor-pdf-viewer/pdf-viewer.component';
+import { EditorLeftPaneHeaderComponent } from './editor-header/editor-left-pane-header.component';
 import { EditorWelcomeComponent } from './editor-welcome.component';
 import { API_BASE_URL } from '../../app.config';
 import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
@@ -17,19 +17,24 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditorMenuService } from './editor-menu/editor-menu.service';
 import { ToastService } from '../../core/toasts/toast.service';
 import { RouterOutlet } from '@angular/router';
+import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.component';
+import { EditorHeaderNameComponent } from './editor-header/editor-header-name.component';
+import { EditorRightPaneHeaderComponent } from './editor-header/editor-right-pane-header.component';
 
 @Component({
   selector: 'app-editor',
   imports: [
     NgOptimizedImage,
-    PdfViewerComponent,
     EditorMenuComponent,
     FormsModule,
-    EditorHeaderComponent,
+    EditorLeftPaneHeaderComponent,
     TwoColumnsComponent,
     EditorWelcomeComponent,
     ApiServerStatusComponent,
     RouterOutlet,
+    EditorPdfViewerComponent,
+    EditorHeaderNameComponent,
+    EditorRightPaneHeaderComponent,
   ],
   template: `
     <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
@@ -57,31 +62,50 @@ import { RouterOutlet } from '@angular/router';
       </header>
 
       <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
+        @if (isImporting() || isExporting()) {
+          <div class="position-absolute top-0 bottom-0 start-0 end-0 d-flex flex-column justify-content-center align-items-center backdrop" style="z-index: 9999">
+            <div class="card">
+              <div class="card-body">
+                @if (isImporting()) {
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  Importing...
+                } @else if (isExporting()) {
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  Exporting...
+                }
+              </div>
+            </div>
+          </div>
+        }
+
         @if (state.value(); as value) {
           <header>
-            <app-editor-header [state]="value" [settings]="settings()"></app-editor-header>
+            <div class="px-3 pt-3 pb-2">
+              <app-editor-header-name [name]="value.name" />
+            </div>
+            <div>
+              <app-two-columns [rightColumnWidth]="rightColumnWidth()">
+                <div class="h-100" left>
+                  <app-editor-left-pane-header [state]="value" [settings]="settings()"></app-editor-left-pane-header>
+                </div>
+                <div class="h-100" right>
+                  <app-editor-right-pane-header [tab]="pdfTab()" (tabChange)="changePdfTab($event)"></app-editor-right-pane-header>
+                </div>
+              </app-two-columns>
+            </div>
           </header>
 
           <div class="flex-grow-1 overflow-hidden">
-            <app-two-columns key="editor" (dragging)="disablePointerEvents.set($event)">
+            <app-two-columns [(rightColumnWidth)]="rightColumnWidth" (dragging)="disablePointerEvents.set($event)" draggable>
               <div class="h-100 overflow-hidden" left>
                 <router-outlet></router-outlet>
               </div>
               <div class="h-100" right>
-                @if (value.pdf; as pdf) {
-                  <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
-                } @else {
-                  <div class="h-100 d-flex flex-column gap-5 align-items-center justify-content-center">
-                    <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5" (click)="importPdfImage()">
-                      <i class="bi bi-filetype-pdf text-primary fs-1"></i>
-                      <div class="lead text-primary">Import PDF image</div>
-                    </button>
-                    <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5">
-                      <i class="bi bi-filetype-pdf text-primary fs-1"></i>
-                      <div class="lead text-primary">Auto-generate PDF image</div>
-                    </button>
-                  </div>
-                }
+                <app-editor-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
               </div>
             </app-two-columns>
           </div>
@@ -117,31 +141,76 @@ import { RouterOutlet } from '@angular/router';
       </div>
     </div>
   `,
+  styles: `
+    .backdrop {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  `,
 })
 export class EditorPage {
-  protected readonly environment = environment;
+  private rightColumnWidthLocalStorageKey = 'editor';
 
-  private editorMenuService = inject(EditorMenuService);
-  private toastService = inject(ToastService);
-  private destroyRef = inject(DestroyRef);
   private apiConstantsService = inject(ApiConstantsService);
-  protected apiUrl = inject(API_BASE_URL);
   private editorStateService = inject(EditorStateService);
+  private editorMenuService = inject(EditorMenuService);
+  private editorSettingsService = inject(EditorSettingsService);
   private settingsService = inject(EditorSettingsService);
 
+  protected apiUrl = inject(API_BASE_URL);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
+  protected pdfTab = computed(() => this.settings().pdfTab);
+
+  protected isImporting = this.editorMenuService.isImporting;
+  protected isExporting = this.editorMenuService.isExporting;
 
   protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
   protected disablePointerEvents = signal<boolean>(false);
 
-  importPdfImage() {
-    this.editorMenuService
-      .importPdfImageData()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not create PDF image: ${message}`),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+  protected totalWidth = signal(window.innerWidth);
+
+  constructor() {
+    effect(() => {
+      const rightColumnWidth = this.rightColumnWidth();
+      this.saveRightColumnWidth(this.rightColumnWidthLocalStorageKey, rightColumnWidth);
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  resize(event: Event) {
+    const target = event.target as Window;
+    const width = target?.innerWidth ?? 0;
+    this.totalWidth.set(width);
+  }
+
+  protected rightColumnWidth = linkedSignal<number, number>({
+    source: () => this.totalWidth(),
+    computation: (input, previous) => {
+      if (previous !== undefined) {
+        return previous?.value;
+      }
+
+      return this.loadRightColumnWidth(this.rightColumnWidthLocalStorageKey) ?? input / 2;
+    },
+  });
+
+  protected changePdfTab(tab: PdfModel) {
+    this.editorSettingsService.savePdfTab(tab);
+  }
+
+  private saveRightColumnWidth(key: string, width: number) {
+    const localStorageKey = `two-columns-${key}`;
+    localStorage.setItem(localStorageKey, width.toString());
+  }
+
+  private loadRightColumnWidth(key: string): number | undefined {
+    const localStorageKey = `two-columns-${key}`;
+
+    const widthString = localStorage.getItem(localStorageKey);
+    if (widthString === null) {
+      return undefined;
+    }
+
+    return parseInt(widthString, 10);
   }
 }

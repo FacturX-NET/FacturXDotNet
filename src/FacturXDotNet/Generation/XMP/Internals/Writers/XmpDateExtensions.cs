@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Generation.XMP.Internals;
+﻿namespace FacturXDotNet.Generation.XMP.Internals.Writers;
 
 static class XmpDateExtensions
 {

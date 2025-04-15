@@ -27,48 +27,36 @@ export class EditorExportMenuComponent {
   private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
-  exportFacturX() {
+  async exportFacturX() {
     this.exporting.emit(true);
-
-    this.editorMenuService
-      .exportFacturX()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not export Factur-X document: ${message}.`),
-        finalize(() => {
-          this.exporting.emit(false);
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+    try {
+      await this.editorMenuService.exportFacturX();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not export Factur-X document: ${message}.`);
+    } finally {
+      this.exporting.emit(false);
+    }
   }
 
-  exportCrossIndustryInvoice() {
+  async exportCrossIndustryInvoice() {
     this.exporting.emit(true);
-
-    this.editorMenuService
-      .exportCrossIndustryInvoice()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not export Cross-Industry Invoice data: ${message}.`),
-        finalize(() => {
-          this.exporting.emit(false);
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+    try {
+      await this.editorMenuService.exportCrossIndustryInvoice();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not export Cross-Industry Invoice data: ${message}.`);
+    } finally {
+      this.exporting.emit(false);
+    }
   }
 
-  exportPdfImage() {
+  async exportPdfImage() {
     this.exporting.emit(true);
-
-    this.editorMenuService
-      .exportPdfImage()
-      .pipe(
-        toastError(this.toastService, (message) => `Could not export PDF image: ${message}.`),
-        finalize(() => {
-          this.exporting.emit(false);
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+    try {
+      await this.editorMenuService.exportPdfImage();
+    } catch (error) {
+      this.toastService.showError(error, (message) => `Could not export PDF image: ${message}.`);
+    } finally {
+      this.exporting.emit(false);
+    }
   }
 }
