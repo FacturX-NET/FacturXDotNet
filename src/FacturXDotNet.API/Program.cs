@@ -3,11 +3,9 @@ using FacturXDotNet.API;
 using FacturXDotNet.API.Configuration;
 using FacturXDotNet.API.Features.Extract;
 using FacturXDotNet.API.Features.Generate;
-using FacturXDotNet.API.Features.Generate.Services;
 using FacturXDotNet.API.Features.Information;
 using FacturXDotNet.API.Features.Information.Services;
 using FacturXDotNet.API.Features.Validate;
-using FacturXDotNet.Generation.PDF.Generators.Standard;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using Serilog;
@@ -49,13 +47,9 @@ try
     );
     builder.Services.AddEndpointsApiExplorer();
 
-    builder.Services.AddSingleton<GeneratePdfImageService>();
     builder.Services.AddTransient<PackagesService>();
 
     WebApplication app = builder.Build();
-
-    GeneratePdfImageService generatePdfImageService = app.Services.GetRequiredService<GeneratePdfImageService>();
-    generatePdfImageService.RegisterPdfGenerator("standard", new StandardPdfGenerator());
 
     app.UseCors();
 

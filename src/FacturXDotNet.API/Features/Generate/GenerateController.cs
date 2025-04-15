@@ -1,10 +1,11 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using FacturXDotNet.API.Features.Generate.Models;
-using FacturXDotNet.API.Features.Generate.Services;
+using FacturXDotNet.API.Features.Generate.Requests;
 using FacturXDotNet.Generation.CII;
 using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Generation.PDF;
+using FacturXDotNet.Generation.PDF.Generators.Standard;
 using FacturXDotNet.Generation.XMP;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
@@ -36,19 +37,18 @@ static class GenerateController
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
 
-        routes.MapGet("/pdf/models", GetPdfModels)
-            .WithSummary("Get PDF models")
-            .WithDescription("Get the available PDF models that can be used to generate a PDF image from Cross-Industry Invoice data.")
-            .Produces<IReadOnlyCollection<string>>()
+        routes.MapPost("/pdf/standard", PostStandardPdf)
+            .WithSummary("Generate PDF")
+            .WithDescription("Generate a PDF file from the Cross-Industry Invoice structured data.")
+            .Produces<IFormFile>(StatusCodes.Status200OK, "application/pdf")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
 
-
-        routes.MapPost("/pdf/{model}", PostPdf)
-            .WithSummary("Generate PDF")
-            .WithDescription("Generate a PDF file from the Cross-Industry Invoice structured data.")
-            .Produces<IFormFile>(StatusCodes.Status200OK, "application/pdf")
+        routes.MapGet("/pdf/standard/language-packs", GetStandardPdfLanguagePacks)
+            .WithSummary("Get predefined language packs")
+            .WithDescription("Get the predefined language packs for the standard PDF generator. These packs can serve as a starting point for custom language packs.")
+            .Produces<IReadOnlyCollection<StandardPdfGeneratorLanguagePack>>()
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
@@ -144,31 +144,26 @@ static class GenerateController
         return Results.File(stream, "text/xml", "factur-x.xml", DateTimeOffset.Now);
     }
 
-    static IReadOnlyCollection<string> GetPdfModels([FromServices] GeneratePdfImageService generatePdfImageService) => generatePdfImageService.GetAvailableModels();
-
-    static async Task<IResult> PostPdf(
-        string model,
-        CrossIndustryInvoice cii,
-        [FromServices] GeneratePdfImageService generatePdfImageService,
-        CancellationToken cancellationToken = default
-    )
+    static async Task<IResult> PostStandardPdf(PostPdfRequest request, CancellationToken cancellationToken = default)
     {
-        IPdfGenerator? generator = generatePdfImageService.GetPdfGenerator(model);
-        if (generator == null)
-        {
-            return Results.NotFound("Requested PDF model not found.");
-        }
-
-        using PdfDocument pdfDocument = generator.Build(cii);
+        StandardPdfGeneratorOptions generatorOptions = request.Options.ToStandardPdfGeneratorOptions();
+        StandardPdfGenerator generator = new(generatorOptions);
+        using PdfDocument pdfDocument = generator.Build(request.CrossIndustryInvoice);
 
         MemoryStream pdfStream = new();
         await pdfDocument.SaveAsync(pdfStream);
         pdfStream.Seek(0, SeekOrigin.Begin);
 
-        string? invoiceNumber = cii.ExchangedDocument?.Id;
-        string? sellerName = cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name;
-        string? buyerName = cii.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name;
+        string? invoiceNumber = request.CrossIndustryInvoice.ExchangedDocument?.Id;
+        string? sellerName = request.CrossIndustryInvoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.Name;
+        string? buyerName = request.CrossIndustryInvoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.Name;
 
         return Results.File(pdfStream, "application/pdf", $"Invoice {invoiceNumber} - {sellerName} - {buyerName}.pdf", DateTimeOffset.Now);
     }
+
+    static IReadOnlyCollection<StandardPdfGeneratorLanguagePack> GetStandardPdfLanguagePacks(HttpContext context) =>
+    [
+        StandardPdfGeneratorLanguagePack.English,
+        StandardPdfGeneratorLanguagePack.French
+    ];
 }

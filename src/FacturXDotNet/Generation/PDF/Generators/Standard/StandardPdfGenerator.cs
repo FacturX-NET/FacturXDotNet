@@ -316,7 +316,12 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         CellDrawer.Create(page, PageRect).Text($"{_options.LanguagePack.PageLabel} 1 / 1", format: XStringFormats.TopRight);
         CellDrawer.Create(page, FooterRect).DrawTopBorder(BorderBrush);
 
-        CellDrawer.Create(page, BottomMarginRect).Text(_options.LanguagePack.WipLabel, font: SmallFont, format: XStringFormats.Center);
+        CellDrawer.Create(page, BottomMarginRect)
+            .Text(
+                $"This document has been generated using FacturX.NET v{BuildInformation.Version.WithoutPrereleaseOrMetadata()} and is still a work in progress.",
+                font: SmallFont,
+                format: XStringFormats.Center
+            );
 
         return document;
     }

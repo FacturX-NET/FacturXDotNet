@@ -40,7 +40,6 @@ public class StandardPdfGeneratorLanguagePack
         DueAmountLabel = pack.DueAmountLabel;
         DefaultLegalIdType = pack.DefaultLegalIdType;
         PageLabel = pack.PageLabel;
-        WipLabel = pack.WipLabel;
     }
 
     /// <summary>
@@ -154,11 +153,6 @@ public class StandardPdfGeneratorLanguagePack
     public required string PageLabel { get; init; }
 
     /// <summary>
-    ///     The label indicating that the PDF document is in progress, generated with FacturX.NET, and subject to further changes.
-    /// </summary>
-    public required string WipLabel { get; init; }
-
-    /// <summary>
     ///     The empty instance of the StandardPdfGeneratorLanguagePack with all properties initialized to their default values.
     /// </summary>
     public static StandardPdfGeneratorLanguagePack Empty { get; } = new()
@@ -184,8 +178,7 @@ public class StandardPdfGeneratorLanguagePack
         DueDateLabel = "",
         DueAmountLabel = "",
         DefaultLegalIdType = "",
-        PageLabel = "",
-        WipLabel = ""
+        PageLabel = ""
     };
 
     /// <summary>
@@ -271,8 +264,7 @@ public class StandardPdfGeneratorLanguagePack
         DueDateLabel = "Due date",
         DueAmountLabel = "Due for payment",
         DefaultLegalIdType = "Legal ID",
-        PageLabel = "Page",
-        WipLabel = $"This PDF has been generated using FacturX.NET v{BuildInformation.Version.WithoutPrereleaseOrMetadata()} and is still a work in progress."
+        PageLabel = "Page"
     };
 
     /// <summary>
@@ -359,7 +351,6 @@ public class StandardPdfGeneratorLanguagePack
         DueDateLabel = "Date d'échéance",
         DueAmountLabel = "Net à payer",
         DefaultLegalIdType = "Identifiant",
-        PageLabel = "Page",
-        WipLabel = $"Ce PDF a été généré par FacturX.NET v{BuildInformation.Version.WithoutPrereleaseOrMetadata()} et est toujours en cours de construction."
+        PageLabel = "Page"
     };
 }
