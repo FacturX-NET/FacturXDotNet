@@ -14,10 +14,8 @@ public class FacturXDocumentBuilderPostProcessXmpMetadataTest
     [TestMethod]
     public async Task ShouldBuildDocument_WithOverridenData()
     {
-        await using FileStream basePdf = File.OpenRead("TestFiles/facturx.pdf");
-
         FacturXDocument newFacturXDocument = await FacturXDocument.Create()
-            .WithBasePdf(basePdf)
+            .WithBasePdfFile("TestFiles/facturx.pdf")
             .WithCrossIndustryInvoiceFile("TestFiles/cii.xml")
             .PostProcess(
                 pp => pp.XmpMetadata(
@@ -303,10 +301,8 @@ public class FacturXDocumentBuilderPostProcessXmpMetadataTest
     [TestMethod]
     public async Task ShouldBuildDocument_WithoutOverridingData()
     {
-        await using FileStream basePdf = File.OpenRead("TestFiles/facturx.pdf");
-
         FacturXDocument newFacturXDocument = await FacturXDocument.Create()
-            .WithBasePdf(basePdf)
+            .WithBasePdfFile("TestFiles/facturx.pdf")
             .WithCrossIndustryInvoiceFile("TestFiles/cii.xml")
             .PostProcess(
                 pp => pp.XmpMetadata(
