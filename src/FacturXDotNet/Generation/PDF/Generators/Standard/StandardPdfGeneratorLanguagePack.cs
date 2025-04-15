@@ -8,6 +8,38 @@ namespace FacturXDotNet.Generation.PDF.Generators.Standard;
 /// </summary>
 public class StandardPdfGeneratorLanguagePack
 {
+    StandardPdfGeneratorLanguagePack() { }
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="StandardPdfGeneratorLanguagePack" /> class
+    ///     by copying values from an existing language pack. Fields can be further customized using
+    ///     their respective <c>init</c> setters after initialization.
+    /// </summary>
+    /// <param name="pack">The language pack from which to copy the field values.</param>
+    public StandardPdfGeneratorLanguagePack(StandardPdfGeneratorLanguagePack pack)
+    {
+        Culture = pack.Culture;
+        VatNumberLabel = pack.VatNumberLabel;
+        OurReferencesLabel = pack.OurReferencesLabel;
+        YourReferencesLabel = pack.YourReferencesLabel;
+        OrderLabel = pack.OrderLabel;
+        InvoiceReferencesLabel = pack.InvoiceReferencesLabel;
+        BusinessProcessLabel = pack.BusinessProcessLabel;
+        DocumentTypeNames = pack.DocumentTypeNames;
+        DefaultDocumentTypeName = pack.DefaultDocumentTypeName;
+        DateLabel = pack.DateLabel;
+        ClientAddressLabel = pack.ClientAddressLabel;
+        YourIdentifiersLabel = pack.YourIdentifiersLabel;
+        DeliveryInformationLabel = pack.DeliveryInformationLabel;
+        CurrencyLabel = pack.CurrencyLabel;
+        PrepaidAmountLabel = pack.PrepaidAmountLabel;
+        DueDateLabel = pack.DueDateLabel;
+        DueAmountLabel = pack.DueAmountLabel;
+        DefaultLegalIdType = pack.DefaultLegalIdType;
+        PageLabel = pack.PageLabel;
+        WipLabel = pack.WipLabel;
+    }
+
     /// <summary>
     ///     The culture associated with the language pack, which defines language and regional settings for the StandardPdfGenerator.
     /// </summary>
@@ -82,7 +114,7 @@ public class StandardPdfGeneratorLanguagePack
     ///     The label representing the prepaid amount in the generated PDF, used for localization purposes in the StandardPdfGenerator.
     /// </summary>
     public required string PrepaidAmountLabel { get; set; }
-    
+
     /// <summary>
     ///     The label representing the due date text in the generated PDF document.
     /// </summary>
@@ -102,11 +134,38 @@ public class StandardPdfGeneratorLanguagePack
     ///     The label used to denote or identify a page within the StandardPdfGenerator.
     /// </summary>
     public required string PageLabel { get; init; }
-    
+
     /// <summary>
     ///     The label indicating that the PDF document is in progress, generated with FacturX.NET, and subject to further changes.
     /// </summary>
     public required string WipLabel { get; init; }
+
+    /// <summary>
+    ///     The empty instance of the StandardPdfGeneratorLanguagePack with all properties initialized to their default values.
+    /// </summary>
+    public static StandardPdfGeneratorLanguagePack Empty { get; } = new()
+    {
+        Culture = CultureInfo.InvariantCulture,
+        VatNumberLabel = "",
+        OurReferencesLabel = "",
+        YourReferencesLabel = "",
+        OrderLabel = "",
+        InvoiceReferencesLabel = "",
+        BusinessProcessLabel = "",
+        DocumentTypeNames = [],
+        DefaultDocumentTypeName = "",
+        DateLabel = "",
+        ClientAddressLabel = "",
+        YourIdentifiersLabel = "",
+        DeliveryInformationLabel = "",
+        CurrencyLabel = "",
+        PrepaidAmountLabel = "",
+        DueDateLabel = "",
+        DueAmountLabel = "",
+        DefaultLegalIdType = "",
+        PageLabel = "",
+        WipLabel = ""
+    };
 
     /// <summary>
     ///     The predefined English language pack for the StandardPdfGenerator containing labels and culture-specific settings.

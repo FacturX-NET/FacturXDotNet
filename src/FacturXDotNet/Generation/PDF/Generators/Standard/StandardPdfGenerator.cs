@@ -170,9 +170,12 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
             invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.SpecifiedLegalOrganization?.Id,
             invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.SpecifiedLegalOrganization?.IdSchemeId
         );
-        CellDrawer.Create(page, SellerInfoRect, 7).Background(GreenLineBg).KeyValue($"{sellerLegalIdType}: ", sellerLegalId, RedBrush);
+        CellDrawer.Create(page, SellerInfoRect, 7).Background(GreenLineBg).Key(sellerLegalIdType, BlackBrush, NormalFont).Text(sellerLegalId, RedBrush, NormalFont);
         string? sellerVatId = FormatVatId(invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.SellerTradeParty?.SpecifiedTaxRegistration?.Id);
-        CellDrawer.Create(page, SellerInfoRect, 8).Background(GreenLineBg).KeyValue($"{_options.LanguagePack.VatNumberLabel}: ", sellerVatId, RedBrush);
+        CellDrawer.Create(page, SellerInfoRect, 8)
+            .Background(GreenLineBg)
+            .Key(_options.LanguagePack.VatNumberLabel, BlackBrush, NormalFont)
+            .Text(sellerVatId, RedBrush, NormalFont);
         CellDrawer.Create(page, SellerInfoRect).DrawLeftBorder(BorderBrush);
 
         CellDrawer.Create(page, SellerReferencesRect, 0).Text(_options.LanguagePack.OurReferencesLabel, font: NormalBoldFont);
@@ -186,11 +189,8 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         CellDrawer.Create(page, BuyerReferencesRect, 5).Background(BlueLineBg);
         CellDrawer.Create(page, BuyerReferencesRect, 6)
             .Background(GreenLineBg)
-            .KeyValue(
-                $"{_options.LanguagePack.OrderLabel}: ",
-                invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerOrderReferencedDocument?.IssuerAssignedId,
-                BlueBrush
-            );
+            .Key(_options.LanguagePack.OrderLabel, BlackBrush, NormalFont)
+            .Text(invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerOrderReferencedDocument?.IssuerAssignedId, BlueBrush, NormalFont);
         CellDrawer.Create(page, BuyerReferencesRect).DrawLeftBorder(BorderBrush);
 
         CellDrawer.Create(page, InvoiceReferencesRect, 0).Text(_options.LanguagePack.InvoiceReferencesLabel, font: NormalBoldFont);
@@ -198,16 +198,18 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         CellDrawer.Create(page, InvoiceReferencesRect, 4).Background(BlueLineBg);
         CellDrawer.Create(page, InvoiceReferencesRect, 5)
             .Background(GreenLineBg)
-            .KeyValue($"{_options.LanguagePack.BusinessProcessLabel}: ", invoice.ExchangedDocumentContext?.BusinessProcessSpecifiedDocumentContextParameterId, BlueBrush);
+            .Key(_options.LanguagePack.BusinessProcessLabel, BlackBrush, NormalFont)
+            .Text(invoice.ExchangedDocumentContext?.BusinessProcessSpecifiedDocumentContextParameterId, BlueBrush, NormalFont);
         CellDrawer.Create(page, InvoiceReferencesRect).DrawLeftBorder(BorderBrush);
 
         string documentTypeName = invoice.ExchangedDocument?.TypeCode == null
             ? _options.LanguagePack.DefaultDocumentTypeName
             : _options.LanguagePack.DocumentTypeNames.GetValueOrDefault(invoice.ExchangedDocument.TypeCode.Value) ?? _options.LanguagePack.DefaultDocumentTypeName;
-        CellDrawer.Create(page, DocumentInfoRect, 0).Background(GreenLineBg).Text($"{documentTypeName}", font: BigBoldFont);
-        CellDrawer.Create(page, DocumentInfoRect, 1).Background(GreenLineBg).KeyValue("N° ", invoice.ExchangedDocument?.Id, RedBrush, BigFont);
+        CellDrawer.Create(page, DocumentInfoRect, 0).Background(GreenLineBg).Text(documentTypeName, font: BigBoldFont);
+        CellDrawer.Create(page, DocumentInfoRect, 1).Background(GreenLineBg).Key("N° ", BlackBrush, NormalFont, false).Text(invoice.ExchangedDocument?.Id, RedBrush, BigFont);
         CellDrawer.Create(page, DocumentInfoRect, 2)
-            .KeyValue($"{_options.LanguagePack.DateLabel}: ", invoice.ExchangedDocument?.IssueDateTime?.ToString("d", _options.LanguagePack.Culture), RedBrush, BigFont);
+            .Key(_options.LanguagePack.DateLabel, BlackBrush, NormalFont)
+            .Text(invoice.ExchangedDocument?.IssueDateTime?.ToString("d", _options.LanguagePack.Culture), RedBrush, BigFont);
         CellDrawer.Create(page, DocumentInfoRect).DrawLeftBorder(BorderBrush);
 
         CellDrawer.Create(page, BuyerInfoRect, 0).Text(_options.LanguagePack.ClientAddressLabel, font: NormalBoldFont);
@@ -228,7 +230,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
             invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.SpecifiedLegalOrganization?.Id,
             invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.SpecifiedLegalOrganization?.IdSchemeId
         );
-        CellDrawer.Create(page, BuyerIdentifiersRect, 2).Background(GreenLineBg).KeyValue($"{buyerLegalIdType}: ", buyerLegalId, RedBrush);
+        CellDrawer.Create(page, BuyerIdentifiersRect, 2).Background(GreenLineBg).Key(buyerLegalIdType, BlackBrush, NormalFont).Text(buyerLegalId, RedBrush, NormalFont);
         CellDrawer.Create(page, BuyerIdentifiersRect, 3).Background(BlueLineBg);
         CellDrawer.Create(page, BuyerIdentifiersRect).DrawLeftBorder(BorderBrush);
 
@@ -239,26 +241,26 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
 
         CellDrawer.Create(page, CurrencyRect)
             .Background(GreenLineBg)
-            .KeyValue($"{_options.LanguagePack.CurrencyLabel}: ", invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.InvoiceCurrencyCode, RedBrush);
+            .Key(_options.LanguagePack.CurrencyLabel, BlackBrush, NormalFont)
+            .Text(invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.InvoiceCurrencyCode, RedBrush, NormalFont);
         CellDrawer.Create(page, CurrencyRect).DrawLeftBorder(BorderBrush);
 
-        CellDrawer.Create(page, PrepaidAmountRect).KeyValue($"{_options.LanguagePack.PrepaidAmountLabel}: ", "");
+        CellDrawer.Create(page, PrepaidAmountRect).Key(_options.LanguagePack.PrepaidAmountLabel, BlackBrush, NormalFont).Text("", BlackBrush, NormalFont);
 
-        CellDrawer.Create(page, DueDateRect).Background(BlueLineBg).KeyValue($"{_options.LanguagePack.DueDateLabel}: ", "", BigBoldFont, HugeBoldFont, XStringFormats.Center);
+        CellDrawer.Create(page, DueDateRect)
+            .Background(BlueLineBg)
+            .Key(_options.LanguagePack.DueDateLabel, BlackBrush, BigBoldFont)
+            .Text("", BlackBrush, HugeBoldFont, XStringFormats.Center);
         CellDrawer.Create(page, DueDateRect).DrawLeftBorder(BorderBrush, 2);
 
+        string? value = FormatMoney(
+            invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.DuePayableAmount,
+            invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.InvoiceCurrencyCode
+        );
         CellDrawer.Create(page, DueAmountRect)
             .Background(GreenLineBg)
-            .KeyValue(
-                $"{_options.LanguagePack.DueAmountLabel}: ",
-                FormatMoney(
-                    invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.SpecifiedTradeSettlementHeaderMonetarySummation?.DuePayableAmount,
-                    invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeSettlement?.InvoiceCurrencyCode
-                ),
-                BigBoldFont,
-                HugeBoldFont,
-                XStringFormats.Center
-            );
+            .Key(_options.LanguagePack.DueAmountLabel, BlackBrush, BigBoldFont)
+            .Text(value, BlackBrush, HugeBoldFont, XStringFormats.Center);
         CellDrawer.Create(page, DueAmountRect).DrawLeftBorder(BorderBrush, 2);
 
         CellDrawer.Create(page, FooterRect).DrawTopBorder(BorderBrush);
@@ -367,6 +369,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         DrawDebugFrame(gfx, PayeeRectColumn2);
 
         DrawDebugFrame(gfx, FooterRect);
+        DrawDebugFrame(gfx, LegalMentions);
         DrawDebugFrame(gfx, PageRect);
     }
 
