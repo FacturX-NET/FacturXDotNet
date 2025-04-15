@@ -1,5 +1,6 @@
 ﻿using FacturXDotNet;
 using FacturXDotNet.Generation.FacturX;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Parsing.CII.Exceptions;
 using FacturXDotNet.Parsing.XMP.Exceptions;
 using FacturXDotNet.Validation;
@@ -34,6 +35,10 @@ static class ValidationIntegrationTestUtils
             await streamWriter.FlushAsync();
             stream.Seek(0, SeekOrigin.Begin);
             builder.WithCrossIndustryInvoice(stream, opt => opt.LeaveOpen = false);
+        }
+        else
+        {
+            builder.WithCrossIndustryInvoice(new CrossIndustryInvoice());
         }
 
         FacturXValidationResult result;

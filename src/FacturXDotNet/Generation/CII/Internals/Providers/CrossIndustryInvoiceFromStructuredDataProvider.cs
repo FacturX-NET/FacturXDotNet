@@ -14,6 +14,7 @@ class CrossIndustryInvoiceFromStructuredDataProvider(CrossIndustryInvoice cii) :
         MemoryStream result = new();
         CrossIndustryInvoiceWriter writer = new();
         await writer.WriteAsync(result, cii);
+        result.Seek(0, SeekOrigin.Begin);
         return result;
     }
 }
