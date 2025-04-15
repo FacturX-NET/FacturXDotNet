@@ -52,6 +52,18 @@
       <EmbeddedResource Include="Resources\sRGB2014.icc">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="Resources\Fonts\Roboto\Roboto-Bold.ttf" />
+      <EmbeddedResource Include="Resources\Fonts\Roboto\Roboto-Bold.ttf" />
+      <None Remove="Resources\Fonts\Roboto\Roboto-BoldItalic.ttf" />
+      <EmbeddedResource Include="Resources\Fonts\Roboto\Roboto-BoldItalic.ttf" />
+      <None Remove="Resources\Fonts\Roboto\Roboto-Italic.ttf" />
+      <EmbeddedResource Include="Resources\Fonts\Roboto\Roboto-Italic.ttf" />
+      <None Remove="Resources\Fonts\Roboto\Roboto-Regular.ttf" />
+      <EmbeddedResource Include="Resources\Fonts\Roboto\Roboto-Regular.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources\Fonts\Roboto\" />
     </ItemGroup>
 
 </Project>

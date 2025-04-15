@@ -38,7 +38,6 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
     const int LineHeight = 11;
     const int PageNumberWidth = 45;
 
-    static readonly XColor DebugFrameColor = new() { R = 255, G = 226, B = 226 };
     static readonly XColor BlueLineBg = new() { R = 221, G = 235, B = 247 };
     static readonly XColor GreenLineBg = new() { R = 235, G = 241, B = 222 };
     static readonly XSolidBrush BlackBrush = new(XColors.DarkSlateGray);
@@ -46,7 +45,6 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
     static readonly XSolidBrush RedBrush = new(new XColor { R = 192, G = 0, B = 0 });
     static readonly XSolidBrush BorderBrush = BlackBrush;
 
-    const string FontName = "Verdana";
     static readonly XFont SmallFont;
     static readonly XFont NormalFont;
     static readonly XFont NormalBoldFont;
@@ -95,13 +93,13 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
 
     static StandardPdfGenerator()
     {
-        GlobalFontSettings.UseWindowsFontsUnderWindows = true;
-        SmallFont = new XFont(FontName, 4);
-        NormalFont = new XFont(FontName, 6);
-        NormalBoldFont = new XFont(FontName, 6, XFontStyleEx.Bold);
-        BigFont = new XFont(FontName, 8);
-        BigBoldFont = new XFont(FontName, 8, XFontStyleEx.Bold);
-        HugeBoldFont = new XFont(FontName, 11, XFontStyleEx.Bold);
+        GlobalFontSettings.FontResolver = new RobotoFontResolver();
+        SmallFont = new XFont("Roboto", 4);
+        NormalFont = new XFont("Roboto", 6);
+        NormalBoldFont = new XFont("Roboto", 6, XFontStyleEx.Bold);
+        BigFont = new XFont("Roboto", 8);
+        BigBoldFont = new XFont("Roboto", 8, XFontStyleEx.Bold);
+        HugeBoldFont = new XFont("Roboto", 11, XFontStyleEx.Bold);
 
         TopMarginRect = new XRect(LeftMarginPt, MarginPadding, ContentWidth, TopMarginPt - TwoMarginPaddings);
         BottomMarginRect = new XRect(LeftMarginPt, Height - BottomMarginPt + MarginPadding, ContentWidth, BottomMarginPt - TwoMarginPaddings);
