@@ -1,5 +1,5 @@
 import { DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators, ValueChangeEvent } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValueChangeEvent } from '@angular/forms';
 import {
   DateOnlyFormat,
   GuidelineSpecifiedDocumentContextParameterId,
@@ -9,7 +9,7 @@ import {
 } from '../../../../../core/api/api.models';
 import { debounceTime, firstValueFrom, from, Subject, switchMap, tap } from 'rxjs';
 import { EditorSavedState, EditorStateService } from '../../../editor-state.service';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidateApi } from '../../../../../core/api/validate.api';
 import { BusinessRuleIdentifier, getBusinessRuleIdentifiers, isBusinessRuleIdentifier, requireBusinessRule } from '../constants/cii-rules';
 import { BusinessTermIdentifier, CiiTerm, getBusinessTermIdentifiers, requireTerm } from '../constants/cii-terms';
@@ -92,7 +92,8 @@ export class CiiFormService {
           return;
         }
 
-        this.saveSubject.next({ ...value, cii: this.form.getRawValue() });
+        const cii = this.fromFormValue(this.form.getRawValue());
+        this.saveSubject.next({ ...value, cii });
       }
     });
   }
@@ -160,9 +161,9 @@ export class CiiFormService {
    *
    * @returns {Promise<boolean>} `true` if the form is valid and business rules are satisfied, otherwise `false`.
    */
-  async validate(): Promise<boolean> {
+  async validate(): Promise<CiiFormValidateResult> {
     if (this.validating()) {
-      return firstValueFrom(toObservable(this.validatingInternal).pipe(takeUntilDestroyed(this.destroyRef)));
+      throw new Error('Cannot validate while another validation is in progress.');
     }
 
     this.validatingInternal.set(true);
@@ -172,23 +173,6 @@ export class CiiFormService {
       const businessRuleIdentifiers = getBusinessRuleIdentifiers();
 
       this.form.markAllAsTouched();
-      if (!this.form.valid) {
-        const termsStatuses: Partial<Record<BusinessTermIdentifier, 'invalid' | 'valid'>> = {};
-        for (const termId of businessTermIdentifiers) {
-          const termControl = this.getControl(termId);
-          if (termControl?.invalid) {
-            termsStatuses[termId] = 'invalid';
-          }
-        }
-
-        this.businessTermsValidationInternal.set(termsStatuses);
-        this.businessRulesValidationInternal.set({});
-
-        this.validatingInternal.set(false);
-
-        return false;
-      }
-
       const cii: ICrossIndustryInvoice = this.fromFormValue(this.form.getRawValue());
       const validationResult = await firstValueFrom(this.validateApi.validateCrossIndustryInvoice(cii).pipe(takeUntilDestroyed(this.destroyRef)));
 
@@ -224,7 +208,11 @@ export class CiiFormService {
 
       this.validatingInternal.set(false);
 
-      return validationResult.valid;
+      if (validationResult.valid) {
+        return { valid: true, cii };
+      } else {
+        return { valid: false, errors: validationResult.errors ?? {} };
+      }
     } catch (error) {
       this.validatingInternal.set(false);
       throw error;
@@ -249,14 +237,13 @@ export class CiiFormService {
       businessProcessSpecifiedDocumentContextParameterId: new FormControl('', { nonNullable: true }),
       guidelineSpecifiedDocumentContextParameterId: new FormControl<GuidelineSpecifiedDocumentContextParameterId | undefined>(undefined, {
         nonNullable: true,
-        validators: [Validators.required],
       }),
     }),
     exchangedDocument: new FormGroup({
       id: new FormControl('', { nonNullable: true }),
-      typeCode: new FormControl<InvoiceTypeCode | undefined>(undefined, { nonNullable: true, validators: [Validators.required] }),
+      typeCode: new FormControl<InvoiceTypeCode | undefined>(undefined, { nonNullable: true }),
       issueDateTime: new FormControl<string | undefined>(undefined, { nonNullable: true }),
-      issueDateTimeFormat: new FormControl<DateOnlyFormat | undefined>(undefined, { nonNullable: true, validators: [Validators.required] }),
+      issueDateTimeFormat: new FormControl<DateOnlyFormat | undefined>(undefined, { nonNullable: true }),
     }),
     supplyChainTradeTransaction: new FormGroup({
       applicableHeaderTradeAgreement: new FormGroup({
@@ -272,7 +259,7 @@ export class CiiFormService {
           }),
           specifiedTaxRegistration: new FormGroup({
             id: new FormControl<string>('', { nonNullable: true }),
-            idSchemeId: new FormControl<VatOnlyTaxSchemeIdentifier | undefined>(undefined, { nonNullable: true, validators: [Validators.required] }),
+            idSchemeId: new FormControl<VatOnlyTaxSchemeIdentifier | undefined>(undefined, { nonNullable: true }),
           }),
         }),
         buyerTradeParty: new FormGroup({
@@ -643,3 +630,10 @@ export interface CiiFormNode {
    */
   children?: CiiFormNode[];
 }
+
+export type CiiFormValidateResult =
+  | {
+      valid: false;
+      errors: { [key: string]: string[] };
+    }
+  | { valid: true; cii: ICrossIndustryInvoice };

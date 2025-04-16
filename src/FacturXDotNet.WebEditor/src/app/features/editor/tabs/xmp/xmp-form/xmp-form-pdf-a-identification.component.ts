@@ -30,7 +30,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           <div class="col-4">
             <label class="form-label" for="pdfAIdentificationConformance">Conformance</label>
             <select id="pdfAIdentificationConformance" class="editor__control form-select" formControlName="conformance" aria-describedby="pdfAIdentificationConformanceHelp">
-              <option value="" class="text-body-tertiary" selected>Choose a conformance level</option>
+              <option [ngValue]="undefined" class="text-body-tertiary" selected>Choose a conformance level</option>
               <option value="A">A</option>
               <option value="B">B</option>
             </select>

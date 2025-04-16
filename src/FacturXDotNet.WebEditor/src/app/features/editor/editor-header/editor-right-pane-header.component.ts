@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, computed, input, model } from '@angular/core';
+import { Component, model } from '@angular/core';
 import { NgbNav, NgbNavItem, NgbNavLinkButton } from '@ng-bootstrap/ng-bootstrap';
 import { PdfModel } from '../editor-settings.service';
 

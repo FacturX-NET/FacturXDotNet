@@ -3,40 +3,53 @@ import { PdfViewerComponent } from './pdf-viewer.component';
 import { EditorSavedState, EditorStateService } from '../editor-state.service';
 import { GenerateApi } from '../../../core/api/generate.api';
 import { firstValueFrom, map } from 'rxjs';
-import { toastError } from '../../../core/toasts/toast-error';
 import { ToastService } from '../../../core/toasts/toast.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditorSettingsService, PdfModel } from '../editor-settings.service';
 import { EditorMenuService } from '../editor-menu/editor-menu.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-editor-pdf-viewer',
   imports: [PdfViewerComponent],
   template: `
     <div class="h-100 position-relative">
-      @if (pdfAlwaysSet(); as pdf) {
-        <div class="h-100">
-          <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
+      @if (pdf.error(); as error) {
+        <div class="h-100 d-flex flex-column align-items-center justify-content-center">
+          <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
+          <div class="text-danger fw-semibold">
+            <i class="bi bi-x-circle-fill text-danger mb-1"></i>
+            {{ getErrorStatus(error) }}
+          </div>
+          <div class="text-danger">
+            {{ getErrorMessage(error) }}
+          </div>
         </div>
       } @else {
-        @switch (pdfTab()) {
-          @case ('imported') {
-            <div class="h-100 w-100 d-flex align-items-center justify-content-center">
-              <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5" (click)="importPdfImage()">
-                <i class="bi bi-file-pdf text-primary fs-1"></i>
-                <div class="lead text-primary">Import PDF</div>
-              </button>
-            </div>
-          }
-          @default {
-            <div class="h-100 d-flex align-items-center justify-content-center">
-              <div class="d-flex gap-1 align-items-end">
-                <div class="spinner-border spinner-border-sm text-body-tertiary mb-2" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-                <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
+        @if (pdfAlwaysSet(); as pdf) {
+          <div class="h-100">
+            <app-pdf-viewer [pdf]="pdf" [disablePointerEvents]="disablePointerEvents()" />
+          </div>
+        } @else {
+          @switch (pdfTab()) {
+            @case ('imported') {
+              <div class="h-100 w-100 d-flex align-items-center justify-content-center">
+                <button class="btn btn-shadow d-flex flex-column gap-2 align-items-center justify-content-center border rounded-3 p-5" (click)="importPdfImage()">
+                  <i class="bi bi-file-pdf text-primary fs-1"></i>
+                  <div class="lead text-primary">Import PDF</div>
+                </button>
               </div>
-            </div>
+            }
+            @default {
+              <div class="h-100 d-flex align-items-center justify-content-center">
+                <div class="d-flex gap-1 align-items-end">
+                  <div class="spinner-border spinner-border-sm text-body-tertiary mb-2" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <i class="bi bi-filetype-pdf text-body-tertiary fs-1"></i>
+                </div>
+              </div>
+            }
           }
         }
       }
@@ -72,7 +85,6 @@ export class EditorPdfViewerComponent {
         return await firstValueFrom(
           this.generateApi.generateStandardPdf(state.request.value.cii).pipe(
             map((file) => ({ id: idGenerator(), content: file })),
-            toastError(this.toastService, (message) => `Error while generating PDF: ${message}`),
             takeUntilDestroyed(this.destroyRef),
           ),
         );
@@ -99,6 +111,22 @@ export class EditorPdfViewerComponent {
     } catch (error) {
       this.toastService.showError(error, (message) => `Could not create PDF image: ${message}`);
     }
+  }
+
+  protected getErrorStatus(error: unknown): string | undefined {
+    if (error instanceof HttpErrorResponse) {
+      return error.statusText;
+    }
+
+    return undefined;
+  }
+
+  protected getErrorMessage(error: unknown) {
+    if (error instanceof HttpErrorResponse) {
+      return error.message;
+    }
+
+    return undefined;
   }
 }
 

@@ -1,7 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { EditorSavedState } from '../editor-state.service';
 import { EditorSettings } from '../editor-settings.service';
-import { EditorHeaderNameComponent } from './editor-header-name.component';
 import { Router, RouterLink } from '@angular/router';
 import { NgbNav, NgbNavItem, NgbNavLink } from '@ng-bootstrap/ng-bootstrap';
 

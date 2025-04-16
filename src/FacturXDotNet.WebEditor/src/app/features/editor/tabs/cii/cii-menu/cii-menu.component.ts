@@ -62,7 +62,12 @@ export class CiiMenuComponent {
 
   async validate() {
     try {
-      await this.ciiFormService.validate();
+      const result = await this.ciiFormService.validate();
+      if (result.valid) {
+        this.toastService.show({ message: 'The Cross-Industry Invoice data is valid.', type: 'success' });
+      } else {
+        this.toastService.show({ message: 'The Cross-Industry Invoice data is invalid.', type: 'error' });
+      }
     } catch (error: unknown) {
       this.toastService.showError(error, (message) => `Validation attempt failed: ${message}.`);
     }

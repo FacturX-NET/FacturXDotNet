@@ -1,7 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, signal, Signal } from '@angular/core';
 import { ImportFileService } from '../../../core/import-file/import-file.service';
 import { ExtractApi } from '../../../core/api/extract.api';
-import { delay, filter, first, firstValueFrom, from, map, of, switchMap, throwError } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { ICrossIndustryInvoice } from '../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { downloadBlob, downloadFile } from '../../../core/utils/download-blob';

@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, computed, HostListener, input, linkedSignal, model, output, signal } from '@angular/core';
+import { booleanAttribute, Component, computed, HostListener, input, model, output, signal } from '@angular/core';
 import { NgStyle } from '@angular/common';
 
 @Component({
