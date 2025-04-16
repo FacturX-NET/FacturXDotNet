@@ -1,4 +1,4 @@
-import { catchError, EMPTY, of, OperatorFunction } from 'rxjs';
+import { catchError, EMPTY, OperatorFunction } from 'rxjs';
 import { ToastService } from './toast.service';
 
 export function toastError<T>(toastService: ToastService, messageFactory: (error: string) => string): OperatorFunction<T, T> {

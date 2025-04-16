@@ -1,7 +1,6 @@
 import { DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators, ValueChangeEvent } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValueChangeEvent } from '@angular/forms';
 import {
-  CrossIndustryInvoice,
   DateOnlyFormat,
   GuidelineSpecifiedDocumentContextParameterId,
   ICrossIndustryInvoice,
@@ -10,7 +9,7 @@ import {
 } from '../../../../../core/api/api.models';
 import { debounceTime, firstValueFrom, from, Subject, switchMap, tap } from 'rxjs';
 import { EditorSavedState, EditorStateService } from '../../../editor-state.service';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidateApi } from '../../../../../core/api/validate.api';
 import { BusinessRuleIdentifier, getBusinessRuleIdentifiers, isBusinessRuleIdentifier, requireBusinessRule } from '../constants/cii-rules';
 import { BusinessTermIdentifier, CiiTerm, getBusinessTermIdentifiers, requireTerm } from '../constants/cii-terms';

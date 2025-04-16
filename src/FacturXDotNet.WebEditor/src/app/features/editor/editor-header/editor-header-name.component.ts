@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, input, signal, viewChild } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { EditorStateService } from '../editor-state.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgStyle } from '@angular/common';
