@@ -1,6 +1,7 @@
 import { DestroyRef, effect, inject, Injectable, signal } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators, ValueChangeEvent } from '@angular/forms';
 import {
+  CrossIndustryInvoice,
   DateOnlyFormat,
   GuidelineSpecifiedDocumentContextParameterId,
   ICrossIndustryInvoice,
@@ -92,7 +93,8 @@ export class CiiFormService {
           return;
         }
 
-        this.saveSubject.next({ ...value, cii: this.form.getRawValue() });
+        const cii = this.fromFormValue(this.form.getRawValue());
+        this.saveSubject.next({ ...value, cii });
       }
     });
   }
@@ -160,9 +162,9 @@ export class CiiFormService {
    *
    * @returns {Promise<boolean>} `true` if the form is valid and business rules are satisfied, otherwise `false`.
    */
-  async validate(): Promise<boolean> {
+  async validate(): Promise<CiiFormValidateResult> {
     if (this.validating()) {
-      return firstValueFrom(toObservable(this.validatingInternal).pipe(takeUntilDestroyed(this.destroyRef)));
+      throw new Error('Cannot validate while another validation is in progress.');
     }
 
     this.validatingInternal.set(true);
@@ -186,7 +188,7 @@ export class CiiFormService {
 
         this.validatingInternal.set(false);
 
-        return false;
+        return { valid: false, errors: this.form.errors ?? {} };
       }
 
       const cii: ICrossIndustryInvoice = this.fromFormValue(this.form.getRawValue());
@@ -224,7 +226,11 @@ export class CiiFormService {
 
       this.validatingInternal.set(false);
 
-      return validationResult.valid;
+      if (validationResult.valid) {
+        return { valid: true, cii };
+      } else {
+        return { valid: false, errors: validationResult.errors ?? {} };
+      }
     } catch (error) {
       this.validatingInternal.set(false);
       throw error;
@@ -643,3 +649,10 @@ export interface CiiFormNode {
    */
   children?: CiiFormNode[];
 }
+
+export type CiiFormValidateResult =
+  | {
+      valid: false;
+      errors: { [key: string]: string[] };
+    }
+  | { valid: true; cii: ICrossIndustryInvoice };

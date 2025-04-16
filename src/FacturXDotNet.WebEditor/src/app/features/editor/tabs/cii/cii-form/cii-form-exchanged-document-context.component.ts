@@ -23,9 +23,9 @@ import { requireTerm } from '../constants/cii-terms';
 
       <app-cii-form-control [term]="bt24" [settings]="settings()" #bt24Control>
         <select [id]="bt24Control.controlId()" class="form-select" formControlName="guidelineSpecifiedDocumentContextParameterId">
-          <option value="" class="text-body-tertiary" selected>Choose a profile</option>
+          <option [ngValue]="undefined" class="text-body-tertiary" selected>Choose a profile</option>
           <option value="Minimum">Minimum</option>
-          <option value="Basic-wl">Basic WL</option>
+          <option value="BasicWl">Basic WL</option>
           <option value="Basic">Basic</option>
           <option value="En16931">EN 16931</option>
           <option value="Extended">Extended</option>

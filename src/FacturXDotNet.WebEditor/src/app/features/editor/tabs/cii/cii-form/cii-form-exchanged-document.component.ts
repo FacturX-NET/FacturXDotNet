@@ -23,7 +23,7 @@ import { requireTerm } from '../constants/cii-terms';
 
       <app-cii-form-control [term]="bt3" [settings]="settings()" #bt3Control>
         <select [id]="bt3Control.controlId()" class="form-select" formControlName="typeCode">
-          <option value="" class="text-body-tertiary" selected>Choose a type</option>
+          <option [ngValue]="undefined" class="text-body-tertiary" selected>Choose a type</option>
           <option value="RequestForPayment">71 - Request for payment</option>
           <option value="DebitNoteRelatedToGoodsOrServices">80 - Debit note related to goods or services</option>
           <option value="CreditNoteRelatedToGoodsOrServices">81 - Credit note related to goods or services</option>
