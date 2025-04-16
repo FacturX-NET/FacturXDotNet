@@ -174,23 +174,6 @@ export class CiiFormService {
       const businessRuleIdentifiers = getBusinessRuleIdentifiers();
 
       this.form.markAllAsTouched();
-      if (!this.form.valid) {
-        const termsStatuses: Partial<Record<BusinessTermIdentifier, 'invalid' | 'valid'>> = {};
-        for (const termId of businessTermIdentifiers) {
-          const termControl = this.getControl(termId);
-          if (termControl?.invalid) {
-            termsStatuses[termId] = 'invalid';
-          }
-        }
-
-        this.businessTermsValidationInternal.set(termsStatuses);
-        this.businessRulesValidationInternal.set({});
-
-        this.validatingInternal.set(false);
-
-        return { valid: false, errors: this.form.errors ?? {} };
-      }
-
       const cii: ICrossIndustryInvoice = this.fromFormValue(this.form.getRawValue());
       const validationResult = await firstValueFrom(this.validateApi.validateCrossIndustryInvoice(cii).pipe(takeUntilDestroyed(this.destroyRef)));
 
@@ -255,14 +238,13 @@ export class CiiFormService {
       businessProcessSpecifiedDocumentContextParameterId: new FormControl('', { nonNullable: true }),
       guidelineSpecifiedDocumentContextParameterId: new FormControl<GuidelineSpecifiedDocumentContextParameterId | undefined>(undefined, {
         nonNullable: true,
-        validators: [Validators.required],
       }),
     }),
     exchangedDocument: new FormGroup({
       id: new FormControl('', { nonNullable: true }),
-      typeCode: new FormControl<InvoiceTypeCode | undefined>(undefined, { nonNullable: true, validators: [Validators.required] }),
+      typeCode: new FormControl<InvoiceTypeCode | undefined>(undefined, { nonNullable: true }),
       issueDateTime: new FormControl<string | undefined>(undefined, { nonNullable: true }),
-      issueDateTimeFormat: new FormControl<DateOnlyFormat | undefined>(undefined, { nonNullable: true, validators: [Validators.required] }),
+      issueDateTimeFormat: new FormControl<DateOnlyFormat | undefined>(undefined, { nonNullable: true }),
     }),
     supplyChainTradeTransaction: new FormGroup({
       applicableHeaderTradeAgreement: new FormGroup({
@@ -278,7 +260,7 @@ export class CiiFormService {
           }),
           specifiedTaxRegistration: new FormGroup({
             id: new FormControl<string>('', { nonNullable: true }),
-            idSchemeId: new FormControl<VatOnlyTaxSchemeIdentifier | undefined>(undefined, { nonNullable: true, validators: [Validators.required] }),
+            idSchemeId: new FormControl<VatOnlyTaxSchemeIdentifier | undefined>(undefined, { nonNullable: true }),
           }),
         }),
         buyerTradeParty: new FormGroup({

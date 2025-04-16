@@ -45,7 +45,7 @@ import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/for
           <div class="col">
             <label class="form-label" for="facturxConformanceLevel">Conformance level</label>
             <select id="facturxConformanceLevel" class="editor__control form-select" formControlName="conformanceLevel" aria-describedby="facturxConformanceLevel">
-              <option [ngValue]="undefined" class="text-body-tertiary" selected>Choose a profile</option>
+              <option [ngValue]="undefined" class="text-body-tertiary" selected>No profile</option>
               <option value="Minimum">Minimum</option>
               <option value="Basic-wl">Basic WL</option>
               <option value="Basic">Basic</option>
