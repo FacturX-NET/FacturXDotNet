@@ -44,7 +44,7 @@ import { RouterLink } from '@angular/router';
             Manage how your PDFs are generated and styled. Create and customize profiles with your own logo, translations, fonts, and colors to match your brand or language
             preferences. Save multiple profiles to quickly switch between different layouts or presentation styles.
           </p>
-          <button class="btn btn-sm btn-outline-success">Create a PDF profile</button>
+          <button class="btn btn-sm btn-outline-success" routerLink="create">Create a PDF profile</button>
         </div>
       </div>
     }
