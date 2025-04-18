@@ -74,191 +74,206 @@ import { EditorPdfGenerationProfileData } from '../../../../../editor-pdf-genera
             <div class="editor__control mb-3">
               <label class="form-label fw-semibold" for="editor-settings-profile-culture">Culture</label>
               <input class="form-control" id="editor-settings-profile-culture" formControlName="culture" [placeholder]="baseLanguagePack?.culture ?? ''" />
-              <p class="form-text">The culture associated with the language pack, which defines language and regional settings for the generator.</p>
+              <p class="form-text">
+                Specifies the language and regional settings used for the invoice. This affect region-specific formatting rules such as date formats, and number separators.
+              </p>
             </div>
 
             <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-vat-number-label">Vat number label</label>
-              <input class="form-control" id="editor-settings-profile-vat-number-label" formControlName="vatNumberLabel" [placeholder]="baseLanguagePack?.vatNumberLabel ?? ''" />
-              <p class="form-text">The label used to denote the VAT (Value Added Tax) number in the generated PDF.</p>
-            </div>
-
-            <div class="d-flex flex-wrap gap-4 mb-3">
-              <div class="editor__control">
-                <label class="form-label fw-semibold" for="editor-settings-profile-supplier-references-label">Supplier references label</label>
-                <input
-                  class="form-control"
-                  id="editor-settings-profile-supplier-references-label"
-                  formControlName="supplierReferencesLabel"
-                  [placeholder]="baseLanguagePack?.supplierReferencesLabel ?? ''"
-                />
-                <p class="form-text">
-                  The label representing "Our References" in the localized language pack, typically used to identify the document references associated with the sender.
-                </p>
-              </div>
-
-              <div class="editor__control">
-                <label class="form-label fw-semibold" for="editor-settings-profile-customer-references-label">Customer references label</label>
-                <input
-                  class="form-control"
-                  id="editor-settings-profile-customer-references-label"
-                  formControlName="customerReferencesLabel"
-                  [placeholder]="baseLanguagePack?.customerReferencesLabel ?? ''"
-                />
-                <p class="form-text">The label used for the "Your references" field in the localized resources of the generator.</p>
-              </div>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-orderLabel">Order label</label>
-              <input class="form-control" id="editor-settings-profile-orderLabel" formControlName="orderLabel" [placeholder]="baseLanguagePack?.orderLabel ?? ''" />
-              <p class="form-text">The label used for the order reference in the generator.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-invoiceReferencesLabel">InvoiceReferencesLabel</label>
-              <input
-                class="form-control"
-                id="editor-settings-profile-invoiceReferencesLabel"
-                formControlName="invoiceReferencesLabel"
-                [placeholder]="baseLanguagePack?.invoiceReferencesLabel ?? ''"
-              />
-              <p class="form-text">The label representing invoice references, used to identify and localize these references in the generated PDF.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-businessProcessLabel">BusinessProcessLabel</label>
-              <input
-                class="form-control"
-                id="editor-settings-profile-businessProcessLabel"
-                formControlName="businessProcessLabel"
-                [placeholder]="baseLanguagePack?.businessProcessLabel ?? ''"
-              />
-              <p class="form-text">The label used to represent a business process in the generated PDF.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-default-document-type-name">DefaultDocumentTypeName</label>
+              <label class="form-label fw-semibold" for="editor-settings-profile-default-document-type-name">Default Document Type</label>
               <input
                 class="form-control"
                 id="editor-settings-profile-default-document-type-name"
                 formControlName="defaultDocumentTypeName"
                 [placeholder]="baseLanguagePack?.defaultDocumentTypeName ?? ''"
               />
-              <p class="form-text">The name of the document type used in the generator.</p>
+              <p class="form-text">
+                The label used when the actual invoice type cannot be matched to a more specific name. Typically set to "Invoice", it serves as a fallback when no precise document
+                type label is available.
+              </p>
             </div>
 
             <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-dateLabel">DateLabel</label>
-              <input class="form-control" id="editor-settings-profile-dateLabel" formControlName="dateLabel" [placeholder]="baseLanguagePack?.dateLabel ?? ''" />
-              <p class="form-text">The label representing the date field in the language pack used by the generator.</p>
+              <label class="form-label fw-semibold" for="editor-settings-profile-date-label">Date</label>
+              <input class="form-control" id="editor-settings-profile-date-label" formControlName="dateLabel" [placeholder]="baseLanguagePack?.dateLabel ?? ''" />
+              <p class="form-text">The label used for the invoice issue date.</p>
             </div>
 
             <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-customer-address-label">ClientAddressLabel</label>
-              <input
-                class="form-control"
-                id="editor-settings-profile-customer-address-label"
-                formControlName="customerAddressLabel"
-                [placeholder]="baseLanguagePack?.customerAddressLabel ?? ''"
-              />
-              <p class="form-text">The label used to identify the client's address in the generated PDF.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-customer-identifiers-label">YourIdentifiersLabel</label>
-              <input
-                class="form-control"
-                id="editor-settings-profile-customer-identifiers-label"
-                formControlName="customerIdentifiersLabel"
-                [placeholder]="baseLanguagePack?.customerIdentifiersLabel ?? ''"
-              />
-              <p class="form-text">The label associated with the recipient's identifiers in the context of generating a PDF.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-deliveryInformationLabel">DeliveryInformationLabel</label>
-              <input
-                class="form-control"
-                id="editor-settings-profile-deliveryInformationLabel"
-                formControlName="deliveryInformationLabel"
-                [placeholder]="baseLanguagePack?.deliveryInformationLabel ?? ''"
-              />
-              <p class="form-text">The label for delivery information, used to display or identify delivery-related details in the PDF document.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-currencyLabel">CurrencyLabel</label>
-              <input class="form-control" id="editor-settings-profile-currencyLabel" formControlName="currencyLabel" [placeholder]="baseLanguagePack?.currencyLabel ?? ''" />
-              <p class="form-text">The label used to represent or display the currency in the generator's output.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-totalWithoutVatLabel">TotalWithoutVatLabel</label>
-              <input
-                class="form-control"
-                id="editor-settings-profile-totalWithoutVatLabel"
-                formControlName="totalWithoutVatLabel"
-                [placeholder]="baseLanguagePack?.totalWithoutVatLabel ?? ''"
-              />
-              <p class="form-text">The label representing the total amount excluding VAT, used in the generator.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-totalVatLabel">TotalVatLabel</label>
-              <input class="form-control" id="editor-settings-profile-totalVatLabel" formControlName="totalVatLabel" [placeholder]="baseLanguagePack?.totalVatLabel ?? ''" />
-              <p class="form-text">The label used to represent the total VAT amount in the generator.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-totalWithVatLabel">TotalWithVatLabel</label>
-              <input
-                class="form-control"
-                id="editor-settings-profile-totalWithVatLabel"
-                formControlName="totalWithVatLabel"
-                [placeholder]="baseLanguagePack?.totalWithVatLabel ?? ''"
-              />
-              <p class="form-text">The label representing the total amount including VAT in the generator.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-prepaidAmountLabel">PrepaidAmountLabel</label>
-              <input
-                class="form-control"
-                id="editor-settings-profile-prepaidAmountLabel"
-                formControlName="prepaidAmountLabel"
-                [placeholder]="baseLanguagePack?.prepaidAmountLabel ?? ''"
-              />
-              <p class="form-text">The label representing the prepaid amount in the generated PDF, used for localization purposes in the generator.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-dueDateLabel">DueDateLabel</label>
-              <input class="form-control" id="editor-settings-profile-dueDateLabel" formControlName="dueDateLabel" [placeholder]="baseLanguagePack?.dueDateLabel ?? ''" />
-              <p class="form-text">The label representing the due date text in the generated PDF document.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-dueAmountLabel">DueAmountLabel</label>
-              <input class="form-control" id="editor-settings-profile-dueAmountLabel" formControlName="dueAmountLabel" [placeholder]="baseLanguagePack?.dueAmountLabel ?? ''" />
-              <p class="form-text">The label representing the due amount in the PDF document.</p>
-            </div>
-
-            <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-default-legal-id-type">DefaultLegalIdType</label>
+              <label class="form-label fw-semibold" for="editor-settings-profile-default-legal-id-type">Default Legal ID name</label>
               <input
                 class="form-control"
                 id="editor-settings-profile-default-legal-id-type"
                 formControlName="defaultLegalIdType"
                 [placeholder]="baseLanguagePack?.defaultLegalIdType ?? ''"
               />
-              <p class="form-text">The default label or identifier used to represent the legal ID type in the language pack for the generator.</p>
+              <p class="form-text">
+                The label used when the legal identification scheme in the invoice is not recognized. While known schemes like SIREN or SIRET have specific labels, this default
+                value is used as a fallback for unrecognized or unmapped schemes.
+              </p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mb-3">
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-vat-number-label">VAT Number</label>
+                <input class="form-control" id="editor-settings-profile-vat-number-label" formControlName="vatNumberLabel" [placeholder]="baseLanguagePack?.vatNumberLabel ?? ''" />
+                <p class="form-text">The label used to display your VAT (Value Added Tax) number on the invoice.</p>
+              </div>
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-customer-address-label">Customer Address</label>
+                <input
+                  class="form-control"
+                  id="editor-settings-profile-customer-address-label"
+                  formControlName="customerAddressLabel"
+                  [placeholder]="baseLanguagePack?.customerAddressLabel ?? ''"
+                />
+                <p class="form-text">The label for the section showing the client’s billing address.</p>
+              </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mb-3">
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-supplier-references-label">Supplier references</label>
+                <input
+                  class="form-control"
+                  id="editor-settings-profile-supplier-references-label"
+                  formControlName="supplierReferencesLabel"
+                  [placeholder]="baseLanguagePack?.supplierReferencesLabel ?? ''"
+                />
+                <p class="form-text">The label for your internal reference or tracking number related to the invoice.</p>
+              </div>
+
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-customer-identifiers-label">Customer Identifiers</label>
+                <input
+                  class="form-control"
+                  id="editor-settings-profile-customer-identifiers-label"
+                  formControlName="customerIdentifiersLabel"
+                  [placeholder]="baseLanguagePack?.customerIdentifiersLabel ?? ''"
+                />
+                <p class="form-text">The label for the client's identifiers, such as customer number or account ID.</p>
+              </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mb-3">
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-customer-references-label">Customer references</label>
+                <input
+                  class="form-control"
+                  id="editor-settings-profile-customer-references-label"
+                  formControlName="customerReferencesLabel"
+                  [placeholder]="baseLanguagePack?.customerReferencesLabel ?? ''"
+                />
+                <p class="form-text">The label for the client’s reference number or identifier for this transaction.</p>
+              </div>
+
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-delivery-information-label">Delivery Information</label>
+                <input
+                  class="form-control"
+                  id="editor-settings-profile-delivery-information-label"
+                  formControlName="deliveryInformationLabel"
+                  [placeholder]="baseLanguagePack?.deliveryInformationLabel ?? ''"
+                />
+                <p class="form-text">The label for the section containing shipping or delivery details.</p>
+              </div>
             </div>
 
             <div class="editor__control mb-3">
-              <label class="form-label fw-semibold" for="editor-settings-profile-pageLabel">PageLabel</label>
-              <input class="form-control" id="editor-settings-profile-pageLabel" formControlName="pageLabel" [placeholder]="baseLanguagePack?.pageLabel ?? ''" />
-              <p class="form-text">The label used to denote or identify a page within the generator.</p>
+              <label class="form-label fw-semibold" for="editor-settings-profile-order-label">Order</label>
+              <input class="form-control" id="editor-settings-profile-order-label" formControlName="orderLabel" [placeholder]="baseLanguagePack?.orderLabel ?? ''" />
+              <p class="form-text">The label used for the purchase order or sales order associated with the invoice.</p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mb-3">
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-invoice-references-label">Invoice References</label>
+                <input
+                  class="form-control"
+                  id="editor-settings-profile-invoice-references-label"
+                  formControlName="invoiceReferencesLabel"
+                  [placeholder]="baseLanguagePack?.invoiceReferencesLabel ?? ''"
+                />
+                <p class="form-text">The label for any references specific to the invoice document itself.</p>
+              </div>
+
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-currency-label">Currency</label>
+                <input class="form-control" id="editor-settings-profile-currency-label" formControlName="currencyLabel" [placeholder]="baseLanguagePack?.currencyLabel ?? ''" />
+                <p class="form-text">The label used to indicate the currency used on the invoice.</p>
+              </div>
+            </div>
+
+            <div class="editor__control mb-3">
+              <label class="form-label fw-semibold" for="editor-settings-profile-business-process-label">Business Process</label>
+              <input
+                class="form-control"
+                id="editor-settings-profile-business-process-label"
+                formControlName="businessProcessLabel"
+                [placeholder]="baseLanguagePack?.businessProcessLabel ?? ''"
+              />
+              <p class="form-text">The label that describes the business process or transaction context (e.g., sales, service).</p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mb-3">
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-total-without-vat-label">Total (Net)</label>
+                <input
+                  class="form-control"
+                  id="editor-settings-profile-total-without-vat-label"
+                  formControlName="totalWithoutVatLabel"
+                  [placeholder]="baseLanguagePack?.totalWithoutVatLabel ?? ''"
+                />
+                <p class="form-text">The label for the total amount before VAT is applied.</p>
+              </div>
+
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-total-vat-label">Total VAT</label>
+                <input class="form-control" id="editor-settings-profile-total-vat-label" formControlName="totalVatLabel" [placeholder]="baseLanguagePack?.totalVatLabel ?? ''" />
+                <p class="form-text">The label for the total VAT amount calculated on the invoice.</p>
+              </div>
+
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-total-gross-label">Total (Gross)</label>
+                <input
+                  class="form-control"
+                  id="editor-settings-profile-total-gross-label"
+                  formControlName="totalWithVatLabel"
+                  [placeholder]="baseLanguagePack?.totalWithVatLabel ?? ''"
+                />
+                <p class="form-text">The label for the total amount including VAT.</p>
+              </div>
+            </div>
+
+            <div class="editor__control mb-3">
+              <label class="form-label fw-semibold" for="editor-settings-profile-prepaid-amount-label">Prepaid</label>
+              <input
+                class="form-control"
+                id="editor-settings-profile-prepaid-amount-label"
+                formControlName="prepaidAmountLabel"
+                [placeholder]="baseLanguagePack?.prepaidAmountLabel ?? ''"
+              />
+              <p class="form-text">The label for any amount already paid in advance.</p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mb-3">
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-due-date-label">Due Date</label>
+                <input class="form-control" id="editor-settings-profile-due-date-label" formControlName="dueDateLabel" [placeholder]="baseLanguagePack?.dueDateLabel ?? ''" />
+                <p class="form-text">The label for the payment due date.</p>
+              </div>
+
+              <div class="editor__control flex-grow-1">
+                <label class="form-label fw-semibold" for="editor-settings-profile-due-amount-label">Due Amount</label>
+                <input class="form-control" id="editor-settings-profile-due-amount-label" formControlName="dueAmountLabel" [placeholder]="baseLanguagePack?.dueAmountLabel ?? ''" />
+                <p class="form-text">The label for the remaining amount that needs to be paid.</p>
+              </div>
+            </div>
+
+            <div class="editor__control mb-3">
+              <label class="form-label fw-semibold" for="editor-settings-profile-page-label">Page</label>
+              <input class="form-control" id="editor-settings-profile-page-label" formControlName="pageLabel" [placeholder]="baseLanguagePack?.pageLabel ?? ''" />
+              <p class="form-text">The label used to indicate page numbers in multi-page invoices.</p>
             </div>
           }
         }
