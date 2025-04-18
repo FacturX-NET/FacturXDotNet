@@ -1,4 +1,4 @@
-import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -13,18 +13,25 @@ export class EditorPdfGenerationProfilesService {
 
   private readonly profilesInternal: WritableSignal<Record<string, EditorPdfGenerationProfile>>;
 
-  get selectedProfile() {
+  get selectedProfileId() {
     return this.selectedProfileInternal.asReadonly();
   }
 
-  private readonly selectedProfileInternal: WritableSignal<EditorPdfGenerationProfile | undefined>;
+  private readonly selectedProfileInternal: WritableSignal<string | undefined>;
+
+  selectedProfile = computed(() => {
+    const selectedProfileId = this.selectedProfileId();
+    if (selectedProfileId === undefined) {
+      return undefined;
+    }
+
+    const profiles = this.profiles();
+    return profiles[selectedProfileId];
+  });
 
   constructor() {
     this.profilesInternal = signal(this.loadProfiles() ?? {});
-
-    const selectedProfileId = this.loadSelectedProfile();
-    const selectedProfile = selectedProfileId === undefined ? undefined : this.getProfile(selectedProfileId);
-    this.selectedProfileInternal = signal(selectedProfile);
+    this.selectedProfileInternal = signal(this.loadSelectedProfile());
   }
 
   getProfile(profileId: string) {
@@ -42,7 +49,7 @@ export class EditorPdfGenerationProfilesService {
     this.profilesInternal.set(newProfiles);
 
     this.saveSelectedProfile(newId);
-    this.selectedProfileInternal.set(newProfile);
+    this.selectedProfileInternal.set(newId);
   }
 
   updateProfile(profileId: string, value: EditorPdfGenerationProfileData) {
@@ -76,7 +83,7 @@ export class EditorPdfGenerationProfilesService {
     }
 
     this.saveSelectedProfile(profile.id);
-    this.selectedProfileInternal.set(profile);
+    this.selectedProfileInternal.set(profile.id);
   }
 
   private saveProfiles(profiles: Record<string, EditorPdfGenerationProfile>): void {

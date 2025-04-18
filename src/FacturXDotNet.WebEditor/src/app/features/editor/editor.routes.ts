@@ -8,6 +8,7 @@ import { EditorSettingsGeneralTab } from './tabs/settings/tabs/editor-settings-g
 import { EditorSettingsPdfProfilesTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profiles.tab';
 import { EditorSettingsPdfProfileCreateTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profile-create.tab';
 import { EditorSettingsPdfProfileEditTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profile-edit.tab';
+import { resetPdfProfileOverride } from './guards/reset-pdf-profile-override';
 
 export const routes: Routes = [
   {
@@ -38,10 +39,12 @@ export const routes: Routes = [
           {
             path: 'profiles/create',
             component: EditorSettingsPdfProfileCreateTab,
+            canDeactivate: [resetPdfProfileOverride],
           },
           {
             path: 'profiles/edit/:profileId',
             component: EditorSettingsPdfProfileEditTab,
+            canDeactivate: [resetPdfProfileOverride],
           },
           {
             path: 'profiles',

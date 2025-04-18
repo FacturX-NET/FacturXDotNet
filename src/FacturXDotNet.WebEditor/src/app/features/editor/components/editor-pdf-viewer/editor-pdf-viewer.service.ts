@@ -32,7 +32,6 @@ export class EditorPdfViewerService {
 
       if (state.request.pdfTab === 'generated' && state.request.value.cii !== undefined) {
         const profile = this.profileOverride ?? this.editorPdfGenerationProfilesService.selectedProfile();
-
         const logo = profile?.logoBase64 === undefined ? undefined : profile.logoBase64.replace(/^data:image\/?[A-Za-z]*;base64,/, '');
 
         const options: GenerateStandardPdfOptions | undefined = profile === undefined ? undefined : { logo };
