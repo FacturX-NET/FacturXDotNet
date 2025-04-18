@@ -6,6 +6,7 @@ import { AttachmentsTab } from './tabs/attachments/attachments.tab';
 import { EditorSettingsTab } from './tabs/settings/editor-settings.tab';
 import { EditorSettingsGeneralTab } from './tabs/settings/tabs/editor-settings-general/editor-settings-general.tab';
 import { EditorSettingsPdfProfilesTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profiles.tab';
+import { EditorSettingsPdfProfileCreateTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profile-create.tab';
 
 export const routes: Routes = [
   {
@@ -32,6 +33,10 @@ export const routes: Routes = [
             path: '',
             pathMatch: 'full',
             component: EditorSettingsGeneralTab,
+          },
+          {
+            path: 'profiles/create',
+            component: EditorSettingsPdfProfileCreateTab,
           },
           {
             path: 'profiles',

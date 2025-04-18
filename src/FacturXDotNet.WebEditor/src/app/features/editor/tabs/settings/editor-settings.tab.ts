@@ -15,7 +15,7 @@ import { NgbNav, NgbNavItem, NgbNavLink, NgbNavLinkButton } from '@ng-bootstrap/
               <ng-container ngbNavItem="/settings">
                 <button ngbNavLink class="text-start" role="button" routerLink="/settings"><i class="bi bi-gear"></i> General</button>
               </ng-container>
-              <hr class="w-100" />
+              <div class="border-top my-3"></div>
               <h6>PDF Generation</h6>
               <ng-container ngbNavItem="/settings/profiles">
                 <button ngbNavLink class="text-start" role="button" routerLink="/settings/profiles"><i class="bi bi-file-pdf"></i> PDF Profiles</button>

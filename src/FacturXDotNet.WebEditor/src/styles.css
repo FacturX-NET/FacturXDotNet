@@ -92,9 +92,6 @@ markdown p:last-of-type {
   max-width: 420px;
 }
 
-.btn {
-}
-
 .btn-outline-primary {
   --bs-btn-color: var(--fx-purple) !important;
   --bs-btn-border-color: var(--fx-purple) !important;

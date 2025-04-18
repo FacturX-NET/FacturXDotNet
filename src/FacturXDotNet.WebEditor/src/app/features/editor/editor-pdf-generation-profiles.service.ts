@@ -18,6 +18,12 @@ export class EditorPdfGenerationProfilesService {
   }
   private selectedProfileInternal = signal<EditorPdfGenerationProfile | undefined>(undefined);
 
+  createProfile(profile: EditorPdfGenerationProfile) {
+    const newProfile = { ...profile, id: idGenerator() };
+    const profiles = this.profilesInternal();
+    this.profilesInternal.set([...profiles, newProfile]);
+  }
+
   selectProfile(profileId: string) {
     const profiles = this.profilesInternal();
     const profile = profiles.find((p) => p.id === profileId);
@@ -32,4 +38,8 @@ export class EditorPdfGenerationProfilesService {
 export interface EditorPdfGenerationProfile {
   id: string;
   name: string;
+}
+
+function idGenerator() {
+  return Math.random().toString(36).substring(2);
 }

@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
   imports: [FormsModule],
   template: `
     <h4><i class="bi bi-code"></i> Cross-Industry Invoice</h4>
-    <hr class="mt-0" />
+    <div class="border-top mb-3"></div>
     <h6>Verbosity</h6>
     <p class="small text-body-secondary">
       Customize how much detail you want to see when editing fields in the Cross-Industry Invoice form. You can choose to display additional information such as business rules, and
