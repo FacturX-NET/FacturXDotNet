@@ -6,7 +6,7 @@ import { NgbNav, NgbNavItem, NgbNavLink, NgbNavLinkBase } from '@ng-bootstrap/ng
 import { FormsModule } from '@angular/forms';
 import { EditorResponsivenessService } from '../../editor-responsiveness.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { distinct, filter, map } from 'rxjs';
+import { distinct, distinctUntilChanged, filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-editor-left-pane-header',
@@ -60,7 +60,7 @@ export class EditorLeftPaneHeaderComponent {
       filter((evt) => evt instanceof NavigationEnd),
       map((evt) => evt.urlAfterRedirects),
       filter((url) => url !== undefined),
-      distinct(),
+      distinctUntilChanged(),
     ),
     { initialValue: this.router.url },
   );

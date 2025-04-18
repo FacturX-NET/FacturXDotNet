@@ -99,6 +99,11 @@ export class GenerateApi {
     const url = `${this.baseUrl}/generate/pdf/standard/language-packs`;
     return this.httpClient.get<StandardPdfGeneratorLanguagePackDto[]>(url);
   }
+
+  getStandardPdfLanguagePack(name: string): Observable<StandardPdfGeneratorLanguagePackDto> {
+    const url = `${this.baseUrl}/generate/pdf/standard/language-packs/${name}`;
+    return this.httpClient.get<StandardPdfGeneratorLanguagePackDto>(url);
+  }
 }
 
 export interface GenerateStandardPdfOptions {

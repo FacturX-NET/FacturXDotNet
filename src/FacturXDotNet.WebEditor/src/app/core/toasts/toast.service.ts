@@ -17,9 +17,9 @@ export class ToastService {
     this.toastsSubject.next({ ...toast, id: this.counter++ });
   }
 
-  showError(error: unknown, messageFactory: (error: string) => string) {
+  showError(error: unknown, messageFactory?: (error: string) => string) {
     const errorMessage = getErrorMessage(error);
-    this.show({ type: 'error', message: messageFactory(errorMessage) });
+    this.show({ type: 'error', message: messageFactory === undefined ? errorMessage : messageFactory(errorMessage) });
     return of(void 0);
   }
 }

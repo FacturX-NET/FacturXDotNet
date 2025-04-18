@@ -1,7 +1,7 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { EditorSettingsPdfProfileFormComponent } from './components/editor-settings-pdf-profile-form.component';
-import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
+import { EditorPdfGenerationProfileData, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
 import { ToastService } from '../../../../../../core/toasts/toast.service';
 import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer/editor-pdf-viewer.service';
 
@@ -15,9 +15,8 @@ import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer
       </h4>
       <button class="btn btn-sm btn-outline-secondary" (click)="preview()">Preview</button>
     </div>
-
-    <h4></h4>
     <div class="border-top mb-3"></div>
+
     <app-editor-settings-pdf-profile-form></app-editor-settings-pdf-profile-form>
     <button class="btn btn-outline-success mt-3" (click)="create()">Create</button>
   `,
@@ -37,14 +36,12 @@ export class EditorSettingsPdfProfileCreateTab {
       return;
     }
 
-    form.formGroup.markAllAsTouched();
-    if (form.formGroup.invalid) {
-      this.toastService.show({ type: 'error', message: 'Please fill in all required fields.' });
-      return;
+    try {
+      const value = form.getValue() as EditorPdfGenerationProfileData;
+      this.editorPdfGenerationProfilesService.createProfile(value);
+    } catch (error) {
+      this.toastService.showError(error);
     }
-
-    const value = form.formGroup.getRawValue() as EditorPdfGenerationProfile;
-    this.editorPdfGenerationProfilesService.createProfile(value);
 
     await this.router.navigate(['/settings/profiles']);
   }
@@ -55,13 +52,11 @@ export class EditorSettingsPdfProfileCreateTab {
       return;
     }
 
-    form.formGroup.markAllAsTouched();
-    if (form.formGroup.invalid) {
-      this.toastService.show({ type: 'error', message: 'Please fill in all required fields.' });
-      return;
+    try {
+      const value = form.getValue() as EditorPdfGenerationProfileData;
+      this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf(value);
+    } catch (error) {
+      this.toastService.showError(error);
     }
-
-    const value = form.formGroup.getRawValue() as EditorPdfGenerationProfile;
-    this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf(value);
   }
 }

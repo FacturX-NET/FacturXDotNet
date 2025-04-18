@@ -22,12 +22,12 @@ public class StandardPdfGeneratorLanguagePackDto
     /// <summary>
     ///     The label representing "Our References" in the localized language pack, typically used to identify the document references associated with the sender.
     /// </summary>
-    public string? OurReferencesLabel { get; init; }
+    public string? SupplierReferencesLabel { get; init; }
 
     /// <summary>
     ///     The label used for the "Your references" field in the localized resources of the generator.
     /// </summary>
-    public string? YourReferencesLabel { get; init; }
+    public string? CustomerReferencesLabel { get; init; }
 
     /// <summary>
     ///     The label used for the order reference in the generator.
@@ -62,12 +62,12 @@ public class StandardPdfGeneratorLanguagePackDto
     /// <summary>
     ///     The label used to identify the client's address in the generated PDF.
     /// </summary>
-    public string? ClientAddressLabel { get; init; }
+    public string? CustomerAddressLabel { get; init; }
 
     /// <summary>
     ///     The label associated with the recipient's identifiers in the context of generating a PDF.
     /// </summary>
-    public string? YourIdentifiersLabel { get; init; }
+    public string? CustomerIdentifiersLabel { get; init; }
 
     /// <summary>
     ///     The label for delivery information, used to display or identify delivery-related details in the PDF document.
@@ -127,16 +127,16 @@ static class StandardPdfGeneratorLanguagePackMappingExtensions
         {
             Culture = string.IsNullOrWhiteSpace(pack.Culture) ? CultureInfo.InvariantCulture : new CultureInfo(pack.Culture),
             VatNumberLabel = pack.VatNumberLabel ?? "",
-            OurReferencesLabel = pack.OurReferencesLabel ?? "",
-            YourReferencesLabel = pack.YourReferencesLabel ?? "",
+            OurReferencesLabel = pack.SupplierReferencesLabel ?? "",
+            YourReferencesLabel = pack.CustomerReferencesLabel ?? "",
             OrderLabel = pack.OrderLabel ?? "",
             InvoiceReferencesLabel = pack.InvoiceReferencesLabel ?? "",
             BusinessProcessLabel = pack.BusinessProcessLabel ?? "",
             DocumentTypeNames = pack.DocumentTypeNames ?? [],
             DefaultDocumentTypeName = pack.DefaultDocumentTypeName ?? "",
             DateLabel = pack.DateLabel ?? "",
-            ClientAddressLabel = pack.ClientAddressLabel ?? "",
-            YourIdentifiersLabel = pack.YourIdentifiersLabel ?? "",
+            ClientAddressLabel = pack.CustomerAddressLabel ?? "",
+            YourIdentifiersLabel = pack.CustomerIdentifiersLabel ?? "",
             DeliveryInformationLabel = pack.DeliveryInformationLabel ?? "",
             CurrencyLabel = pack.CurrencyLabel ?? "",
             TotalWithoutVatLabel = pack.TotalWithoutVatLabel ?? "",
@@ -154,16 +154,16 @@ static class StandardPdfGeneratorLanguagePackMappingExtensions
         {
             Culture = pack.Culture.Name,
             VatNumberLabel = pack.VatNumberLabel,
-            OurReferencesLabel = pack.OurReferencesLabel,
-            YourReferencesLabel = pack.YourReferencesLabel,
+            SupplierReferencesLabel = pack.OurReferencesLabel,
+            CustomerReferencesLabel = pack.YourReferencesLabel,
             OrderLabel = pack.OrderLabel,
             InvoiceReferencesLabel = pack.InvoiceReferencesLabel,
             BusinessProcessLabel = pack.BusinessProcessLabel,
             DocumentTypeNames = pack.DocumentTypeNames,
             DefaultDocumentTypeName = pack.DefaultDocumentTypeName,
             DateLabel = pack.DateLabel,
-            ClientAddressLabel = pack.ClientAddressLabel,
-            YourIdentifiersLabel = pack.YourIdentifiersLabel,
+            CustomerAddressLabel = pack.ClientAddressLabel,
+            CustomerIdentifiersLabel = pack.YourIdentifiersLabel,
             DeliveryInformationLabel = pack.DeliveryInformationLabel,
             CurrencyLabel = pack.CurrencyLabel,
             TotalWithoutVatLabel = pack.TotalWithoutVatLabel,

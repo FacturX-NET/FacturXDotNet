@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, input, viewChild } from '@angular/core';
 import { EditorSettingsPdfProfileFormComponent } from './components/editor-settings-pdf-profile-form.component';
 import { Router, RouterLink } from '@angular/router';
-import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
+import { EditorPdfGenerationProfile, EditorPdfGenerationProfileData, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
 import { ToastService } from '../../../../../../core/toasts/toast.service';
 import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer/editor-pdf-viewer.service';
 import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
@@ -62,7 +62,7 @@ export class EditorSettingsPdfProfileEditTab {
         return;
       }
 
-      form.formGroup.patchValue(profile);
+      form.setValue(profile);
     });
   }
 
@@ -72,14 +72,12 @@ export class EditorSettingsPdfProfileEditTab {
       return;
     }
 
-    form.formGroup.markAllAsTouched();
-    if (form.formGroup.invalid) {
-      this.toastService.show({ type: 'error', message: 'Please fill in all required fields.' });
-      return;
+    try {
+      const value = form.getValue() as EditorPdfGenerationProfileData;
+      this.editorPdfGenerationProfilesService.updateProfile(this.profileId(), value);
+    } catch (error) {
+      this.toastService.showError(error);
     }
-
-    const value = form.formGroup.getRawValue() as EditorPdfGenerationProfile;
-    this.editorPdfGenerationProfilesService.updateProfile(this.profileId(), value);
 
     await this.router.navigate(['/settings/profiles']);
   }
@@ -99,13 +97,11 @@ export class EditorSettingsPdfProfileEditTab {
       return;
     }
 
-    form.formGroup.markAllAsTouched();
-    if (form.formGroup.invalid) {
-      this.toastService.show({ type: 'error', message: 'Please fill in all required fields.' });
-      return;
+    try {
+      const value = form.getValue() as EditorPdfGenerationProfileData;
+      this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf(value);
+    } catch (error) {
+      this.toastService.showError(error);
     }
-
-    const value = form.formGroup.getRawValue() as EditorPdfGenerationProfile;
-    this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf(value);
   }
 }

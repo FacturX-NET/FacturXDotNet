@@ -6,7 +6,6 @@
 
 /* tslint:disable */
 /* eslint-disable */
-
 // ReSharper disable InconsistentNaming
 
 export class ApplicableHeaderTradeAgreement implements IApplicableHeaderTradeAgreement {
@@ -1049,16 +1048,16 @@ export interface ISpecifiedTradeSettlementHeaderMonetarySummation {
 export class StandardPdfGeneratorLanguagePackDto implements IStandardPdfGeneratorLanguagePackDto {
   culture?: string | undefined;
   vatNumberLabel?: string | undefined;
-  ourReferencesLabel?: string | undefined;
-  yourReferencesLabel?: string | undefined;
+  supplierReferencesLabel?: string | undefined;
+  customerReferencesLabel?: string | undefined;
   orderLabel?: string | undefined;
   invoiceReferencesLabel?: string | undefined;
   businessProcessLabel?: string | undefined;
   documentTypeNames?: { [key: string]: string } | undefined;
   defaultDocumentTypeName?: string | undefined;
   dateLabel?: string | undefined;
-  clientAddressLabel?: string | undefined;
-  yourIdentifiersLabel?: string | undefined;
+  customerAddressLabel?: string | undefined;
+  customerIdentifiersLabel?: string | undefined;
   deliveryInformationLabel?: string | undefined;
   currencyLabel?: string | undefined;
   totalWithoutVatLabel?: string | undefined;
@@ -1087,8 +1086,8 @@ export class StandardPdfGeneratorLanguagePackDto implements IStandardPdfGenerato
       }
       this.culture = _data['culture'];
       this.vatNumberLabel = _data['vatNumberLabel'];
-      this.ourReferencesLabel = _data['ourReferencesLabel'];
-      this.yourReferencesLabel = _data['yourReferencesLabel'];
+      this.supplierReferencesLabel = _data['supplierReferencesLabel'];
+      this.customerReferencesLabel = _data['customerReferencesLabel'];
       this.orderLabel = _data['orderLabel'];
       this.invoiceReferencesLabel = _data['invoiceReferencesLabel'];
       this.businessProcessLabel = _data['businessProcessLabel'];
@@ -1100,8 +1099,8 @@ export class StandardPdfGeneratorLanguagePackDto implements IStandardPdfGenerato
       }
       this.defaultDocumentTypeName = _data['defaultDocumentTypeName'];
       this.dateLabel = _data['dateLabel'];
-      this.clientAddressLabel = _data['clientAddressLabel'];
-      this.yourIdentifiersLabel = _data['yourIdentifiersLabel'];
+      this.customerAddressLabel = _data['customerAddressLabel'];
+      this.customerIdentifiersLabel = _data['customerIdentifiersLabel'];
       this.deliveryInformationLabel = _data['deliveryInformationLabel'];
       this.currencyLabel = _data['currencyLabel'];
       this.totalWithoutVatLabel = _data['totalWithoutVatLabel'];
@@ -1129,8 +1128,8 @@ export class StandardPdfGeneratorLanguagePackDto implements IStandardPdfGenerato
     }
     data['culture'] = this.culture;
     data['vatNumberLabel'] = this.vatNumberLabel;
-    data['ourReferencesLabel'] = this.ourReferencesLabel;
-    data['yourReferencesLabel'] = this.yourReferencesLabel;
+    data['supplierReferencesLabel'] = this.supplierReferencesLabel;
+    data['customerReferencesLabel'] = this.customerReferencesLabel;
     data['orderLabel'] = this.orderLabel;
     data['invoiceReferencesLabel'] = this.invoiceReferencesLabel;
     data['businessProcessLabel'] = this.businessProcessLabel;
@@ -1142,8 +1141,8 @@ export class StandardPdfGeneratorLanguagePackDto implements IStandardPdfGenerato
     }
     data['defaultDocumentTypeName'] = this.defaultDocumentTypeName;
     data['dateLabel'] = this.dateLabel;
-    data['clientAddressLabel'] = this.clientAddressLabel;
-    data['yourIdentifiersLabel'] = this.yourIdentifiersLabel;
+    data['customerAddressLabel'] = this.customerAddressLabel;
+    data['customerIdentifiersLabel'] = this.customerIdentifiersLabel;
     data['deliveryInformationLabel'] = this.deliveryInformationLabel;
     data['currencyLabel'] = this.currencyLabel;
     data['totalWithoutVatLabel'] = this.totalWithoutVatLabel;
@@ -1161,16 +1160,16 @@ export class StandardPdfGeneratorLanguagePackDto implements IStandardPdfGenerato
 export interface IStandardPdfGeneratorLanguagePackDto {
   culture?: string | undefined;
   vatNumberLabel?: string | undefined;
-  ourReferencesLabel?: string | undefined;
-  yourReferencesLabel?: string | undefined;
+  supplierReferencesLabel?: string | undefined;
+  customerReferencesLabel?: string | undefined;
   orderLabel?: string | undefined;
   invoiceReferencesLabel?: string | undefined;
   businessProcessLabel?: string | undefined;
   documentTypeNames?: { [key: string]: string } | undefined;
   defaultDocumentTypeName?: string | undefined;
   dateLabel?: string | undefined;
-  clientAddressLabel?: string | undefined;
-  yourIdentifiersLabel?: string | undefined;
+  customerAddressLabel?: string | undefined;
+  customerIdentifiersLabel?: string | undefined;
   deliveryInformationLabel?: string | undefined;
   currencyLabel?: string | undefined;
   totalWithoutVatLabel?: string | undefined;
@@ -1188,16 +1187,16 @@ export interface IStandardPdfGeneratorLanguagePackDto {
 export class StandardPdfGeneratorLanguagePackDto2 implements IStandardPdfGeneratorLanguagePackDto2 {
   culture?: string | undefined;
   vatNumberLabel?: string | undefined;
-  ourReferencesLabel?: string | undefined;
-  yourReferencesLabel?: string | undefined;
+  supplierReferencesLabel?: string | undefined;
+  customerReferencesLabel?: string | undefined;
   orderLabel?: string | undefined;
   invoiceReferencesLabel?: string | undefined;
   businessProcessLabel?: string | undefined;
   documentTypeNames?: { [key: string]: string } | undefined;
   defaultDocumentTypeName?: string | undefined;
   dateLabel?: string | undefined;
-  clientAddressLabel?: string | undefined;
-  yourIdentifiersLabel?: string | undefined;
+  customerAddressLabel?: string | undefined;
+  customerIdentifiersLabel?: string | undefined;
   deliveryInformationLabel?: string | undefined;
   currencyLabel?: string | undefined;
   totalWithoutVatLabel?: string | undefined;
@@ -1226,8 +1225,8 @@ export class StandardPdfGeneratorLanguagePackDto2 implements IStandardPdfGenerat
       }
       this.culture = _data['culture'];
       this.vatNumberLabel = _data['vatNumberLabel'];
-      this.ourReferencesLabel = _data['ourReferencesLabel'];
-      this.yourReferencesLabel = _data['yourReferencesLabel'];
+      this.supplierReferencesLabel = _data['supplierReferencesLabel'];
+      this.customerReferencesLabel = _data['customerReferencesLabel'];
       this.orderLabel = _data['orderLabel'];
       this.invoiceReferencesLabel = _data['invoiceReferencesLabel'];
       this.businessProcessLabel = _data['businessProcessLabel'];
@@ -1239,8 +1238,8 @@ export class StandardPdfGeneratorLanguagePackDto2 implements IStandardPdfGenerat
       }
       this.defaultDocumentTypeName = _data['defaultDocumentTypeName'];
       this.dateLabel = _data['dateLabel'];
-      this.clientAddressLabel = _data['clientAddressLabel'];
-      this.yourIdentifiersLabel = _data['yourIdentifiersLabel'];
+      this.customerAddressLabel = _data['customerAddressLabel'];
+      this.customerIdentifiersLabel = _data['customerIdentifiersLabel'];
       this.deliveryInformationLabel = _data['deliveryInformationLabel'];
       this.currencyLabel = _data['currencyLabel'];
       this.totalWithoutVatLabel = _data['totalWithoutVatLabel'];
@@ -1268,8 +1267,8 @@ export class StandardPdfGeneratorLanguagePackDto2 implements IStandardPdfGenerat
     }
     data['culture'] = this.culture;
     data['vatNumberLabel'] = this.vatNumberLabel;
-    data['ourReferencesLabel'] = this.ourReferencesLabel;
-    data['yourReferencesLabel'] = this.yourReferencesLabel;
+    data['supplierReferencesLabel'] = this.supplierReferencesLabel;
+    data['customerReferencesLabel'] = this.customerReferencesLabel;
     data['orderLabel'] = this.orderLabel;
     data['invoiceReferencesLabel'] = this.invoiceReferencesLabel;
     data['businessProcessLabel'] = this.businessProcessLabel;
@@ -1281,8 +1280,8 @@ export class StandardPdfGeneratorLanguagePackDto2 implements IStandardPdfGenerat
     }
     data['defaultDocumentTypeName'] = this.defaultDocumentTypeName;
     data['dateLabel'] = this.dateLabel;
-    data['clientAddressLabel'] = this.clientAddressLabel;
-    data['yourIdentifiersLabel'] = this.yourIdentifiersLabel;
+    data['customerAddressLabel'] = this.customerAddressLabel;
+    data['customerIdentifiersLabel'] = this.customerIdentifiersLabel;
     data['deliveryInformationLabel'] = this.deliveryInformationLabel;
     data['currencyLabel'] = this.currencyLabel;
     data['totalWithoutVatLabel'] = this.totalWithoutVatLabel;
@@ -1300,16 +1299,16 @@ export class StandardPdfGeneratorLanguagePackDto2 implements IStandardPdfGenerat
 export interface IStandardPdfGeneratorLanguagePackDto2 {
   culture?: string | undefined;
   vatNumberLabel?: string | undefined;
-  ourReferencesLabel?: string | undefined;
-  yourReferencesLabel?: string | undefined;
+  supplierReferencesLabel?: string | undefined;
+  customerReferencesLabel?: string | undefined;
   orderLabel?: string | undefined;
   invoiceReferencesLabel?: string | undefined;
   businessProcessLabel?: string | undefined;
   documentTypeNames?: { [key: string]: string } | undefined;
   defaultDocumentTypeName?: string | undefined;
   dateLabel?: string | undefined;
-  clientAddressLabel?: string | undefined;
-  yourIdentifiersLabel?: string | undefined;
+  customerAddressLabel?: string | undefined;
+  customerIdentifiersLabel?: string | undefined;
   deliveryInformationLabel?: string | undefined;
   currencyLabel?: string | undefined;
   totalWithoutVatLabel?: string | undefined;
