@@ -29,10 +29,10 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
       <div class="border-top mb-3"></div>
     </div>
 
-    <app-editor-settings-pdf-profile-form [confirmationTpl]="confirmation">
+    <app-editor-settings-pdf-profile-form [confirmationTpl]="confirmation" #profileForm>
       <ng-template #confirmation>
         <div class="d-flex gap-2">
-          <button class="btn btn-outline-success mt-3" (click)="save()">Save changes</button>
+          <button class="btn btn-outline-success mt-3" (click)="save()" [disabled]="!profileForm.hasChanges()">Save changes</button>
           <button class="btn btn-outline-secondary mt-3" (click)="revertChanges()">Revert changes</button>
         </div>
       </ng-template>
@@ -81,8 +81,10 @@ export class EditorSettingsPdfProfileEditTab {
     try {
       const value = form.getValue();
       this.editorPdfGenerationProfilesService.updateProfile(this.profileId(), value);
+      this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf(value);
     } catch (error) {
       this.toastService.showError(error);
+      throw error;
     }
 
     this.toastService.show({ type: 'success', message: 'Profile saved successfully.' });
@@ -96,6 +98,15 @@ export class EditorSettingsPdfProfileEditTab {
 
     const profile = this.profile();
     form.setValue(profile);
+
+    try {
+      const value = form.getValue();
+      this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf(value);
+    } catch (error) {
+      this.toastService.showError(error);
+      throw error;
+    }
+
     this.toastService.show({ type: 'info', message: 'The values have been reverted to the original values. No changes have been saved.' });
   }
 

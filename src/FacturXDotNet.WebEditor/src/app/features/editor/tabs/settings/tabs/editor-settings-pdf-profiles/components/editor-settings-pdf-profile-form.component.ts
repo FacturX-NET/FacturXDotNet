@@ -1,9 +1,8 @@
-import { Component, computed, inject, input, Input, signal, Signal, TemplateRef } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, linkedSignal, Signal, TemplateRef, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ImportFileService } from '../../../../../../../core/import-file/import-file.service';
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { GenerateApi } from '../../../../../../../core/api/generate.api';
-import { distinctUntilChanged, map } from 'rxjs';
+import { delay, distinctUntilChanged, map, startWith } from 'rxjs';
 import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/api/api.models';
 import { EditorPdfGenerationProfileData } from '../../../../../editor-pdf-generation-profiles.service';
 import { EditorSettingsLanguagePackDocumentTypesFormComponent } from './editor-settings-language-pack-document-types-form.component';
@@ -25,7 +24,7 @@ import { NgTemplateOutlet } from '@angular/common';
       <app-editor-settings-general-form [formGroup]="formGroup" />
 
       @if (confirmationTpl(); as confirmationTpl) {
-        <ng-container [ngTemplateOutlet]="confirmationTpl"> </ng-container>
+        <ng-container [ngTemplateOutlet]="confirmationTpl"></ng-container>
       }
 
       <div class="pt-3">
@@ -45,7 +44,7 @@ import { NgTemplateOutlet } from '@angular/common';
             <app-editor-settings-language-pack-form formGroupName="languagePack" [languagePacks]="languagePacks.value() ?? []" [baseLanguagePack]="baseLanguagePack" />
 
             @if (confirmationTpl(); as confirmationTpl) {
-              <ng-container [ngTemplateOutlet]="confirmationTpl"> </ng-container>
+              <ng-container [ngTemplateOutlet]="confirmationTpl"></ng-container>
             }
 
             <div class="pt-3">
@@ -68,7 +67,7 @@ import { NgTemplateOutlet } from '@angular/common';
               </div>
 
               @if (confirmationTpl(); as confirmationTpl) {
-                <ng-container [ngTemplateOutlet]="confirmationTpl"> </ng-container>
+                <ng-container [ngTemplateOutlet]="confirmationTpl"></ng-container>
               }
             </div>
           }
@@ -81,9 +80,8 @@ import { NgTemplateOutlet } from '@angular/common';
 export class EditorSettingsPdfProfileFormComponent {
   confirmationTpl = input<TemplateRef<unknown> | undefined>(undefined);
 
-  private importFileService = inject(ImportFileService);
-
   private generateApi = inject(GenerateApi);
+  private destroyRef = inject(DestroyRef);
 
   protected formGroup = new FormGroup({
     name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -206,6 +204,8 @@ export class EditorSettingsPdfProfileFormComponent {
 
     return languagePacks.find((x) => x.culture === selectedPack) ?? {};
   });
+
+  hasChanges = toSignal(this.formGroup.events.pipe(map(() => this.formGroup.dirty)), { initialValue: false });
 
   getValue(): EditorPdfGenerationProfileData {
     this.formGroup.markAllAsTouched();
@@ -399,6 +399,7 @@ export class EditorSettingsPdfProfileFormComponent {
         },
       },
     });
+    this.formGroup.markAsPristine();
   }
 
   protected async overrideDocumentTypeNames(value: boolean) {
