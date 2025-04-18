@@ -7,6 +7,7 @@ import { EditorSettingsTab } from './tabs/settings/editor-settings.tab';
 import { EditorSettingsGeneralTab } from './tabs/settings/tabs/editor-settings-general/editor-settings-general.tab';
 import { EditorSettingsPdfProfilesTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profiles.tab';
 import { EditorSettingsPdfProfileCreateTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profile-create.tab';
+import { EditorSettingsPdfProfileEditTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profile-edit.tab';
 
 export const routes: Routes = [
   {
@@ -37,6 +38,10 @@ export const routes: Routes = [
           {
             path: 'profiles/create',
             component: EditorSettingsPdfProfileCreateTab,
+          },
+          {
+            path: 'profiles/edit/:profileId',
+            component: EditorSettingsPdfProfileEditTab,
           },
           {
             path: 'profiles',

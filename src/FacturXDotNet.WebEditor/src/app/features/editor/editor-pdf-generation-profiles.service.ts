@@ -7,26 +7,51 @@ export class EditorPdfGenerationProfilesService {
   get profiles() {
     return this.profilesInternal.asReadonly();
   }
-  private profilesInternal = signal<EditorPdfGenerationProfile[]>([
-    { id: 'default', name: 'Default' },
-    { id: 'other1', name: 'Other' },
-    { id: 'other2', name: 'Other' },
-  ]);
+  private profilesInternal = signal<Record<string, EditorPdfGenerationProfile>>({
+    default: { id: 'default', name: 'Default' },
+    other1: { id: 'other1', name: 'Other' },
+    other2: { id: 'other2', name: 'Other' },
+  });
 
   get selectedProfile() {
     return this.selectedProfileInternal.asReadonly();
   }
   private selectedProfileInternal = signal<EditorPdfGenerationProfile | undefined>(undefined);
 
-  createProfile(profile: EditorPdfGenerationProfile) {
-    const newProfile = { ...profile, id: idGenerator() };
+  getProfile(profileId: string) {
     const profiles = this.profilesInternal();
-    this.profilesInternal.set([...profiles, newProfile]);
+    return profiles[profileId];
+  }
+
+  createProfile(profile: EditorPdfGenerationProfileData) {
+    const newId = idGenerator();
+    const newProfile = { ...profile, id: newId };
+    const profiles = this.profilesInternal();
+    const newProfiles = { ...profiles, [newId]: newProfile };
+    this.profilesInternal.set(newProfiles);
+  }
+
+  updateProfile(profileId: string, value: EditorPdfGenerationProfileData) {
+    const profiles = this.profilesInternal();
+    if (profiles[profileId] === undefined) {
+      throw new Error(`Could not find profile ${profileId}`);
+    }
+
+    const newProfiles = { ...profiles };
+    newProfiles[profileId] = { id: profileId, ...value };
+    this.profilesInternal.set(newProfiles);
+  }
+
+  deleteProfile(profileId: string) {
+    const profiles = this.profilesInternal();
+    const newProfiles = { ...profiles };
+    delete newProfiles[profileId];
+    this.profilesInternal.set(newProfiles);
   }
 
   selectProfile(profileId: string) {
     const profiles = this.profilesInternal();
-    const profile = profiles.find((p) => p.id === profileId);
+    const profile = profiles[profileId];
     if (profile === undefined) {
       throw new Error(`Could not find profile ${profileId}`);
     }
@@ -35,10 +60,11 @@ export class EditorPdfGenerationProfilesService {
   }
 }
 
-export interface EditorPdfGenerationProfile {
-  id: string;
-  name: string;
+export interface EditorPdfGenerationProfileData {
+  readonly name: string;
 }
+
+export type EditorPdfGenerationProfile = { readonly id: string } & EditorPdfGenerationProfileData;
 
 function idGenerator() {
   return Math.random().toString(36).substring(2);

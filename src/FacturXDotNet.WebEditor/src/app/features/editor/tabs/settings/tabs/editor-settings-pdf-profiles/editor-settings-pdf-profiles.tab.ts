@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { EditorPdfViewerService } from '../../../../editor-pdf-viewer/editor-pdf-viewer.service';
 import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
 import { RouterLink } from '@angular/router';
@@ -7,19 +7,23 @@ import { RouterLink } from '@angular/router';
   selector: 'app-editor-settings-pdf-profiles',
   imports: [RouterLink],
   template: `
-    <h4><i class="bi bi-file-pdf"></i> PDF Profiles</h4>
+    <div class="d-flex align-items-start justify-content-between">
+      <h4><i class="bi bi-file-pdf"></i> PDF Profiles</h4>
+      @if (profilesArray().length > 0) {
+        <button class="btn btn-sm btn-outline-success mb-3" routerLink="create">New profile</button>
+      }
+    </div>
     <div class="border-top mb-3"></div>
-    @if (profiles().length > 0) {
+    @if (profilesArray().length > 0) {
       <p class="small text-body-secondary">
         Manage how your PDFs are generated and styled. Create and customize profiles with your own logo, translations, fonts, and colors to match your brand or language
         preferences. Save multiple profiles to quickly switch between different layouts or presentation styles.
       </p>
-      <button class="btn btn-sm btn-outline-success mb-3" routerLink="create">New profile</button>
       <div class="list-group">
-        @for (profile of profiles(); track profile.id) {
+        @for (profile of profilesArray(); track profile.id) {
           <div class="list-group-item">
             <div class="d-flex align-items-center py-2">
-              <a [routerLink]="profile.id">
+              <a [routerLink]="'edit/' + profile.id">
                 {{ profile.name }}
               </a>
               <div class="flex-grow-1"><!-- spacer --></div>
@@ -51,7 +55,8 @@ export class EditorSettingsPdfProfilesTab {
   private editorPdfGenerationProfilesService = inject(EditorPdfGenerationProfilesService);
   private editorPdfViewerService = inject(EditorPdfViewerService);
 
-  protected profiles = this.editorPdfGenerationProfilesService.profiles;
+  private profiles = this.editorPdfGenerationProfilesService.profiles;
+  protected profilesArray = computed(() => Object.values(this.profiles()));
   protected selectedProfile = this.editorPdfGenerationProfilesService.selectedProfile;
 
   protected selectProfile(profile: EditorPdfGenerationProfile) {

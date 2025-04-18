@@ -13,7 +13,7 @@ import { ToastService } from '../../../../../../core/toasts/toast.service';
     </h4>
     <div class="border-top mb-3"></div>
     <app-editor-settings-pdf-profile-form></app-editor-settings-pdf-profile-form>
-    <button class="btn btn-sm btn-outline-success mt-3" (click)="create()">Create</button>
+    <button class="btn btn-outline-success mt-3" (click)="create()">Create</button>
   `,
   styles: ``,
 })
