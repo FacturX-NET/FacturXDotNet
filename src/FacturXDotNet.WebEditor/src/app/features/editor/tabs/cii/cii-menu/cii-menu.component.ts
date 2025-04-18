@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, Input, input } from '@angular/core';
 import { CiiMenuDetailsDropdownComponent } from './cii-menu-details-dropdown.component';
 import { EditorSettings, EditorSettingsService } from '../../../editor-settings.service';
 import { CiiFormService } from '../cii-form/cii-form.service';
@@ -10,18 +10,22 @@ import { ToastService } from '../../../../../core/toasts/toast.service';
   imports: [CiiMenuDetailsDropdownComponent, NgbTooltip],
   template: `
     <div class="d-flex flex-column align-items-center py-2">
-      @if (settings().foldSummary) {
-        <button class="btn btn-link" (click)="unfoldSummary()" ngbTooltip="Unfold summary">
-          <i class="bi bi-chevron-right"></i>
-        </button>
+      @if (settings().foldSummary || forceFold()) {
+        @if (!forceFold()) {
+          <button class="btn btn-link" (click)="unfoldSummary()" ngbTooltip="Unfold summary">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        }
 
         <button class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#editor__cii-summary--offcanvas">
           <i class="bi bi-body-text"></i>
         </button>
       } @else {
-        <button class="btn btn-link" (click)="foldSummary()" ngbTooltip="Fold summary">
-          <i class="bi bi-chevron-left"></i>
-        </button>
+        @if (!forceFold()) {
+          <button class="btn btn-link" (click)="foldSummary()" ngbTooltip="Fold summary">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        }
       }
 
       <app-cii-menu-details-dropdown [settings]="settings()" />
@@ -45,6 +49,7 @@ import { ToastService } from '../../../../../core/toasts/toast.service';
 })
 export class CiiMenuComponent {
   settings = input.required<EditorSettings>();
+  forceFold = input<boolean>(false);
 
   private editorSettingsService = inject(EditorSettingsService);
   private ciiFormService = inject(CiiFormService);

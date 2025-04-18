@@ -29,6 +29,7 @@ body {
   --bs-link-decoration: none;
 
   --editor-summary-width: 420px;
+  --editor-summary-width-small: 240px;
   --editor-summary-offcanvas-width: 560px;
 }
 

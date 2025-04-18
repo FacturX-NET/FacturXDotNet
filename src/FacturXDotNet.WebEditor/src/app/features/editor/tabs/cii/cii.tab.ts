@@ -1,4 +1,4 @@
-import { Component, computed, inject, Resource, Signal } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, Resource, signal, Signal, viewChild } from '@angular/core';
 import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
 import { CiiFormComponent } from './cii-form/cii-form.component';
 import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
@@ -10,8 +10,8 @@ import { EditorSavedState, EditorStateService } from '../../editor-state.service
   selector: 'app-cii',
   imports: [CiiFormComponent, CiiSummaryComponent, CiiMenuComponent],
   template: `
-    <div class="h-100 d-flex overflow-hidden position-relative">
-      @if (settings().foldSummary) {
+    <div class="h-100 d-flex overflow-hidden position-relative" #container>
+      @if (settings().foldSummary || folded()) {
         <div id="editor__cii-summary--offcanvas" class="flex-shrink-0 offcanvas offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
           <div class="offcanvas-header align-items-center gap-2">
             <h5 class="offcanvas-title" id="ciiSummaryTitle">Cross-Industry Invoice</h5>
@@ -23,7 +23,7 @@ import { EditorSavedState, EditorStateService } from '../../editor-state.service
           </div>
         </div>
       } @else {
-        <div id="editor__cii-summary" class="flex-shrink-0 overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
+        <div id="editor__cii-summary" class="flex-shrink-0 overflow-y-auto ps-xl-3 pt-3" [class.small]="small()" tabindex="-1" aria-labelledby="ciiSummaryTitle">
           <div class="overflow-x-hidden small">
             <div class="justify-content-between">
               <h6>Cross-Industry Invoice</h6>
@@ -33,7 +33,7 @@ import { EditorSavedState, EditorStateService } from '../../editor-state.service
         </div>
       }
 
-      <app-cii-menu [settings]="settings()"></app-cii-menu>
+      <app-cii-menu [settings]="settings()" [forceFold]="folded()"></app-cii-menu>
 
       <div
         id="editor__cii-form"
@@ -66,6 +66,10 @@ import { EditorSavedState, EditorStateService } from '../../editor-state.service
       width: var(--editor-summary-width);
     }
 
+    #editor__cii-summary.small {
+      width: var(--editor-summary-width-small);
+    }
+
     #editor__cii-summary--offcanvas {
       width: var(--editor-summary-offcanvas-width);
     }
@@ -80,4 +84,33 @@ export class CiiTab {
   protected cii = computed(() => this.state.value()?.cii ?? {});
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected formState = this.ciiFormService.state;
+
+  private containerElement = viewChild<ElementRef>('container');
+  protected small = signal<boolean>(false);
+  protected folded = signal<boolean>(false);
+
+  constructor() {
+    const resizeObserver = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry.contentRect.width < 650) {
+        this.small.set(true);
+        this.folded.set(true);
+      } else if (entry.contentRect.width < 950) {
+        this.small.set(true);
+        this.folded.set(false);
+      } else {
+        this.small.set(false);
+        this.folded.set(false);
+      }
+    });
+
+    effect(() => {
+      const container = this.containerElement()?.nativeElement;
+      if (container === undefined || container === null) {
+        return;
+      }
+
+      resizeObserver.observe(container);
+    });
+  }
 }

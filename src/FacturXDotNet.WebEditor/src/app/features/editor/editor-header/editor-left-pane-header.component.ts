@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-editor-left-pane-header',
   imports: [NgbNav, NgbNavItem, NgbNavLink, RouterLink, FormsModule, NgbNavLinkBase],
   template: `
-    <ul ngbNav [activeId]="router.url" class="nav-tabs px-4">
+    <ul ngbNav [activeId]="router.url" class="nav-tabs px-4" [class.small]="small()">
       <li ngbNavItem="/xmp">
         <a ngbNavLink role="button" routerLink="/xmp">
           <i class="bi bi-info-lg"></i>
@@ -53,9 +53,13 @@ export class EditorLeftPaneHeaderComponent {
   settings = input.required<EditorSettings>();
 
   protected router = inject(Router);
+  protected small = computed(() => {
+    const width = this.width();
+    return width !== undefined && width < 950;
+  });
   protected folded = computed(() => {
     const width = this.width();
-    return width !== undefined && width < 800;
+    return width !== undefined && width < 650;
   });
 
   protected async changeTab(route: string) {
