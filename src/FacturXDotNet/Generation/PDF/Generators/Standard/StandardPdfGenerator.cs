@@ -181,10 +181,10 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
             .Text(sellerVatId, RedBrush, NormalFont);
         CellDrawer.Create(page, SellerInfoRect).DrawLeftBorder(BorderBrush);
 
-        CellDrawer.Create(page, SellerReferencesRect, 0).Text(_options.LanguagePack.OurReferencesLabel, font: NormalBoldFont);
+        CellDrawer.Create(page, SellerReferencesRect, 0).Text(_options.LanguagePack.SupplierReferencesLabel, font: NormalBoldFont);
         CellDrawer.Create(page, SellerReferencesRect).DrawLeftBorder(BorderBrush);
 
-        CellDrawer.Create(page, BuyerReferencesRect, 0).Text(_options.LanguagePack.YourReferencesLabel, font: NormalBoldFont);
+        CellDrawer.Create(page, BuyerReferencesRect, 0).Text(_options.LanguagePack.CustomerReferencesLabel, font: NormalBoldFont);
         CellDrawer.Create(page, BuyerReferencesRect, 1)
             .Background(GreenLineBg)
             .Text(invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerReference, BlueBrush);
@@ -205,9 +205,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
             .Text(invoice.ExchangedDocumentContext?.BusinessProcessSpecifiedDocumentContextParameterId, BlueBrush, NormalFont);
         CellDrawer.Create(page, InvoiceReferencesRect).DrawLeftBorder(BorderBrush);
 
-        string documentTypeName = invoice.ExchangedDocument?.TypeCode == null
-            ? _options.LanguagePack.DefaultDocumentTypeName
-            : _options.LanguagePack.DocumentTypeNames.GetValueOrDefault(invoice.ExchangedDocument.TypeCode.Value) ?? _options.LanguagePack.DefaultDocumentTypeName;
+        string documentTypeName = GetDocumentName(invoice);
         CellDrawer.Create(page, DocumentInfoRect, 0).Background(GreenLineBg).Text(documentTypeName, font: BigBoldFont);
         CellDrawer.Create(page, DocumentInfoRect, 1).Background(GreenLineBg).Key("N° ", BlackBrush, NormalFont, false).Text(invoice.ExchangedDocument?.Id, RedBrush, BigFont);
         CellDrawer.Create(page, DocumentInfoRect, 2)
@@ -215,7 +213,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
             .Text(invoice.ExchangedDocument?.IssueDateTime?.ToString("d", _options.LanguagePack.Culture), RedBrush, BigFont);
         CellDrawer.Create(page, DocumentInfoRect).DrawLeftBorder(BorderBrush);
 
-        CellDrawer.Create(page, BuyerInfoRect, 0).Text(_options.LanguagePack.ClientAddressLabel, font: NormalBoldFont);
+        CellDrawer.Create(page, BuyerInfoRect, 0).Text(_options.LanguagePack.CustomerAddressLabel, font: NormalBoldFont);
         CellDrawer.Create(page, BuyerInfoRect, 1).Background(BlueLineBg);
         CellDrawer.Create(page, BuyerInfoRect, 2)
             .Background(GreenLineBg)
@@ -227,7 +225,7 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
         CellDrawer.Create(page, BuyerInfoRect, 8).Background(GreenLineBg);
         CellDrawer.Create(page, BuyerInfoRect).DrawLeftBorder(BorderBrush);
 
-        CellDrawer.Create(page, BuyerIdentifiersRect, 0).Text(_options.LanguagePack.YourIdentifiersLabel, font: NormalBoldFont);
+        CellDrawer.Create(page, BuyerIdentifiersRect, 0).Text(_options.LanguagePack.CustomerIdentifiersLabel, font: NormalBoldFont);
         string buyerLegalIdType = GetLegalIdType(invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.SpecifiedLegalOrganization?.IdSchemeId);
         string? buyerLegalId = FormatLegalId(
             invoice.SupplyChainTradeTransaction?.ApplicableHeaderTradeAgreement?.BuyerTradeParty?.SpecifiedLegalOrganization?.Id,
@@ -324,6 +322,17 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
             );
 
         return document;
+    }
+
+    string GetDocumentName(CrossIndustryInvoice invoice)
+    {
+        if (invoice.ExchangedDocument?.TypeCode == null)
+        {
+            return _options.LanguagePack.DefaultDocumentTypeName;
+        }
+
+        string? typeName = _options.LanguagePack.DocumentTypeNames.GetValueOrDefault(invoice.ExchangedDocument.TypeCode.Value);
+        return string.IsNullOrWhiteSpace(typeName) ? _options.LanguagePack.DefaultDocumentTypeName : typeName;
     }
 
     string GetLegalIdType(string? idSchemeId) =>

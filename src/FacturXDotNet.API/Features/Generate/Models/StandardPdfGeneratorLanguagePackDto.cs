@@ -47,7 +47,7 @@ public class StandardPdfGeneratorLanguagePackDto
     /// <summary>
     ///     The collection of names for document types, keyed by their invoice type codes.
     /// </summary>
-    public Dictionary<InvoiceTypeCode, string>? DocumentTypeNames { get; init; }
+    public Dictionary<InvoiceTypeCode, string?>? DocumentTypeNames { get; init; }
 
     /// <summary>
     ///     The name of the document type used in the generator.
@@ -123,7 +123,7 @@ public class StandardPdfGeneratorLanguagePackDto
 static class StandardPdfGeneratorLanguagePackMappingExtensions
 {
     public static StandardPdfGeneratorLanguagePack ToStandardPdfGeneratorLanguagePack(this StandardPdfGeneratorLanguagePackDto pack) =>
-        new(StandardPdfGeneratorLanguagePack.English)
+        new(StandardPdfGeneratorLanguagePack.Empty)
         {
             Culture = string.IsNullOrWhiteSpace(pack.Culture) ? CultureInfo.InvariantCulture : new CultureInfo(pack.Culture),
             VatNumberLabel = pack.VatNumberLabel ?? "",

@@ -10,22 +10,25 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
   selector: 'app-editor-settings-pdf-profile-edit',
   imports: [EditorSettingsPdfProfileFormComponent, RouterLink, NgbDropdown, NgbDropdownMenu, NgbDropdownToggle, NgbDropdownItem],
   template: `
-    <div class="d-flex align-items-start justify-content-between">
-      <h4>
-        <a routerLink="/settings/profiles"><i class="bi bi-file-pdf"></i> PDF Profiles</a> / {{ profile().name }}
-      </h4>
-      <div class="d-flex align-items-start gap-2">
-        <button class="btn btn-sm btn-outline-secondary" (click)="preview()">Preview</button>
+    <div class="sticky-top pt-2 bg-body">
+      <div class="d-flex align-items-start justify-content-between">
+        <h4>
+          <a routerLink="/settings/profiles"><i class="bi bi-file-pdf"></i> PDF Profiles</a> / {{ profile().name }}
+        </h4>
+        <div class="d-flex align-items-start gap-2">
+          <button class="btn btn-sm btn-outline-secondary" (click)="preview()">Preview</button>
 
-        <div ngbDropdown>
-          <button id="editor-settings-profile-edit-menu" class="btn btn-sm btn-outline-secondary hide-toggle" ngbDropdownToggle><i class="bi bi-three-dots"></i></button>
-          <div ngbDropdownMenu aria-labelledby="editor-settings-profile-edit-menu">
-            <button class="text-danger" (click)="delete()" ngbDropdownItem><i class="bi bi-trash"></i> Delete profile</button>
+          <div ngbDropdown>
+            <button id="editor-settings-profile-edit-menu" class="btn btn-sm btn-outline-secondary hide-toggle" ngbDropdownToggle><i class="bi bi-three-dots"></i></button>
+            <div ngbDropdownMenu aria-labelledby="editor-settings-profile-edit-menu">
+              <button class="text-danger" (click)="delete()" ngbDropdownItem><i class="bi bi-trash"></i> Delete profile</button>
+            </div>
           </div>
         </div>
       </div>
+      <div class="border-top mb-3"></div>
     </div>
-    <div class="border-top mb-3"></div>
+
     <app-editor-settings-pdf-profile-form></app-editor-settings-pdf-profile-form>
     <div class="d-flex gap-2">
       <button class="btn btn-outline-success mt-3" (click)="save()">Save changes</button>
