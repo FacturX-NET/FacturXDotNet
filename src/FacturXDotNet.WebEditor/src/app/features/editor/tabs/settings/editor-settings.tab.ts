@@ -23,7 +23,9 @@ import { NgbNav, NgbNavItem, NgbNavLink, NgbNavLinkButton } from '@ng-bootstrap/
             </div>
           </div>
 
-          <router-outlet></router-outlet>
+          <div class="flex-grow-1">
+            <router-outlet></router-outlet>
+          </div>
         </div>
       </div>
     </div>
