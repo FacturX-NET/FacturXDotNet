@@ -33,7 +33,7 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
       <ng-template #confirmation>
         <div class="d-flex gap-2">
           <button class="btn btn-outline-success mt-3" (click)="save()">Save changes</button>
-          <button class="btn btn-outline-secondary mt-3" (click)="cancel()">Revert changes</button>
+          <button class="btn btn-outline-secondary mt-3" (click)="revertChanges()">Revert changes</button>
         </div>
       </ng-template>
     </app-editor-settings-pdf-profile-form>
@@ -85,11 +85,18 @@ export class EditorSettingsPdfProfileEditTab {
       this.toastService.showError(error);
     }
 
-    await this.router.navigate(['/settings/profiles']);
+    this.toastService.show({ type: 'success', message: 'Profile saved successfully.' });
   }
 
-  protected async cancel() {
-    await this.router.navigate(['/settings/profiles']);
+  protected async revertChanges() {
+    const form = this.form();
+    if (form === undefined) {
+      return;
+    }
+
+    const profile = this.profile();
+    form.setValue(profile);
+    this.toastService.show({ type: 'info', message: 'The values have been reverted to the original values. No changes have been saved.' });
   }
 
   protected async delete() {
