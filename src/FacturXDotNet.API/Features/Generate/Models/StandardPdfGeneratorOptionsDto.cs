@@ -29,6 +29,6 @@ static class StandardPdfGeneratorOptionsMappingExtensions
     public static StandardPdfGeneratorOptions ToStandardPdfGeneratorOptions(this StandardPdfGeneratorOptionsDto options) =>
         new()
         {
-            Logo = options.Logo, Footer = options.Footer, LanguagePack = options.LanguagePack?.ToStandardPdfGeneratorLanguagePack() ?? StandardPdfGeneratorLanguagePack.English
+            Logo = options.Logo, Footer = options.Footer, LanguagePack = options.LanguagePack?.ToStandardPdfGeneratorLanguagePack() ?? StandardPdfGeneratorLanguagePack.Default
         };
 }
