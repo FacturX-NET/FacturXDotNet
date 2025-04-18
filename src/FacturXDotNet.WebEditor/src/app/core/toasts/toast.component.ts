@@ -7,7 +7,7 @@ import { ToastInstance } from './toast.service';
 @Component({
   selector: 'app-toast',
   template: `
-    @let colorScheme = toast().type === 'success' ? 'text-bg-success' : toast().type == 'error' ? 'text-bg-danger' : '';
+    @let colorScheme = toast().type === 'success' ? 'text-bg-success' : toast().type == 'info' ? 'text-bg-light' : toast().type == 'error' ? 'text-bg-danger' : '';
 
     <div #toastElt aria-atomic="true" aria-live="assertive" class="toast {{ colorScheme }}" data-bs-autohide="true" data-bs-delay="10000" role="alert">
       <div class="d-flex">

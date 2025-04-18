@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { from, map, Observable, of, switchMap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../../app.config';
-import { CrossIndustryInvoice, ICrossIndustryInvoice, IXmpMetadata } from './api.models';
+import { CrossIndustryInvoice, ICrossIndustryInvoice, IXmpMetadata, StandardPdfGeneratorLanguagePackDto } from './api.models';
 import { EditorStateAttachment } from '../../features/editor/editor-state.service';
 
 @Injectable({
@@ -78,18 +78,11 @@ export class GenerateApi {
   }
 
   generateStandardPdf(cii: ICrossIndustryInvoice, options?: GenerateStandardPdfOptions): Observable<File> {
-    return from(options?.logo?.arrayBuffer() ?? of(undefined)).pipe(
-      switchMap((logoBytes) => {
-        const url = `${this.baseUrl}/generate/pdf/standard`;
-        const ciiObj = new CrossIndustryInvoice(cii);
-        const request: { crossIndustryInvoice: CrossIndustryInvoice; options: { logo?: string } } = { crossIndustryInvoice: ciiObj.toJSON(), options: {} };
+    const url = `${this.baseUrl}/generate/pdf/standard`;
+    const ciiObj = new CrossIndustryInvoice(cii);
+    const request = { crossIndustryInvoice: ciiObj.toJSON(), options };
 
-        if (logoBytes !== undefined) {
-          request.options.logo = btoa(String.fromCharCode(...new Uint8Array(logoBytes)));
-        }
-
-        return this.httpClient.post(url, request, { observe: 'response', responseType: 'blob' });
-      }),
+    return this.httpClient.post(url, request, { observe: 'response', responseType: 'blob' }).pipe(
       map((response): File => {
         if (response.body === null) {
           throw new Error('No response body');
@@ -101,8 +94,20 @@ export class GenerateApi {
       }),
     );
   }
+
+  getStandardPdfLanguagePacks(): Observable<StandardPdfGeneratorLanguagePackDto[]> {
+    const url = `${this.baseUrl}/generate/pdf/standard/language-packs`;
+    return this.httpClient.get<StandardPdfGeneratorLanguagePackDto[]>(url);
+  }
+
+  getStandardPdfLanguagePack(name: string): Observable<StandardPdfGeneratorLanguagePackDto> {
+    const url = `${this.baseUrl}/generate/pdf/standard/language-packs/${name}`;
+    return this.httpClient.get<StandardPdfGeneratorLanguagePackDto>(url);
+  }
 }
 
-interface GenerateStandardPdfOptions {
-  readonly logo?: Blob;
+export interface GenerateStandardPdfOptions {
+  readonly logo?: string;
+  readonly footer?: string;
+  readonly languagePack?: StandardPdfGeneratorLanguagePackDto;
 }

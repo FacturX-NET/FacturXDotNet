@@ -18,6 +18,11 @@ namespace FacturXDotNet.API.Features.Generate;
 static class GenerateController
 {
     static readonly JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
+    static readonly IReadOnlyDictionary<string, StandardPdfGeneratorLanguagePackDto> LanguagePacks = new[]
+    {
+        StandardPdfGeneratorLanguagePack.English,
+        StandardPdfGeneratorLanguagePack.French
+    }.ToDictionary(p => p.Culture.Name, p => p.ToStandardPdfGeneratorLanguagePackDto());
 
     public static RouteGroupBuilder MapGenerateEndpoints(this RouteGroupBuilder routes)
     {
@@ -49,6 +54,14 @@ static class GenerateController
             .WithSummary("Get predefined language packs")
             .WithDescription("Get the predefined language packs for the standard PDF generator. These packs can serve as a starting point for custom language packs.")
             .Produces<IReadOnlyCollection<StandardPdfGeneratorLanguagePackDto>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .DisableAntiforgery();
+
+        routes.MapGet("/pdf/standard/language-packs/{languagePackName}", GetStandardPdfLanguagePack)
+            .WithSummary("Get predefined language pack")
+            .WithDescription("Get the predefined language pack with the given name for the standard PDF generator.")
+            .Produces<StandardPdfGeneratorLanguagePackDto>()
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
@@ -161,9 +174,7 @@ static class GenerateController
         return Results.File(pdfStream, "application/pdf", $"Invoice {invoiceNumber} - {sellerName} - {buyerName}.pdf", DateTimeOffset.Now);
     }
 
-    static IReadOnlyCollection<StandardPdfGeneratorLanguagePackDto> GetStandardPdfLanguagePacks(HttpContext context) =>
-    [
-        StandardPdfGeneratorLanguagePack.English.ToStandardPdfGeneratorLanguagePackDto(),
-        StandardPdfGeneratorLanguagePack.French.ToStandardPdfGeneratorLanguagePackDto()
-    ];
+    static IEnumerable<StandardPdfGeneratorLanguagePackDto> GetStandardPdfLanguagePacks() => LanguagePacks.Values;
+
+    static StandardPdfGeneratorLanguagePackDto? GetStandardPdfLanguagePack(string languagePackName) => LanguagePacks.GetValueOrDefault(languagePackName);
 }

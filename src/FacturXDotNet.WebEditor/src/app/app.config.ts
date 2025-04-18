@@ -1,5 +1,5 @@
 import { ApplicationConfig, InjectionToken, provideExperimentalZonelessChangeDetection } from '@angular/core';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
@@ -11,7 +11,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 export const appConfig: ApplicationConfig = {
   providers: [
     provideExperimentalZonelessChangeDetection(),
-    provideRouter(routes, withInMemoryScrolling({ anchorScrolling: 'enabled' })),
+    provideRouter(routes, withInMemoryScrolling({ anchorScrolling: 'enabled' }), withComponentInputBinding()),
     provideHttpClient(withFetch()),
     { provide: API_BASE_URL, useValue: environment.apiUrl },
     provideMarkdown(),

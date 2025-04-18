@@ -29,6 +29,7 @@ body {
   --bs-link-decoration: none;
 
   --editor-summary-width: 420px;
+  --editor-summary-width-small: 240px;
   --editor-summary-offcanvas-width: 560px;
 }
 
@@ -89,9 +90,6 @@ markdown p:last-of-type {
 
 .editor__control {
   max-width: 420px;
-}
-
-.btn {
 }
 
 .btn-outline-primary {

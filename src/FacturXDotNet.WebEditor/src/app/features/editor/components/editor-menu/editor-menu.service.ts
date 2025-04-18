@@ -1,15 +1,16 @@
 import { computed, DestroyRef, inject, Injectable, signal, Signal } from '@angular/core';
-import { ImportFileService } from '../../../core/import-file/import-file.service';
-import { ExtractApi } from '../../../core/api/extract.api';
+import { ImportFileService } from '../../../../core/import-file/import-file.service';
+import { ExtractApi } from '../../../../core/api/extract.api';
 import { firstValueFrom } from 'rxjs';
-import { ICrossIndustryInvoice } from '../../../core/api/api.models';
+import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { downloadBlob, downloadFile } from '../../../core/utils/download-blob';
-import { GenerateApi } from '../../../core/api/generate.api';
-import { CiiFormService } from '../tabs/cii/cii-form/cii-form.service';
-import { EditorStateService } from '../editor-state.service';
+import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
+import { GenerateApi } from '../../../../core/api/generate.api';
+import { CiiFormService } from '../../tabs/cii/cii-form/cii-form.service';
+import { EditorStateService } from '../../editor-state.service';
 import * as pdf from 'pdfjs-dist';
-import { EditorSettingsService } from '../editor-settings.service';
+import { EditorSettingsService } from '../../editor-settings.service';
+import { EditorPdfViewerService } from '../editor-pdf-viewer/editor-pdf-viewer.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,7 @@ import { EditorSettingsService } from '../editor-settings.service';
 export class EditorMenuService {
   private editorStateService = inject(EditorStateService);
   private editorSettingsService = inject(EditorSettingsService);
+  private editorPdfViewerService = inject(EditorPdfViewerService);
   private ciiFormService = inject(CiiFormService);
   private importFileService = inject(ImportFileService);
   private extractApi = inject(ExtractApi);
@@ -195,7 +197,7 @@ export class EditorMenuService {
       throw new Error('Invalid Cross-Industry Invoice data');
     }
 
-    const pdf = await this.getPdf();
+    const pdf = this.getPdf();
     if (pdf === undefined) {
       throw new Error('Internal Error: the PDF is not set');
     }
@@ -243,7 +245,7 @@ export class EditorMenuService {
       throw new Error('Internal Error: no saved state available');
     }
 
-    const pdf = await this.getPdf();
+    const pdf = this.getPdf();
     if (pdf === undefined) {
       throw new Error('Internal Error: the PDF is not set');
     }
@@ -262,18 +264,8 @@ export class EditorMenuService {
     return this.ciiFormService.form.getRawValue();
   }
 
-  private async getPdf(): Promise<Blob | undefined> {
-    const value = this.editorStateService.savedState.value();
-    if (value === undefined || value === null) {
-      return undefined;
-    }
-
-    const tab = this.editorSettingsService.settings().pdfTab;
-    if (tab === 'imported' && value.pdf !== undefined) {
-      return value.pdf.content;
-    }
-
-    return firstValueFrom(this.generateApi.generateStandardPdf(value.cii).pipe(takeUntilDestroyed(this.destroyRef)));
+  private getPdf(): Blob | undefined {
+    return this.editorPdfViewerService.pdf.value()?.content;
   }
 
   private async extractPdfAttachments(file: File): Promise<{ name: string; description?: string; content: Uint8Array }[]> {
