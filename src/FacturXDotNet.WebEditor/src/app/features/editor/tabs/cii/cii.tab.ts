@@ -5,12 +5,13 @@ import { CiiSummaryComponent } from './cii-summary/cii-summary.component';
 import { CiiMenuComponent } from './cii-menu/cii-menu.component';
 import { CiiFormService } from './cii-form/cii-form.service';
 import { EditorSavedState, EditorStateService } from '../../editor-state.service';
+import { EditorResponsivenessService } from '../../editor-responsiveness.service';
 
 @Component({
   selector: 'app-cii',
   imports: [CiiFormComponent, CiiSummaryComponent, CiiMenuComponent],
   template: `
-    <div class="h-100 d-flex overflow-hidden position-relative" #container>
+    <div class="h-100 d-flex overflow-hidden position-relative">
       @if (settings().foldSummary || folded()) {
         <div id="editor__cii-summary--offcanvas" class="flex-shrink-0 offcanvas offcanvas-start overflow-y-auto ps-xl-3 pt-3" tabindex="-1" aria-labelledby="ciiSummaryTitle">
           <div class="offcanvas-header align-items-center gap-2">
@@ -38,6 +39,7 @@ import { EditorSavedState, EditorStateService } from '../../editor-state.service
       <div
         id="editor__cii-form"
         class="flex-grow-1 h-100 position-relative overflow-y-auto mt-3 pb-5"
+        [class.small]="small()"
         data-bs-spy="scroll"
         data-bs-target="#editor__cii-summary-content"
         data-bs-smooth-scroll="true"
@@ -77,6 +79,7 @@ import { EditorSavedState, EditorStateService } from '../../editor-state.service
 })
 export class CiiTab {
   private editorStateService = inject(EditorStateService);
+  private editorResponsivenessService = inject(EditorResponsivenessService);
   private ciiFormService = inject(CiiFormService);
   private settingsService = inject(EditorSettingsService);
 
@@ -85,32 +88,6 @@ export class CiiTab {
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
   protected formState = this.ciiFormService.state;
 
-  private containerElement = viewChild<ElementRef>('container');
-  protected small = signal<boolean>(false);
-  protected folded = signal<boolean>(false);
-
-  constructor() {
-    const resizeObserver = new ResizeObserver((entries) => {
-      const entry = entries[0];
-      if (entry.contentRect.width < 650) {
-        this.small.set(true);
-        this.folded.set(true);
-      } else if (entry.contentRect.width < 950) {
-        this.small.set(true);
-        this.folded.set(false);
-      } else {
-        this.small.set(false);
-        this.folded.set(false);
-      }
-    });
-
-    effect(() => {
-      const container = this.containerElement()?.nativeElement;
-      if (container === undefined || container === null) {
-        return;
-      }
-
-      resizeObserver.observe(container);
-    });
-  }
+  protected small = this.editorResponsivenessService.smallLeftColumn;
+  protected folded = this.editorResponsivenessService.foldLeftColumn;
 }

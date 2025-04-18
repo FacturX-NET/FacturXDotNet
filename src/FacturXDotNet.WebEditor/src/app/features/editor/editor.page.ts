@@ -15,6 +15,7 @@ import { RouterOutlet } from '@angular/router';
 import { EditorPdfViewerComponent } from './editor-pdf-viewer/editor-pdf-viewer.component';
 import { EditorHeaderNameComponent } from './editor-header/editor-header-name.component';
 import { EditorRightPaneHeaderComponent } from './editor-header/editor-right-pane-header.component';
+import { EditorResponsivenessService } from './editor-responsiveness.service';
 
 @Component({
   selector: 'app-editor',
@@ -85,7 +86,7 @@ import { EditorRightPaneHeaderComponent } from './editor-header/editor-right-pan
             <div>
               <app-two-columns [rightColumnWidth]="rightColumnWidth()" resizeHandleWidth="16">
                 <div class="h-100" left>
-                  <app-editor-left-pane-header [state]="value" [width]="leftColumnWidth()" [settings]="settings()"></app-editor-left-pane-header>
+                  <app-editor-left-pane-header [state]="value" [settings]="settings()"></app-editor-left-pane-header>
                 </div>
                 <div class="h-100" right>
                   <app-editor-right-pane-header [tab]="pdfTab()" (tabChange)="changePdfTab($event)"></app-editor-right-pane-header>
@@ -149,6 +150,7 @@ export class EditorPage {
   private editorStateService = inject(EditorStateService);
   private editorMenuService = inject(EditorMenuService);
   private editorSettingsService = inject(EditorSettingsService);
+  private editorResponsivenessService = inject(EditorResponsivenessService);
   private settingsService = inject(EditorSettingsService);
 
   protected apiUrl = inject(API_BASE_URL);
@@ -169,6 +171,11 @@ export class EditorPage {
       const rightColumnWidth = this.rightColumnWidth();
       this.saveRightColumnWidth(this.rightColumnWidthLocalStorageKey, rightColumnWidth);
     });
+
+    effect(() => {
+      const editorLeftColumnWidth = this.totalWidth() - this.rightColumnWidth() - 16;
+      this.editorResponsivenessService.setLeftColumnWidth(editorLeftColumnWidth);
+    });
   }
 
   @HostListener('window:resize', ['$event'])
@@ -177,8 +184,6 @@ export class EditorPage {
     const width = target?.innerWidth ?? 0;
     this.totalWidth.set(width);
   }
-
-  protected leftColumnWidth = computed(() => this.totalWidth() - this.rightColumnWidth() - 16);
 
   protected rightColumnWidth = linkedSignal<number, number>({
     source: () => this.totalWidth(),
