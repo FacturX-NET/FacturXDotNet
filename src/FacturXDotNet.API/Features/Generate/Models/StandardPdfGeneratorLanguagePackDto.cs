@@ -20,14 +20,54 @@ public class StandardPdfGeneratorLanguagePackDto
     public string? VatNumberLabel { get; init; }
 
     /// <summary>
+    ///     The label representing the contact information in the standard PDF generator.
+    /// </summary>
+    public string? ContactLabel { get; init; }
+
+    /// <summary>
+    ///     The label used for email in the standard PDF generator language pack.
+    /// </summary>
+    public string? EmailLabel { get; init; }
+
+    /// <summary>
     ///     The label representing "Our References" in the localized language pack, typically used to identify the document references associated with the sender.
     /// </summary>
     public string? SupplierReferencesLabel { get; init; }
 
     /// <summary>
+    ///     The label used to identify the invoiced object, which provides a description or reference for the object being invoiced.
+    /// </summary>
+    public string? InvoicedObjectIdentifierLabel { get; init; }
+
+    /// <summary>
+    ///     The label associated with the sales order reference, typically displayed in a PDF document to identify the related sales order.
+    /// </summary>
+    public string? SalesOrderReferenceLabel { get; init; }
+
+    /// <summary>
     ///     The label used for the "Your references" field in the localized resources of the generator.
     /// </summary>
     public string? CustomerReferencesLabel { get; init; }
+
+    /// <summary>
+    ///     The label used to represent a call for tender within the context of the language pack.
+    /// </summary>
+    public string? CallForTenderLabel { get; init; }
+
+    /// <summary>
+    ///     The label representing the project reference in the language pack, used for identifying a referenced project.
+    /// </summary>
+    public string? ProjectReferenceLabel { get; init; }
+
+    /// <summary>
+    ///     The label associated with the accounting reference, used for standardized naming in the generator output.
+    /// </summary>
+    public string? AccountingReferenceLabel { get; init; }
+
+    /// <summary>
+    ///     The label for the contract reference field in the language pack.
+    /// </summary>
+    public string? ContractReferenceLabel { get; init; }
 
     /// <summary>
     ///     The label used for the order reference in the generator.
@@ -38,6 +78,26 @@ public class StandardPdfGeneratorLanguagePackDto
     ///     The label representing invoice references, used to identify and localize these references in the generated PDF.
     /// </summary>
     public string? InvoiceReferencesLabel { get; init; }
+
+    /// <summary>
+    ///     The label representing the starting period in a given language pack for the PDF generator.
+    /// </summary>
+    public string? StartPeriodLabel { get; init; }
+
+    /// <summary>
+    ///     The label representing the end of a specified period in the document.
+    /// </summary>
+    public string? EndPeriodLabel { get; init; }
+
+    /// <summary>
+    ///     The label associated with the reference to a preceding invoice.
+    /// </summary>
+    public string? PrecedingInvoiceReferenceLabel { get; init; }
+
+    /// <summary>
+    ///     The label text used for displaying the date of the preceding invoice in the generated PDF document.
+    /// </summary>
+    public string? PrecedingInvoiceDateLabel { get; init; }
 
     /// <summary>
     ///     The label used to represent a business process in the generated PDF.
@@ -78,6 +138,22 @@ public class StandardPdfGeneratorLanguagePackDto
     ///     The label for delivery information, used to display or identify delivery-related details in the PDF document.
     /// </summary>
     public string? DeliveryInformationLabel { get; init; }
+
+    /// <summary>
+    ///     The label associated with the despatch advice, typically used to represent shipping or dispatch information in documents.
+    /// </summary>
+    public string? DespatchAdviceLabel { get; init; }
+
+    /// <summary>
+    ///     The label used to identify the delivery date in the generated document.
+    /// </summary>
+    public string? DeliveryDateLabel { get; init; }
+
+    /// <summary>
+    ///     The reference identifier for a receiving advice document, typically used to associate deliveries
+    ///     with related documentation in the business process.
+    /// </summary>
+    public string? ReceivingAdviceLabel { get; init; }
 
     /// <summary>
     ///     The label used to represent or display the currency in the generator's output.
@@ -132,18 +208,33 @@ static class StandardPdfGeneratorLanguagePackMappingExtensions
         {
             Culture = string.IsNullOrWhiteSpace(pack.Culture) ? CultureInfo.InvariantCulture : new CultureInfo(pack.Culture),
             VatNumberLabel = pack.VatNumberLabel ?? "",
-            SupplierReferencesLabel = pack.SupplierReferencesLabel ?? "",
-            CustomerReferencesLabel = pack.CustomerReferencesLabel ?? "",
-            OrderLabel = pack.OrderLabel ?? "",
+            ContactLabel = pack.ContactLabel ?? "",
+            EmailLabel = pack.EmailLabel ?? "",
+            SellerReferencesLabel = pack.SupplierReferencesLabel ?? "",
+            InvoicedObjectIdentifierLabel = pack.InvoicedObjectIdentifierLabel ?? "",
+            SalesOrderReferenceLabel = pack.SalesOrderReferenceLabel ?? "",
+            BuyerReferencesLabel = pack.CustomerReferencesLabel ?? "",
+            CallForTenderLabel = pack.CallForTenderLabel ?? "",
+            ProjectReferenceLabel = pack.ProjectReferenceLabel ?? "",
+            AccountingReferenceLabel = pack.AccountingReferenceLabel ?? "",
+            ContractReferenceLabel = pack.ContractReferenceLabel ?? "",
+            PurchaseOrderReferenceLabel = pack.OrderLabel ?? "",
             InvoiceReferencesLabel = pack.InvoiceReferencesLabel ?? "",
+            StartPeriodLabel = pack.StartPeriodLabel ?? "",
+            EndPeriodLabel = pack.EndPeriodLabel ?? "",
+            PrecedingInvoiceReferenceLabel = pack.PrecedingInvoiceReferenceLabel ?? "",
+            PrecedingInvoiceDateLabel = pack.PrecedingInvoiceDateLabel ?? "",
             BusinessProcessLabel = pack.BusinessProcessLabel ?? "",
             DocumentTypeNames = pack.DocumentTypeNames ?? [],
             DefaultInvoiceDocumentsTypeName = pack.DefaultInvoiceDocumentsTypeName ?? "",
             DefaultCreditNoteDocumentsTypeName = pack.DefaultCreditNoteDocumentsTypeName ?? "",
             DateLabel = pack.DateLabel ?? "",
-            CustomerAddressLabel = pack.CustomerAddressLabel ?? "",
-            CustomerIdentifiersLabel = pack.CustomerIdentifiersLabel ?? "",
+            BuyerAddressLabel = pack.CustomerAddressLabel ?? "",
+            BuyerIdentifiersLabel = pack.CustomerIdentifiersLabel ?? "",
             DeliveryInformationLabel = pack.DeliveryInformationLabel ?? "",
+            DespatchAdviceLabel = pack.DespatchAdviceLabel ?? "",
+            DeliveryDateLabel = pack.DeliveryDateLabel ?? "",
+            ReceivingAdviceLabel = pack.ReceivingAdviceLabel ?? "",
             CurrencyLabel = pack.CurrencyLabel ?? "",
             TotalWithoutVatLabel = pack.TotalWithoutVatLabel ?? "",
             TotalVatLabel = pack.TotalVatLabel ?? "",
@@ -160,17 +251,17 @@ static class StandardPdfGeneratorLanguagePackMappingExtensions
         {
             Culture = pack.Culture.Name,
             VatNumberLabel = pack.VatNumberLabel,
-            SupplierReferencesLabel = pack.SupplierReferencesLabel,
-            CustomerReferencesLabel = pack.CustomerReferencesLabel,
-            OrderLabel = pack.OrderLabel,
+            SupplierReferencesLabel = pack.SellerReferencesLabel,
+            CustomerReferencesLabel = pack.BuyerReferencesLabel,
+            OrderLabel = pack.PurchaseOrderReferenceLabel,
             InvoiceReferencesLabel = pack.InvoiceReferencesLabel,
             BusinessProcessLabel = pack.BusinessProcessLabel,
             DocumentTypeNames = pack.DocumentTypeNames,
             DefaultInvoiceDocumentsTypeName = pack.DefaultInvoiceDocumentsTypeName,
             DefaultCreditNoteDocumentsTypeName = pack.DefaultCreditNoteDocumentsTypeName,
             DateLabel = pack.DateLabel,
-            CustomerAddressLabel = pack.CustomerAddressLabel,
-            CustomerIdentifiersLabel = pack.CustomerIdentifiersLabel,
+            CustomerAddressLabel = pack.BuyerAddressLabel,
+            CustomerIdentifiersLabel = pack.BuyerIdentifiersLabel,
             DeliveryInformationLabel = pack.DeliveryInformationLabel,
             CurrencyLabel = pack.CurrencyLabel,
             TotalWithoutVatLabel = pack.TotalWithoutVatLabel,
