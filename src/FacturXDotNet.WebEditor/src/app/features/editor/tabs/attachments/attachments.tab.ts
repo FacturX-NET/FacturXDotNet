@@ -18,10 +18,10 @@ import { DeletedAttachment, DeletedAttachmentsService } from './deleted-attachme
         <h4 class="text-truncate">Attachments ({{ attachments().length }})</h4>
         <hr class="mt-0" />
         <div class="d-flex gap-2 mb-4">
-          <button class="btn btn-sm btn-outline-secondary text-truncate" (click)="addAttachment()"><i class="bi bi-plus"></i> Add attachment</button>
+          <button class="btn btn-sm btn-light border text-truncate" (click)="addAttachment()"><i class="bi bi-plus"></i> Add attachment</button>
           @if (attachments().length !== 0) {
             <div class="flex-grow-1"><!-- spacer --></div>
-            <button class="btn btn-sm btn-outline-secondary text-truncate" (click)="downloadAllAttachments()"><i class="bi bi-download"></i> Download all</button>
+            <button class="btn btn-sm btn-light border text-truncate" (click)="downloadAllAttachments()"><i class="bi bi-download"></i> Download all</button>
             <button class="btn btn-sm btn-outline-danger text-truncate" (click)="deleteAllAttachments()"><i class="bi bi-trash"></i> Delete all</button>
           }
         </div>
@@ -33,7 +33,7 @@ import { DeletedAttachment, DeletedAttachmentsService } from './deleted-attachme
                   <app-attachment [attachment]="attachment" (attachmentChange)="updateAttachment($index, $event)"></app-attachment>
                 </div>
                 <div class="d-flex gap-2">
-                  <button class="btn btn-sm btn-outline-secondary text-truncate" (click)="downloadAttachment($index)"><i class="bi bi-download"></i></button>
+                  <button class="btn btn-sm btn-light border text-truncate" (click)="downloadAttachment($index)"><i class="bi bi-download"></i></button>
                   <button class="btn btn-sm btn-outline-danger text-truncate" (click)="deleteAttachment($index)"><i class="bi bi-trash"></i></button>
                 </div>
               </div>
@@ -52,7 +52,7 @@ import { DeletedAttachment, DeletedAttachmentsService } from './deleted-attachme
             WILL NOT be shared between tabs.
           </p>
           <div class="d-flex justify-content-end gap-2 mb-4">
-            <button class="btn btn-sm btn-outline-secondary text-truncate" (click)="downloadAllDeletedAttachments()"><i class="bi bi-download"></i> Download all</button>
+            <button class="btn btn-sm btn-light border text-truncate" (click)="downloadAllDeletedAttachments()"><i class="bi bi-download"></i> Download all</button>
             <button class="btn btn-sm btn-outline-primary text-truncate" (click)="restoreAllAttachments()"><i class="bi bi-arrow-bar-up"></i> Restore all</button>
           </div>
           <div class="list-group">
@@ -63,7 +63,7 @@ import { DeletedAttachment, DeletedAttachmentsService } from './deleted-attachme
                     <app-attachment [attachment]="deletedAttachment" editable="false"></app-attachment>
                   </div>
                   <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-outline-secondary text-truncate" (click)="downloadDeletedAttachment(deletedAttachment)"><i class="bi bi-download"></i></button>
+                    <button class="btn btn-sm btn-light border text-truncate" (click)="downloadDeletedAttachment(deletedAttachment)"><i class="bi bi-download"></i></button>
                     <button class="btn btn-sm btn-outline-primary text-truncate" (click)="restoreDeletedAttachment(deletedAttachment)"><i class="bi bi-arrow-bar-up"></i></button>
                   </div>
                 </div>

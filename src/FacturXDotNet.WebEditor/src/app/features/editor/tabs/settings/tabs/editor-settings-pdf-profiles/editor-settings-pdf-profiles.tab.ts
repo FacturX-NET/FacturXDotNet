@@ -28,7 +28,7 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
             @if (selectedProfile() === undefined) {
               <button class="btn btn-sm btn-outline-success ms-2" disabled>Selected</button>
             } @else {
-              <button class="btn btn-sm btn-outline-secondary ms-2" (click)="selectProfile(undefined)">Select</button>
+              <button class="btn btn-sm btn-light border ms-2" (click)="selectProfile(undefined)">Select</button>
             }
           </div>
         </div>
@@ -44,10 +44,10 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
                 @if (selectedProfile() !== undefined && selectedProfile()?.id === profile.id) {
                   <button class="btn btn-sm btn-outline-success ms-2" disabled>Selected</button>
                 } @else {
-                  <button class="btn btn-sm btn-outline-secondary ms-2" (click)="selectProfile(profile)">Select</button>
+                  <button class="btn btn-sm btn-light border ms-2" (click)="selectProfile(profile)">Select</button>
                 }
                 <div ngbDropdown>
-                  <button id="editor-settings-profile-edit-menu" class="btn btn-sm btn-outline-secondary hide-toggle" ngbDropdownToggle><i class="bi bi-three-dots"></i></button>
+                  <button id="editor-settings-profile-edit-menu" class="btn btn-sm btn-light border hide-toggle" ngbDropdownToggle><i class="bi bi-three-dots"></i></button>
                   <div ngbDropdownMenu aria-labelledby="editor-settings-profile-edit-menu">
                     <button class="text-danger" (click)="deleteProfile(profile)" ngbDropdownItem><i class="bi bi-trash"></i> Delete profile</button>
                   </div>

@@ -28,11 +28,11 @@ import { ImportFileService } from '../../../../../../../core/import-file/import-
             <img class="img-thumbnail" [src]="formGroup().controls['logoBase64'].value" alt="Logo" />
           </div>
           <div class="d-flex flex-wrap gap-2">
-            <button role="button" class="btn btn-outline-secondary" (click)="chooseLogo()">Change logo</button>
-            <button role="button" class="btn btn-outline-secondary" (click)="removeLogo()">Remove logo</button>
+            <button role="button" class="btn btn-light border" (click)="chooseLogo()">Change logo</button>
+            <button role="button" class="btn btn-light border" (click)="removeLogo()">Remove logo</button>
           </div>
         } @else {
-          <button role="button" class="btn btn-outline-secondary" (click)="chooseLogo()">Upload logo</button>
+          <button role="button" class="btn btn-light border" (click)="chooseLogo()">Upload logo</button>
         }
       </div>
       <p class="form-text">Upload your logo to display it in the top-left corner of the generated invoice.</p>

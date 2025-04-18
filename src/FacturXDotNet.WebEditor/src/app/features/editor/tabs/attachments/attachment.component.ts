@@ -15,7 +15,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
           <input class="form-control form-control-sm" formControlName="description" placeholder="Description" />
         </div>
         <div class="d-flex gap-2">
-          <button class="btn btn-sm btn-outline-secondary mt-3"><i class="bi bi-floppy2-fill"></i> Save</button>
+          <button class="btn btn-sm btn-light border mt-3"><i class="bi bi-floppy2-fill"></i> Save</button>
           <button type="button" class="btn btn-sm btn-outline-danger mt-3" (click)="cancel()"><i class="bi bi-x-lg"></i> Cancel</button>
         </div>
       </form>

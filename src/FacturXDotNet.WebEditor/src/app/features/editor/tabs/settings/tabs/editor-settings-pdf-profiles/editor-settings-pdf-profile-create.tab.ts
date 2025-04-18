@@ -14,7 +14,7 @@ import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer
         <h4>
           <a routerLink="/settings/profiles"><i class="bi bi-file-pdf"></i> PDF Profiles</a> / New profile
         </h4>
-        <button class="btn btn-sm btn-outline-secondary" (click)="preview()">Preview</button>
+        <button class="btn btn-sm btn-light border" (click)="preview()">Preview</button>
       </div>
       <div class="border-top mb-3"></div>
     </div>
