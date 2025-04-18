@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, computed, HostListener, input, model, output, signal } from '@angular/core';
+import { booleanAttribute, Component, computed, HostListener, input, model, numberAttribute, output, signal } from '@angular/core';
 import { NgStyle } from '@angular/common';
 
 @Component({
@@ -33,7 +33,7 @@ import { NgStyle } from '@angular/common';
 })
 export class TwoColumnsComponent {
   rightColumnWidth = model.required<number>();
-  resizeHandleWidth = input(16);
+  resizeHandleWidth = input(16, { transform: numberAttribute });
   draggable = input(false, { transform: booleanAttribute });
   dragging = output<boolean>();
 

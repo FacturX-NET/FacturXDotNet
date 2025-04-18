@@ -83,9 +83,9 @@ import { EditorRightPaneHeaderComponent } from './editor-header/editor-right-pan
               <app-editor-header-name [name]="value.name" />
             </div>
             <div>
-              <app-two-columns [rightColumnWidth]="rightColumnWidth()">
+              <app-two-columns [rightColumnWidth]="rightColumnWidth()" resizeHandleWidth="16">
                 <div class="h-100" left>
-                  <app-editor-left-pane-header [state]="value" [settings]="settings()"></app-editor-left-pane-header>
+                  <app-editor-left-pane-header [state]="value" [width]="leftColumnWidth()" [settings]="settings()"></app-editor-left-pane-header>
                 </div>
                 <div class="h-100" right>
                   <app-editor-right-pane-header [tab]="pdfTab()" (tabChange)="changePdfTab($event)"></app-editor-right-pane-header>
@@ -95,7 +95,7 @@ import { EditorRightPaneHeaderComponent } from './editor-header/editor-right-pan
           </header>
 
           <div class="flex-grow-1 overflow-hidden">
-            <app-two-columns [(rightColumnWidth)]="rightColumnWidth" (dragging)="disablePointerEvents.set($event)" draggable>
+            <app-two-columns [(rightColumnWidth)]="rightColumnWidth" resizeHandleWidth="16" (dragging)="disablePointerEvents.set($event)" draggable>
               <div class="h-100 overflow-hidden" left>
                 <router-outlet></router-outlet>
               </div>
@@ -177,6 +177,8 @@ export class EditorPage {
     const width = target?.innerWidth ?? 0;
     this.totalWidth.set(width);
   }
+
+  protected leftColumnWidth = computed(() => this.totalWidth() - this.rightColumnWidth() - 16);
 
   protected rightColumnWidth = linkedSignal<number, number>({
     source: () => this.totalWidth(),
