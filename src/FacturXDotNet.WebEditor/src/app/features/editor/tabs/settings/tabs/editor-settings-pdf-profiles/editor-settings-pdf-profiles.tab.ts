@@ -70,7 +70,11 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
       </div>
     }
   `,
-  styles: ``,
+  styles: `
+    .hide-toggle::after {
+      content: none;
+    }
+  `,
 })
 export class EditorSettingsPdfProfilesTab {
   private editorPdfGenerationProfilesService = inject(EditorPdfGenerationProfilesService);
