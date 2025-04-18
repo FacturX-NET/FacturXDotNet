@@ -9,15 +9,18 @@ import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer
   selector: 'app-editor-settings-pdf-profile-create',
   imports: [RouterLink, EditorSettingsPdfProfileFormComponent],
   template: `
-    <div class="d-flex align-items-start justify-content-between">
-      <h4>
-        <a routerLink="/settings/profiles"><i class="bi bi-file-pdf"></i> PDF Profiles</a> / New profile
-      </h4>
-      <button class="btn btn-sm btn-outline-secondary" (click)="preview()">Preview</button>
+    <div class="sticky-top pt-2 bg-body">
+      <div class="d-flex align-items-start justify-content-between">
+        <h4>
+          <a routerLink="/settings/profiles"><i class="bi bi-file-pdf"></i> PDF Profiles</a> / New profile
+        </h4>
+        <button class="btn btn-sm btn-outline-secondary" (click)="preview()">Preview</button>
+      </div>
+      <div class="border-top mb-3"></div>
     </div>
-    <div class="border-top mb-3"></div>
 
     <app-editor-settings-pdf-profile-form></app-editor-settings-pdf-profile-form>
+
     <button class="btn btn-outline-success mt-3" (click)="create()">Create</button>
   `,
   styles: ``,
@@ -37,7 +40,7 @@ export class EditorSettingsPdfProfileCreateTab {
     }
 
     try {
-      const value = form.getValue() as EditorPdfGenerationProfileData;
+      const value = form.getValue();
       this.editorPdfGenerationProfilesService.createProfile(value);
     } catch (error) {
       this.toastService.showError(error);
@@ -53,7 +56,7 @@ export class EditorSettingsPdfProfileCreateTab {
     }
 
     try {
-      const value = form.getValue() as EditorPdfGenerationProfileData;
+      const value = form.getValue();
       this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf(value);
     } catch (error) {
       this.toastService.showError(error);

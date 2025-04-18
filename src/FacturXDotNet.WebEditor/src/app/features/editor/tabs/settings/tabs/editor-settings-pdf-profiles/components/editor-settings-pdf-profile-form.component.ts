@@ -6,10 +6,11 @@ import { GenerateApi } from '../../../../../../../core/api/generate.api';
 import { distinctUntilChanged, map } from 'rxjs';
 import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/api/api.models';
 import { EditorPdfGenerationProfileData } from '../../../../../editor-pdf-generation-profiles.service';
+import { EditorSettingsLanguagePackDocumentTypesFormComponent } from './editor-settings-language-pack-document-types-form.component';
 
 @Component({
   selector: 'app-editor-settings-pdf-profile-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, EditorSettingsLanguagePackDocumentTypesFormComponent],
   template: `
     <form [formGroup]="formGroup">
       <div class="editor__control mb-3">
@@ -262,588 +263,49 @@ import { EditorPdfGenerationProfileData } from '../../../../../editor-pdf-genera
               <p class="form-text">The label used to indicate page numbers in multi-page invoices.</p>
             </div>
 
-            <div formGroupName="documentTypeNames">
-              <h6>Document Types</h6>
-              <div class="border-top mb-3"></div>
-
+            <div class="d-flex flex-wrap gap-3 mb-3">
               <div class="editor__control mb-3">
-                <label class="form-label fw-semibold" for="editor-settings-profile-default-document-type-name">Default Document Type</label>
+                <label class="form-label fw-semibold" for="editor-settings-profile-default-invoice-documents-type-name">Default Invoice Documents Name</label>
                 <input
                   class="form-control"
-                  id="editor-settings-profile-default-document-type-name"
-                  formControlName="defaultDocumentTypeName"
-                  [placeholder]="baseLanguagePack?.defaultDocumentTypeName ?? ''"
+                  id="editor-settings-profile-default-invoice-documents-type-name"
+                  formControlName="defaultInvoiceDocumentsTypeName"
+                  [placeholder]="baseLanguagePack?.defaultInvoiceDocumentsTypeName ?? ''"
                 />
                 <p class="form-text">
-                  The label used when the actual invoice type cannot be matched to a more specific name. Typically set to "Invoice", it serves as a fallback when no precise
-                  document type label is available.
+                  The label used when the document is an invoice and the actual invoice type cannot be matched to a more specific name. Typically set to "Invoice", it serves as a
+                  fallback when no precise document type label is available.
                 </p>
               </div>
 
-              <div class="d-flex flex-wrap gap-3 mb-3">
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-RequestForPayment">71 - Request for payment</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-RequestForPayment"
-                    formControlName="requestForPayment"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['RequestForPayment'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-DebitNoteRelatedToGoodsOrServices">80 - Debit note related to goods or services</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-DebitNoteRelatedToGoodsOrServices"
-                    formControlName="debitNoteRelatedToGoodsOrServices"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['DebitNoteRelatedToGoodsOrServices'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-CreditNoteRelatedToGoodsOrServices">81 - Credit note related to goods or services</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-CreditNoteRelatedToGoodsOrServices"
-                    formControlName="creditNoteRelatedToGoodsOrServices"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['CreditNoteRelatedToGoodsOrServices'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-MeteredServicesInvoice">82 - Metered services invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-MeteredServicesInvoice"
-                    formControlName="meteredServicesInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['MeteredServicesInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-CreditNoteRelatedToFinancialAdjustments"
-                    >83 - Credit note related to financial adjustments</label
-                  >
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-CreditNoteRelatedToFinancialAdjustments"
-                    formControlName="creditNoteRelatedToFinancialAdjustments"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['CreditNoteRelatedToFinancialAdjustments'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-DebitNoteRelatedToFinancialAdjustments"
-                    >84 - Debit note related to financial adjustments</label
-                  >
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-DebitNoteRelatedToFinancialAdjustments"
-                    formControlName="debitNoteRelatedToFinancialAdjustments"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['DebitNoteRelatedToFinancialAdjustments'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-TaxNotification">102 - Tax notification</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-TaxNotification"
-                    formControlName="taxNotification"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['TaxNotification'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-InvoicingDataSheet">130 - Invoicing data sheet</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-InvoicingDataSheet"
-                    formControlName="invoicingDataSheet"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['InvoicingDataSheet'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-DirectPaymentValuation">202 - Direct payment valuation</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-DirectPaymentValuation"
-                    formControlName="directPaymentValuation"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['DirectPaymentValuation'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ProvisionalPaymentValuation">203 - Provisional payment valuation</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ProvisionalPaymentValuation"
-                    formControlName="provisionalPaymentValuation"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ProvisionalPaymentValuation'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-PaymentValuation">204 - Payment valuation</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-PaymentValuation"
-                    formControlName="paymentValuation"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['PaymentValuation'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-InterimApplicationForPayment">211 - Interim application for payment</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-InterimApplicationForPayment"
-                    formControlName="interimApplicationForPayment"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['InterimApplicationForPayment'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-FinalPaymentRequestBasedOnCompletionOfWork">
-                    218 - Final payment request based on completion of work
-                  </label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-FinalPaymentRequestBasedOnCompletionOfWork"
-                    formControlName="finalPaymentRequestBasedOnCompletionOfWork"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['FinalPaymentRequestBasedOnCompletionOfWork'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-PaymentRequestForCompletedUnits">219 - Payment request for completed units</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-PaymentRequestForCompletedUnits"
-                    formControlName="paymentRequestForCompletedUnits"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['PaymentRequestForCompletedUnits'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-SelfBilledCreditNote">261 - Self billed credit note</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-SelfBilledCreditNote"
-                    formControlName="selfBilledCreditNote"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['SelfBilledCreditNote'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ConsolidatedCreditNoteGoodsAndServices"
-                    >262 - Consolidated credit note - goods and services</label
-                  >
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ConsolidatedCreditNoteGoodsAndServices"
-                    formControlName="consolidatedCreditNoteGoodsAndServices"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ConsolidatedCreditNoteGoodsAndServices'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-PriceVariationInvoice">295 - Price variation invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-PriceVariationInvoice"
-                    formControlName="priceVariationInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['PriceVariationInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-CreditNoteForPriceVariation">296 - Credit note for price variation</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-CreditNoteForPriceVariation"
-                    formControlName="creditNoteForPriceVariation"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['CreditNoteForPriceVariation'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-DelcredereCreditNote">308 - Delcredere credit note</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-DelcredereCreditNote"
-                    formControlName="delcredereCreditNote"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['DelcredereCreditNote'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ProformaInvoice">325 - Proforma invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ProformaInvoice"
-                    formControlName="proformaInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ProformaInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-PartialInvoice">326 - Partial invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-PartialInvoice"
-                    formControlName="partialInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['PartialInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-CommercialInvoiceWhichIncludesPackingList">
-                    331 - Commercial invoice which includes a packing list
-                  </label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-CommercialInvoiceWhichIncludesPackingList"
-                    formControlName="commercialInvoiceWhichIncludesPackingList"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['CommercialInvoiceWhichIncludesPackingList'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-CommercialInvoice">380 - Commercial invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-CommercialInvoice"
-                    formControlName="commercialInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['CommercialInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-CreditNote">381 - Credit note</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-CreditNote"
-                    formControlName="creditNote"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['CreditNote'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-CommissionNote">382 - Commission note</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-CommissionNote"
-                    formControlName="commissionNote"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['CommissionNote'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-DebitNote">383 - Debit note</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-DebitNote"
-                    formControlName="debitNote"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['DebitNote'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-CorrectedInvoice">384 - Corrected invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-CorrectedInvoice"
-                    formControlName="correctedInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['CorrectedInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ConsolidatedInvoice">385 - Consolidated invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ConsolidatedInvoice"
-                    formControlName="consolidatedInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ConsolidatedInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-PrepaymentInvoice">386 - Prepayment invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-PrepaymentInvoice"
-                    formControlName="prepaymentInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['PrepaymentInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-HireInvoice">387 - Hire invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-HireInvoice"
-                    formControlName="hireInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['HireInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-TaxInvoice">388 - Tax invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-TaxInvoice"
-                    formControlName="taxInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['TaxInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-SelfBilledInvoice">389 - Self-billed invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-SelfBilledInvoice"
-                    formControlName="selfBilledInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['SelfBilledInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-DelcredereInvoice">390 - Delcredere invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-DelcredereInvoice"
-                    formControlName="delcredereInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['DelcredereInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-FactoredInvoice">393 - Factored invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-FactoredInvoice"
-                    formControlName="factoredInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['FactoredInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-LeaseInvoice">394 - Lease invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-LeaseInvoice"
-                    formControlName="leaseInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['LeaseInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ConsignmentInvoice">395 - Consignment invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ConsignmentInvoice"
-                    formControlName="consignmentInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ConsignmentInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-FactoredCreditNote">396 - Factored credit note</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-FactoredCreditNote"
-                    formControlName="factoredCreditNote"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['FactoredCreditNote'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-OcrPaymentCreditNote">420 - Optical Character Reading (OCR) payment credit note</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-OcrPaymentCreditNote"
-                    formControlName="ocrPaymentCreditNote"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['OcrPaymentCreditNote'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-DebitAdvice">456 - Debit advice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-DebitAdvice"
-                    formControlName="debitAdvice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['DebitAdvice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ReversalOfDebit">457 - Reversal of debit</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ReversalOfDebit"
-                    formControlName="reversalOfDebit"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ReversalOfDebit'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ReversalOfCredit">458 - Reversal of credit</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ReversalOfCredit"
-                    formControlName="reversalOfCredit"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ReversalOfCredit'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-SelfBilledDebitNote">527 - Self billed debit note</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-SelfBilledDebitNote"
-                    formControlName="selfBilledDebitNote"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['SelfBilledDebitNote'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ForwardersCreditNote">532 - Forwarder's credit note</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ForwardersCreditNote"
-                    formControlName="forwardersCreditNote"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ForwardersCreditNote'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ForwardersInvoiceDiscrepancyReport">553 - Forwarder's invoice discrepancy report</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ForwardersInvoiceDiscrepancyReport"
-                    formControlName="forwardersInvoiceDiscrepancyReport"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ForwardersInvoiceDiscrepancyReport'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-InsurersInvoice">575 - Insurer's invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-InsurersInvoice"
-                    formControlName="insurersInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['InsurersInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ForwardersInvoice">623 - Forwarder's invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ForwardersInvoice"
-                    formControlName="forwardersInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ForwardersInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-PortChargesDocuments">633 - Port charges documents</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-PortChargesDocuments"
-                    formControlName="portChargesDocuments"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['PortChargesDocuments'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-InvoiceInformationForAccountingPurposes"
-                    >751 - Invoice information for accounting purposes</label
-                  >
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-InvoiceInformationForAccountingPurposes"
-                    formControlName="invoiceInformationForAccountingPurposes"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['InvoiceInformationForAccountingPurposes'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-FreightInvoice">780 - Freight invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-FreightInvoice"
-                    formControlName="freightInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['FreightInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ClaimNotification">817 - Claim notification</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ClaimNotification"
-                    formControlName="claimNotification"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ClaimNotification'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-ConsularInvoice">870 - Consular invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-ConsularInvoice"
-                    formControlName="consularInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['ConsularInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-PartialConstructionInvoice">875 - Partial construction invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-PartialConstructionInvoice"
-                    formControlName="partialConstructionInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['PartialConstructionInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-PartialFinalConstructionInvoice">876 - Partial final construction invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-PartialFinalConstructionInvoice"
-                    formControlName="partialFinalConstructionInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['PartialFinalConstructionInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-FinalConstructionInvoice">877 - Final construction invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-FinalConstructionInvoice"
-                    formControlName="finalConstructionInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['FinalConstructionInvoice'] ?? ''"
-                  />
-                </div>
-
-                <div class="editor__control col-6">
-                  <label class="form-label fw-semibold" for="editor-settings-profile-CustomsInvoice">935 - Customs invoice</label>
-                  <input
-                    class="form-control"
-                    id="editor-settings-profile-CustomsInvoice"
-                    formControlName="customsInvoice"
-                    [placeholder]="baseLanguagePack?.documentTypeNames?.['CustomsInvoice'] ?? ''"
-                  />
-                </div>
+              <div class="editor__control mb-3">
+                <label class="form-label fw-semibold" for="editor-settings-profile-default-credit-note-documents-type-name">Default Credit Note Documents Name</label>
+                <input
+                  class="form-control"
+                  id="editor-settings-profile-default-credit-note-documents-type-name"
+                  formControlName="defaultCreditNoteDocumentsTypeName"
+                  [placeholder]="baseLanguagePack?.defaultCreditNoteDocumentsTypeName ?? ''"
+                />
+                <p class="form-text">
+                  The label used when the document is a credit note and the actual credit note type cannot be matched to a more specific name. Typically set to "Credit Note", it
+                  serves as a fallback when no precise document type label is available.
+                </p>
               </div>
             </div>
+
+            <h6>Document Types</h6>
+            <div class="border-top mt-1 mb-3"></div>
+            <p class="form-text">
+              The fields above let you set the labels for common document types like invoices and credit notes. However, there are many more specific variations of these documents.
+            </p>
+            @if (!overrideLanguagePack()) {
+              <button class="btn btn-sm btn-light border" (click)="overrideDocumentTypeNames(true)">Override document type names</button>
+            } @else {
+              <button class="btn btn-sm btn-light border mb-3" (click)="overrideDocumentTypeNames(false)">
+                <i class="bi bi-x-lg"></i> Use default invoice and credit note names
+              </button>
+              <app-editor-settings-language-pack-document-types-form formGroupName="documentTypeNames" [baseLanguagePack]="baseLanguagePack" />
+            }
           }
         }
       </div>
@@ -881,8 +343,10 @@ export class EditorSettingsPdfProfileFormComponent {
       dueAmountLabel: new FormControl<string | null>(null),
       defaultLegalIdType: new FormControl<string | null>(null),
       pageLabel: new FormControl<string | null>(null),
+      defaultInvoiceDocumentsTypeName: new FormControl<string | null>(null),
+      defaultCreditNoteDocumentsTypeName: new FormControl<string | null>(null),
+      overrideDocumentTypeNames: new FormControl(false),
       documentTypeNames: new FormGroup({
-        defaultDocumentTypeName: new FormControl<string | null>(null),
         requestForPayment: new FormControl<string | null>(null),
         debitNoteRelatedToGoodsOrServices: new FormControl<string | null>(null),
         creditNoteRelatedToGoodsOrServices: new FormControl<string | null>(null),
@@ -942,6 +406,13 @@ export class EditorSettingsPdfProfileFormComponent {
     }),
   });
 
+  protected overrideLanguagePack = toSignal(
+    this.formGroup.valueChanges.pipe(
+      map((_) => this.formGroup.controls.languagePack.controls.overrideDocumentTypeNames.value),
+      distinctUntilChanged(),
+    ),
+  );
+
   protected languagePacks = rxResource({
     loader: () => this.generateApi.getStandardPdfLanguagePacks(),
   });
@@ -966,9 +437,7 @@ export class EditorSettingsPdfProfileFormComponent {
       return {};
     }
 
-    const result = languagePacks.find((x) => x.culture === selectedPack) ?? {};
-    console.log(languagePacks, result);
-    return result;
+    return languagePacks.find((x) => x.culture === selectedPack) ?? {};
   });
 
   getValue(): EditorPdfGenerationProfileData {
@@ -1003,65 +472,73 @@ export class EditorSettingsPdfProfileFormComponent {
         dueAmountLabel: this.formGroup.controls.languagePack.controls.dueAmountLabel.value ?? undefined,
         defaultLegalIdType: this.formGroup.controls.languagePack.controls.defaultLegalIdType.value ?? undefined,
         pageLabel: this.formGroup.controls.languagePack.controls.pageLabel.value ?? undefined,
-        defaultDocumentTypeName: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.defaultDocumentTypeName.value ?? undefined,
-        documentTypeNames: {
-          requestForPayment: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.requestForPayment.value ?? '',
-          debitNoteRelatedToGoodsOrServices: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.debitNoteRelatedToGoodsOrServices.value ?? '',
-          creditNoteRelatedToGoodsOrServices: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.creditNoteRelatedToGoodsOrServices.value ?? '',
-          meteredServicesInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.meteredServicesInvoice.value ?? '',
-          creditNoteRelatedToFinancialAdjustments: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.creditNoteRelatedToFinancialAdjustments.value ?? '',
-          debitNoteRelatedToFinancialAdjustments: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.debitNoteRelatedToFinancialAdjustments.value ?? '',
-          taxNotification: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.taxNotification.value ?? '',
-          invoicingDataSheet: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.invoicingDataSheet.value ?? '',
-          directPaymentValuation: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.directPaymentValuation.value ?? '',
-          provisionalPaymentValuation: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.provisionalPaymentValuation.value ?? '',
-          paymentValuation: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.paymentValuation.value ?? '',
-          interimApplicationForPayment: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.interimApplicationForPayment.value ?? '',
-          finalPaymentRequestBasedOnCompletionOfWork:
-            this.formGroup.controls.languagePack.controls.documentTypeNames.controls.finalPaymentRequestBasedOnCompletionOfWork.value ?? '',
-          paymentRequestForCompletedUnits: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.paymentRequestForCompletedUnits.value ?? '',
-          selfBilledCreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.selfBilledCreditNote.value ?? '',
-          consolidatedCreditNoteGoodsAndServices: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.consolidatedCreditNoteGoodsAndServices.value ?? '',
-          priceVariationInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.priceVariationInvoice.value ?? '',
-          creditNoteForPriceVariation: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.creditNoteForPriceVariation.value ?? '',
-          delcredereCreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.delcredereCreditNote.value ?? '',
-          proformaInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.proformaInvoice.value ?? '',
-          partialInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.partialInvoice.value ?? '',
-          commercialInvoiceWhichIncludesPackingList: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.commercialInvoiceWhichIncludesPackingList.value ?? '',
-          commercialInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.commercialInvoice.value ?? '',
-          creditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.creditNote.value ?? '',
-          commissionNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.commissionNote.value ?? '',
-          debitNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.debitNote.value ?? '',
-          correctedInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.correctedInvoice.value ?? '',
-          consolidatedInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.consolidatedInvoice.value ?? '',
-          prepaymentInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.prepaymentInvoice.value ?? '',
-          hireInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.hireInvoice.value ?? '',
-          taxInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.taxInvoice.value ?? '',
-          selfBilledInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.selfBilledInvoice.value ?? '',
-          delcredereInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.delcredereInvoice.value ?? '',
-          factoredInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.factoredInvoice.value ?? '',
-          leaseInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.leaseInvoice.value ?? '',
-          consignmentInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.consignmentInvoice.value ?? '',
-          factoredCreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.factoredCreditNote.value ?? '',
-          ocrPaymentCreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.ocrPaymentCreditNote.value ?? '',
-          debitAdvice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.debitAdvice.value ?? '',
-          reversalOfDebit: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.reversalOfDebit.value ?? '',
-          reversalOfCredit: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.reversalOfCredit.value ?? '',
-          selfBilledDebitNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.selfBilledDebitNote.value ?? '',
-          forwardersCreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.forwardersCreditNote.value ?? '',
-          forwardersInvoiceDiscrepancyReport: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.forwardersInvoiceDiscrepancyReport.value ?? '',
-          insurersInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.insurersInvoice.value ?? '',
-          forwardersInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.forwardersInvoice.value ?? '',
-          portChargesDocuments: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.portChargesDocuments.value ?? '',
-          invoiceInformationForAccountingPurposes: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.invoiceInformationForAccountingPurposes.value ?? '',
-          freightInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.freightInvoice.value ?? '',
-          claimNotification: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.claimNotification.value ?? '',
-          consularInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.consularInvoice.value ?? '',
-          partialConstructionInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.partialConstructionInvoice.value ?? '',
-          partialFinalConstructionInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.partialFinalConstructionInvoice.value ?? '',
-          finalConstructionInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.finalConstructionInvoice.value ?? '',
-          customsInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.customsInvoice.value ?? '',
-        } satisfies { [key: string]: string },
+        defaultInvoiceDocumentsTypeName: this.formGroup.controls.languagePack.controls.defaultInvoiceDocumentsTypeName.value ?? undefined,
+        defaultCreditNoteDocumentsTypeName: this.formGroup.controls.languagePack.controls.defaultCreditNoteDocumentsTypeName.value ?? undefined,
+        documentTypeNames: this.formGroup.controls.languagePack.controls.overrideDocumentTypeNames.value
+          ? {
+              RequestForPayment: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.requestForPayment.value ?? undefined,
+              DebitNoteRelatedToGoodsOrServices: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.debitNoteRelatedToGoodsOrServices.value ?? undefined,
+              CreditNoteRelatedToGoodsOrServices: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.creditNoteRelatedToGoodsOrServices.value ?? undefined,
+              MeteredServicesInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.meteredServicesInvoice.value ?? undefined,
+              CreditNoteRelatedToFinancialAdjustments:
+                this.formGroup.controls.languagePack.controls.documentTypeNames.controls.creditNoteRelatedToFinancialAdjustments.value ?? undefined,
+              DebitNoteRelatedToFinancialAdjustments:
+                this.formGroup.controls.languagePack.controls.documentTypeNames.controls.debitNoteRelatedToFinancialAdjustments.value ?? undefined,
+              TaxNotification: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.taxNotification.value ?? undefined,
+              InvoicingDataSheet: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.invoicingDataSheet.value ?? undefined,
+              DirectPaymentValuation: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.directPaymentValuation.value ?? undefined,
+              ProvisionalPaymentValuation: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.provisionalPaymentValuation.value ?? undefined,
+              PaymentValuation: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.paymentValuation.value ?? undefined,
+              InterimApplicationForPayment: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.interimApplicationForPayment.value ?? undefined,
+              FinalPaymentRequestBasedOnCompletionOfWork:
+                this.formGroup.controls.languagePack.controls.documentTypeNames.controls.finalPaymentRequestBasedOnCompletionOfWork.value ?? undefined,
+              PaymentRequestForCompletedUnits: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.paymentRequestForCompletedUnits.value ?? undefined,
+              SelfBilledCreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.selfBilledCreditNote.value ?? undefined,
+              ConsolidatedCreditNoteGoodsAndServices:
+                this.formGroup.controls.languagePack.controls.documentTypeNames.controls.consolidatedCreditNoteGoodsAndServices.value ?? undefined,
+              PriceVariationInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.priceVariationInvoice.value ?? undefined,
+              CreditNoteForPriceVariation: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.creditNoteForPriceVariation.value ?? undefined,
+              DelcredereCreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.delcredereCreditNote.value ?? undefined,
+              ProformaInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.proformaInvoice.value ?? undefined,
+              PartialInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.partialInvoice.value ?? undefined,
+              CommercialInvoiceWhichIncludesPackingList:
+                this.formGroup.controls.languagePack.controls.documentTypeNames.controls.commercialInvoiceWhichIncludesPackingList.value ?? undefined,
+              CommercialInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.commercialInvoice.value ?? undefined,
+              CreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.creditNote.value ?? undefined,
+              CommissionNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.commissionNote.value ?? undefined,
+              DebitNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.debitNote.value ?? undefined,
+              CorrectedInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.correctedInvoice.value ?? undefined,
+              ConsolidatedInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.consolidatedInvoice.value ?? undefined,
+              PrepaymentInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.prepaymentInvoice.value ?? undefined,
+              HireInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.hireInvoice.value ?? undefined,
+              TaxInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.taxInvoice.value ?? undefined,
+              SelfBilledInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.selfBilledInvoice.value ?? undefined,
+              DelcredereInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.delcredereInvoice.value ?? undefined,
+              FactoredInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.factoredInvoice.value ?? undefined,
+              LeaseInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.leaseInvoice.value ?? undefined,
+              ConsignmentInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.consignmentInvoice.value ?? undefined,
+              FactoredCreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.factoredCreditNote.value ?? undefined,
+              OcrPaymentCreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.ocrPaymentCreditNote.value ?? undefined,
+              DebitAdvice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.debitAdvice.value ?? undefined,
+              ReversalOfDebit: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.reversalOfDebit.value ?? undefined,
+              ReversalOfCredit: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.reversalOfCredit.value ?? undefined,
+              SelfBilledDebitNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.selfBilledDebitNote.value ?? undefined,
+              ForwardersCreditNote: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.forwardersCreditNote.value ?? undefined,
+              ForwardersInvoiceDiscrepancyReport: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.forwardersInvoiceDiscrepancyReport.value ?? undefined,
+              InsurersInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.insurersInvoice.value ?? undefined,
+              ForwardersInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.forwardersInvoice.value ?? undefined,
+              PortChargesDocuments: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.portChargesDocuments.value ?? undefined,
+              InvoiceInformationForAccountingPurposes:
+                this.formGroup.controls.languagePack.controls.documentTypeNames.controls.invoiceInformationForAccountingPurposes.value ?? undefined,
+              FreightInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.freightInvoice.value ?? undefined,
+              ClaimNotification: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.claimNotification.value ?? undefined,
+              ConsularInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.consularInvoice.value ?? undefined,
+              PartialConstructionInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.partialConstructionInvoice.value ?? undefined,
+              PartialFinalConstructionInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.partialFinalConstructionInvoice.value ?? undefined,
+              FinalConstructionInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.finalConstructionInvoice.value ?? undefined,
+              CustomsInvoice: this.formGroup.controls.languagePack.controls.documentTypeNames.controls.customsInvoice.value ?? undefined,
+            }
+          : undefined,
       },
     };
   }
@@ -1073,28 +550,30 @@ export class EditorSettingsPdfProfileFormComponent {
       footer: profile.footer,
       languagePack: {
         baseLanguagePack: profile.languagePack?.baseLanguagePack ?? null,
-        culture: profile.languagePack?.culture ?? null,
-        vatNumberLabel: profile.languagePack?.vatNumberLabel ?? null,
-        supplierReferencesLabel: profile.languagePack?.supplierReferencesLabel ?? null,
-        customerReferencesLabel: profile.languagePack?.customerReferencesLabel ?? null,
-        orderLabel: profile.languagePack?.orderLabel ?? null,
-        invoiceReferencesLabel: profile.languagePack?.invoiceReferencesLabel ?? null,
-        businessProcessLabel: profile.languagePack?.businessProcessLabel ?? null,
-        dateLabel: profile.languagePack?.dateLabel ?? null,
-        customerAddressLabel: profile.languagePack?.customerAddressLabel ?? null,
-        customerIdentifiersLabel: profile.languagePack?.customerIdentifiersLabel ?? null,
-        deliveryInformationLabel: profile.languagePack?.deliveryInformationLabel ?? null,
-        currencyLabel: profile.languagePack?.currencyLabel ?? null,
-        totalWithoutVatLabel: profile.languagePack?.totalWithoutVatLabel ?? null,
-        totalVatLabel: profile.languagePack?.totalVatLabel ?? null,
-        totalWithVatLabel: profile.languagePack?.totalWithVatLabel ?? null,
-        prepaidAmountLabel: profile.languagePack?.prepaidAmountLabel ?? null,
-        dueDateLabel: profile.languagePack?.dueDateLabel ?? null,
-        dueAmountLabel: profile.languagePack?.dueAmountLabel ?? null,
-        defaultLegalIdType: profile.languagePack?.defaultLegalIdType ?? null,
-        pageLabel: profile.languagePack?.pageLabel ?? null,
+        culture: profile.languagePack?.['Culture'] ?? null,
+        vatNumberLabel: profile.languagePack?.['VatNumberLabel'] ?? null,
+        supplierReferencesLabel: profile.languagePack?.['SupplierReferencesLabel'] ?? null,
+        customerReferencesLabel: profile.languagePack?.['CustomerReferencesLabel'] ?? null,
+        orderLabel: profile.languagePack?.['OrderLabel'] ?? null,
+        invoiceReferencesLabel: profile.languagePack?.['InvoiceReferencesLabel'] ?? null,
+        businessProcessLabel: profile.languagePack?.['BusinessProcessLabel'] ?? null,
+        dateLabel: profile.languagePack?.['DateLabel'] ?? null,
+        customerAddressLabel: profile.languagePack?.['CustomerAddressLabel'] ?? null,
+        customerIdentifiersLabel: profile.languagePack?.['CustomerIdentifiersLabel'] ?? null,
+        deliveryInformationLabel: profile.languagePack?.['DeliveryInformationLabel'] ?? null,
+        currencyLabel: profile.languagePack?.['CurrencyLabel'] ?? null,
+        totalWithoutVatLabel: profile.languagePack?.['TotalWithoutVatLabel'] ?? null,
+        totalVatLabel: profile.languagePack?.['TotalVatLabel'] ?? null,
+        totalWithVatLabel: profile.languagePack?.['TotalWithVatLabel'] ?? null,
+        prepaidAmountLabel: profile.languagePack?.['PrepaidAmountLabel'] ?? null,
+        dueDateLabel: profile.languagePack?.['DueDateLabel'] ?? null,
+        dueAmountLabel: profile.languagePack?.['DueAmountLabel'] ?? null,
+        defaultLegalIdType: profile.languagePack?.['DefaultLegalIdType'] ?? null,
+        pageLabel: profile.languagePack?.['PageLabel'] ?? null,
+        defaultInvoiceDocumentsTypeName: profile.languagePack?.['DefaultInvoiceDocumentsTypeName'] ?? null,
+        defaultCreditNoteDocumentsTypeName: profile.languagePack?.['DefaultCreditNoteDocumentsTypeName'] ?? null,
+        overrideDocumentTypeNames: this.formGroup.controls.languagePack.controls.overrideDocumentTypeNames.value,
         documentTypeNames: {
-          defaultDocumentTypeName: profile.languagePack?.defaultDocumentTypeName ?? null,
           requestForPayment: profile.languagePack?.documentTypeNames?.['RequestForPayment'] ?? null,
           debitNoteRelatedToGoodsOrServices: profile.languagePack?.documentTypeNames?.['DebitNoteRelatedToGoodsOrServices'] ?? null,
           creditNoteRelatedToGoodsOrServices: profile.languagePack?.documentTypeNames?.['CreditNoteRelatedToGoodsOrServices'] ?? null,
@@ -1153,6 +632,10 @@ export class EditorSettingsPdfProfileFormComponent {
         },
       },
     });
+  }
+
+  protected async overrideDocumentTypeNames(value: boolean) {
+    this.formGroup.controls.languagePack.controls.overrideDocumentTypeNames.setValue(value);
   }
 
   protected async chooseLogo(): Promise<void> {

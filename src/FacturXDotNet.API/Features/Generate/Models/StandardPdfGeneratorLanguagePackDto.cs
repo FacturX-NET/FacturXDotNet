@@ -50,9 +50,14 @@ public class StandardPdfGeneratorLanguagePackDto
     public Dictionary<InvoiceTypeCode, string?>? DocumentTypeNames { get; init; }
 
     /// <summary>
-    ///     The name of the document type used in the generator.
+    ///     The default name assigned to the invoice document type in the language pack.
     /// </summary>
-    public string? DefaultDocumentTypeName { get; init; }
+    public string? DefaultInvoiceDocumentsTypeName { get; init; }
+
+    /// <summary>
+    ///     The default name of the document type used for credit notes in the PDF generator.
+    /// </summary>
+    public string? DefaultCreditNoteDocumentsTypeName { get; init; }
 
     /// <summary>
     ///     The label representing the date field in the language pack used by the generator.
@@ -133,7 +138,8 @@ static class StandardPdfGeneratorLanguagePackMappingExtensions
             InvoiceReferencesLabel = pack.InvoiceReferencesLabel ?? "",
             BusinessProcessLabel = pack.BusinessProcessLabel ?? "",
             DocumentTypeNames = pack.DocumentTypeNames ?? [],
-            DefaultDocumentTypeName = pack.DefaultDocumentTypeName ?? "",
+            DefaultInvoiceDocumentsTypeName = pack.DefaultInvoiceDocumentsTypeName ?? "",
+            DefaultCreditNoteDocumentsTypeName = pack.DefaultCreditNoteDocumentsTypeName ?? "",
             DateLabel = pack.DateLabel ?? "",
             CustomerAddressLabel = pack.CustomerAddressLabel ?? "",
             CustomerIdentifiersLabel = pack.CustomerIdentifiersLabel ?? "",
@@ -160,7 +166,8 @@ static class StandardPdfGeneratorLanguagePackMappingExtensions
             InvoiceReferencesLabel = pack.InvoiceReferencesLabel,
             BusinessProcessLabel = pack.BusinessProcessLabel,
             DocumentTypeNames = pack.DocumentTypeNames,
-            DefaultDocumentTypeName = pack.DefaultDocumentTypeName,
+            DefaultInvoiceDocumentsTypeName = pack.DefaultInvoiceDocumentsTypeName,
+            DefaultCreditNoteDocumentsTypeName = pack.DefaultCreditNoteDocumentsTypeName,
             DateLabel = pack.DateLabel,
             CustomerAddressLabel = pack.CustomerAddressLabel,
             CustomerIdentifiersLabel = pack.CustomerIdentifiersLabel,

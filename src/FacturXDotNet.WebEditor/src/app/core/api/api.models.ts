@@ -1054,7 +1054,8 @@ export class StandardPdfGeneratorLanguagePackDto implements IStandardPdfGenerato
   invoiceReferencesLabel?: string | undefined;
   businessProcessLabel?: string | undefined;
   documentTypeNames?: { [key: string]: string } | undefined;
-  defaultDocumentTypeName?: string | undefined;
+  defaultInvoiceDocumentsTypeName?: string | undefined;
+  defaultCreditNoteDocumentsTypeName?: string | undefined;
   dateLabel?: string | undefined;
   customerAddressLabel?: string | undefined;
   customerIdentifiersLabel?: string | undefined;
@@ -1097,7 +1098,8 @@ export class StandardPdfGeneratorLanguagePackDto implements IStandardPdfGenerato
           if (_data['documentTypeNames'].hasOwnProperty(key)) (<any>this.documentTypeNames)![key] = _data['documentTypeNames'][key];
         }
       }
-      this.defaultDocumentTypeName = _data['defaultDocumentTypeName'];
+      this.defaultInvoiceDocumentsTypeName = _data['defaultInvoiceDocumentsTypeName'];
+      this.defaultCreditNoteDocumentsTypeName = _data['defaultCreditNoteDocumentsTypeName'];
       this.dateLabel = _data['dateLabel'];
       this.customerAddressLabel = _data['customerAddressLabel'];
       this.customerIdentifiersLabel = _data['customerIdentifiersLabel'];
@@ -1139,7 +1141,8 @@ export class StandardPdfGeneratorLanguagePackDto implements IStandardPdfGenerato
         if (this.documentTypeNames.hasOwnProperty(key)) (<any>data['documentTypeNames'])[key] = (<any>this.documentTypeNames)[key];
       }
     }
-    data['defaultDocumentTypeName'] = this.defaultDocumentTypeName;
+    data['defaultInvoiceDocumentsTypeName'] = this.defaultInvoiceDocumentsTypeName;
+    data['defaultCreditNoteDocumentsTypeName'] = this.defaultCreditNoteDocumentsTypeName;
     data['dateLabel'] = this.dateLabel;
     data['customerAddressLabel'] = this.customerAddressLabel;
     data['customerIdentifiersLabel'] = this.customerIdentifiersLabel;
@@ -1166,7 +1169,8 @@ export interface IStandardPdfGeneratorLanguagePackDto {
   invoiceReferencesLabel?: string | undefined;
   businessProcessLabel?: string | undefined;
   documentTypeNames?: { [key: string]: string } | undefined;
-  defaultDocumentTypeName?: string | undefined;
+  defaultInvoiceDocumentsTypeName?: string | undefined;
+  defaultCreditNoteDocumentsTypeName?: string | undefined;
   dateLabel?: string | undefined;
   customerAddressLabel?: string | undefined;
   customerIdentifiersLabel?: string | undefined;
@@ -1193,7 +1197,8 @@ export class StandardPdfGeneratorLanguagePackDto2 implements IStandardPdfGenerat
   invoiceReferencesLabel?: string | undefined;
   businessProcessLabel?: string | undefined;
   documentTypeNames?: { [key: string]: string } | undefined;
-  defaultDocumentTypeName?: string | undefined;
+  defaultInvoiceDocumentsTypeName?: string | undefined;
+  defaultCreditNoteDocumentsTypeName?: string | undefined;
   dateLabel?: string | undefined;
   customerAddressLabel?: string | undefined;
   customerIdentifiersLabel?: string | undefined;
@@ -1236,7 +1241,8 @@ export class StandardPdfGeneratorLanguagePackDto2 implements IStandardPdfGenerat
           if (_data['documentTypeNames'].hasOwnProperty(key)) (<any>this.documentTypeNames)![key] = _data['documentTypeNames'][key];
         }
       }
-      this.defaultDocumentTypeName = _data['defaultDocumentTypeName'];
+      this.defaultInvoiceDocumentsTypeName = _data['defaultInvoiceDocumentsTypeName'];
+      this.defaultCreditNoteDocumentsTypeName = _data['defaultCreditNoteDocumentsTypeName'];
       this.dateLabel = _data['dateLabel'];
       this.customerAddressLabel = _data['customerAddressLabel'];
       this.customerIdentifiersLabel = _data['customerIdentifiersLabel'];
@@ -1278,7 +1284,8 @@ export class StandardPdfGeneratorLanguagePackDto2 implements IStandardPdfGenerat
         if (this.documentTypeNames.hasOwnProperty(key)) (<any>data['documentTypeNames'])[key] = (<any>this.documentTypeNames)[key];
       }
     }
-    data['defaultDocumentTypeName'] = this.defaultDocumentTypeName;
+    data['defaultInvoiceDocumentsTypeName'] = this.defaultInvoiceDocumentsTypeName;
+    data['defaultCreditNoteDocumentsTypeName'] = this.defaultCreditNoteDocumentsTypeName;
     data['dateLabel'] = this.dateLabel;
     data['customerAddressLabel'] = this.customerAddressLabel;
     data['customerIdentifiersLabel'] = this.customerIdentifiersLabel;
@@ -1305,7 +1312,8 @@ export interface IStandardPdfGeneratorLanguagePackDto2 {
   invoiceReferencesLabel?: string | undefined;
   businessProcessLabel?: string | undefined;
   documentTypeNames?: { [key: string]: string } | undefined;
-  defaultDocumentTypeName?: string | undefined;
+  defaultInvoiceDocumentsTypeName?: string | undefined;
+  defaultCreditNoteDocumentsTypeName?: string | undefined;
   dateLabel?: string | undefined;
   customerAddressLabel?: string | undefined;
   customerIdentifiersLabel?: string | undefined;

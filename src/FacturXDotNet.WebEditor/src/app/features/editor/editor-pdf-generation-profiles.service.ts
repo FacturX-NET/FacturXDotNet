@@ -1,5 +1,5 @@
 import { computed, Injectable, signal, WritableSignal } from '@angular/core';
-import { IStandardPdfGeneratorLanguagePackDto, StandardPdfGeneratorLanguagePackDto } from '../../core/api/api.models';
+import { IStandardPdfGeneratorLanguagePackDto } from '../../core/api/api.models';
 
 @Injectable({
   providedIn: 'root',
@@ -128,7 +128,7 @@ export interface EditorPdfGenerationProfileData {
   readonly name: string;
   readonly logoBase64?: string;
   readonly footer?: string;
-  readonly languagePack?: { baseLanguagePack?: string } & IStandardPdfGeneratorLanguagePackDto;
+  readonly languagePack?: { baseLanguagePack?: string; documentTypeNames?: Record<string, string | undefined> } & Omit<IStandardPdfGeneratorLanguagePackDto, 'documentTypeNames'>;
 }
 
 export type EditorPdfGenerationProfile = { readonly id: string } & EditorPdfGenerationProfileData;

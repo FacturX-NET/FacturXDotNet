@@ -26,7 +26,7 @@ public class StandardPdfGeneratorLanguagePack
         InvoiceReferencesLabel = pack.InvoiceReferencesLabel;
         BusinessProcessLabel = pack.BusinessProcessLabel;
         DocumentTypeNames = pack.DocumentTypeNames;
-        DefaultDocumentTypeName = pack.DefaultDocumentTypeName;
+        DefaultInvoiceDocumentsTypeName = pack.DefaultInvoiceDocumentsTypeName;
         DateLabel = pack.DateLabel;
         CustomerAddressLabel = pack.CustomerAddressLabel;
         CustomerIdentifiersLabel = pack.CustomerIdentifiersLabel;
@@ -83,9 +83,14 @@ public class StandardPdfGeneratorLanguagePack
     public required Dictionary<InvoiceTypeCode, string?> DocumentTypeNames { get; init; }
 
     /// <summary>
-    ///     The name of the document type used in the StandardPdfGenerator.
+    ///     The default document type name used for invoices in the StandardPdfGeneratorLanguagePack.
     /// </summary>
-    public required string DefaultDocumentTypeName { get; init; }
+    public required string DefaultInvoiceDocumentsTypeName { get; init; }
+
+    /// <summary>
+    ///     The default document type name used for credit notes in the StandardPdfGenerator.
+    /// </summary>
+    public required string DefaultCreditNoteDocumentsTypeName { get; init; }
 
     /// <summary>
     ///     The label representing the date field in the language pack used by the StandardPdfGenerator.
@@ -165,7 +170,8 @@ public class StandardPdfGeneratorLanguagePack
         InvoiceReferencesLabel = "",
         BusinessProcessLabel = "",
         DocumentTypeNames = [],
-        DefaultDocumentTypeName = "",
+        DefaultInvoiceDocumentsTypeName = "",
+        DefaultCreditNoteDocumentsTypeName = "",
         DateLabel = "",
         CustomerAddressLabel = "",
         CustomerIdentifiersLabel = "",
@@ -256,7 +262,8 @@ public class StandardPdfGeneratorLanguagePack
             { InvoiceTypeCode.FinalConstructionInvoice, "Final construction invoice" },
             { InvoiceTypeCode.CustomsInvoice, "Customs invoice" }
         },
-        DefaultDocumentTypeName = "Invoice",
+        DefaultInvoiceDocumentsTypeName = "Invoice",
+        DefaultCreditNoteDocumentsTypeName = "Credit Note",
         DateLabel = "Date",
         CustomerAddressLabel = "Client address",
         CustomerIdentifiersLabel = "Your identifiers",
@@ -343,7 +350,8 @@ public class StandardPdfGeneratorLanguagePack
             { InvoiceTypeCode.FinalConstructionInvoice, "Facture finale de construction" },
             { InvoiceTypeCode.CustomsInvoice, "Facture douanière" }
         },
-        DefaultDocumentTypeName = "Facture",
+        DefaultInvoiceDocumentsTypeName = "Facture",
+        DefaultCreditNoteDocumentsTypeName = "Avoir",
         DateLabel = "Date",
         CustomerAddressLabel = "Adresse du client",
         CustomerIdentifiersLabel = "Vos identifiants",

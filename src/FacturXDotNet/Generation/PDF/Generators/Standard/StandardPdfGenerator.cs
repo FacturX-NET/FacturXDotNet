@@ -328,11 +328,22 @@ public partial class StandardPdfGenerator(StandardPdfGeneratorOptions? options =
     {
         if (invoice.ExchangedDocument?.TypeCode == null)
         {
-            return _options.LanguagePack.DefaultDocumentTypeName;
+            return _options.LanguagePack.DefaultInvoiceDocumentsTypeName;
         }
 
-        string? typeName = _options.LanguagePack.DocumentTypeNames.GetValueOrDefault(invoice.ExchangedDocument.TypeCode.Value);
-        return string.IsNullOrWhiteSpace(typeName) ? _options.LanguagePack.DefaultDocumentTypeName : typeName;
+        InvoiceTypeCode typeCode = invoice.ExchangedDocument.TypeCode.Value;
+        string? typeName = _options.LanguagePack.DocumentTypeNames.GetValueOrDefault(typeCode);
+        if (!string.IsNullOrWhiteSpace(typeName))
+        {
+            return typeName;
+        }
+
+        return typeCode switch
+        {
+            InvoiceTypeCode.CreditNote or InvoiceTypeCode.CreditNoteForPriceVariation or InvoiceTypeCode.CreditNoteRelatedToFinancialAdjustments
+                or InvoiceTypeCode.CreditNoteRelatedToGoodsOrServices => _options.LanguagePack.DefaultCreditNoteDocumentsTypeName,
+            _ => _options.LanguagePack.DefaultInvoiceDocumentsTypeName
+        };
     }
 
     string GetLegalIdType(string? idSchemeId) =>

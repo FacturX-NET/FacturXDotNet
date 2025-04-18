@@ -76,7 +76,7 @@ export class EditorSettingsPdfProfileEditTab {
     }
 
     try {
-      const value = form.getValue() as EditorPdfGenerationProfileData;
+      const value = form.getValue();
       this.editorPdfGenerationProfilesService.updateProfile(this.profileId(), value);
     } catch (error) {
       this.toastService.showError(error);
@@ -101,7 +101,7 @@ export class EditorSettingsPdfProfileEditTab {
     }
 
     try {
-      const value = form.getValue() as EditorPdfGenerationProfileData;
+      const value = form.getValue();
       this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf(value);
     } catch (error) {
       this.toastService.showError(error);
