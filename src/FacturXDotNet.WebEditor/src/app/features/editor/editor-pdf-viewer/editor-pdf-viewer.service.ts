@@ -3,7 +3,8 @@ import { EditorSavedState, EditorStateService } from '../editor-state.service';
 import { firstValueFrom, map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditorSettingsService } from '../editor-settings.service';
-import { GenerateApi } from '../../../core/api/generate.api';
+import { GenerateApi, GenerateStandardPdfOptions } from '../../../core/api/generate.api';
+import { EditorPdfGenerationProfileData, EditorPdfGenerationProfilesService } from '../editor-pdf-generation-profiles.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ import { GenerateApi } from '../../../core/api/generate.api';
 export class EditorPdfViewerService {
   private editorStateService = inject(EditorStateService);
   private editorSettingsService = inject(EditorSettingsService);
+  private editorPdfGenerationProfilesService = inject(EditorPdfGenerationProfilesService);
   private generateApi = inject(GenerateApi);
   private destroyRef = inject(DestroyRef);
 
@@ -29,8 +31,14 @@ export class EditorPdfViewerService {
       }
 
       if (state.request.pdfTab === 'generated' && state.request.value.cii !== undefined) {
+        const profile = this.profileOverride ?? this.editorPdfGenerationProfilesService.selectedProfile();
+
+        const logo = profile?.logoBase64 === undefined ? undefined : profile.logoBase64.replace(/^data:image\/?[A-Za-z]*;base64,/, '');
+
+        const options: GenerateStandardPdfOptions | undefined = profile === undefined ? undefined : { logo };
+
         return await firstValueFrom(
-          this.generateApi.generateStandardPdf(state.request.value.cii).pipe(
+          this.generateApi.generateStandardPdf(state.request.value.cii, options).pipe(
             map((file) => ({ id: idGenerator(), content: file })),
             takeUntilDestroyed(this.destroyRef),
           ),
@@ -41,8 +49,11 @@ export class EditorPdfViewerService {
     },
   });
 
-  regenerateAndDisplayStandardPdf() {
+  private profileOverride: EditorPdfGenerationProfileData | undefined;
+
+  regenerateAndDisplayStandardPdf(profile?: EditorPdfGenerationProfileData) {
     if (this.pdfTab() === 'generated') {
+      this.profileOverride = profile;
       this.pdf.reload();
     } else {
       this.editorSettingsService.savePdfTab('generated');

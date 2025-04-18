@@ -6,7 +6,6 @@
 
 /* tslint:disable */
 /* eslint-disable */
-
 // ReSharper disable InconsistentNaming
 
 export class ApplicableHeaderTradeAgreement implements IApplicableHeaderTradeAgreement {
@@ -548,13 +547,6 @@ export class HostingInformationDto implements IHostingInformationDto {
     }
   }
 
-  static fromJS(data: any): HostingInformationDto {
-    data = typeof data === 'object' ? data : {};
-    let result = new HostingInformationDto();
-    result.init(data);
-    return result;
-  }
-
   init(_data?: any) {
     if (_data) {
       for (var property in _data) {
@@ -562,6 +554,13 @@ export class HostingInformationDto implements IHostingInformationDto {
       }
       this.unsafeEnvironment = _data['unsafeEnvironment'];
     }
+  }
+
+  static fromJS(data: any): HostingInformationDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new HostingInformationDto();
+    result.init(data);
+    return result;
   }
 
   toJSON(data?: any) {
@@ -710,6 +709,63 @@ export interface IPackageDto {
   version: string;
   license: string;
   link: string;
+
+  [key: string]: any;
+}
+
+export class PostPdfRequest implements IPostPdfRequest {
+  crossIndustryInvoice!: CrossIndustryInvoice;
+  options?: StandardPdfGeneratorOptionsDto | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IPostPdfRequest) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+      this.crossIndustryInvoice =
+        data.crossIndustryInvoice && !(<any>data.crossIndustryInvoice).toJSON
+          ? new CrossIndustryInvoice(data.crossIndustryInvoice)
+          : <CrossIndustryInvoice>this.crossIndustryInvoice;
+      this.options = data.options && !(<any>data.options).toJSON ? new StandardPdfGeneratorOptionsDto(data.options) : <StandardPdfGeneratorOptionsDto>this.options;
+    }
+    if (!data) {
+      this.crossIndustryInvoice = new CrossIndustryInvoice();
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.crossIndustryInvoice = _data['crossIndustryInvoice'] ? CrossIndustryInvoice.fromJS(_data['crossIndustryInvoice']) : new CrossIndustryInvoice();
+      this.options = _data['options'] ? StandardPdfGeneratorOptionsDto.fromJS(_data['options']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): PostPdfRequest {
+    data = typeof data === 'object' ? data : {};
+    let result = new PostPdfRequest();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['crossIndustryInvoice'] = this.crossIndustryInvoice ? this.crossIndustryInvoice.toJSON() : <any>undefined;
+    data['options'] = this.options ? this.options.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IPostPdfRequest {
+  crossIndustryInvoice: ICrossIndustryInvoice;
+  options?: IStandardPdfGeneratorOptionsDto | undefined;
 
   [key: string]: any;
 }
@@ -985,6 +1041,339 @@ export interface ISpecifiedTradeSettlementHeaderMonetarySummation {
   taxTotalAmountCurrencyId?: string | undefined;
   grandTotalAmount?: number | undefined;
   duePayableAmount?: number | undefined;
+
+  [key: string]: any;
+}
+
+export class StandardPdfGeneratorLanguagePackDto implements IStandardPdfGeneratorLanguagePackDto {
+  culture?: string | undefined;
+  vatNumberLabel?: string | undefined;
+  ourReferencesLabel?: string | undefined;
+  yourReferencesLabel?: string | undefined;
+  orderLabel?: string | undefined;
+  invoiceReferencesLabel?: string | undefined;
+  businessProcessLabel?: string | undefined;
+  documentTypeNames?: { [key: string]: string } | undefined;
+  defaultDocumentTypeName?: string | undefined;
+  dateLabel?: string | undefined;
+  clientAddressLabel?: string | undefined;
+  yourIdentifiersLabel?: string | undefined;
+  deliveryInformationLabel?: string | undefined;
+  currencyLabel?: string | undefined;
+  totalWithoutVatLabel?: string | undefined;
+  totalVatLabel?: string | undefined;
+  totalWithVatLabel?: string | undefined;
+  prepaidAmountLabel?: string | undefined;
+  dueDateLabel?: string | undefined;
+  dueAmountLabel?: string | undefined;
+  defaultLegalIdType?: string | undefined;
+  pageLabel?: string | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IStandardPdfGeneratorLanguagePackDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.culture = _data['culture'];
+      this.vatNumberLabel = _data['vatNumberLabel'];
+      this.ourReferencesLabel = _data['ourReferencesLabel'];
+      this.yourReferencesLabel = _data['yourReferencesLabel'];
+      this.orderLabel = _data['orderLabel'];
+      this.invoiceReferencesLabel = _data['invoiceReferencesLabel'];
+      this.businessProcessLabel = _data['businessProcessLabel'];
+      if (_data['documentTypeNames']) {
+        this.documentTypeNames = {} as any;
+        for (let key in _data['documentTypeNames']) {
+          if (_data['documentTypeNames'].hasOwnProperty(key)) (<any>this.documentTypeNames)![key] = _data['documentTypeNames'][key];
+        }
+      }
+      this.defaultDocumentTypeName = _data['defaultDocumentTypeName'];
+      this.dateLabel = _data['dateLabel'];
+      this.clientAddressLabel = _data['clientAddressLabel'];
+      this.yourIdentifiersLabel = _data['yourIdentifiersLabel'];
+      this.deliveryInformationLabel = _data['deliveryInformationLabel'];
+      this.currencyLabel = _data['currencyLabel'];
+      this.totalWithoutVatLabel = _data['totalWithoutVatLabel'];
+      this.totalVatLabel = _data['totalVatLabel'];
+      this.totalWithVatLabel = _data['totalWithVatLabel'];
+      this.prepaidAmountLabel = _data['prepaidAmountLabel'];
+      this.dueDateLabel = _data['dueDateLabel'];
+      this.dueAmountLabel = _data['dueAmountLabel'];
+      this.defaultLegalIdType = _data['defaultLegalIdType'];
+      this.pageLabel = _data['pageLabel'];
+    }
+  }
+
+  static fromJS(data: any): StandardPdfGeneratorLanguagePackDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new StandardPdfGeneratorLanguagePackDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['culture'] = this.culture;
+    data['vatNumberLabel'] = this.vatNumberLabel;
+    data['ourReferencesLabel'] = this.ourReferencesLabel;
+    data['yourReferencesLabel'] = this.yourReferencesLabel;
+    data['orderLabel'] = this.orderLabel;
+    data['invoiceReferencesLabel'] = this.invoiceReferencesLabel;
+    data['businessProcessLabel'] = this.businessProcessLabel;
+    if (this.documentTypeNames) {
+      data['documentTypeNames'] = {};
+      for (let key in this.documentTypeNames) {
+        if (this.documentTypeNames.hasOwnProperty(key)) (<any>data['documentTypeNames'])[key] = (<any>this.documentTypeNames)[key];
+      }
+    }
+    data['defaultDocumentTypeName'] = this.defaultDocumentTypeName;
+    data['dateLabel'] = this.dateLabel;
+    data['clientAddressLabel'] = this.clientAddressLabel;
+    data['yourIdentifiersLabel'] = this.yourIdentifiersLabel;
+    data['deliveryInformationLabel'] = this.deliveryInformationLabel;
+    data['currencyLabel'] = this.currencyLabel;
+    data['totalWithoutVatLabel'] = this.totalWithoutVatLabel;
+    data['totalVatLabel'] = this.totalVatLabel;
+    data['totalWithVatLabel'] = this.totalWithVatLabel;
+    data['prepaidAmountLabel'] = this.prepaidAmountLabel;
+    data['dueDateLabel'] = this.dueDateLabel;
+    data['dueAmountLabel'] = this.dueAmountLabel;
+    data['defaultLegalIdType'] = this.defaultLegalIdType;
+    data['pageLabel'] = this.pageLabel;
+    return data;
+  }
+}
+
+export interface IStandardPdfGeneratorLanguagePackDto {
+  culture?: string | undefined;
+  vatNumberLabel?: string | undefined;
+  ourReferencesLabel?: string | undefined;
+  yourReferencesLabel?: string | undefined;
+  orderLabel?: string | undefined;
+  invoiceReferencesLabel?: string | undefined;
+  businessProcessLabel?: string | undefined;
+  documentTypeNames?: { [key: string]: string } | undefined;
+  defaultDocumentTypeName?: string | undefined;
+  dateLabel?: string | undefined;
+  clientAddressLabel?: string | undefined;
+  yourIdentifiersLabel?: string | undefined;
+  deliveryInformationLabel?: string | undefined;
+  currencyLabel?: string | undefined;
+  totalWithoutVatLabel?: string | undefined;
+  totalVatLabel?: string | undefined;
+  totalWithVatLabel?: string | undefined;
+  prepaidAmountLabel?: string | undefined;
+  dueDateLabel?: string | undefined;
+  dueAmountLabel?: string | undefined;
+  defaultLegalIdType?: string | undefined;
+  pageLabel?: string | undefined;
+
+  [key: string]: any;
+}
+
+export class StandardPdfGeneratorLanguagePackDto2 implements IStandardPdfGeneratorLanguagePackDto2 {
+  culture?: string | undefined;
+  vatNumberLabel?: string | undefined;
+  ourReferencesLabel?: string | undefined;
+  yourReferencesLabel?: string | undefined;
+  orderLabel?: string | undefined;
+  invoiceReferencesLabel?: string | undefined;
+  businessProcessLabel?: string | undefined;
+  documentTypeNames?: { [key: string]: string } | undefined;
+  defaultDocumentTypeName?: string | undefined;
+  dateLabel?: string | undefined;
+  clientAddressLabel?: string | undefined;
+  yourIdentifiersLabel?: string | undefined;
+  deliveryInformationLabel?: string | undefined;
+  currencyLabel?: string | undefined;
+  totalWithoutVatLabel?: string | undefined;
+  totalVatLabel?: string | undefined;
+  totalWithVatLabel?: string | undefined;
+  prepaidAmountLabel?: string | undefined;
+  dueDateLabel?: string | undefined;
+  dueAmountLabel?: string | undefined;
+  defaultLegalIdType?: string | undefined;
+  pageLabel?: string | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IStandardPdfGeneratorLanguagePackDto2) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.culture = _data['culture'];
+      this.vatNumberLabel = _data['vatNumberLabel'];
+      this.ourReferencesLabel = _data['ourReferencesLabel'];
+      this.yourReferencesLabel = _data['yourReferencesLabel'];
+      this.orderLabel = _data['orderLabel'];
+      this.invoiceReferencesLabel = _data['invoiceReferencesLabel'];
+      this.businessProcessLabel = _data['businessProcessLabel'];
+      if (_data['documentTypeNames']) {
+        this.documentTypeNames = {} as any;
+        for (let key in _data['documentTypeNames']) {
+          if (_data['documentTypeNames'].hasOwnProperty(key)) (<any>this.documentTypeNames)![key] = _data['documentTypeNames'][key];
+        }
+      }
+      this.defaultDocumentTypeName = _data['defaultDocumentTypeName'];
+      this.dateLabel = _data['dateLabel'];
+      this.clientAddressLabel = _data['clientAddressLabel'];
+      this.yourIdentifiersLabel = _data['yourIdentifiersLabel'];
+      this.deliveryInformationLabel = _data['deliveryInformationLabel'];
+      this.currencyLabel = _data['currencyLabel'];
+      this.totalWithoutVatLabel = _data['totalWithoutVatLabel'];
+      this.totalVatLabel = _data['totalVatLabel'];
+      this.totalWithVatLabel = _data['totalWithVatLabel'];
+      this.prepaidAmountLabel = _data['prepaidAmountLabel'];
+      this.dueDateLabel = _data['dueDateLabel'];
+      this.dueAmountLabel = _data['dueAmountLabel'];
+      this.defaultLegalIdType = _data['defaultLegalIdType'];
+      this.pageLabel = _data['pageLabel'];
+    }
+  }
+
+  static fromJS(data: any): StandardPdfGeneratorLanguagePackDto2 {
+    data = typeof data === 'object' ? data : {};
+    let result = new StandardPdfGeneratorLanguagePackDto2();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['culture'] = this.culture;
+    data['vatNumberLabel'] = this.vatNumberLabel;
+    data['ourReferencesLabel'] = this.ourReferencesLabel;
+    data['yourReferencesLabel'] = this.yourReferencesLabel;
+    data['orderLabel'] = this.orderLabel;
+    data['invoiceReferencesLabel'] = this.invoiceReferencesLabel;
+    data['businessProcessLabel'] = this.businessProcessLabel;
+    if (this.documentTypeNames) {
+      data['documentTypeNames'] = {};
+      for (let key in this.documentTypeNames) {
+        if (this.documentTypeNames.hasOwnProperty(key)) (<any>data['documentTypeNames'])[key] = (<any>this.documentTypeNames)[key];
+      }
+    }
+    data['defaultDocumentTypeName'] = this.defaultDocumentTypeName;
+    data['dateLabel'] = this.dateLabel;
+    data['clientAddressLabel'] = this.clientAddressLabel;
+    data['yourIdentifiersLabel'] = this.yourIdentifiersLabel;
+    data['deliveryInformationLabel'] = this.deliveryInformationLabel;
+    data['currencyLabel'] = this.currencyLabel;
+    data['totalWithoutVatLabel'] = this.totalWithoutVatLabel;
+    data['totalVatLabel'] = this.totalVatLabel;
+    data['totalWithVatLabel'] = this.totalWithVatLabel;
+    data['prepaidAmountLabel'] = this.prepaidAmountLabel;
+    data['dueDateLabel'] = this.dueDateLabel;
+    data['dueAmountLabel'] = this.dueAmountLabel;
+    data['defaultLegalIdType'] = this.defaultLegalIdType;
+    data['pageLabel'] = this.pageLabel;
+    return data;
+  }
+}
+
+export interface IStandardPdfGeneratorLanguagePackDto2 {
+  culture?: string | undefined;
+  vatNumberLabel?: string | undefined;
+  ourReferencesLabel?: string | undefined;
+  yourReferencesLabel?: string | undefined;
+  orderLabel?: string | undefined;
+  invoiceReferencesLabel?: string | undefined;
+  businessProcessLabel?: string | undefined;
+  documentTypeNames?: { [key: string]: string } | undefined;
+  defaultDocumentTypeName?: string | undefined;
+  dateLabel?: string | undefined;
+  clientAddressLabel?: string | undefined;
+  yourIdentifiersLabel?: string | undefined;
+  deliveryInformationLabel?: string | undefined;
+  currencyLabel?: string | undefined;
+  totalWithoutVatLabel?: string | undefined;
+  totalVatLabel?: string | undefined;
+  totalWithVatLabel?: string | undefined;
+  prepaidAmountLabel?: string | undefined;
+  dueDateLabel?: string | undefined;
+  dueAmountLabel?: string | undefined;
+  defaultLegalIdType?: string | undefined;
+  pageLabel?: string | undefined;
+
+  [key: string]: any;
+}
+
+export class StandardPdfGeneratorOptionsDto implements IStandardPdfGeneratorOptionsDto {
+  logo?: string | undefined;
+  footer?: string | undefined;
+  languagePack?: StandardPdfGeneratorLanguagePackDto | undefined;
+
+  [key: string]: any;
+
+  constructor(data?: IStandardPdfGeneratorOptionsDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property)) (<any>this)[property] = (<any>data)[property];
+      }
+      this.languagePack =
+        data.languagePack && !(<any>data.languagePack).toJSON ? new StandardPdfGeneratorLanguagePackDto(data.languagePack) : <StandardPdfGeneratorLanguagePackDto>this.languagePack;
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      for (var property in _data) {
+        if (_data.hasOwnProperty(property)) this[property] = _data[property];
+      }
+      this.logo = _data['logo'];
+      this.footer = _data['footer'];
+      this.languagePack = _data['languagePack'] ? StandardPdfGeneratorLanguagePackDto.fromJS(_data['languagePack']) : <any>undefined;
+    }
+  }
+
+  static fromJS(data: any): StandardPdfGeneratorOptionsDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new StandardPdfGeneratorOptionsDto();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    for (var property in this) {
+      if (this.hasOwnProperty(property)) data[property] = this[property];
+    }
+    data['logo'] = this.logo;
+    data['footer'] = this.footer;
+    data['languagePack'] = this.languagePack ? this.languagePack.toJSON() : <any>undefined;
+    return data;
+  }
+}
+
+export interface IStandardPdfGeneratorOptionsDto {
+  logo?: string | undefined;
+  footer?: string | undefined;
+  languagePack?: IStandardPdfGeneratorLanguagePackDto | undefined;
 
   [key: string]: any;
 }

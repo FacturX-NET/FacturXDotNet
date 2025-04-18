@@ -34,7 +34,7 @@ export class EditorPdfGenerationProfilesService {
 
   createProfile(profile: EditorPdfGenerationProfileData) {
     const newId = idGenerator();
-    const newProfile = { ...profile, id: newId };
+    const newProfile = { id: newId, ...profile };
     const profiles = this.profilesInternal();
     const newProfiles = { [newId]: newProfile, ...profiles };
 
@@ -108,14 +108,10 @@ export class EditorPdfGenerationProfilesService {
 
 export interface EditorPdfGenerationProfileData {
   readonly name: string;
+  readonly logoBase64?: string;
 }
 
 export type EditorPdfGenerationProfile = { readonly id: string } & EditorPdfGenerationProfileData;
-
-interface LocalStorageData {
-  readonly profiles: Record<string, EditorPdfGenerationProfile>;
-  readonly selectedProfileId?: string;
-}
 
 function idGenerator() {
   return Math.random().toString(36).substring(2);
