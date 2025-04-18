@@ -3,7 +3,9 @@ import { EditorPage } from './editor.page';
 import { XmpTab } from './tabs/xmp/xmp.tab';
 import { CiiTab } from './tabs/cii/cii.tab';
 import { AttachmentsTab } from './tabs/attachments/attachments.tab';
-import { SettingsTab } from './tabs/settings/settings.tab';
+import { EditorSettingsTab } from './tabs/settings/editor-settings.tab';
+import { EditorSettingsGeneralTab } from './tabs/settings/tabs/editor-settings-general/editor-settings-general.tab';
+import { EditorSettingsPdfProfilesTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profiles.tab';
 
 export const routes: Routes = [
   {
@@ -24,7 +26,22 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
-        component: SettingsTab,
+        component: EditorSettingsTab,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            component: EditorSettingsGeneralTab,
+          },
+          {
+            path: 'profiles',
+            component: EditorSettingsPdfProfilesTab,
+          },
+          {
+            path: '**',
+            redirectTo: '',
+          },
+        ],
       },
       {
         path: '**',

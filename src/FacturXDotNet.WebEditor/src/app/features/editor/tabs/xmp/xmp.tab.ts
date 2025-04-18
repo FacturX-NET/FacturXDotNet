@@ -50,5 +50,4 @@ export class XmpTab {
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
 
   protected small = this.editorResponsivenessService.smallLeftColumn;
-  protected folded = this.editorResponsivenessService.foldLeftColumn;
 }
