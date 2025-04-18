@@ -19,9 +19,11 @@ import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer
       <div class="border-top mb-3"></div>
     </div>
 
-    <app-editor-settings-pdf-profile-form></app-editor-settings-pdf-profile-form>
-
-    <button class="btn btn-outline-success mt-3" (click)="create()">Create</button>
+    <app-editor-settings-pdf-profile-form [confirmationTpl]="confirmation">
+      <ng-template #confirmation>
+        <button class="btn btn-outline-success mt-3" (click)="create()">Create</button>
+      </ng-template>
+    </app-editor-settings-pdf-profile-form>
   `,
   styles: ``,
 })
@@ -62,4 +64,6 @@ export class EditorSettingsPdfProfileCreateTab {
       this.toastService.showError(error);
     }
   }
+
+  protected readonly confirm = confirm;
 }

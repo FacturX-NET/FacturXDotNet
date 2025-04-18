@@ -220,7 +220,7 @@ import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/
       </div>
 
       <div class="d-flex flex-wrap gap-3 mb-3">
-        <div class="editor__control mb-3">
+        <div class="editor__control">
           <label class="form-label fw-semibold" for="editor-settings-profile-default-invoice-documents-type-name">Default Invoice Documents Name</label>
           <input
             class="form-control"
@@ -234,7 +234,7 @@ import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/
           </p>
         </div>
 
-        <div class="editor__control mb-3">
+        <div class="editor__control">
           <label class="form-label fw-semibold" for="editor-settings-profile-default-credit-note-documents-type-name">Default Credit Note Documents Name</label>
           <input
             class="form-control"

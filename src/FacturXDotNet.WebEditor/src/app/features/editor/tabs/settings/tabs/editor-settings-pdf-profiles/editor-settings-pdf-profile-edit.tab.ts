@@ -29,11 +29,14 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
       <div class="border-top mb-3"></div>
     </div>
 
-    <app-editor-settings-pdf-profile-form></app-editor-settings-pdf-profile-form>
-    <div class="d-flex gap-2">
-      <button class="btn btn-outline-success mt-3" (click)="save()">Save changes</button>
-      <button class="btn btn-outline-secondary mt-3" (click)="cancel()">Revert changes</button>
-    </div>
+    <app-editor-settings-pdf-profile-form [confirmationTpl]="confirmation">
+      <ng-template #confirmation>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-success mt-3" (click)="save()">Save changes</button>
+          <button class="btn btn-outline-secondary mt-3" (click)="cancel()">Revert changes</button>
+        </div>
+      </ng-template>
+    </app-editor-settings-pdf-profile-form>
   `,
   styles: `
     .hide-toggle::after {
