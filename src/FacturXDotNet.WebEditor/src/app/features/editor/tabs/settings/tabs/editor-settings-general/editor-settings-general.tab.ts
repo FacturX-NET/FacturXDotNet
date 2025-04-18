@@ -6,26 +6,24 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-editor-settings-general',
   imports: [FormsModule],
   template: `
-    <div>
-      <h4><i class="bi bi-code"></i> Cross-Industry Invoice</h4>
-      <hr class="mt-0" />
-      <h6>Verbosity</h6>
-      <p class="small text-body-secondary">
-        Customize how much detail you want to see when editing fields in the Cross-Industry Invoice form. You can choose to display additional information such as business rules,
-        and helpful remarks for each field. Adjust these settings to match your preferred level of guidance and complexity.
-      </p>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="showBusinessRules" [ngModel]="showBusinessRules()" (ngModelChange)="setBusinessRules($event)" />
-        <label class="form-check-label" for="showBusinessRules">Show business rules</label>
-      </div>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="showRemarks" [ngModel]="showRemarks()" (ngModelChange)="setRemarks($event)" />
-        <label class="form-check-label" for="showRemarks">Show remarks</label>
-      </div>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="showChorusProRemarks" [ngModel]="showChorusProRemarks()" (ngModelChange)="setChorusProRemarks($event)" />
-        <label class="form-check-label" for="showChorusProRemarks">Show Chorus PRO remarks</label>
-      </div>
+    <h4><i class="bi bi-code"></i> Cross-Industry Invoice</h4>
+    <hr class="mt-0" />
+    <h6>Verbosity</h6>
+    <p class="small text-body-secondary">
+      Customize how much detail you want to see when editing fields in the Cross-Industry Invoice form. You can choose to display additional information such as business rules, and
+      helpful remarks for each field. Adjust these settings to match your preferred level of guidance and complexity.
+    </p>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="showBusinessRules" [ngModel]="showBusinessRules()" (ngModelChange)="setBusinessRules($event)" />
+      <label class="form-check-label" for="showBusinessRules">Show business rules</label>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="showRemarks" [ngModel]="showRemarks()" (ngModelChange)="setRemarks($event)" />
+      <label class="form-check-label" for="showRemarks">Show remarks</label>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="showChorusProRemarks" [ngModel]="showChorusProRemarks()" (ngModelChange)="setChorusProRemarks($event)" />
+      <label class="form-check-label" for="showChorusProRemarks">Show Chorus PRO remarks</label>
     </div>
   `,
   styles: ``,
