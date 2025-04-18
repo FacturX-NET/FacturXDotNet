@@ -62,6 +62,6 @@ export class EditorSettingsPdfProfileCreateTab {
     }
 
     const value = form.formGroup.getRawValue() as EditorPdfGenerationProfile;
-    this.editorPdfViewerService.regenerateAndDisplayStandardPdf(value);
+    this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf(value);
   }
 }

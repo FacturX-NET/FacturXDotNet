@@ -86,7 +86,7 @@ export class EditorSettingsPdfProfilesTab {
   }
 
   protected regeneratePdf() {
-    this.editorPdfViewerService.regenerateAndDisplayStandardPdf();
+    this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf();
   }
 
   protected async deleteProfile(profile: EditorPdfGenerationProfile) {

@@ -50,7 +50,7 @@ export class EditorPdfViewerService {
 
   private profileOverride: EditorPdfGenerationProfileData | undefined;
 
-  regenerateAndDisplayStandardPdf(profile?: EditorPdfGenerationProfileData) {
+  regenerateAndDisplayGeneratedPdf(profile?: EditorPdfGenerationProfileData) {
     if (this.pdfTab() === 'generated') {
       this.profileOverride = profile;
       this.pdf.reload();

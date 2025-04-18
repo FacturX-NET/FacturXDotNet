@@ -14,7 +14,7 @@ import { EditorPdfViewerService } from '../editor-pdf-viewer/editor-pdf-viewer.s
           <button ngbNavLink>Imported</button>
         </li>
         <li ngbNavItem="generated">
-          <button ngbNavLink>Standard</button>
+          <button ngbNavLink>Generated</button>
         </li>
       </ul>
 
@@ -40,6 +40,6 @@ export class EditorRightPaneHeaderComponent {
   protected pdf = this.editorPdfViewerService.pdf;
 
   protected regeneratePdf() {
-    this.editorPdfViewerService.regenerateAndDisplayStandardPdf();
+    this.editorPdfViewerService.regenerateAndDisplayGeneratedPdf();
   }
 }

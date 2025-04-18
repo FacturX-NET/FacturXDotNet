@@ -4,6 +4,6 @@ import { EditorPdfViewerService } from '../components/editor-pdf-viewer/editor-p
 
 export const resetPdfProfileOverride: CanDeactivateFn<unknown> = () => {
   const editorPdfViewerService = inject(EditorPdfViewerService);
-  editorPdfViewerService.regenerateAndDisplayStandardPdf();
+  editorPdfViewerService.regenerateAndDisplayGeneratedPdf();
   return true;
 };
