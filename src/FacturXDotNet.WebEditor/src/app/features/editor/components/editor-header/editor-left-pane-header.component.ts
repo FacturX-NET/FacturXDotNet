@@ -1,10 +1,10 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { EditorSavedState } from '../editor-state.service';
-import { EditorSettings } from '../editor-settings.service';
+import { EditorSavedState } from '../../editor-state.service';
+import { EditorSettings } from '../../editor-settings.service';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { NgbNav, NgbNavItem, NgbNavLink, NgbNavLinkBase } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-import { EditorResponsivenessService } from '../editor-responsiveness.service';
+import { EditorResponsivenessService } from '../../editor-responsiveness.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { distinct, filter, map } from 'rxjs';
 

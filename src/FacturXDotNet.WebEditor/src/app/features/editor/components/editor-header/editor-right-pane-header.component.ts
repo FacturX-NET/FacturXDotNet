@@ -1,6 +1,6 @@
 import { Component, inject, model } from '@angular/core';
 import { NgbNav, NgbNavItem, NgbNavLinkButton } from '@ng-bootstrap/ng-bootstrap';
-import { PdfModel } from '../editor-settings.service';
+import { PdfModel } from '../../editor-settings.service';
 import { EditorPdfViewerService } from '../editor-pdf-viewer/editor-pdf-viewer.service';
 
 @Component({

@@ -3,7 +3,7 @@ import { EditorSettingsPdfProfileFormComponent } from './components/editor-setti
 import { Router, RouterLink } from '@angular/router';
 import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
 import { ToastService } from '../../../../../../core/toasts/toast.service';
-import { EditorPdfViewerService } from '../../../../editor-pdf-viewer/editor-pdf-viewer.service';
+import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer/editor-pdf-viewer.service';
 import { NgbDropdown, NgbDropdownButtonItem, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

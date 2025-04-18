@@ -1,10 +1,10 @@
 import { computed, DestroyRef, inject, Injectable, resource, Resource } from '@angular/core';
-import { EditorSavedState, EditorStateService } from '../editor-state.service';
+import { EditorSavedState, EditorStateService } from '../../editor-state.service';
 import { firstValueFrom, map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { EditorSettingsService } from '../editor-settings.service';
-import { GenerateApi, GenerateStandardPdfOptions } from '../../../core/api/generate.api';
-import { EditorPdfGenerationProfileData, EditorPdfGenerationProfilesService } from '../editor-pdf-generation-profiles.service';
+import { EditorSettingsService } from '../../editor-settings.service';
+import { GenerateApi, GenerateStandardPdfOptions } from '../../../../core/api/generate.api';
+import { EditorPdfGenerationProfileData, EditorPdfGenerationProfilesService } from '../../editor-pdf-generation-profiles.service';
 
 @Injectable({
   providedIn: 'root',

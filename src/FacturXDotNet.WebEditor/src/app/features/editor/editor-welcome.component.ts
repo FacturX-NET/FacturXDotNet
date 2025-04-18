@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { EditorMenuService } from './editor-menu/editor-menu.service';
+import { EditorMenuService } from './components/editor-menu/editor-menu.service';
 import { ToastService } from '../../core/toasts/toast.service';
 
 @Component({

@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { EditorSettingsPdfProfileFormComponent } from './components/editor-settings-pdf-profile-form.component';
 import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
 import { ToastService } from '../../../../../../core/toasts/toast.service';
-import { EditorPdfViewerService } from '../../../../editor-pdf-viewer/editor-pdf-viewer.service';
+import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer/editor-pdf-viewer.service';
 
 @Component({
   selector: 'app-editor-settings-pdf-profile-create',

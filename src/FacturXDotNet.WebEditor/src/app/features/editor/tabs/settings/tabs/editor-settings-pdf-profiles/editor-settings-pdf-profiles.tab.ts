@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { EditorPdfViewerService } from '../../../../editor-pdf-viewer/editor-pdf-viewer.service';
+import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer/editor-pdf-viewer.service';
 import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
 import { RouterLink } from '@angular/router';
 
