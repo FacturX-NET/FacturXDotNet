@@ -2,10 +2,11 @@ import { Component, computed, inject } from '@angular/core';
 import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer/editor-pdf-viewer.service';
 import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
 import { RouterLink } from '@angular/router';
+import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-editor-settings-pdf-profiles',
-  imports: [RouterLink],
+  imports: [RouterLink, NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle],
   template: `
     <div class="d-flex align-items-start justify-content-between">
       <h4><i class="bi bi-file-pdf"></i> PDF Profiles</h4>
@@ -20,6 +21,18 @@ import { RouterLink } from '@angular/router';
         preferences. Save multiple profiles to quickly switch between different layouts or presentation styles.
       </p>
       <div class="list-group">
+        <div class="list-group-item list-group-item-light">
+          <div class="d-flex align-items-center py-2">
+            Default
+            <div class="flex-grow-1"><!-- spacer --></div>
+            @if (selectedProfile() === undefined) {
+              <button class="btn btn-sm btn-outline-success ms-2" disabled>Selected</button>
+            } @else {
+              <button class="btn btn-sm btn-outline-secondary ms-2" (click)="selectProfile(undefined)">Select</button>
+            }
+          </div>
+        </div>
+
         @for (profile of profilesArray(); track profile.id) {
           <div class="list-group-item">
             <div class="d-flex align-items-center py-2">
@@ -27,11 +40,19 @@ import { RouterLink } from '@angular/router';
                 {{ profile.name }}
               </a>
               <div class="flex-grow-1"><!-- spacer --></div>
-              @if (selectedProfile() !== undefined && selectedProfile()?.id === profile.id) {
-                <button class="btn btn-sm btn-outline-success ms-2" disabled>Selected</button>
-              } @else {
-                <button class="btn btn-sm btn-outline-secondary ms-2" (click)="selectProfile(profile)">Select</button>
-              }
+              <div class="d-flex gap-2">
+                @if (selectedProfile() !== undefined && selectedProfile()?.id === profile.id) {
+                  <button class="btn btn-sm btn-outline-success ms-2" disabled>Selected</button>
+                } @else {
+                  <button class="btn btn-sm btn-outline-secondary ms-2" (click)="selectProfile(profile)">Select</button>
+                }
+                <div ngbDropdown>
+                  <button id="editor-settings-profile-edit-menu" class="btn btn-sm btn-outline-secondary hide-toggle" ngbDropdownToggle><i class="bi bi-three-dots"></i></button>
+                  <div ngbDropdownMenu aria-labelledby="editor-settings-profile-edit-menu">
+                    <button class="text-danger" (click)="deleteProfile(profile)" ngbDropdownItem><i class="bi bi-trash"></i> Delete profile</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         }
@@ -59,12 +80,17 @@ export class EditorSettingsPdfProfilesTab {
   protected profilesArray = computed(() => Object.values(this.profiles()));
   protected selectedProfile = this.editorPdfGenerationProfilesService.selectedProfile;
 
-  protected selectProfile(profile: EditorPdfGenerationProfile) {
-    this.editorPdfGenerationProfilesService.selectProfile(profile.id);
+  protected selectProfile(profile: EditorPdfGenerationProfile | undefined) {
+    this.editorPdfGenerationProfilesService.selectProfile(profile?.id);
     this.regeneratePdf();
   }
 
   protected regeneratePdf() {
     this.editorPdfViewerService.regenerateAndDisplayStandardPdf();
+  }
+
+  protected async deleteProfile(profile: EditorPdfGenerationProfile) {
+    this.editorPdfGenerationProfilesService.deleteProfile(profile.id);
+    this.regeneratePdf();
   }
 }

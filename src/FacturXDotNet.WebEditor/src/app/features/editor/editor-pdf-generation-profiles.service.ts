@@ -1,4 +1,4 @@
-import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { computed, Injectable, signal, WritableSignal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -75,7 +75,13 @@ export class EditorPdfGenerationProfilesService {
     this.profilesInternal.set(newProfiles);
   }
 
-  selectProfile(profileId: string) {
+  selectProfile(profileId: string | undefined) {
+    if (profileId === undefined) {
+      this.saveSelectedProfile(undefined);
+      this.selectedProfileInternal.set(undefined);
+      return;
+    }
+
     const profiles = this.profilesInternal();
     const profile = profiles[profileId];
     if (profile === undefined) {
@@ -99,8 +105,12 @@ export class EditorPdfGenerationProfilesService {
     return JSON.parse(serialized) as Record<string, EditorPdfGenerationProfile>;
   }
 
-  private saveSelectedProfile(selectedProfile: string): void {
-    localStorage.setItem(EditorPdfGenerationProfilesService.selectedProfileLocalStorageKey, selectedProfile);
+  private saveSelectedProfile(selectedProfile: string | undefined): void {
+    if (selectedProfile === undefined) {
+      localStorage.removeItem(EditorPdfGenerationProfilesService.selectedProfileLocalStorageKey);
+    } else {
+      localStorage.setItem(EditorPdfGenerationProfilesService.selectedProfileLocalStorageKey, selectedProfile);
+    }
   }
 
   private loadSelectedProfile(): string | undefined {
