@@ -1,4 +1,4 @@
-import { Component, inject, Signal, signal, viewChild } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { EditorSettingsPdfProfileFormComponent } from './components/editor-settings-pdf-profile-form.component';
 import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';

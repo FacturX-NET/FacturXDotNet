@@ -1,10 +1,6 @@
-import { Component, computed, DestroyRef, inject, input, linkedSignal, resource, Resource } from '@angular/core';
+import { Component, computed, inject, input, linkedSignal } from '@angular/core';
 import { PdfViewerComponent } from './pdf-viewer.component';
-import { EditorSavedState, EditorStateService } from '../../editor-state.service';
-import { GenerateApi } from '../../../../core/api/generate.api';
-import { firstValueFrom, map } from 'rxjs';
 import { ToastService } from '../../../../core/toasts/toast.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditorSettingsService, PdfModel } from '../../editor-settings.service';
 import { EditorMenuService } from '../editor-menu/editor-menu.service';
 import { HttpErrorResponse } from '@angular/common/http';

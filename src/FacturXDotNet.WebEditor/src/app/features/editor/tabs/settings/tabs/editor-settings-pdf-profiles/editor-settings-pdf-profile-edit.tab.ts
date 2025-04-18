@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
 import { ToastService } from '../../../../../../core/toasts/toast.service';
 import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer/editor-pdf-viewer.service';
-import { NgbDropdown, NgbDropdownButtonItem, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-editor-settings-pdf-profile-edit',
@@ -12,7 +12,7 @@ import { NgbDropdown, NgbDropdownButtonItem, NgbDropdownItem, NgbDropdownMenu, N
   template: `
     <div class="d-flex align-items-start justify-content-between">
       <h4>
-        <a routerLink="/settings/profiles"><i class="bi bi-file-pdf"></i> PDF Profiles</a> / {{ profile()?.name }}
+        <a routerLink="/settings/profiles"><i class="bi bi-file-pdf"></i> PDF Profiles</a> / {{ profile().name }}
       </h4>
       <div class="d-flex align-items-start gap-2">
         <button class="btn btn-sm btn-outline-secondary" (click)="preview()">Preview</button>

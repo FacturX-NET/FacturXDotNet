@@ -1,4 +1,4 @@
-import { Component, computed, effect, ElementRef, inject, Resource, signal, Signal, viewChild } from '@angular/core';
+import { Component, computed, inject, Resource, Signal } from '@angular/core';
 import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
 import { CiiFormComponent } from './cii-form/cii-form.component';
 import { CiiSummaryComponent } from './cii-summary/cii-summary.component';

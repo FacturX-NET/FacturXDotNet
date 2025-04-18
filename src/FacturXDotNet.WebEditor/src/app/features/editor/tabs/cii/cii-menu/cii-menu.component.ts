@@ -1,4 +1,4 @@
-import { Component, inject, Input, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CiiMenuDetailsDropdownComponent } from './cii-menu-details-dropdown.component';
 import { EditorSettings, EditorSettingsService } from '../../../editor-settings.service';
 import { CiiFormService } from '../cii-form/cii-form.service';

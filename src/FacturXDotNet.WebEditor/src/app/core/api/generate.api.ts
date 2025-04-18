@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { from, map, Observable, of, switchMap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../../app.config';
 import { CrossIndustryInvoice, ICrossIndustryInvoice, IXmpMetadata, StandardPdfGeneratorLanguagePackDto } from './api.models';
 import { EditorStateAttachment } from '../../features/editor/editor-state.service';

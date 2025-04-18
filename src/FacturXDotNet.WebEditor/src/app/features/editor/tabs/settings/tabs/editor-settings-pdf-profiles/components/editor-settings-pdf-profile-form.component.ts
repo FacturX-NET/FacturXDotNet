@@ -1,8 +1,5 @@
-import { Component, inject, input, model } from '@angular/core';
-import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../../../../editor-pdf-generation-profiles.service';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { tap } from 'rxjs';
 import { ImportFileService } from '../../../../../../../core/import-file/import-file.service';
 
 @Component({

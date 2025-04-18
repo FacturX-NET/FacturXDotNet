@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { EditorResponsivenessService } from '../../editor-responsiveness.service';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { NgbNav, NgbNavItem, NgbNavLink, NgbNavLinkButton } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNav, NgbNavItem, NgbNavLinkButton } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-settings',
-  imports: [RouterOutlet, NgbNav, NgbNavItem, NgbNavLink, RouterLink, NgbNavLinkButton],
+  imports: [RouterOutlet, NgbNav, NgbNavItem, RouterLink, NgbNavLinkButton],
   template: `
     <div class="h-100 overflow-auto">
       <div class="container py-4">
