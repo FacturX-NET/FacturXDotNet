@@ -128,7 +128,7 @@ export interface EditorPdfGenerationProfileData {
   readonly name: string;
   readonly logoBase64?: string;
   readonly footer?: string;
-  readonly languagePack?: { baseLanguagePack?: string; documentTypeNames?: Record<string, string | undefined> } & Omit<IStandardPdfGeneratorLanguagePackDto, 'documentTypeNames'>;
+  readonly languagePack?: Omit<IStandardPdfGeneratorLanguagePackDto, 'documentTypeNames'> & { baseLanguagePack?: string; documentTypeNames?: Record<string, string | undefined> };
 }
 
 export type EditorPdfGenerationProfile = { readonly id: string } & EditorPdfGenerationProfileData;

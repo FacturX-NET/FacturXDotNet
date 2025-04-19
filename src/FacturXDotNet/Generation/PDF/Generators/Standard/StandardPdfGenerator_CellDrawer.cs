@@ -17,7 +17,7 @@ public partial class StandardPdfGenerator
             return this;
         }
 
-        public CellDrawer Key(string text, XBrush? brush, XFont? font, bool appendColon = true)
+        public CellDrawer Key(string text, XBrush? brush = null, XFont? font = null, bool appendColon = true)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -26,7 +26,7 @@ public partial class StandardPdfGenerator
 
             if (appendColon)
             {
-                text = text.EndsWith(": ") || text.EndsWith(":") ? text : $"{text}: ";
+                text = text.EndsWith(": ") || text.EndsWith(':') ? text : $"{text}: ";
             }
 
             text = text.EndsWith(' ') ? text : $"{text} ";
