@@ -63,7 +63,7 @@ try
     app.MapOpenApi();
     app.MapScalarApiReference();
 
-    app.MapGet("/", () => Results.LocalRedirect("/scalar")).ExcludeFromDescription();
+    app.MapGet("/", () => Results.LocalRedirect($"{configuration.Value.Hosting.BasePath}/scalar")).ExcludeFromDescription();
     app.MapHealthChecks("/health");
     app.MapGroup("/info").MapInformationEndpoints().WithTags("Information");
     app.MapGroup("/generate").MapGenerateEndpoints().WithTags("Generate");

@@ -28,9 +28,7 @@ server {
     }
     
     location @apiserver {
-        rewrite ^/api$ / break;
-        rewrite ^/api/(.*)$ /$1 break;
-        proxy_pass http://127.0.0.1:{PORT};
+        proxy_pass http://127.0.0.1:{PORT}/;
         proxy_set_header Host $host;
     }
 
