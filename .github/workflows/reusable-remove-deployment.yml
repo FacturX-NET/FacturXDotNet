@@ -23,6 +23,16 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Check input
+        run: |
+          INPUT=${{ inputs.prerelease }}
+          INPUT_TRIMMED=$(echo $INPUT | xargs echo -n)
+          if [ -z "${INPUT_TRIMMED}" ]; then
+            echo "Input '$INPUT' is empty."
+            exit 1;
+          fi
+
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh/
@@ -42,13 +52,13 @@ jobs:
       - name: Restart nginx
         run: |
           ssh remote 'sudo systemctl restart nginx'
-          
+
       - name: Remove API application
         run: |
           ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down -d'
-          ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}'
+          ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}/'
 
       - name: Remove Editor application
         run: |
           ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down -d'
-          ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}'
+          ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}/'
