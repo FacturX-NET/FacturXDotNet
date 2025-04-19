@@ -63,4 +63,4 @@ jobs:
       - name: Remove Editor application
         continue-on-error: true
         run: |
-          ssh remote 'rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/'
+          ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/'
