@@ -57,8 +57,8 @@ jobs:
         id: find_port
         run: |
           scp .github/workflows/scripts/get_random_port.sh remote:~/${{ github.run_id }}/get_random_port.sh
-          ssh remote 'chmod +x ~/${{ github.run_id }}/get_random_port.sh 
-          PORT=$(ssh remote "~/${{ github.run_id }}/get_random_port.sh")
+          ssh remote 'chmod +x ~/${{ github.run_id }}/get_random_port.sh'
+          PORT=$(ssh remote '~/${{ github.run_id }}/get_random_port.sh')
           echo "Random port: $PORT"
           echo "port=$PORT" >> $GITHUB_OUTPUT
 
