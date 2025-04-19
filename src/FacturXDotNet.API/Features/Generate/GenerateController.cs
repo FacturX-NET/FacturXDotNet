@@ -160,8 +160,18 @@ static class GenerateController
         return Results.File(facturXStream, "application/pdf", pdf.FileName, DateTimeOffset.Now);
     }
 
-    static async Task<IResult> PostCii(CrossIndustryInvoice crossIndustryInvoice, CancellationToken cancellationToken = default)
+    static async Task<IResult> PostCii(CrossIndustryInvoice crossIndustryInvoice, [FromQuery] bool skipValidation = false, CancellationToken cancellationToken = default)
     {
+        if (!skipValidation)
+        {
+            CrossIndustryInvoiceValidator validator = new();
+            FacturXValidationResult validationResult = validator.GetValidationResult(crossIndustryInvoice);
+            if (!validationResult.Success)
+            {
+                return Results.ValidationProblem(ValidationResults.BuildErrors(validationResult), null, null, StatusCodes.Status400BadRequest);
+            }
+        }
+
         MemoryStream stream = new();
         CrossIndustryInvoiceWriter writer = new();
         await writer.WriteAsync(stream, crossIndustryInvoice);
