@@ -18,7 +18,7 @@ jobs:
     name: Compute Version
     uses: ./.github/workflows/reusable-compute-version.yml
   
-  build-docker-image:
+  build-api-docker-image:
     name: Build Docker Image
     needs: compute-version
     uses: ./.github/workflows/reusable-build-publish-api-docker-image.yml
@@ -35,102 +35,16 @@ jobs:
       api-url: https://alpha.facturxdotnet.org/api
       version: ${{ needs.compute-version.outputs.version }}
 
-  deploy:
+  deploy-api-and-editor:
     name: Deploy API and Editor to Production
-    runs-on: ubuntu-latest
     needs:
-      - build-docker-image
+      - build-api-docker-image
       - build-editor-application
-    
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download editor artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: editor
-          path: dist/editor
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.PROD_SSH_KEY }}" > ~/.ssh/prod.key
-          chmod 600 ~/.ssh/prod.key
-
-          echo "Host prod"                               > ~/.ssh/config
-          echo "  HostName ${{ secrets.PROD_SSH_HOST }}" >> ~/.ssh/config
-          echo "  User ${{ secrets.PROD_SSH_USER }}"     >> ~/.ssh/config
-          echo "  IdentityFile ~/.ssh/prod.key"          >> ~/.ssh/config
-          echo "  StrictHostKeyChecking no"              >> ~/.ssh/config
-      
-      # START maintenance mode
-      - name: Create temporary folder for this build
-        run: |
-          ssh prod 'mkdir -p ~/${{ github.run_id }}'
-
-      - name: Start maintenance mode
-        run: |
-          scp .github/workflows/pages/maintenance.html prod:~/${{ github.run_id }}/maintenance.html
-          ssh prod 'sudo mkdir -p /var/www/alpha.facturxdotnet.org'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/alpha.facturxdotnet.org/maintenance.html'
-
-      # UPDATE applications
-      - name: Pull new API image and restart application
-        run: |
-          echo "Building API docker-compose file..."
-          mkdir -p dist/api
-          cp .github/workflows/configs/api.docker-compose.yml.template dist/api/docker-compose.yml
-          sed -i -e 's/{PORT}/5296/g' -e 's/{PRERELEASE}/alpha/g' dist/api/docker-compose.yml
-          
-          cat dist/api/docker-compose.yml
-          
-          echo "Publishing API docker-compose file..."
-          ssh prod 'mkdir -p ~/facturxdotnet/alpha/api'
-          scp dist/api/docker-compose.yml prod:~/facturxdotnet/alpha/api/docker-compose.yml
-          
-          echo "Restarting API app..."
-          ssh prod 'cd facturxdotnet/alpha/api; docker compose pull'
-          ssh prod 'cd facturxdotnet/alpha/api; docker compose up -d'
-
-      - name: Replace current build of Editor application
-        run: |
-          echo "Uploading Editor app..."
-          ssh prod 'mkdir -p ~/${{ github.run_id }}/editor'
-          scp -r dist/editor/* prod:~/${{ github.run_id }}/editor
-          
-          echo "Removing old Editor release..."
-          ssh prod 'sudo mkdir -p /var/www/alpha.facturxdotnet.org/editor'
-          ssh prod 'sudo rm -rf /var/www/alpha.facturxdotnet.org/editor/*'
-          
-          echo "Moving new Editor release..."
-          ssh prod 'sudo mv ~/${{ github.run_id }}/editor/* /var/www/alpha.facturxdotnet.org/editor'
-
-      - name: Replace nginx configurations
-        run: |
-          echo "Building nginx configuration file..."
-          mkdir -p dist/
-          cp .github/workflows/configs/facturxdotnet.nginx.conf.template dist/alpha.facturxdotnet.org.conf
-          sed -i -e 's/{PORT}/5296/g' -e 's/{PRERELEASE}/alpha/g' dist/alpha.facturxdotnet.org.conf
-          
-          cat dist/alpha.facturxdotnet.org.conf
-          
-          echo "Publishing nginx configuration file..."
-          ssh prod 'mkdir -p ~/${{ github.run_id }}/nginx'
-          scp dist/alpha.facturxdotnet.org.conf prod:~/${{ github.run_id }}/nginx/alpha.facturxdotnet.org.conf
-          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/alpha.facturxdotnet.org.conf /etc/nginx/conf.d/alpha.facturxdotnet.org.conf'
-
-      - name: Restart nginx
-        run: |
-          ssh prod 'sudo systemctl restart nginx'
-      
-      # EXIT maintenance mode
-      - name: Exit maintenance mode
-        run: |
-          ssh prod 'sudo rm /var/www/alpha.facturxdotnet.org/maintenance.html'
-
-      - name: Remove temporary folder for this build
-        if: always()
-        run: |
-          ssh prod 'rm -rf ~/${{ github.run_id }}'
+    uses: ./.github/workflows/reusable-deploy-api-editor.yml
+    with:
+      editor-artifact-name: editor
+      prerelease: alpha
+    secrets:
+      PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+      PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+      PROD_SSH_USER: ${{ secrets.PROD_SSH_USER }}

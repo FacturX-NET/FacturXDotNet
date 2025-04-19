@@ -1,0 +1,129 @@
+﻿name: Reusable - Build Editor Application
+
+on:
+  workflow_call:
+    inputs:
+      editor-artifact-name:
+        description: The name of the artifact that contains the editor build
+        type: string
+        required: true
+      
+      prerelease:
+        description: The prerelease identifier, the apps will be deployed to the PRERELEASE.facturxdotnet.org domain.
+        type: string
+        required: true
+
+    secrets:
+      PROD_SSH_KEY:
+        required: true
+      PROD_SSH_HOST:
+        required: true
+      PROD_SSH_USER:
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy API and Editor to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download editor artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.editor-artifact-name }}
+          path: dist/editor
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.PROD_SSH_KEY }}" > ~/.ssh/remote.key
+          chmod 600 ~/.ssh/remote.key
+
+          echo "Host remote"                               > ~/.ssh/config
+          echo "  HostName ${{ secrets.PROD_SSH_HOST }}"   >> ~/.ssh/config
+          echo "  User ${{ secrets.PROD_SSH_USER }}"       >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/remote.key"          >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no"                >> ~/.ssh/config
+
+      - name: Find available port
+        id: find_port
+        run: |
+          # Find random available port
+          # Copied from https://unix.stackexchange.com/a/423052
+          PORT=$(ssh remote 'comm -23 <(seq 49152 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1')
+          echo "Random port: $PORT"
+          echo "port=$PORT" >> $GITHUB_OUTPUT
+
+      # START maintenance mode
+      - name: Create temporary folder for this build
+        run: |
+          ssh remote 'mkdir -p ~/${{ github.run_id }}'
+
+      - name: Start maintenance mode
+        run: |
+          scp .github/workflows/pages/maintenance.html remote:~/${{ github.run_id }}/maintenance.html
+          ssh remote 'sudo mkdir -p /var/www/${{ inputs.prerelease }}.facturxdotnet.org'
+          ssh remote 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance.html'
+
+      # UPDATE applications
+      - name: Pull new API image and restart application
+        run: |
+          echo "Building API docker-compose file..."
+          mkdir -p dist
+          cp .github/workflows/configs/api.docker-compose.yml.template dist/docker-compose.yml
+          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/docker-compose.yml
+
+          cat dist/docker-compose.yml
+
+          echo "Publishing API docker-compose file..."
+          ssh remote 'mkdir -p ~/facturxdotnet/${{ inputs.prerelease }}/api'
+          scp dist/docker-compose.yml remote:~/facturxdotnet/${{ inputs.prerelease }}/api/docker-compose.yml
+
+          echo "Restarting API app..."
+          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose pull'
+          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose up -d'
+
+      - name: Replace current build of Editor application
+        run: |
+          echo "Uploading Editor app..."
+          ssh remote 'mkdir -p ~/${{ github.run_id }}/editor'
+          scp -r dist/editor/* remote:~/${{ github.run_id }}/editor
+
+          echo "Removing old Editor release..."
+          ssh remote 'sudo mkdir -p /var/www/${{ inputs.prerelease }}.facturxdotnet.org/editor'
+          ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/editor/*'
+
+          echo "Moving new Editor release..."
+          ssh remote 'sudo mv ~/${{ github.run_id }}/editor/* /var/www/${{ inputs.prerelease }}.facturxdotnet.org/editor'
+
+      - name: Replace nginx configurations
+        run: |
+          echo "Building nginx configuration file..."
+          mkdir -p dist/
+          cp .github/workflows/configs/facturxdotnet.nginx.conf.template dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
+          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
+
+          cat dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
+
+          echo "Publishing nginx configuration file..."
+          ssh remote 'mkdir -p ~/${{ github.run_id }}/nginx'
+          scp dist/${{ inputs.prerelease }}.facturxdotnet.org.conf remote:~/${{ github.run_id }}/nginx/${{ inputs.prerelease }}.facturxdotnet.org.conf
+          ssh remote 'sudo cp ~/${{ github.run_id }}/nginx/${{ inputs.prerelease }}.facturxdotnet.org.conf /etc/nginx/conf.d/${{ inputs.prerelease }}.facturxdotnet.org.conf'
+
+      - name: Restart nginx
+        run: |
+          ssh remote 'sudo systemctl restart nginx'
+
+      # EXIT maintenance mode
+      - name: Exit maintenance mode
+        run: |
+          ssh remote 'sudo rm /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance.html'
+
+      - name: Remove temporary folder for this build
+        if: always()
+        run: |
+          ssh remote 'rm -rf ~/${{ github.run_id }}'
