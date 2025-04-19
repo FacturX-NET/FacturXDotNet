@@ -11,10 +11,6 @@
         description: The version of the application
         type: string
         required: true
-    
-    secrets:
-      GITHUB_TOKEN:
-        required: true
 
     outputs:
       image_name: ${{ jobs.build-docker-image.outputs.image_name }}
