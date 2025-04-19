@@ -1,4 +1,6 @@
-﻿on:
+﻿name: Reusable - Build & Publish API Docker Image
+
+on:
   workflow_call:
     inputs:
       tag:
@@ -18,7 +20,7 @@
       image_id: ${{ jobs.build-docker-image.outputs.image_id }}
 
 jobs:
-  build-docker-image:
+  build-publish-api-docker-image:
     name: Build Docker Image
     runs-on: ubuntu-latest
     outputs:

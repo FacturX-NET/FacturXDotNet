@@ -19,7 +19,7 @@ jobs:
   build-docker-image:
     name: Build Docker Image
     needs: compute-version
-    uses: ./.github/workflows/reusable-build-publish-docker-image.yml
+    uses: ./.github/workflows/reusable-build-publish-api-docker-image.yml
     with:
       tag: latest-alpha
       version: ${{ needs.compute-version.outputs.version }}
