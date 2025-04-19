@@ -1,0 +1,59 @@
+﻿on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: The name of the artifact that will contain the build result
+        type: string
+        required: true
+      
+      version:
+        description: The version of the application
+        type: string
+        required: true
+
+
+jobs:
+  build-editor-application:
+    name: Build Editor Application
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: src/FacturXDotNet.WebEditor/package-lock.json
+
+      - name: Install dependencies
+        run: cd src/FacturXDotNet.WebEditor; npm ci
+
+      - name: Dump licenses file
+        run: cd src/FacturXDotNet.WebEditor; node scripts/dump-licenses.js
+
+      - name: Setup environment
+        run: |
+          cd src/FacturXDotNet.WebEditor
+          echo "import { Environment } from './environment.types';"                 > src/environments/environment.ts
+          echo ""                                                                   >> src/environments/environment.ts
+          echo "export const environment: Environment = {"                          >> src/environments/environment.ts
+          echo "  version: '${{ inputs.version }}',"                                >> src/environments/environment.ts
+          echo "  buildDate: new Date('$(date +'%Y-%m-%d')'),"                      >> src/environments/environment.ts
+          echo "  apiUrl: 'https://api.facturxdotnet.org',"                         >> src/environments/environment.ts
+          echo "};"                                                                 >> src/environments/environment.ts
+          echo "Environment is"
+          cat src/environments/environment.ts
+
+      - name: Build
+        run: cd src/FacturXDotNet.WebEditor; npm run build
+
+      - name: Upload build result
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: src/FacturXDotNet.WebEditor/dist/facturxdotnet-webeditor/browser/
+          if-no-files-found: error

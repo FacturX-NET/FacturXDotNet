@@ -1,0 +1,73 @@
+﻿on:
+  workflow_call:
+    inputs:
+      tag:
+        description: (optional) A tag to associate with the new image
+        type: string
+        required: false
+        default: ''
+      
+      version:
+        description: The version of the application
+        type: string
+        required: true
+
+    outputs:
+      image_name: ${{ jobs.build-docker-image.outputs.image_name }}
+      image_tag: ${{ jobs.build-docker-image.outputs.image_tag }}
+      image_id: ${{ jobs.build-docker-image.outputs.image_id }}
+
+jobs:
+  build-docker-image:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    outputs:
+      image_name: ${{ steps.push_image.outputs.image_name }}
+      image_tag: ${{ steps.push_image.outputs.image_tag }}
+      image_id: ${{ steps.push_image.outputs.image_id }}
+    
+    env:
+      MINVERVERSIONOVERRIDE: ${{ inputs.version }}
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 6 (for dotnet-project-licenses)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Install dotnet-project-licenses
+        run: dotnet tool install -g dotnet-project-licenses --framework net6.0
+
+      - name: Generate licenses file
+        run: cd src/FacturXDotNet.API; dotnet-project-licenses -i dotnet-project-licenses-input.json --json --output-directory Resources
+
+      - name: Build the Docker image
+        run: cd src; docker build . --file FacturXDotNet.API/Dockerfile --tag facturxdotnet-api --label "runnumber=${GITHUB_RUN_ID}" --build-arg VERSION=${{ steps.compute_version.outputs.version }}
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        id: push_image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/facturxdotnet-api
+          IMAGE_NAME=$(echo $IMAGE_NAME | tr '[A-Z]' '[a-z]' | tr '+' '.')
+          VERSION=${{ inputs.version }}
+          VERSION=$(echo $VERSION | tr '[A-Z]' '[a-z]' | tr '+' '.')
+          
+          docker tag facturxdotnet-api $IMAGE_NAME:$VERSION 
+          docker push $IMAGE_NAME:$VERSION
+          
+          echo "image_name=$IMAGE_NAME" >> $GITHUB_OUTPUT
+          echo "image_tag=$VERSION" >> $GITHUB_OUTPUT
+          echo "image_id=$IMAGE_NAME:$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Push ${{ inputs.tag }}
+        if: inputs.tag != ''
+        run: |
+          docker tag facturxdotnet-api ${{ steps.push_image.outputs.image_name }}:${{ inputs.tag }} 
+          docker push ${{ steps.push_image.outputs.image_name }}:${{ inputs.tag }}
