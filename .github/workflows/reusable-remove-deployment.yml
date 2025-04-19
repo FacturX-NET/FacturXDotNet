@@ -32,7 +32,6 @@ jobs:
             exit 1;
           fi
 
-
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh/
