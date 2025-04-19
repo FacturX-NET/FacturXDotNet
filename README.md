@@ -40,6 +40,13 @@ A Factur-X document is a PDF containing
 - XMP metadata that must at least give information about the conformance level to the PDF/A standard and to the EN16931 standard
 - Other attachments
 
+#### Web Editor
+Test it live: [https://editor.facturxdotnet.org](https://editor.facturxdotnet.org)
+
+When your file is ready, simply click **Export** > **Download FacturX document** to generate and download the final output.
+
+![Export Factur-X document](https://github.com/FacturX-NET/FacturXDotNet/blob/main/assets/editor-export-facturx.png)
+
 #### API: `POST /generate/facturx`
 Test it live: [https://api.facturxdotnet.org](https://api.facturxdotnet.org/scalar/#tag/generate/POST/generate/facturx)
 
