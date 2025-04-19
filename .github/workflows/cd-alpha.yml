@@ -109,7 +109,7 @@ jobs:
           echo "Building nginx configuration file..."
           mkdir -p dist/
           cp .github/workflows/configs/facturxdotnet.nginx.conf.template dist/alpha.facturxdotnet.org.conf
-          sed -i -e 's/{PORT}/5296/g' -e 's/{PRERELEASE}/alpha/g' dist/api/docker-compose.yml
+          sed -i -e 's/{PORT}/5296/g' -e 's/{PRERELEASE}/alpha/g' dist/alpha.facturxdotnet.org.conf
           
           cat dist/alpha.facturxdotnet.org.conf
           
