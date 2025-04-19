@@ -40,7 +40,7 @@ try
                     doc.Info.License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://github.com/FacturX-NET/FacturXDotNet/blob/main/LICENSE") };
                     doc.Info.Contact = new OpenApiContact
                         { Name = "Ismail Bennani", Email = "facturx.net@gmail.com", Url = new Uri("https://github.com/FacturX-NET/FacturXDotNet/issues") };
-
+                    
                     return Task.CompletedTask;
                 }
             );
@@ -61,7 +61,15 @@ try
     app.UseCors();
 
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(
+        opt =>
+        {
+            if (!string.IsNullOrWhiteSpace(configuration.Value.Hosting.BasePath))
+            {
+                opt.WithBaseServerUrl(configuration.Value.Hosting.BasePath);
+            }
+        }
+    );
 
     app.MapGet("/", () => Results.LocalRedirect($"{configuration.Value.Hosting.BasePath}/scalar")).ExcludeFromDescription();
     app.MapHealthChecks("/health");
