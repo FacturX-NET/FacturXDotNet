@@ -1,0 +1,24 @@
+name: Manual Deployment - Remove deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        description: The prerelease identifier of the deployment to remove.
+        type: string
+        required: true
+
+concurrency:
+  group: alpha
+  cancel-in-progress: true
+
+jobs:
+  remove-deployment:
+    name: Remove Deployment
+    uses: ./.github/workflows/reusable-remove-deployment.yml
+    with:
+      prerelease: ${{ inputs.prerelease }}
+    secrets:
+      PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+      PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+      PROD_SSH_USER: ${{ secrets.PROD_SSH_USER }}
