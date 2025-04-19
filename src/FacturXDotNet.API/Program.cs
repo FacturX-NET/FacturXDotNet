@@ -6,6 +6,7 @@ using FacturXDotNet.API.Features.Generate;
 using FacturXDotNet.API.Features.Information;
 using FacturXDotNet.API.Features.Information.Services;
 using FacturXDotNet.API.Features.Validate;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using Serilog;
@@ -50,6 +51,12 @@ try
     builder.Services.AddTransient<PackagesService>();
 
     WebApplication app = builder.Build();
+
+    IOptions<AppConfiguration> configuration = app.Services.GetRequiredService<IOptions<AppConfiguration>>();
+    if (!string.IsNullOrWhiteSpace(configuration.Value.Hosting.BasePath))
+    {
+        app.UsePathBase(configuration.Value.Hosting.BasePath);
+    }
 
     app.UseCors();
 
