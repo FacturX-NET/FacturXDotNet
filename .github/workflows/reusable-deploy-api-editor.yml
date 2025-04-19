@@ -49,21 +49,21 @@ jobs:
           echo "  IdentityFile ~/.ssh/remote.key"          >> ~/.ssh/config
           echo "  StrictHostKeyChecking no"                >> ~/.ssh/config
 
+      - name: Create temporary folder for this build
+        run: |
+          ssh remote 'mkdir -p ~/${{ github.run_id }}'
+
       - name: Find available port
         id: find_port
         run: |
           # Find random available port
           # Copied from https://unix.stackexchange.com/a/423052
-          CMD="comm -23 <(seq 49152 65535 | sort) <(ss -Htan | awk '{print $4}' | cut -d':' -f2 | sort -u) | shuf | head -n 1"
-          PORT="$(ssh remote "$CMD")"
+          scp .github/workflows/scripts/get_random_port.sh remote:~/${{ github.run_id }}/get_random_port.sh
+          PORT="$(ssh remote '~/${{ github.run_id }}/get_random_port.sh')"
           echo "Random port: $PORT"
           echo "port=$PORT" >> $GITHUB_OUTPUT
 
       # START maintenance mode
-      - name: Create temporary folder for this build
-        run: |
-          ssh remote 'mkdir -p ~/${{ github.run_id }}'
-
       - name: Start maintenance mode
         run: |
           scp .github/workflows/pages/maintenance.html remote:~/${{ github.run_id }}/maintenance.html
