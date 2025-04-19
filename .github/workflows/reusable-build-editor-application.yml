@@ -1,4 +1,6 @@
-﻿on:
+﻿name: Reusable - Build Editor Application
+
+on:
   workflow_call:
     inputs:
       artifact-name:
