@@ -77,9 +77,13 @@ jobs:
       # UPDATE applications
       - name: Pull new API image and restart application
         run: |
-          ssh prod 'cd facturxdotnet/alpha; sed -i -e s/image: ${{ needs.build-docker-image.outputs.image_name }}:.*/image: ${{ needs.build-docker-image.outputs.image_name }}:latest-alpha/g'
-          ssh prod 'cd facturxdotnet/alpha; docker compose pull'
-          ssh prod 'cd facturxdotnet/alpha; docker compose up -d'
+          mkdir -p dist/api
+          cp .github/workflows/configs/api.docker-compose.yml.template dist/api/docker-compose.yml
+          sed -i -e 's/\\{PORT\\}/5295/g' -e 's/\\{TAG\\}/latest-alpha/g'
+          ssh prod 'mkdir -p ~/facturxdotnet/alpha/api'
+          scp dist/api/docker-compose.yml prod:~/facturxdotnet/alpha/api/docker-compose.yml
+          ssh prod 'cd facturxdotnet/alpha/api; docker compose pull'
+          ssh prod 'cd facturxdotnet/alpha/api; docker compose up -d'
 
       - name: Replace current build of Editor application
         run: |
