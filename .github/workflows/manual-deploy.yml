@@ -1,4 +1,4 @@
-name: Continuous Deployment - Publish alpha build
+name: Manual Deployment - Build & Deploy API & Editor
 
 on:
   workflow_dispatch:
