@@ -4,10 +4,10 @@ using FacturXDotNet.Models.XMP;
 namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 
 /// <summary>
-///     BR-HYBRID-03: A PDF/A extension schema (XMP) following the structure definition in the corresponding specification SHALL be used.
+///     BR-HYBRID-3: A PDF/A extension schema (XMP) following the structure definition in the corresponding specification SHALL be used.
 /// </summary>
 public record BrHybrid03() : HybridBusinessRule(
-    "BR-HYBRID-03",
+    "BR-HYBRID-3",
     "A PDF/A extension schema (XMP) following the structure definition in the corresponding specification SHALL be used."
 )
 {

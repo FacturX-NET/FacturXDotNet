@@ -36,10 +36,36 @@ import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/
         </p>
       </div>
 
-      <div class="editor__control mb-3">
-        <label class="form-label fw-semibold" for="editor-settings-profile-date-label">Date</label>
-        <input class="form-control" id="editor-settings-profile-date-label" formControlName="dateLabel" [placeholder]="baseLanguagePack()?.dateLabel ?? ''" />
-        <p class="form-text">The label used for the invoice issue date.</p>
+      <div class="d-flex flex-wrap gap-3 mb-3">
+        <div class="editor__control flex-grow-1">
+          <label class="form-label fw-semibold" for="editor-settings-profile-contact-label">Contact</label>
+          <input class="form-control" id="editor-settings-profile-contact-label" formControlName="contactLabel" [placeholder]="baseLanguagePack()?.contactLabel ?? ''" />
+          <p class="form-text">The label for the contact person related to the invoice, such as a sales representative or account manager.</p>
+        </div>
+
+        <div class="editor__control flex-grow-1">
+          <label class="form-label fw-semibold" for="editor-settings-profile-date-label">Date</label>
+          <input class="form-control" id="editor-settings-profile-date-label" formControlName="dateLabel" [placeholder]="baseLanguagePack()?.dateLabel ?? ''" />
+          <p class="form-text">The label used for the invoice issue date.</p>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-3 mb-3">
+        <div class="editor__control flex-grow-1">
+          <label class="form-label fw-semibold" for="editor-settings-profile-email-label">Email</label>
+          <input class="form-control" id="editor-settings-profile-email-label" formControlName="emailLabel" [placeholder]="baseLanguagePack()?.emailLabel ?? ''" />
+          <p class="form-text">The label used for displaying the contact email address.</p>
+        </div>
+        <div class="editor__control flex-grow-1">
+          <label class="form-label fw-semibold" for="editor-settings-profile-buyer-address-label">Buyer Address</label>
+          <input
+            class="form-control"
+            id="editor-settings-profile-buyer-address-label"
+            formControlName="buyerAddressLabel"
+            [placeholder]="baseLanguagePack()?.buyerAddressLabel ?? ''"
+          />
+          <p class="form-text">The label for the section showing the client’s billing address.</p>
+        </div>
       </div>
 
       <div class="editor__control mb-3">
@@ -62,50 +88,62 @@ import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/
           <input class="form-control" id="editor-settings-profile-vat-number-label" formControlName="vatNumberLabel" [placeholder]="baseLanguagePack()?.vatNumberLabel ?? ''" />
           <p class="form-text">The label used to display your VAT (Value Added Tax) number on the invoice.</p>
         </div>
-        <div class="editor__control flex-grow-1">
-          <label class="form-label fw-semibold" for="editor-settings-profile-customer-address-label">Customer Address</label>
-          <input
-            class="form-control"
-            id="editor-settings-profile-customer-address-label"
-            formControlName="customerAddressLabel"
-            [placeholder]="baseLanguagePack()?.customerAddressLabel ?? ''"
-          />
-          <p class="form-text">The label for the section showing the client’s billing address.</p>
-        </div>
       </div>
 
       <div class="d-flex flex-wrap gap-3 mb-3">
         <div class="editor__control flex-grow-1">
-          <label class="form-label fw-semibold" for="editor-settings-profile-supplier-references-label">Supplier references</label>
+          <label class="form-label fw-semibold" for="editor-settings-profile-seller-references-label">Seller references</label>
           <input
             class="form-control"
-            id="editor-settings-profile-supplier-references-label"
-            formControlName="supplierReferencesLabel"
-            [placeholder]="baseLanguagePack()?.supplierReferencesLabel ?? ''"
+            id="editor-settings-profile-seller-references-label"
+            formControlName="sellerReferencesLabel"
+            [placeholder]="baseLanguagePack()?.sellerReferencesLabel ?? ''"
           />
           <p class="form-text">The label for your internal reference or tracking number related to the invoice.</p>
         </div>
 
         <div class="editor__control flex-grow-1">
-          <label class="form-label fw-semibold" for="editor-settings-profile-customer-identifiers-label">Customer Identifiers</label>
+          <label class="form-label fw-semibold" for="editor-settings-profile-buyer-identifiers-label">Buyer Identifiers</label>
           <input
             class="form-control"
-            id="editor-settings-profile-customer-identifiers-label"
-            formControlName="customerIdentifiersLabel"
-            [placeholder]="baseLanguagePack()?.customerIdentifiersLabel ?? ''"
+            id="editor-settings-profile-buyer-identifiers-label"
+            formControlName="buyerIdentifiersLabel"
+            [placeholder]="baseLanguagePack()?.buyerIdentifiersLabel ?? ''"
           />
-          <p class="form-text">The label for the client's identifiers, such as customer number or account ID.</p>
+          <p class="form-text">The label for the client's identifiers, such as buyer number or account ID.</p>
         </div>
+      </div>
+
+      <div class="editor__control flex-grow-1">
+        <label class="form-label fw-semibold" for="editor-settings-profile-invoice-object-identifier-label">Client ID</label>
+        <input
+          class="form-control"
+          id="editor-settings-profile-invoice-object-identifier-label"
+          formControlName="invoicedObjectIdentifierLabel"
+          [placeholder]="baseLanguagePack()?.invoicedObjectIdentifierLabel ?? ''"
+        />
+        <p class="form-text">The label for the identifier assigned to the client or customer in your system.</p>
+      </div>
+
+      <div class="editor__control mb-3">
+        <label class="form-label fw-semibold" for="editor-settings-profile-sales-order-label">Sales order</label>
+        <input
+          class="form-control"
+          id="editor-settings-profile-sales-order-label"
+          formControlName="salesOrderReferenceLabel"
+          [placeholder]="baseLanguagePack()?.salesOrderReferenceLabel ?? ''"
+        />
+        <p class="form-text">The label for referencing a related sales order in the invoice.</p>
       </div>
 
       <div class="d-flex flex-wrap gap-3 mb-3">
         <div class="editor__control flex-grow-1">
-          <label class="form-label fw-semibold" for="editor-settings-profile-customer-references-label">Customer references</label>
+          <label class="form-label fw-semibold" for="editor-settings-profile-buyer-references-label">Buyer references</label>
           <input
             class="form-control"
-            id="editor-settings-profile-customer-references-label"
-            formControlName="customerReferencesLabel"
-            [placeholder]="baseLanguagePack()?.customerReferencesLabel ?? ''"
+            id="editor-settings-profile-buyer-references-label"
+            formControlName="buyerReferencesLabel"
+            [placeholder]="baseLanguagePack()?.buyerReferencesLabel ?? ''"
           />
           <p class="form-text">The label for the client’s reference number or identifier for this transaction.</p>
         </div>
@@ -122,22 +160,155 @@ import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/
         </div>
       </div>
 
-      <div class="editor__control mb-3">
-        <label class="form-label fw-semibold" for="editor-settings-profile-order-label">Order</label>
-        <input class="form-control" id="editor-settings-profile-order-label" formControlName="orderLabel" [placeholder]="baseLanguagePack()?.orderLabel ?? ''" />
-        <p class="form-text">The label used for the purchase order or sales order associated with the invoice.</p>
+      <div class="d-flex flex-wrap gap-3 mb-3">
+        <div class="editor__control flex-grow-1">
+          <label class="form-label fw-semibold" for="editor-settings-profile-call-for-tender-label">Tender</label>
+          <input
+            class="form-control"
+            id="editor-settings-profile-call-for-tender-label"
+            formControlName="callForTenderLabel"
+            [placeholder]="baseLanguagePack()?.callForTenderLabel ?? ''"
+          />
+          <p class="form-text">The label used when referencing a call for tender or bidding process associated with the invoice.</p>
+        </div>
+
+        <div class="editor__control flex-grow-1">
+          <label class="form-label fw-semibold" for="editor-settings-profile-despatch-advice-label">Despatch advice</label>
+          <input
+            class="form-control"
+            id="editor-settings-profile-despatch-advice-label"
+            formControlName="despatchAdviceLabel"
+            [placeholder]="baseLanguagePack()?.despatchAdviceLabel ?? ''"
+          />
+          <p class="form-text">The label used for referencing a despatch advice, which confirms the shipment of goods.</p>
+        </div>
       </div>
 
       <div class="d-flex flex-wrap gap-3 mb-3">
         <div class="editor__control flex-grow-1">
-          <label class="form-label fw-semibold" for="editor-settings-profile-invoice-references-label">Invoice References</label>
+          <label class="form-label fw-semibold" for="editor-settings-profile-project-label">Project</label>
           <input
             class="form-control"
-            id="editor-settings-profile-invoice-references-label"
-            formControlName="invoiceReferencesLabel"
-            [placeholder]="baseLanguagePack()?.invoiceReferencesLabel ?? ''"
+            id="editor-settings-profile-project-label"
+            formControlName="projectReferenceLabel"
+            [placeholder]="baseLanguagePack()?.projectReferenceLabel ?? ''"
           />
-          <p class="form-text">The label for any references specific to the invoice document itself.</p>
+          <p class="form-text">The label for identifying a specific project the invoice relates to.</p>
+        </div>
+
+        <div class="editor__control flex-grow-1">
+          <label class="form-label fw-semibold" for="editor-settings-profile-delivery-date-label">Delivery date</label>
+          <input
+            class="form-control"
+            id="editor-settings-profile-delivery-date-label"
+            formControlName="deliveryDateLabel"
+            [placeholder]="baseLanguagePack()?.deliveryDateLabel ?? ''"
+          />
+          <p class="form-text">The label for the actual or expected date of delivery.</p>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-3 mb-3">
+        <div class="editor__control flex-grow-1">
+          <label class="form-label fw-semibold" for="editor-settings-profile-accounting-reference-label">Accounting</label>
+          <input
+            class="form-control"
+            id="editor-settings-profile-accounting-reference-label"
+            formControlName="accountingReferenceLabel"
+            [placeholder]="baseLanguagePack()?.accountingReferenceLabel ?? ''"
+          />
+          <p class="form-text">The label for referencing internal accounting or financial tracking codes.</p>
+        </div>
+
+        <div class="editor__control flex-grow-1">
+          <label class="form-label fw-semibold" for="editor-settings-profile-receiving-advice-label">Receiving advice</label>
+          <input
+            class="form-control"
+            id="editor-settings-profile-receiving-advice-label"
+            formControlName="receivingAdviceLabel"
+            [placeholder]="baseLanguagePack()?.receivingAdviceLabel ?? ''"
+          />
+          <p class="form-text">The label used for referencing a receiving advice, confirming goods have been received.</p>
+        </div>
+      </div>
+
+      <div class="editor__control mb-3">
+        <label class="form-label fw-semibold" for="editor-settings-profile-contract-label">Contract</label>
+        <input
+          class="form-control"
+          id="editor-settings-profile-contract-label"
+          formControlName="contractReferenceLabel"
+          [placeholder]="baseLanguagePack()?.contractReferenceLabel ?? ''"
+        />
+        <p class="form-text">The label for referencing a related contract or agreement.</p>
+      </div>
+
+      <div class="editor__control mb-3">
+        <label class="form-label fw-semibold" for="editor-settings-profile-purchase-order-label">Purchase order</label>
+        <input
+          class="form-control"
+          id="editor-settings-profile-purchase-order-label"
+          formControlName="purchaseOrderReferenceLabel"
+          [placeholder]="baseLanguagePack()?.purchaseOrderReferenceLabel ?? ''"
+        />
+        <p class="form-text">The label used to display the client’s purchase order reference.</p>
+      </div>
+
+      <div class="editor__control mb-3">
+        <label class="form-label fw-semibold" for="editor-settings-profile-invoice-references-label">Invoice References</label>
+        <input
+          class="form-control"
+          id="editor-settings-profile-invoice-references-label"
+          formControlName="invoiceReferencesLabel"
+          [placeholder]="baseLanguagePack()?.invoiceReferencesLabel ?? ''"
+        />
+        <p class="form-text">The label for any references specific to the invoice document itself.</p>
+      </div>
+
+      <div class="editor__control mb-3">
+        <label class="form-label fw-semibold" for="editor-settings-profile-period-start-label">Period start</label>
+        <input class="form-control" id="editor-settings-profile-period-start-label" formControlName="startPeriodLabel" [placeholder]="baseLanguagePack()?.startPeriodLabel ?? ''" />
+        <p class="form-text">The label indicating the beginning of a billing or service period.</p>
+      </div>
+
+      <div class="editor__control mb-3">
+        <label class="form-label fw-semibold" for="editor-settings-profile-period-end-label">Period end</label>
+        <input class="form-control" id="editor-settings-profile-period-end-label" formControlName="endPeriodLabel" [placeholder]="baseLanguagePack()?.endPeriodLabel ?? ''" />
+        <p class="form-text">The label indicating the end of a billing or service period.</p>
+      </div>
+
+      <div class="editor__control mb-3">
+        <label class="form-label fw-semibold" for="editor-settings-profile-preceding-invoice-reference-label">Preceding invoice</label>
+        <input
+          class="form-control"
+          id="editor-settings-profile-preceding-invoice-reference-label"
+          formControlName="precedingInvoiceReferenceLabel"
+          [placeholder]="baseLanguagePack()?.precedingInvoiceReferenceLabel ?? ''"
+        />
+        <p class="form-text">The label used to reference a previous invoice related to the current one (e.g., a correction or follow-up).</p>
+      </div>
+
+      <div class="editor__control mb-3">
+        <label class="form-label fw-semibold" for="editor-settings-profile-preceding-invoice-date-reference-label">Preceding invoice date</label>
+        <input
+          class="form-control"
+          id="editor-settings-profile-preceding-invoice-date-reference-label"
+          formControlName="precedingInvoiceDateLabel"
+          [placeholder]="baseLanguagePack()?.precedingInvoiceDateLabel ?? ''"
+        />
+        <p class="form-text">The label for the issue date of the preceding invoice referenced.</p>
+      </div>
+
+      <div class="d-flex flex-wrap gap-3 mb-3">
+        <div class="editor__control flex-grow-1">
+          <label class="form-label fw-semibold" for="editor-settings-profile-business-process-label">Business Process</label>
+          <input
+            class="form-control"
+            id="editor-settings-profile-business-process-label"
+            formControlName="businessProcessLabel"
+            [placeholder]="baseLanguagePack()?.businessProcessLabel ?? ''"
+          />
+          <p class="form-text">The label that describes the business process or transaction context (e.g., sales, service).</p>
         </div>
 
         <div class="editor__control flex-grow-1">
@@ -145,17 +316,6 @@ import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/
           <input class="form-control" id="editor-settings-profile-currency-label" formControlName="currencyLabel" [placeholder]="baseLanguagePack()?.currencyLabel ?? ''" />
           <p class="form-text">The label used to indicate the currency used on the invoice.</p>
         </div>
-      </div>
-
-      <div class="editor__control mb-3">
-        <label class="form-label fw-semibold" for="editor-settings-profile-business-process-label">Business Process</label>
-        <input
-          class="form-control"
-          id="editor-settings-profile-business-process-label"
-          formControlName="businessProcessLabel"
-          [placeholder]="baseLanguagePack()?.businessProcessLabel ?? ''"
-        />
-        <p class="form-text">The label that describes the business process or transaction context (e.g., sales, service).</p>
       </div>
 
       <div class="d-flex flex-wrap gap-3 mb-3">
