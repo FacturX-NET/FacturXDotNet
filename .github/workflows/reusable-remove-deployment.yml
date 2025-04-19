@@ -1,0 +1,63 @@
+name: Manual Deployment - Remove deployment
+
+on:
+  workflow_call:
+    inputs:
+      prerelease:
+        description: The prerelease identifier of the deployment to remove.
+        type: string
+        required: true
+
+    secrets:
+      PROD_SSH_KEY:
+        required: true
+      PROD_SSH_HOST:
+        required: true
+      PROD_SSH_USER:
+        required: true
+
+
+jobs:
+  remove-deployment:
+    name: Remove deployment
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check input
+        run: |
+          INPUT=${{ inputs.prerelease }}
+          INPUT_TRIMMED=$(echo $INPUT | xargs echo -n)
+          if [ -z "${INPUT_TRIMMED}" ]; then
+            echo "Input '$INPUT' is empty."
+            exit 1;
+          fi
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.PROD_SSH_KEY }}" > ~/.ssh/remote.key
+          chmod 600 ~/.ssh/remote.key
+
+          echo "Host remote"                               > ~/.ssh/config
+          echo "  HostName ${{ secrets.PROD_SSH_HOST }}"   >> ~/.ssh/config
+          echo "  User ${{ secrets.PROD_SSH_USER }}"       >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/remote.key"          >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no"                >> ~/.ssh/config
+
+      - name: Remove nginx configuration
+        run: |
+          ssh remote 'sudo rm /etc/nginx/conf.d/${{ inputs.prerelease }}.facturxdotnet.org.conf'
+
+      - name: Restart nginx
+        run: |
+          ssh remote 'sudo systemctl restart nginx'
+
+      - name: Remove API application
+        run: |
+          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down -d'
+          ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}/'
+
+      - name: Remove Editor application
+        run: |
+          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down -d'
+          ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}/'

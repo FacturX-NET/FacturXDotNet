@@ -8,9 +8,6 @@ on:
         type: string
         required: true
 
-env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-
 concurrency:
   group: alpha
   cancel-in-progress: true

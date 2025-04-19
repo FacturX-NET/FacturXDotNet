@@ -16,9 +16,6 @@ on:
       PROD_SSH_USER:
         required: true
 
-env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-
 concurrency:
   group: ${{ inputs.prerelease }}
   cancel-in-progress: true
