@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.XMP.Exceptions;
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-﻿name: Reusable - Build Editor Application
+name: Reusable - Build Editor Application
 
 on:
   workflow_call:

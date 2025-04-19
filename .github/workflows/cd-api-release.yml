@@ -1,4 +1,4 @@
-﻿name: Continuous Deployment - Publish API
+name: Continuous Deployment - Publish API
 
 on:
   push:

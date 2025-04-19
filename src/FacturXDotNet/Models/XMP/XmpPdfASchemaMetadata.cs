@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.XMP;
+namespace FacturXDotNet.Models.XMP;
 
 /// <summary>
 ///     <b>PDF/A Schema Value Type</b> - This schema describes a single extension schema which may comprise an arbitrary number of properties.

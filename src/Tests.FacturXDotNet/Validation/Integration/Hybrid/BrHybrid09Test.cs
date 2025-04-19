@@ -1,4 +1,4 @@
-﻿namespace Tests.FacturXDotNet.Validation.Integration.Hybrid;
+namespace Tests.FacturXDotNet.Validation.Integration.Hybrid;
 
 [TestClass]
 public class BrHybrid09Test

@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Generation.PDF.Internals;
+using FacturXDotNet.Generation.PDF.Internals;
 using FacturXDotNet.Generation.XMP;
 using FacturXDotNet.Models;
 using FacturXDotNet.Models.CII;

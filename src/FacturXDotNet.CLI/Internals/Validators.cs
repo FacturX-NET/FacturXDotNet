@@ -1,4 +1,4 @@
-﻿using System.CommandLine.Parsing;
+using System.CommandLine.Parsing;
 
 namespace FacturXDotNet.CLI.Internals;
 

@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.CLI;
+namespace FacturXDotNet.CLI;
 
 public enum Verbosity
 {

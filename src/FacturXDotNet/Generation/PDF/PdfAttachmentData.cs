@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Generation.PDF;
+namespace FacturXDotNet.Generation.PDF;
 
 /// <summary>
 ///     A file to attach to a PDF document.

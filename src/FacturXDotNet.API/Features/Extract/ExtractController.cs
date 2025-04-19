@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.API.Features.Extract.Models;
+using FacturXDotNet.API.Features.Extract.Models;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.CII;

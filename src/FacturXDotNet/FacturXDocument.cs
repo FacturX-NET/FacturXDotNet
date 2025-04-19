@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using CommunityToolkit.HighPerformance;
 using FacturXDotNet.Extensions;
 using FacturXDotNet.Generation.FacturX;

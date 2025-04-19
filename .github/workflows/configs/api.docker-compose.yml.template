@@ -1,4 +1,4 @@
-﻿services:
+services:
   facturxdotnet_api:
     container_name: FacturX.Net-API-{PRERELEASE}
     restart: always

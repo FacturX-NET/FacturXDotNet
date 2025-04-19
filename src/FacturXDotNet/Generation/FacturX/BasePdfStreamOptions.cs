@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Generation.FacturX;
+namespace FacturXDotNet.Generation.FacturX;
 
 /// <summary>
 ///     Represents the options for configuring the base PDF stream used during the Factur-X document generation process.

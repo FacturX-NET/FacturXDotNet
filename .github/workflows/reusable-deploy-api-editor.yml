@@ -1,4 +1,4 @@
-﻿name: Reusable - Build Editor Application
+name: Reusable - Build Editor Application
 
 on:
   workflow_call:
@@ -42,9 +42,6 @@ jobs:
           name: ${{ inputs.editor-artifact-name }}
           path: dist/editor
 
-      - name: Install dos2unix
-        run: sudo apt install -y dos2unix
-
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh/
@@ -64,17 +61,15 @@ jobs:
       - name: Find available port
         id: find_port
         run: |
-          dos2unix .github/workflows/scripts/get_random_port.sh
           scp .github/workflows/scripts/get_random_port.sh remote:~/${{ github.run_id }}/get_random_port.sh
           ssh remote 'chmod +x ~/${{ github.run_id }}/get_random_port.sh'
-          PORT=$(ssh remote ~/${{ github.run_id }}/get_random_port.sh)
+          PORT=$(ssh remote '~/${{ github.run_id }}/get_random_port.sh')
           echo "Random port: $PORT"
           echo "port=$PORT" >> $GITHUB_OUTPUT
 
       # START maintenance mode
       - name: Start maintenance mode
         run: |
-          dos2unix .github/workflows/pages/maintenance.html
           scp .github/workflows/pages/maintenance.html remote:~/${{ github.run_id }}/maintenance.html
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.prerelease }}.facturxdotnet.org'
           ssh remote 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance.html'
@@ -85,7 +80,6 @@ jobs:
           echo "Building API docker-compose file..."
           mkdir -p dist
           cp .github/workflows/configs/api.docker-compose.yml.template dist/docker-compose.yml
-          dos2unix dist/docker-compose.yml
           sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/docker-compose.yml
 
           cat dist/docker-compose.yml
@@ -116,7 +110,6 @@ jobs:
           echo "Building nginx configuration file..."
           mkdir -p dist/
           cp .github/workflows/configs/facturxdotnet.nginx.conf.template dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
-          dos2unix dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
           sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
 
           cat dist/${{ inputs.prerelease }}.facturxdotnet.org.conf

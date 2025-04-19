@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.API.Configuration;
+namespace FacturXDotNet.API.Configuration;
 
 class AppHostingConfiguration
 {

@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Models;
+using FacturXDotNet.Models;
 using FacturXDotNet.Validation.BusinessRules;
 
 namespace FacturXDotNet.Validation;

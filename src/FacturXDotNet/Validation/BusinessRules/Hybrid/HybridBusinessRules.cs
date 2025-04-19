@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
+namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 
 /// <summary>
 ///     The business rules for validating a FacturX.

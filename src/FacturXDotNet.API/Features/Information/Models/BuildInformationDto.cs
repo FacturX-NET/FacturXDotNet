@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.API.Features.Information.Models;
+namespace FacturXDotNet.API.Features.Information.Models;
 
 /// <summary>
 ///     The information about the current build.

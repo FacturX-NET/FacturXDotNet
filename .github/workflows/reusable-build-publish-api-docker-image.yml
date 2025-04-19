@@ -1,4 +1,4 @@
-﻿name: Reusable - Build & Publish API Docker Image
+name: Reusable - Build & Publish API Docker Image
 
 on:
   workflow_call:

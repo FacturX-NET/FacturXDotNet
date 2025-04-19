@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.XMP;
 using FacturXDotNet.Parsing.XMP.Exceptions;

@@ -1,4 +1,4 @@
-﻿name: Reusable - Compute Version
+name: Reusable - Compute Version
 
 on:
   workflow_call:

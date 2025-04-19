@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.CLI;
+using FacturXDotNet.CLI;
 using FluentAssertions;
 
 namespace Tests.FacturXDotNet.CLI;

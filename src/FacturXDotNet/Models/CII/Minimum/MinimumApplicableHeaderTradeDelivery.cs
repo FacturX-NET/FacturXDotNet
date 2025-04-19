@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.CII.Minimum;
+namespace FacturXDotNet.Models.CII.Minimum;
 
 /// <inheritdoc cref="CII.ApplicableHeaderTradeDelivery" />
 public class MinimumApplicableHeaderTradeDelivery

@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models;
+namespace FacturXDotNet.Models;
 
 /// <summary>
 ///     Represents the different Factur-X profiles as a set of flags.

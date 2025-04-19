@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Generation.PDF.Generators.Standard;
+using FacturXDotNet.Generation.PDF.Generators.Standard;
 
 namespace FacturXDotNet.API.Features.Generate.Models;
 

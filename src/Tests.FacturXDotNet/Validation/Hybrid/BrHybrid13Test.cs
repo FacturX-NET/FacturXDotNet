@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Validation.BusinessRules.Hybrid;
+using FacturXDotNet.Validation.BusinessRules.Hybrid;
 using FluentAssertions;
 
 namespace Tests.FacturXDotNet.Validation.Hybrid;

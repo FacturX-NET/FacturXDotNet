@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Generation.CII.Internals.Providers;
+using FacturXDotNet.Generation.CII.Internals.Providers;
 using FacturXDotNet.Generation.PDF;
 using FacturXDotNet.Generation.XMP.Internals.Providers;
 using Microsoft.Extensions.Logging;

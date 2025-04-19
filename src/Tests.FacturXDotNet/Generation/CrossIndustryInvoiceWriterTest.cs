@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.RegularExpressions;
 using FacturXDotNet.Generation.CII;
 using FacturXDotNet.Models.CII;

@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.API.Features.Generate.Models;
+using FacturXDotNet.API.Features.Generate.Models;
 using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.API.Features.Generate.Requests;

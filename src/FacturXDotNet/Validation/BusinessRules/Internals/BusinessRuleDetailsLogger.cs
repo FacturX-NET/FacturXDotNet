@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Validation.BusinessRules.Internals;
+namespace FacturXDotNet.Validation.BusinessRules.Internals;
 
 /// <summary>
 ///     A logger that stores additional details about business rule validation.

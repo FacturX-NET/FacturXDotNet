@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.HighPerformance;
+using CommunityToolkit.HighPerformance;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 

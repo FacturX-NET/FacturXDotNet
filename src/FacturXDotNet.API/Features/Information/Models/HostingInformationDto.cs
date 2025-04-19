@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.API.Features.Information.Models;
+namespace FacturXDotNet.API.Features.Information.Models;
 
 /// <summary>
 ///     Information about the current hosting environment of the API application.

@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Validation;
+namespace FacturXDotNet.Validation;
 
 /// <summary>
 ///     Represent the expected validation status of a business rule. Some rules are expected to fail because they are associated with a higher profile.

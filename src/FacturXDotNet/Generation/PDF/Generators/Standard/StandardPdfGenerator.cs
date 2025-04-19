@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.CII;
 using NMoneys;
 using PdfSharp;
 using PdfSharp.Drawing;

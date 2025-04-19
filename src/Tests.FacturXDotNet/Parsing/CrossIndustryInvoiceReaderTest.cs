@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Parsing.CII;
 using FacturXDotNet.Parsing.CII.Exceptions;

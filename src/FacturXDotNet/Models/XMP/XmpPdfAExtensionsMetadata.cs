@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.XMP;
+namespace FacturXDotNet.Models.XMP;
 
 /// <summary>
 ///     <b>PDF/A Extension Schema Container Schema</b> - This schema is required for defining XMP extension schemas. It is a container with one or more extension schemas. The
