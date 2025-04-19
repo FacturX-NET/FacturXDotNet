@@ -62,15 +62,17 @@ jobs:
           echo "  StrictHostKeyChecking no"              >> ~/.ssh/config
       
       # START maintenance mode
-      - name: Start maintenance mode
+      - name: Create temporary folder for this build
         run: |
           ssh prod 'mkdir -p ~/${{ github.run_id }}'
+
+      - name: Start maintenance mode
+        run: |
           scp .github/workflows/pages/maintenance.html prod:~/${{ github.run_id }}/maintenance.html
           ssh prod 'sudo mkdir -p /var/www/api-alpha.facturxdotnet.org'
           ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org'
           ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/api-alpha.facturxdotnet.org/maintenance.html'
           ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/editor-alpha.facturxdotnet.org/maintenance.html'
-          ssh prod 'rm -rf ~/${{ github.run_id }}'
 
       # UPDATE applications
       - name: Pull new API image and restart application
@@ -86,7 +88,6 @@ jobs:
           ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org/html'
           ssh prod 'rm -r /var/www/editor-alpha.facturxdotnet.org/html/*'
           ssh prod 'sudo cp ~/${{ github.run_id }}/editor/* /var/www/editor-alpha.facturxdotnet.org/html/'
-          ssh prod 'rm -rf ~/${{ github.run_id }}'
 
       - name: Replace nginx configurations
         run: |
@@ -95,15 +96,18 @@ jobs:
           scp .github/workflows/configs/editor-alpha.nginx.conf prod:~/${{ github.run_id }}/nginx/editor-alpha.nginx.conf
           ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/api-alpha.nginx.conf /etc/nginx/conf.d/api-alpha.facturxdotnet.org.conf'
           ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/editor-alpha.nginx.conf /etc/nginx/conf.d/editor-alpha.facturxdotnet.org.conf'
-          ssh prod 'rm -rf ~/${{ github.run_id }}'
 
       - name: Restart nginx
         run: |
           ssh prod 'sudo systemctl restart nginx'
       
       # EXIT maintenance mode
-
       - name: Exit maintenance mode
         run: |
           ssh prod 'sudo rm /var/www/api-alpha.facturxdotnet.org/maintenance.html'
           ssh prod 'sudo rm /var/www/editor-alpha.facturxdotnet.org/maintenance.html'
+
+      - name: Remove temporary folder for this build
+        if: always()
+        run: |
+          ssh prod 'rm -rf ~/${{ github.run_id }}'
