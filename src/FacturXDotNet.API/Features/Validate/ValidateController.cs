@@ -1,6 +1,5 @@
 ﻿using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation;
-using FacturXDotNet.Validation.BusinessRules.CII;
 
 namespace FacturXDotNet.API.Features.Validate;
 
@@ -15,38 +14,12 @@ static class ValidateController
                     CrossIndustryInvoiceValidator validator = new();
                     FacturXValidationResult report = validator.GetValidationResult(cii);
 
-                    if (report.Success)
+                    if (!report.Success)
                     {
-                        return Results.Ok();
+                        return Results.ValidationProblem(ValidationResults.BuildErrors(report), null, null, StatusCodes.Status400BadRequest);
                     }
 
-                    Dictionary<string, List<string>> result = new();
-
-                    foreach (BusinessRuleValidationResult failure in report.Rules.Where(r => r.HasFailed))
-                    {
-                        if (failure.Rule is not CrossIndustryInvoiceBusinessRule ciiRule)
-                        {
-                            continue;
-                        }
-
-                        foreach (string fieldInvolved in ciiRule.TermsInvolved)
-                        {
-                            if (!result.TryGetValue(fieldInvolved, out List<string>? failedRules))
-                            {
-                                failedRules = new List<string>();
-                                result[fieldInvolved] = failedRules;
-                            }
-
-                            failedRules.Add(ciiRule.Name);
-                        }
-                    }
-
-                    return Results.ValidationProblem(
-                        result.Select(kv => new KeyValuePair<string, string[]>(kv.Key, kv.Value.ToArray())),
-                        null,
-                        null,
-                        StatusCodes.Status400BadRequest
-                    );
+                    return Results.Ok();
                 }
             )
             .WithSummary("Validate Cross-Industry Invoice")
