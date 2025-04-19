@@ -7,6 +7,10 @@ on:
         description: The version of the application
         value: ${{ jobs.compute_version.outputs.version }}
 
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  MINVERBUILDMETADATA: build.${{ github.run_id }}.${{ github.run_attempt}}
+
 jobs:
   compute_version:
     name: Build Docker Image

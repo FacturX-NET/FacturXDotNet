@@ -11,7 +11,6 @@
         type: string
         required: true
 
-
 jobs:
   build-editor-application:
     name: Build Editor Application
