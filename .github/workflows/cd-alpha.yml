@@ -71,8 +71,8 @@ jobs:
           scp .github/workflows/pages/maintenance.html prod:~/${{ github.run_id }}/maintenance.html
           ssh prod 'sudo mkdir -p /var/www/api-alpha.facturxdotnet.org'
           ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/api-alpha.facturxdotnet.org/maintenance.html'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/editor-alpha.facturxdotnet.org/maintenance.html'
+          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/api-alpha.facturxdotnet.org/html/maintenance.html'
+          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/editor-alpha.facturxdotnet.org/html/maintenance.html'
 
       # UPDATE applications
       - name: Pull new API image and restart application
@@ -85,8 +85,8 @@ jobs:
         run: |
           ssh prod 'mkdir -p ~/${{ github.run_id }}/editor'
           scp -r dist/editor/* prod:~/${{ github.run_id }}/editor
-          ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org/html'
-          ssh prod 'rm -r /var/www/editor-alpha.facturxdotnet.org/html/*'
+          ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org/html'          
+          ssh prod 'find /var/www/editor-alpha.facturxdotnet.org/html/ ! -name 'maintenance.html' -type f -exec rm -f {} +'
           ssh prod 'sudo cp ~/${{ github.run_id }}/editor/* /var/www/editor-alpha.facturxdotnet.org/html/'
 
       - name: Replace nginx configurations
@@ -104,8 +104,8 @@ jobs:
       # EXIT maintenance mode
       - name: Exit maintenance mode
         run: |
-          ssh prod 'sudo rm /var/www/api-alpha.facturxdotnet.org/maintenance.html'
-          ssh prod 'sudo rm /var/www/editor-alpha.facturxdotnet.org/maintenance.html'
+          ssh prod 'sudo rm /var/www/api-alpha.facturxdotnet.org/html/maintenance.html'
+          ssh prod 'sudo rm /var/www/editor-alpha.facturxdotnet.org/html/maintenance.html'
 
       - name: Remove temporary folder for this build
         if: always()
