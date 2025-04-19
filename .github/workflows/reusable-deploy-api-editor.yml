@@ -27,6 +27,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -36,6 +41,9 @@ jobs:
         with:
           name: ${{ inputs.editor-artifact-name }}
           path: dist/editor
+
+      - name: Install dos2unix
+        run: sudo apt install -y dos2unix
 
       - name: Setup SSH
         run: |
@@ -56,6 +64,7 @@ jobs:
       - name: Find available port
         id: find_port
         run: |
+          dos2unix .github/workflows/scripts/get_random_port.sh
           scp .github/workflows/scripts/get_random_port.sh remote:~/${{ github.run_id }}/get_random_port.sh
           ssh remote 'chmod +x ~/${{ github.run_id }}/get_random_port.sh'
           PORT=$(ssh remote ~/${{ github.run_id }}/get_random_port.sh)
@@ -124,6 +133,6 @@ jobs:
           ssh remote 'sudo rm /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance.html'
 
       - name: Remove temporary folder for this build
-        
+        if: always()
         run: |
           ssh remote 'rm -rf ~/${{ github.run_id }}'
