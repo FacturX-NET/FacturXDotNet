@@ -6,7 +6,7 @@ public class BrHybrid02Test
     [TestMethod]
     public async Task ShouldFail() =>
         await ValidationIntegrationTestUtils.CheckRuleFails(
-            "BR-HYBRID-02",
+          "BR-HYBRID-2",
             """
             <?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
             <x:xmpmeta xmlns:x="adobe:ns:meta/">

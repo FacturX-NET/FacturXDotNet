@@ -6,7 +6,7 @@ public class BrCo09Test
     [TestMethod]
     public async Task ShouldFail() =>
         await ValidationIntegrationTestUtils.CheckRuleFails(
-            "BR-CO-09",
+             "BR-CO-9",
             cii: """
                  <?xml version='1.0' encoding='UTF-8'?>
                  <rsm:CrossIndustryInvoice xmlns:qdt="urn:un:unece:uncefact:data:standard:QualifiedDataType:100"
