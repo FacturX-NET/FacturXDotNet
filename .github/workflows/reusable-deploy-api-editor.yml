@@ -23,7 +23,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy API and Editor to Production
+    name: Deploy API and Editor
     runs-on: ubuntu-latest
 
     steps:
