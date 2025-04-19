@@ -69,8 +69,8 @@ jobs:
       - name: Start maintenance mode
         run: |
           scp .github/workflows/pages/maintenance.html prod:~/${{ github.run_id }}/maintenance.html
-          ssh prod 'sudo mkdir -p /var/www/api-alpha.facturxdotnet.org'
-          ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org'
+          ssh prod 'sudo mkdir -p /var/www/api-alpha.facturxdotnet.org/html'
+          ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org/html'
           ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/api-alpha.facturxdotnet.org/html/maintenance.html'
           ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/editor-alpha.facturxdotnet.org/html/maintenance.html'
 
