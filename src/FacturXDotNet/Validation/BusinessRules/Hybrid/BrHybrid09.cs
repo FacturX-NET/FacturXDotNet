@@ -4,9 +4,9 @@ using FacturXDotNet.Models.XMP;
 namespace FacturXDotNet.Validation.BusinessRules.Hybrid;
 
 /// <summary>
-///     BR-HYBRID-09: The fx:Version in the XMP instance SHALL be a value defined in the HybridDocumentVersion codelist.
+///     BR-HYBRID-9: The fx:Version in the XMP instance SHALL be a value defined in the HybridDocumentVersion codelist.
 /// </summary>
-public record BrHybrid09() : HybridBusinessRule("BR-HYBRID-09", "The fx:Version in the XMP instance SHALL be a value defined in the HybridDocumentVersion codelist.")
+public record BrHybrid09() : HybridBusinessRule("BR-HYBRID-9", "The fx:Version in the XMP instance SHALL be a value defined in the HybridDocumentVersion codelist.")
 {
     /// <inheritdoc />
     public override bool Check(XmpMetadata? xmp, string? ciiAttachmentName, CrossIndustryInvoice? cii, IBusinessRuleDetailsLogger? logger = null) =>
