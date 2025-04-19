@@ -45,19 +45,22 @@ jobs:
           echo "  StrictHostKeyChecking no"                >> ~/.ssh/config
 
       - name: Remove nginx configuration
+        continue-on-error: true
         run: |
           ssh remote 'sudo rm /etc/nginx/conf.d/${{ inputs.prerelease }}.facturxdotnet.org.conf'
 
       - name: Restart nginx
+        continue-on-error: true
         run: |
           ssh remote 'sudo systemctl restart nginx'
 
       - name: Remove API application
+        continue-on-error: true
         run: |
-          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down -d'
+          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down'
           ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}/'
 
       - name: Remove Editor application
+        continue-on-error: true
         run: |
-          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down -d'
-          ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}/'
+          ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/'
