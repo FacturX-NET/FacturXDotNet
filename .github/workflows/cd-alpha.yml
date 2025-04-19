@@ -77,21 +77,33 @@ jobs:
       # UPDATE applications
       - name: Pull new API image and restart application
         run: |
+          echo "Building API docker-compose file..."
           mkdir -p dist/api
           cp .github/workflows/configs/api.docker-compose.yml.template dist/api/docker-compose.yml
           sed -i -e 's/\\{PORT\\}/5295/g' -e 's/\\{TAG\\}/latest-alpha/g' dist/api/docker-compose.yml
+          
+          cat dist/api/docker-compose.yml
+          
+          echo "Publishing API docker-compose file..."
           ssh prod 'mkdir -p ~/facturxdotnet/alpha/api'
           scp dist/api/docker-compose.yml prod:~/facturxdotnet/alpha/api/docker-compose.yml
+          
+          echo "Restarting API app..."
           ssh prod 'cd facturxdotnet/alpha/api; docker compose pull'
           ssh prod 'cd facturxdotnet/alpha/api; docker compose up -d'
 
       - name: Replace current build of Editor application
         run: |
+          echo "Uploading Editor app..."
           ssh prod 'mkdir -p ~/${{ github.run_id }}/editor'
           scp -r dist/editor/* prod:~/${{ github.run_id }}/editor
+          
+          echo "Removing old Editor release..."
           ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org/html'          
           ssh prod 'find /var/www/editor-alpha.facturxdotnet.org/html/ ! -name 'maintenance.html' -type f -exec rm -f {} +'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/editor/* /var/www/editor-alpha.facturxdotnet.org/html/'
+          
+          echo "Moving new Editor release..."
+          ssh prod 'sudo mv ~/${{ github.run_id }}/editor/* /var/www/editor-alpha.facturxdotnet.org/html/'
 
       - name: Replace nginx configurations
         run: |
