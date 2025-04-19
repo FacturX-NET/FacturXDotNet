@@ -1,4 +1,4 @@
-﻿# Serveur angular
+﻿# Serveur API
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
@@ -7,24 +7,29 @@ server {
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
     keepalive_timeout 70;
 
-    server_name editor-alpha.facturxdotnet.org;
-    root /var/www/editor-alpha.facturxdotnet.org/html;
-    index index.html index.htm;
-    error_log /var/log/nginx/editor-alpha.facturxdotnet.org.error.log;
-    access_log /var/log/nginx/editor-alpha.facturxdotnet.org.access.log;
-
-    ####    Locations
-    # On commence par chercher l'existence du fichier maintenance_on.html, s'il existe nous sommes en maintenance, nous affichons donc cette page.
-    # On essaye de servir le fichier à $uri, puis à $uri/, puis on redirige vers l'app angular index.thml
+    server_name {PRERELEASE}.facturxdotnet.org;
+    root /var/www/{PRERELEASE}.facturxdotnet.org;
+    error_log /var/log/nginx/{PRERELEASE}.facturxdotnet.org.api.error.log;
+    access_log /var/log/nginx/{PRERELEASE}.facturxdotnet.org.editor.access.log;
+    
+    location /editor {
+        try_files /maintenance.html editor$uri editor/index.html;
+    }
+    
+    location /api {
+        try_files /maintenance.html @apiserver;
+    }
+    
     location / {
-        try_files /maintenance.html $uri $uri.html $uri/index.html index.html;
+        return 301 https://{PRERELEASE}.facturxdotnet.org/editor$uri;
+    }
+    
+    location @apiserver {
+        proxy_pass http://127.0.0.1:{PORT};
+        proxy_set_header Host $host;
     }
 
-    include mime.types;
-    types {
-            application/javascript js mjs;
-    }
-
+    # ssl_stapling on;
     ssl_stapling on;
     ssl_stapling_verify on;
     ssl_trusted_certificate /etc/letsencrypt/live/facturxdotnet.org/fullchain.pem;

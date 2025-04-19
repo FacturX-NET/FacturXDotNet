@@ -69,10 +69,8 @@ jobs:
       - name: Start maintenance mode
         run: |
           scp .github/workflows/pages/maintenance.html prod:~/${{ github.run_id }}/maintenance.html
-          ssh prod 'sudo mkdir -p /var/www/api-alpha.facturxdotnet.org/html'
-          ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org/html'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/api-alpha.facturxdotnet.org/html/maintenance.html'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/editor-alpha.facturxdotnet.org/html/maintenance.html'
+          ssh prod 'sudo mkdir -p /var/www/alpha.facturxdotnet.org'
+          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/alpha.facturxdotnet.org/maintenance.html'
 
       # UPDATE applications
       - name: Pull new API image and restart application
@@ -80,7 +78,7 @@ jobs:
           echo "Building API docker-compose file..."
           mkdir -p dist/api
           cp .github/workflows/configs/api.docker-compose.yml.template dist/api/docker-compose.yml
-          sed -i -e 's/{PORT}/5296/g' -e 's/{TAG}/latest-alpha/g' -e 's/{PRERELEASE}/-alpha/g' dist/api/docker-compose.yml
+          sed -i -e 's/{PORT}/5296/g' -e 's/{PRERELEASE}/alpha/g' dist/api/docker-compose.yml
           
           cat dist/api/docker-compose.yml
           
@@ -99,19 +97,25 @@ jobs:
           scp -r dist/editor/* prod:~/${{ github.run_id }}/editor
           
           echo "Removing old Editor release..."
-          ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org/html'          
-          ssh prod 'find /var/www/editor-alpha.facturxdotnet.org/html/ ! -name 'maintenance.html' -type f -exec rm -f {} +'
+          ssh prod 'sudo mkdir -p /var/www/alpha.facturxdotnet.org/editor'
+          ssh prod 'sudo rm -rf /var/www/alpha.facturxdotnet.org/editor/*'
           
           echo "Moving new Editor release..."
-          ssh prod 'sudo mv ~/${{ github.run_id }}/editor/* /var/www/editor-alpha.facturxdotnet.org/html/'
+          ssh prod 'sudo mv ~/${{ github.run_id }}/editor/* /var/www/alpha.facturxdotnet.org/editor'
 
       - name: Replace nginx configurations
         run: |
+          echo "Building nginx configuration file..."
+          mkdir -p dist/
+          cp .github/workflows/configs/facturxdotnet.nginx.conf.template dist/alpha.facturxdotnet.org.conf
+          sed -i -e 's/{PORT}/5296/g' -e 's/{PRERELEASE}/alpha/g' dist/api/docker-compose.yml
+          
+          cat dist/alpha.facturxdotnet.org.conf
+          
+          echo "Publishing nginx configuration file..."
           ssh prod 'mkdir -p ~/${{ github.run_id }}/nginx'
-          scp .github/workflows/configs/api-alpha.nginx.conf prod:~/${{ github.run_id }}/nginx/api-alpha.nginx.conf
-          scp .github/workflows/configs/editor-alpha.nginx.conf prod:~/${{ github.run_id }}/nginx/editor-alpha.nginx.conf
-          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/api-alpha.nginx.conf /etc/nginx/conf.d/api-alpha.facturxdotnet.org.conf'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/editor-alpha.nginx.conf /etc/nginx/conf.d/editor-alpha.facturxdotnet.org.conf'
+          scp dist/alpha.facturxdotnet.org.conf prod:~/${{ github.run_id }}/nginx/alpha.facturxdotnet.org.conf
+          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/alpha.factuxdotnet.org.conf /etc/nginx/conf.d/alpha.facturxdotnet.org.conf'
 
       - name: Restart nginx
         run: |
@@ -120,8 +124,7 @@ jobs:
       # EXIT maintenance mode
       - name: Exit maintenance mode
         run: |
-          ssh prod 'sudo rm /var/www/api-alpha.facturxdotnet.org/html/maintenance.html'
-          ssh prod 'sudo rm /var/www/editor-alpha.facturxdotnet.org/html/maintenance.html'
+          ssh prod 'sudo rm /var/www/alpha.facturxdotnet.org/maintenance.html'
 
       - name: Remove temporary folder for this build
         if: always()
