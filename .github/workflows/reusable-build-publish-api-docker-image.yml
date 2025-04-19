@@ -25,6 +25,9 @@ on:
         description: The unique id (name:tag) of the Docker Image that has been published
         value: ${{ jobs.build-publish-api-docker-image.outputs.image_id }}
 
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
 jobs:
   build-publish-api-docker-image:
     name: Build Docker Image

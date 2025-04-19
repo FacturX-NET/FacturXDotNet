@@ -6,9 +6,6 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+-alpha'
   workflow_dispatch:
 
-env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-
 concurrency:
   group: alpha
   cancel-in-progress: true
