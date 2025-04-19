@@ -63,6 +63,25 @@ The `POST /generate/facturx` endpoint allows you to generate a Factur-X document
 - XMP metadata in JSON format (**optional**) — if not provided, minimal metadata will be generated automatically
 - Additional attachments as binary files (**optional**)
 
+By default, the API validates the provided CII data to ensure it complies with the EN16931 standard before generating the Factur-X document.  
+If validation fails, the API responds with a `400 Bad Request` and includes detailed information about the violated business rules in the `errors` field of the response.
+
+**Example Error Response**
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "errors": {
+    "BT-1": ["BR-2"],
+    "BT-31": ["BR-CO-9", "BR-CO-26"],
+    "BT-30": ["BR-CO-26"]
+  }
+}
+```
+
+Each entry maps a business term (e.g., `BT-1`, `BT-31`) to one or more violated business rules (e.g., `BR-CO-09`). This makes it easier to pinpoint and correct issues in your invoice data.
+
 **Example Usage**
 ```shell
 curl https://api.facturxdotnet.org/generate/facturx \
