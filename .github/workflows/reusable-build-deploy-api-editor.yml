@@ -43,7 +43,7 @@ jobs:
       version: ${{ needs.compute-version.outputs.version }}
 
   deploy-api-and-editor:
-    name: Deploy API and Editor to Production
+    name: Deploy API and Editor
     needs:
       - build-api-docker-image
       - build-editor-application
