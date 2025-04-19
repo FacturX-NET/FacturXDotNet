@@ -11,27 +11,21 @@ server {
     error_log /var/log/nginx/{PRERELEASE}.facturxdotnet.org.error.log;
     access_log /var/log/nginx/{PRERELEASE}.facturxdotnet.org.access.log;
     
+    try_files /maintenance.html $uri;
+    
     location /editor {
-        try_files /maintenance.html @editorapp;
+        try_files $uri /editor/index.html;
     }
     
     location /api {
-        try_files /maintenance.html @apiserver;
+        proxy_pass http://127.0.0.1:{PORT};
+        proxy_set_header Host $host;
     }
     
     location / {
         return 301 https://{PRERELEASE}.facturxdotnet.org/editor$uri;
     }
     
-    location @editorapp {
-        try_files $uri /editor/index.html;
-    }
-    
-    location @apiserver {
-        proxy_pass http://127.0.0.1:{PORT}/;
-        proxy_set_header Host $host;
-    }
-
     # ssl_stapling on;
     ssl_stapling on;
     ssl_stapling_verify on;
