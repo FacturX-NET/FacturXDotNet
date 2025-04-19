@@ -24,6 +24,15 @@ try
     );
     builder.Services.ConfigureHttpJsonOptions(options => { options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
 
+    string host = builder.Configuration.GetSection("Hosting").GetValue<string>("Host") ?? "http://localhost";
+    string basePath = builder.Configuration.GetSection("Hosting").GetValue<string>("BasePath") ?? "";
+    string serverUrl = (host.EndsWith('/') ? host[..^1] : host)
+                       + (basePath == ""
+                           ? ""
+                           : basePath.StartsWith('/')
+                               ? basePath
+                               : $"/{basePath}");
+
     builder.Services.AddHealthChecks();
     builder.Services.AddOpenApi(
         opt =>
@@ -40,7 +49,10 @@ try
                     doc.Info.License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://github.com/FacturX-NET/FacturXDotNet/blob/main/LICENSE") };
                     doc.Info.Contact = new OpenApiContact
                         { Name = "Ismail Bennani", Email = "facturx.net@gmail.com", Url = new Uri("https://github.com/FacturX-NET/FacturXDotNet/issues") };
-                    
+
+                    doc.Servers.Clear();
+                    doc.Servers.Add(new OpenApiServer { Url = serverUrl });
+
                     return Task.CompletedTask;
                 }
             );
@@ -61,15 +73,7 @@ try
     app.UseCors();
 
     app.MapOpenApi();
-    app.MapScalarApiReference(
-        opt =>
-        {
-            if (!string.IsNullOrWhiteSpace(configuration.Value.Hosting.BasePath))
-            {
-                opt.WithBaseServerUrl(configuration.Value.Hosting.BasePath);
-            }
-        }
-    );
+    app.MapScalarApiReference();
 
     app.MapGet("/", () => Results.LocalRedirect($"{configuration.Value.Hosting.BasePath}/scalar")).ExcludeFromDescription();
     app.MapHealthChecks("/health");
