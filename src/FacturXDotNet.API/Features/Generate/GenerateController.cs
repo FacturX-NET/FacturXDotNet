@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using FacturXDotNet.API.Features.Generate.Models;
 using FacturXDotNet.API.Features.Generate.Requests;
+using FacturXDotNet.API.Features.Validate;
 using FacturXDotNet.Generation.CII;
 using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Generation.PDF;
@@ -9,6 +10,7 @@ using FacturXDotNet.Generation.PDF.Generators.Standard;
 using FacturXDotNet.Generation.XMP;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
+using FacturXDotNet.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using PdfSharp.Pdf;
@@ -75,7 +77,8 @@ static class GenerateController
         [FromForm] IFormFile pdf,
         [FromForm] IFormFile cii,
         [FromForm] AttachmentDto[]? attachments,
-        CancellationToken cancellationToken
+        [FromQuery] bool skipValidation = false,
+        CancellationToken cancellationToken = default
     )
     {
         FacturXDocumentBuilder builder = FacturXDocument.Create();
@@ -140,6 +143,16 @@ static class GenerateController
 
         FacturXDocument facturX = await builder.BuildAsync();
 
+        if (!skipValidation)
+        {
+            FacturXValidator validator = new();
+            FacturXValidationResult validationResult = await validator.GetValidationResultAsync(facturX, cancellationToken: cancellationToken);
+            if (!validationResult.Success)
+            {
+                return Results.ValidationProblem(ValidationResults.BuildErrors(validationResult), null, null, StatusCodes.Status400BadRequest);
+            }
+        }
+
         MemoryStream facturXStream = new();
         await facturX.ExportAsync(facturXStream);
         facturXStream.Seek(0, SeekOrigin.Begin);
@@ -147,8 +160,18 @@ static class GenerateController
         return Results.File(facturXStream, "application/pdf", pdf.FileName, DateTimeOffset.Now);
     }
 
-    static async Task<IResult> PostCii(CrossIndustryInvoice crossIndustryInvoice, CancellationToken cancellationToken = default)
+    static async Task<IResult> PostCii(CrossIndustryInvoice crossIndustryInvoice, [FromQuery] bool skipValidation = false, CancellationToken cancellationToken = default)
     {
+        if (!skipValidation)
+        {
+            CrossIndustryInvoiceValidator validator = new();
+            FacturXValidationResult validationResult = validator.GetValidationResult(crossIndustryInvoice);
+            if (!validationResult.Success)
+            {
+                return Results.ValidationProblem(ValidationResults.BuildErrors(validationResult), null, null, StatusCodes.Status400BadRequest);
+            }
+        }
+
         MemoryStream stream = new();
         CrossIndustryInvoiceWriter writer = new();
         await writer.WriteAsync(stream, crossIndustryInvoice);
