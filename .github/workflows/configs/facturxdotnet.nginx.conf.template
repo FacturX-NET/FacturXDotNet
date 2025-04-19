@@ -24,7 +24,7 @@ server {
     }
     
     location @editorapp {
-        try_files $uri editor/index.html;
+        try_files $uri /editor/index.html;
     }
     
     location @apiserver {
