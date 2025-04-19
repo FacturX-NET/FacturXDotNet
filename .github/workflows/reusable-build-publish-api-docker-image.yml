@@ -15,9 +15,15 @@ on:
         required: true
 
     outputs:
-      image_name: ${{ jobs.build-docker-image.outputs.image_name }}
-      image_tag: ${{ jobs.build-docker-image.outputs.image_tag }}
-      image_id: ${{ jobs.build-docker-image.outputs.image_id }}
+      image_name:
+        description: The name of the Docker Image that has been published
+        value: ${{ jobs.build-publish-api-docker-image.outputs.image_name }}
+      image_tag:
+        description: The tag of the Docker Image that has been published
+        value: ${{ jobs.build-publish-api-docker-image.outputs.image_tag }}
+      image_id:
+        description: The unique id (name:tag) of the Docker Image that has been published
+        value: ${{ jobs.build-publish-api-docker-image.outputs.image_id }}
 
 jobs:
   build-publish-api-docker-image:

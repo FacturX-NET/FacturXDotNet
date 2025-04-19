@@ -3,7 +3,9 @@
 on:
   workflow_call:
     outputs:
-      version: ${{ jobs.compute_version.outputs.version }}
+      version:
+        description: The version of the application
+        value: ${{ jobs.compute_version.outputs.version }}
 
 jobs:
   compute_version:
