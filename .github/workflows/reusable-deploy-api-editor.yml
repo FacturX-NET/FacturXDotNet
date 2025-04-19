@@ -83,6 +83,7 @@ jobs:
           sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/docker-compose.yml
 
           cat dist/docker-compose.yml
+          echo
 
           echo "Publishing API docker-compose file..."
           ssh remote 'mkdir -p ~/facturxdotnet/${{ inputs.prerelease }}/api'
@@ -113,6 +114,7 @@ jobs:
           sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
 
           cat dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
+          echo
 
           echo "Publishing nginx configuration file..."
           ssh remote 'mkdir -p ~/${{ github.run_id }}/nginx'
