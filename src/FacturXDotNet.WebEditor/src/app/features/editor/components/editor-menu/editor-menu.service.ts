@@ -257,7 +257,7 @@ export class EditorMenuService {
 
   private async getValidCii(): Promise<ICrossIndustryInvoice | undefined> {
     const valid = await this.ciiFormService.validate();
-    if (!valid) {
+    if (!valid.valid) {
       return undefined;
     }
 
