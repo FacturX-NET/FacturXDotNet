@@ -54,10 +54,9 @@ jobs:
 
       - name: Remove API application
         run: |
-          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down -d'
+          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down'
           ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}/'
 
       - name: Remove Editor application
         run: |
-          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down -d'
-          ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}/'
+          ssh remote 'rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/'
