@@ -9,8 +9,11 @@ on:
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
+concurrency:
+  group: alpha
+  cancel-in-progress: true
+
 jobs:
-  
   compute-version:
     name: Compute Version
     uses: ./.github/workflows/reusable-compute-version.yml
