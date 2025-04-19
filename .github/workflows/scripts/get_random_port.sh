@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+﻿#!/bin/bash
 
 # Find random available port
 # Copied from https://unix.stackexchange.com/a/423052
