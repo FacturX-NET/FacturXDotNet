@@ -36,12 +36,12 @@ export class GenerateApi {
 
     let i = 0;
     for (const attachment of attachments) {
-      const blob = new Blob([attachment.content]);
-
-      formData.append(`attachments[${i}].file`, blob, attachment.name);
+      const contentBlob = new Blob([attachment.content], { type: 'application/octet-stream' });
+      formData.append(`attachments[${i}].file`, contentBlob, attachment.name);
 
       if (attachment.description !== undefined) {
-        formData.append(`attachments[${i}].description`, attachment.description);
+        const descriptionBlob = new Blob([attachment.description], { type: 'text/plain' });
+        formData.append(`attachments[${i}].description`, descriptionBlob);
       }
 
       i++;
