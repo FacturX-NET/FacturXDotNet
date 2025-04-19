@@ -1,4 +1,4 @@
-﻿name: Continuous Deployment - Publish Editor
+name: Continuous Deployment - Publish Editor
 
 on:
   push:

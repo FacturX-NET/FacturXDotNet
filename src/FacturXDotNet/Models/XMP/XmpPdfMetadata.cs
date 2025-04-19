@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.XMP;
+namespace FacturXDotNet.Models.XMP;
 
 /// <summary>
 ///     <b>Adobe PDF namespace</b> - This namespace specifies properties used with Adobe PDF documents.

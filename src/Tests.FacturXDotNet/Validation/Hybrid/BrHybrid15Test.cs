@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Validation.BusinessRules.Hybrid;
 using FluentAssertions;

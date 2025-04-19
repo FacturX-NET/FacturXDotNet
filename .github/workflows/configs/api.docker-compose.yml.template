@@ -1,0 +1,12 @@
+services:
+  facturxdotnet_api:
+    container_name: FacturX.Net-API-{PRERELEASE}
+    restart: always
+    image: ghcr.io/facturx-net/facturxdotnet-api:latest-{PRERELEASE}
+    environment:
+      ASPNETCORE_HTTP_PORTS: {PORT}
+      Hosting__Host: https://{PRERELEASE}.facturxdotnet.org
+      Hosting__BasePath: /api
+      Hosting__UnsafeEnvironment: true
+    ports:
+      - {PORT}:{PORT}

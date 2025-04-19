@@ -1,4 +1,4 @@
-﻿namespace Tests.FacturXDotNet.Validation.Integration.CII.Br;
+namespace Tests.FacturXDotNet.Validation.Integration.CII.Br;
 
 [TestClass]
 public class Br09InvoiceShallHaveSellerPostalAddressWithCountryCodeTest

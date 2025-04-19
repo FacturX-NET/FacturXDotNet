@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Extensions;
+using FacturXDotNet.Extensions;
 using FacturXDotNet.Generation.PDF;
 using FacturXDotNet.Generation.PDF.Internals;
 using Microsoft.Extensions.Logging;

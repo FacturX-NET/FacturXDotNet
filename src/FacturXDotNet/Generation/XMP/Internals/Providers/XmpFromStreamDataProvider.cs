@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Models.XMP;
+using FacturXDotNet.Models.XMP;
 using FacturXDotNet.Parsing.XMP;
 
 namespace FacturXDotNet.Generation.XMP.Internals.Providers;

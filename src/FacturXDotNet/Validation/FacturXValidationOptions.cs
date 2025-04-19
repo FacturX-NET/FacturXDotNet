@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Models;
+using FacturXDotNet.Models;
 using FacturXDotNet.Validation.BusinessRules.CII;
 using Microsoft.Extensions.Logging;
 

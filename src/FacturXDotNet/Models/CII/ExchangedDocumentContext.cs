@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.CII;
+namespace FacturXDotNet.Models.CII;
 
 /// <summary>
 ///     <b>EXCHANGE DOCUMENT CONTEXT</b> - A group of business terms providing information on the business process and rules applicable to the Invoice document.

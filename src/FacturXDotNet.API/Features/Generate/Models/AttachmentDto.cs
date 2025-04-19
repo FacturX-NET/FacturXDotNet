@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.API.Features.Generate.Models;
+namespace FacturXDotNet.API.Features.Generate.Models;
 
 /// <summary>
 ///     An attachment of a FacturX document.

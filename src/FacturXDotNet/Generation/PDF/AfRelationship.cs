@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Generation.PDF;
+namespace FacturXDotNet.Generation.PDF;
 
 /// <summary>
 ///     The relationship of a file to a PDF document.

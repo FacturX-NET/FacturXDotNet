@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.CII;
+namespace FacturXDotNet.Models.CII;
 
 /// <summary>
 ///     <b>SELLER VAT IDENTIFIER</b> - Detailed information on tax information of the seller

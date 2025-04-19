@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Validation.BusinessRules;
+namespace FacturXDotNet.Validation.BusinessRules;
 
 /// <summary>
 ///     A detail that was logged during the validation of a business rule.

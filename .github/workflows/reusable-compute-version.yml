@@ -1,7 +1,15 @@
-﻿on:
+name: Reusable - Compute Version
+
+on:
   workflow_call:
     outputs:
-      version: ${{ jobs.compute_version.outputs.version }}
+      version:
+        description: The version of the application
+        value: ${{ jobs.compute_version.outputs.version }}
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  MINVERBUILDMETADATA: build.${{ github.run_id }}.${{ github.run_attempt}}
 
 jobs:
   compute_version:

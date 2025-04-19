@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Validation.Utils;
+namespace FacturXDotNet.Validation.Utils;
 
 static class DecimalExtensions
 {

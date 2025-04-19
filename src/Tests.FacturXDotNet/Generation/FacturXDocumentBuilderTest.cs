@@ -1,4 +1,4 @@
-﻿using FacturXDotNet;
+using FacturXDotNet;
 using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Generation.PDF;
 using FluentAssertions;

@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.Generation.Internals;

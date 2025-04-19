@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Generation.PDF.Generators.Standard;
+namespace FacturXDotNet.Generation.PDF.Generators.Standard;
 
 /// <summary>
 ///     Provides configuration options for generating standard PDFs.

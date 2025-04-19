@@ -1,4 +1,3 @@
-﻿# Serveur API
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
@@ -7,24 +6,26 @@ server {
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
     keepalive_timeout 70;
 
-    server_name api-alpha.facturxdotnet.org;
-    root /var/www/api-alpha.facturxdotnet.org/html;
-    error_log /var/log/nginx/api-alpha.facturxdotnet.org.error.log;
-    access_log /var/log/nginx/api-alpha.facturxdotnet.org.access.log;
-
-    ####    Locations
-    # On commence par chercher l'existence du fichier maintenance_on.html, s'il existe nous sommes en maintenance, nous affichons donc cette page.
-    # Ensuite on essaye de servir les fichiers statiques
-    # Enfin on redirige les requêtes vers le serveur d'API qui est servi sur le port 5295 
-    location / {
-        try_files ../maintenance.html $uri $uri.html $uri/index.html @apiserver;
+    server_name {PRERELEASE}.facturxdotnet.org;
+    root /var/www/{PRERELEASE}.facturxdotnet.org;
+    error_log /var/log/nginx/{PRERELEASE}.facturxdotnet.org.error.log;
+    access_log /var/log/nginx/{PRERELEASE}.facturxdotnet.org.access.log;
+    
+    try_files /maintenance.html $uri;
+    
+    location /editor {
+        try_files $uri /editor/index.html;
     }
     
-    location @apiserver {
-        proxy_pass http://127.0.0.1:5295;
+    location /api {
+        proxy_pass http://127.0.0.1:{PORT};
         proxy_set_header Host $host;
     }
-
+    
+    location / {
+        return 301 https://{PRERELEASE}.facturxdotnet.org/editor$uri;
+    }
+    
     # ssl_stapling on;
     ssl_stapling on;
     ssl_stapling_verify on;

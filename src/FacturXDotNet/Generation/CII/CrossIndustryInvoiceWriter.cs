@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 using FacturXDotNet.Generation.Internals;

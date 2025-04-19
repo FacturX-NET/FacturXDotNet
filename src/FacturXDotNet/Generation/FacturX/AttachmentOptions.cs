@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Generation.FacturX;
+namespace FacturXDotNet.Generation.FacturX;
 
 /// <summary>
 ///     Represents the options for configuring an attachment during Factur-X document generation.

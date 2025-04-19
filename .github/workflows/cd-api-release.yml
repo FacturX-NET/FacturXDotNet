@@ -1,4 +1,4 @@
-﻿name: Continuous Deployment - Publish API
+name: Continuous Deployment - Publish API
 
 on:
   push:
@@ -12,10 +12,15 @@ env:
 
 jobs:
 
+  compute-version:
+    name: Compute Version
+    uses: ./.github/workflows/reusable-compute-version.yml
+
   build-docker-image:
-    uses: ./.github/workflows/reusable-build-publish-docker-image.yml
+    uses: ./.github/workflows/reusable-build-publish-api-docker-image.yml
     with:
       tag: latest
+      version: ${{ needs.compute-version.outputs.version }}
   
   deploy:
     name: Deploy to Production

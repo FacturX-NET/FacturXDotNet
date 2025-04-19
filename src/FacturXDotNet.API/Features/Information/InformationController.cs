@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.API.Configuration;
+using FacturXDotNet.API.Configuration;
 using FacturXDotNet.API.Features.Information.Models;
 using FacturXDotNet.API.Features.Information.Services;
 using Microsoft.AspNetCore.Mvc;

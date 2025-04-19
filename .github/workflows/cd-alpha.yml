@@ -1,4 +1,4 @@
-﻿name: Continuous Deployment - Publish alpha build
+name: Continuous Deployment - Publish alpha build
 
 on:
   push:
@@ -8,96 +8,18 @@ on:
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  MINVERBUILDMETADATA: build.${{ github.run_id }}.${{ github.run_attempt}}
+
+concurrency:
+  group: alpha
+  cancel-in-progress: true
 
 jobs:
-  
-  compute-version:
-    name: Compute Version
-    uses: ./.github/workflows/reusable-compute-version.yml
-  
-  build-docker-image:
-    name: Build Docker Image
-    needs: compute-version
-    uses: ./.github/workflows/reusable-build-publish-docker-image.yml
+  build-deploy-api-editor:
+    name: Build & Deploy API & Editor
+    uses: ./.github/workflows/reusable-build-deploy-api-editor.yml
     with:
-      tag: latest-alpha
-      version: ${{ needs.compute-version.outputs.version }}
-  
-  build-editor-application:
-    name: Build Editor Application
-    needs: compute-version
-    uses: ./.github/workflows/reusable-build-editor-application.yml
-    with:
-      artifact-name: editor
-      version: ${{ needs.compute-version.outputs.version }}
-
-  deploy:
-    name: Deploy API and Editor to Production
-    runs-on: ubuntu-latest
-    needs:
-      - build-docker-image
-      - build-editor-application
-    
-    steps:
-      - name: Download editor artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: editor
-          path: dist/editor
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.PROD_SSH_KEY }}" > ~/.ssh/prod.key
-          chmod 600 ~/.ssh/prod.key
-
-          echo "Host prod"                               > ~/.ssh/config
-          echo "  HostName ${{ secrets.PROD_SSH_HOST }}" >> ~/.ssh/config
-          echo "  User ${{ secrets.PROD_SSH_USER }}"     >> ~/.ssh/config
-          echo "  IdentityFile ~/.ssh/prod.key"          >> ~/.ssh/config
-          echo "  StrictHostKeyChecking no"              >> ~/.ssh/config
-      
-      # START maintenance mode
-      - name: Start maintenance mode
-        run: |
-          ssh prod 'mkdir -p ~/${{ github.run_id }}'
-          scp .github/workflows/pages/maintenance.html prod:~/${{ github.run_id }}/maintenance.html
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html prod:/var/www/api-alpha.facturxdotnet.org/maintenance.html
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html prod:/var/www/editor-alpha.facturxdotnet.org/maintenance.html
-          ssh prod 'rm -rf ~/${{ github.run_id }}'
-
-      # UPDATE applications
-      - name: Pull new API image and restart application
-        run: |
-          ssh prod 'cd facturxdotnet/alpha; sed -i -e s/image: ${{ needs.build-docker-image.outputs.image_name }}:.*/image: ${{ needs.build-docker-image.outputs.image_name }}:latest-alpha/g
-          ssh prod 'cd facturxdotnet/alpha; docker compose pull'
-          ssh prod 'cd facturxdotnet/alpha; docker compose up -d'
-
-      - name: Replace current build of Editor application
-        run: |
-          ssh prod 'mkdir -p ~/${{ github.run_id }}/editor'
-          scp -r dist/editor/* prod:~/${{ github.run_id }}/editor
-          ssh prod 'rm -r /var/www/editor-alpha.facturxdotnet.org/html/*'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/editor/* prod:/var/www/editor-alpha.facturxdotnet.org/html/
-          ssh prod 'rm -rf ~/${{ github.run_id }}'
-
-      - name: Replace nginx configurations
-        run: |
-          ssh prod 'mkdir -p ~/${{ github.run_id }}/nginx'
-          scp .github/workflows/configs/api-alpha.nginx.conf prod:~/${{ github.run_id }}/nginx/api-alpha.nginx.conf
-          scp .github/workflows/configs/editor-alpha.nginx.conf prod:~/${{ github.run_id }}/nginx/editor-alpha.nginx.conf
-          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/api-alpha.nginx.conf prod:/etc/nginx/conf.d/api-alpha.facturxdotnet.org.conf'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/editor-alpha.nginx.conf prod:/etc/nginx/conf.d/editor-alpha.facturxdotnet.org.conf'
-          ssh prod 'rm -rf ~/${{ github.run_id }}'
-
-      - name: Restart nginx
-        run: |
-          ssh prod 'sudo systemctl restart nginx'
-      
-      # EXIT maintenance mode
-
-      - name: Exit maintenance mode
-        run: |
-          ssh prod 'sudo rm /var/www/api-alpha.facturxdotnet.org/maintenance.html'
-          ssh prod 'sudo rm /var/www/editor-alpha.facturxdotnet.org/maintenance.html'
+      prerelease: alpha
+    secrets:
+      PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+      PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+      PROD_SSH_USER: ${{ secrets.PROD_SSH_USER }}

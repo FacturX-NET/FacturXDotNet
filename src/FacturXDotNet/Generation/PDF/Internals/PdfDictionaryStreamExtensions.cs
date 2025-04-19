@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.Filters;
 

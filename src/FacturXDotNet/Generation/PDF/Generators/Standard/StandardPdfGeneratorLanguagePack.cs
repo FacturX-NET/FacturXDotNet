@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.Generation.PDF.Generators.Standard;

@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.XMP;
+namespace FacturXDotNet.Models.XMP;
 
 /// <summary>
 ///     <b>PDF/A Identification Schema</b> - The only mandatory XMP entries are those which indicate that the file is a PDF/A-1 document and its conformance level. The table below

@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Generation.FacturX;
+namespace FacturXDotNet.Generation.FacturX;
 
 /// <summary>
 ///     Represents the options for configuring the Cross Industry Invoice (CII) during Factur-X document generation.

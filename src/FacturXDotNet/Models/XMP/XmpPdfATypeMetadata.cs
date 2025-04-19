@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.XMP;
+namespace FacturXDotNet.Models.XMP;
 
 /// <summary>
 ///     <b>PDF/A ValueType Value Type</b> - The PDF/A ValueType schema is required for all property value types which are not defined in the XMP 2004 specification [4], i.e. for value

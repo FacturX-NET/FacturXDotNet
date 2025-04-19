@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.CII;
+namespace FacturXDotNet.Models.CII;
 
 /// <summary>
 ///     <b>DOCUMENT TOTALS</b> - A group of business terms providing the monetary totals for the Invoice.

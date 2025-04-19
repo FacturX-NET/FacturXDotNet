@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 
