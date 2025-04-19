@@ -79,7 +79,7 @@ jobs:
         run: |
           mkdir -p dist/api
           cp .github/workflows/configs/api.docker-compose.yml.template dist/api/docker-compose.yml
-          sed -i -e 's/\\{PORT\\}/5295/g' -e 's/\\{TAG\\}/latest-alpha/g'
+          sed -i -e 's/\\{PORT\\}/5295/g' -e 's/\\{TAG\\}/latest-alpha/g' dist/api/docker-compose.yml
           ssh prod 'mkdir -p ~/facturxdotnet/alpha/api'
           scp dist/api/docker-compose.yml prod:~/facturxdotnet/alpha/api/docker-compose.yml
           ssh prod 'cd facturxdotnet/alpha/api; docker compose pull'
