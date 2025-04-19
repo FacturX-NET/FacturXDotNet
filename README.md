@@ -40,12 +40,16 @@ A Factur-X document is a PDF containing
 - XMP metadata that must at least give information about the conformance level to the PDF/A standard and to the EN16931 standard
 - Other attachments
 
-#### API
-Try me at [https://api.facturxdotnet.org](https://api.facturxdotnet.org/scalar/#tag/generate/POST/generate/facturx)
+#### API: `POST /generate/facturx`
+Test it live: [https://api.facturxdotnet.org](https://api.facturxdotnet.org/scalar/#tag/generate/POST/generate/facturx)
 
-The `POST /generate/facturx` endpoint builds a Factur-X document using the given PDF file (binary), CII data (json), XMP metadata (json, optional), and attachments (binary, optional). 
+The `POST /generate/facturx` endpoint generates a Factur-X document by combining the following inputs:
+- A binary PDF file (required)
+- CII (Cross Industry Invoice) data in JSON format (required)
+- XMP metadata in JSON format (optional): if omitted, minimal metadata will be generated automatically
+- Additional attachments as binary files (optional)
 
-Usage
+**Usage**
 ```shell
 curl https://api.facturxdotnet.org/generate/facturx \
   --request POST \
@@ -79,4 +83,38 @@ curl https://api.facturxdotnet.org/generate/facturx \
   ------549a116c9bd650be51ba2de6c4869b49
   '
 
+```
+
+
+#### CLI: `generate`
+
+The `generate` sub-command creates a Factur-X file by combining a PDF file with a Cross-Industry Invoice data file.
+By default, it validates the CII data before generating the output to ensure compliance and correctness.
+
+**Example**
+```
+facturx generate --pdf path/to/pdf-file.pdf --cii path/to/cii-file.xml --output-path /path/to/facturx.pdf
+```
+
+**Usage**
+```
+FacturX.NET CLI v0.2.1-alpha+790b140996d1c1bef17d6f725e0d7fd776df34b1
+Copyright © 2025 Ismail Bennani
+
+Usage:
+  facturx generate [options]
+
+Options:
+  --pdf <path> (REQUIRED)                                                  The path to the PDF that will be used as base.
+  --cii <path> (REQUIRED)                                                  The path to the CII file to use as structured data.
+  --cii-name <name>                                                        The name of the CII attachment in the result. [default: factur-x.xml]
+  --attach <path>                                                          Additional files to attach to the result.
+  --author <name>                                                          The name of the author of the document. This will be added to the metadata of the output file.
+  -o, --output-path <path>                                                 The path to the output file.
+  --skip-validation                                                        Do not validate the generated Factur-X PDF. [default: False]
+  --warnings-as-errors                                                     Treat warnings as errors. [default: False]
+  -p, --profile <Basic|BasicWl|En16931|Extended|Minimum|None>              The profile to use for validation. If set, the profile will override the one specified in the Factur-X file.
+  -s, --skip-rule                                                          The business rules that should be skipped. Example: --skip-rule "BR-01" --skip-rule "BR-02"
+  -v, --verbosity <d|detailed|diag|diagnostic|m|minimal|n|normal|q|quiet>  Set the verbosity level. [default: Normal]
+  -?, -h, --help                                                           Show help and usage information
 ```
