@@ -68,14 +68,14 @@ jobs:
           scp .github/workflows/pages/maintenance.html prod:~/${{ github.run_id }}/maintenance.html
           ssh prod 'sudo mkdir -p /var/www/api-alpha.facturxdotnet.org'
           ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/api-alpha.facturxdotnet.org/maintenance.html
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/editor-alpha.facturxdotnet.org/maintenance.html
+          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/api-alpha.facturxdotnet.org/maintenance.html'
+          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/editor-alpha.facturxdotnet.org/maintenance.html'
           ssh prod 'rm -rf ~/${{ github.run_id }}'
 
       # UPDATE applications
       - name: Pull new API image and restart application
         run: |
-          ssh prod 'cd facturxdotnet/alpha; sed -i -e s/image: ${{ needs.build-docker-image.outputs.image_name }}:.*/image: ${{ needs.build-docker-image.outputs.image_name }}:latest-alpha/g
+          ssh prod 'cd facturxdotnet/alpha; sed -i -e s/image: ${{ needs.build-docker-image.outputs.image_name }}:.*/image: ${{ needs.build-docker-image.outputs.image_name }}:latest-alpha/g'
           ssh prod 'cd facturxdotnet/alpha; docker compose pull'
           ssh prod 'cd facturxdotnet/alpha; docker compose up -d'
 
@@ -85,7 +85,7 @@ jobs:
           scp -r dist/editor/* prod:~/${{ github.run_id }}/editor
           ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org/html'
           ssh prod 'rm -r /var/www/editor-alpha.facturxdotnet.org/html/*'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/editor/* /var/www/editor-alpha.facturxdotnet.org/html/
+          ssh prod 'sudo cp ~/${{ github.run_id }}/editor/* /var/www/editor-alpha.facturxdotnet.org/html/'
           ssh prod 'rm -rf ~/${{ github.run_id }}'
 
       - name: Replace nginx configurations
