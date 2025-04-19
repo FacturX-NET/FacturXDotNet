@@ -66,8 +66,8 @@ jobs:
         run: |
           ssh prod 'mkdir -p ~/${{ github.run_id }}'
           scp .github/workflows/pages/maintenance.html prod:~/${{ github.run_id }}/maintenance.html
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html prod:/var/www/api-alpha.facturxdotnet.org/maintenance.html
-          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html prod:/var/www/editor-alpha.facturxdotnet.org/maintenance.html
+          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/api-alpha.facturxdotnet.org/maintenance.html
+          ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/editor-alpha.facturxdotnet.org/maintenance.html
           ssh prod 'rm -rf ~/${{ github.run_id }}'
 
       # UPDATE applications
@@ -82,7 +82,7 @@ jobs:
           ssh prod 'mkdir -p ~/${{ github.run_id }}/editor'
           scp -r dist/editor/* prod:~/${{ github.run_id }}/editor
           ssh prod 'rm -r /var/www/editor-alpha.facturxdotnet.org/html/*'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/editor/* prod:/var/www/editor-alpha.facturxdotnet.org/html/
+          ssh prod 'sudo cp ~/${{ github.run_id }}/editor/* /var/www/editor-alpha.facturxdotnet.org/html/
           ssh prod 'rm -rf ~/${{ github.run_id }}'
 
       - name: Replace nginx configurations
@@ -90,8 +90,8 @@ jobs:
           ssh prod 'mkdir -p ~/${{ github.run_id }}/nginx'
           scp .github/workflows/configs/api-alpha.nginx.conf prod:~/${{ github.run_id }}/nginx/api-alpha.nginx.conf
           scp .github/workflows/configs/editor-alpha.nginx.conf prod:~/${{ github.run_id }}/nginx/editor-alpha.nginx.conf
-          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/api-alpha.nginx.conf prod:/etc/nginx/conf.d/api-alpha.facturxdotnet.org.conf'
-          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/editor-alpha.nginx.conf prod:/etc/nginx/conf.d/editor-alpha.facturxdotnet.org.conf'
+          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/api-alpha.nginx.conf /etc/nginx/conf.d/api-alpha.facturxdotnet.org.conf'
+          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/editor-alpha.nginx.conf /etc/nginx/conf.d/editor-alpha.facturxdotnet.org.conf'
           ssh prod 'rm -rf ~/${{ github.run_id }}'
 
       - name: Restart nginx
