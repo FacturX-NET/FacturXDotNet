@@ -1,6 +1,6 @@
 ﻿services:
   facturxdotnet_api:
-    container_name: FacturX.Net-API
+    container_name: FacturX.Net-API{PRERELEASE}
     restart: always
     image: ghcr.io/facturx-net/facturxdotnet-api:{TAG}
     environment:

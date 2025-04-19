@@ -80,7 +80,7 @@ jobs:
           echo "Building API docker-compose file..."
           mkdir -p dist/api
           cp .github/workflows/configs/api.docker-compose.yml.template dist/api/docker-compose.yml
-          sed -i -e 's/{PORT}/5295/g' -e 's/{TAG}/latest-alpha/g' dist/api/docker-compose.yml
+          sed -i -e 's/{PORT}/5295/g' -e 's/{TAG}/latest-alpha/g' -e 's/{PRERELEASE}/-alpha/g' dist/api/docker-compose.yml
           
           cat dist/api/docker-compose.yml
           
