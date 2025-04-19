@@ -29,6 +29,7 @@ jobs:
     uses: ./.github/workflows/reusable-build-editor-application.yml
     with:
       artifact-name: editor
+      api-url: https://alpha.facturxdotnet.org/api
       version: ${{ needs.compute-version.outputs.version }}
 
   deploy:

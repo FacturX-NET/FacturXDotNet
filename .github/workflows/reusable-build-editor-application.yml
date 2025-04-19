@@ -8,6 +8,11 @@ on:
         type: string
         required: true
       
+      api-url:
+        description: The URL at which the FacturX.NET API will be served
+        type: string
+        required: true
+      
       version:
         description: The version of the application
         type: string
@@ -44,7 +49,7 @@ jobs:
           echo "export const environment: Environment = {"                          >> src/environments/environment.ts
           echo "  version: '${{ inputs.version }}',"                                >> src/environments/environment.ts
           echo "  buildDate: new Date('$(date +'%Y-%m-%d')'),"                      >> src/environments/environment.ts
-          echo "  apiUrl: 'https://api.facturxdotnet.org',"                         >> src/environments/environment.ts
+          echo "  apiUrl: '${{ inputs.api-url }}',"                         >> src/environments/environment.ts
           echo "};"                                                                 >> src/environments/environment.ts
           echo "Environment is"
           cat src/environments/environment.ts
