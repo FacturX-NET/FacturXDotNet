@@ -116,7 +116,7 @@ jobs:
           echo "Publishing nginx configuration file..."
           ssh prod 'mkdir -p ~/${{ github.run_id }}/nginx'
           scp dist/alpha.facturxdotnet.org.conf prod:~/${{ github.run_id }}/nginx/alpha.facturxdotnet.org.conf
-          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/alpha.factuxdotnet.org.conf /etc/nginx/conf.d/alpha.facturxdotnet.org.conf'
+          ssh prod 'sudo cp ~/${{ github.run_id }}/nginx/alpha.facturxdotnet.org.conf /etc/nginx/conf.d/alpha.facturxdotnet.org.conf'
 
       - name: Restart nginx
         run: |
