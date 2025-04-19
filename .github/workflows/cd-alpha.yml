@@ -66,6 +66,8 @@ jobs:
         run: |
           ssh prod 'mkdir -p ~/${{ github.run_id }}'
           scp .github/workflows/pages/maintenance.html prod:~/${{ github.run_id }}/maintenance.html
+          ssh prod 'sudo mkdir -p /var/www/api-alpha.facturxdotnet.org'
+          ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org'
           ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/api-alpha.facturxdotnet.org/maintenance.html
           ssh prod 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/editor-alpha.facturxdotnet.org/maintenance.html
           ssh prod 'rm -rf ~/${{ github.run_id }}'
@@ -81,6 +83,7 @@ jobs:
         run: |
           ssh prod 'mkdir -p ~/${{ github.run_id }}/editor'
           scp -r dist/editor/* prod:~/${{ github.run_id }}/editor
+          ssh prod 'sudo mkdir -p /var/www/editor-alpha.facturxdotnet.org/html'
           ssh prod 'rm -r /var/www/editor-alpha.facturxdotnet.org/html/*'
           ssh prod 'sudo cp ~/${{ github.run_id }}/editor/* /var/www/editor-alpha.facturxdotnet.org/html/
           ssh prod 'rm -rf ~/${{ github.run_id }}'
