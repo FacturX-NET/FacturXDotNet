@@ -155,6 +155,6 @@ jobs:
           ssh remote 'sudo systemctl restart nginx'
 
       - name: Remove temporary folder for this build
-        if: always()
+        
         run: |
           ssh remote 'rm -rf ~/${{ github.run_id }}'
