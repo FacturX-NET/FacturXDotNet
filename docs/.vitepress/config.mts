@@ -163,6 +163,10 @@ export default withPwa(
       search: {
         provider: "local",
       },
+
+      ssr: {
+        noExternal: ["vitepress-plugin-nprogress"],
+      },
     },
   }),
 );
