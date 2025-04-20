@@ -71,6 +71,7 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Delete image from ghcr.io
+        continue-on-error: true
         uses: chipkent/action-cleanup-package@v1.0.1
         with:
           package-name: facturxdotnet-api
