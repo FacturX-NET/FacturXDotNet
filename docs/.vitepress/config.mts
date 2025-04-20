@@ -4,7 +4,7 @@ import { defineConfig } from "vitepress"; // https://vitepress.dev/reference/sit
 export default defineConfig({
   srcDir: "./src",
   head: [
-    ["link", { rel: "icon", href: "/assets/favicon.ico" }],
+    ["link", { rel: "icon", href: "/favicon.ico" }],
     [
       "link",
       {
@@ -22,7 +22,7 @@ export default defineConfig({
   lastUpdated: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: "/assets/favicon.png",
+    logo: "/favicon.png",
 
     nav: [
       { text: "Home", link: "/" },
