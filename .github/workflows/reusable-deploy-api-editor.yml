@@ -83,7 +83,10 @@ jobs:
           scp -r dist/maintenance.nginx.conf remote:~/${{ github.run_id }}/maintenance.nginx.conf
           
           echo "Uploading maintenance files..."
+          ssh remote 'sudo mkdir -p ~/${{ github.run_id }}/maintenance'
           scp -r .github/workflows/pages/maintenance/* remote:~/${{ github.run_id }}/maintenance/
+          
+          echo "Deploying maintenance files..."
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance'
           ssh remote 'sudo mv -r ~/${{ github.run_id }}/maintenance/* /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance/'
 
