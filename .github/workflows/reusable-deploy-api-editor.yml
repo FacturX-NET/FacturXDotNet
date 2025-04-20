@@ -90,7 +90,7 @@ jobs:
           echo
           
           echo "Uploading maintenance files..."
-          ssh remote 'sudo mkdir -p ~/${{ github.run_id }}/maintenance'
+          ssh remote 'mkdir -p ~/${{ github.run_id }}/maintenance'
           scp -r .github/workflows/pages/maintenance/* remote:~/${{ github.run_id }}/maintenance
           
           echo
