@@ -26,9 +26,9 @@ export default defineConfig({
 
     nav: [
       { text: "Home", link: "/" },
-      { text: "Getting started", link: "/getting-started" },
-      { text: "OpenAPI specification", link: "/api/openapi-specification" },
-      { text: ".NET API reference", link: "/library/api-reference" },
+      { text: "Guides", link: "/getting-started" },
+      { text: "OpenAPI specification", link: "/openapi-specification" },
+      { text: ".NET API reference", link: "/api-reference" },
     ],
 
     sidebar: [
@@ -90,6 +90,9 @@ export default defineConfig({
       {
         text: ".NET library",
         items: [{ text: "API reference", link: "/library/api-reference" }],
+      },
+      {
+        text: "v{VERSION}",
       },
     ],
 
