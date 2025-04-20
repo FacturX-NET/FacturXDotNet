@@ -1,21 +1,21 @@
-import {Component, computed, effect, HostListener, inject, linkedSignal, Resource, signal, Signal} from '@angular/core';
-import {NgOptimizedImage} from '@angular/common';
-import {EditorSettings, EditorSettingsService, PdfModel} from './editor-settings.service';
-import {EditorMenuComponent} from './components/editor-menu/editor-menu.component';
-import {FormsModule} from '@angular/forms';
-import {TwoColumnsComponent} from '../../core/two-columns/two-columns.component';
-import {EditorSavedState, EditorStateService} from './editor-state.service';
-import {EditorLeftPaneHeaderComponent} from './components/editor-header/editor-left-pane-header.component';
-import {EditorWelcomeComponent} from './editor-welcome.component';
-import {API_BASE_URL} from '../../app.config';
-import {ApiServerStatusComponent} from '../../core/api/components/api-server-status.component';
-import {ApiConstantsService} from '../../core/api/services/api-constants.service';
-import {EditorMenuService} from './components/editor-menu/editor-menu.service';
-import {RouterOutlet} from '@angular/router';
-import {EditorPdfViewerComponent} from './components/editor-pdf-viewer/editor-pdf-viewer.component';
-import {EditorHeaderNameComponent} from './components/editor-header/editor-header-name.component';
-import {EditorRightPaneHeaderComponent} from './components/editor-header/editor-right-pane-header.component';
-import {EditorResponsivenessService} from './editor-responsiveness.service';
+import { Component, computed, effect, HostListener, inject, linkedSignal, Resource, signal, Signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
+import { EditorSettings, EditorSettingsService, PdfModel } from './editor-settings.service';
+import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
+import { FormsModule } from '@angular/forms';
+import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
+import { EditorSavedState, EditorStateService } from './editor-state.service';
+import { EditorLeftPaneHeaderComponent } from './components/editor-header/editor-left-pane-header.component';
+import { EditorWelcomeComponent } from './editor-welcome.component';
+import { API_BASE_URL } from '../../app.config';
+import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
+import { ApiConstantsService } from '../../core/api/services/api-constants.service';
+import { EditorMenuService } from './components/editor-menu/editor-menu.service';
+import { RouterOutlet } from '@angular/router';
+import { EditorPdfViewerComponent } from './components/editor-pdf-viewer/editor-pdf-viewer.component';
+import { EditorHeaderNameComponent } from './components/editor-header/editor-header-name.component';
+import { EditorRightPaneHeaderComponent } from './components/editor-header/editor-right-pane-header.component';
+import { EditorResponsivenessService } from './editor-responsiveness.service';
 
 @Component({
   selector: 'app-editor',
