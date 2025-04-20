@@ -44,15 +44,24 @@ jobs:
       artifact-name: editor
       api-url: https://${{ inputs.build-name }}.facturxdotnet.org/api
       version: ${{ needs.compute-version.outputs.version }}
+  
+  build-docs-application:
+    name: Build Docs Application
+    needs: compute-version
+    uses: ./.github/workflows/reusable-build-docs-application.yml
+    with:
+      artifact-name: docs
+      version: ${{ needs.compute-version.outputs.version }}
 
-  deploy-api-and-editor:
+  deploy:
     name: Deploy API and Editor
     needs:
       - build-api-docker-image
       - build-editor-application
-    uses: ./.github/workflows/reusable-deploy-api-editor.yml
+    uses: ./.github/workflows/reusable-deploy-api-editor-docs.yml
     with:
       editor-artifact-name: editor
+      docs-artifact-name: docs
       build-name: ${{ inputs.build-name }}
     secrets:
       PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
