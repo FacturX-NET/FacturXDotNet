@@ -17,7 +17,7 @@ on:
         required: true
 
 concurrency:
-  group: ${{ secrets.PROD_SSH_HOST }}
+  group: deployment
 
 jobs:
   remove-deployment:
