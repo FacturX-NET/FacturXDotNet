@@ -3,8 +3,11 @@ import { defineConfig } from "vitepress"; // https://vitepress.dev/reference/sit
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   srcDir: "./src",
+  head: [["link", { rel: "icon", href: "/favicon.ico" }]],
+
   title: "FacturX.NET Documentation",
   description: "Work with Factur-X documents in .NET",
+
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
