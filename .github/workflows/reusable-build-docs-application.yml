@@ -15,7 +15,7 @@ on:
 
 jobs:
   build-editor-application:
-    name: Build Editor Application
+    name: Build Docs Application
     runs-on: ubuntu-latest
     
     steps:
@@ -28,26 +28,26 @@ jobs:
         with:
           node-version: 22.x
           cache: npm
-          cache-dependency-path: src/docs/package-lock.json
+          cache-dependency-path: docs/package-lock.json
 
       - name: Install dependencies
-        run: cd src/docs; npm ci
+        run: cd docs; npm ci
 
       - name: Set version number
         run: |
-          sed -i -e 's/{VERSION}/${{ inputs.version }}/g' src/docs/src/index.md
+          sed -i -e 's/{VERSION}/${{ inputs.version }}/g' docs/src/index.md
 
       - name: Build
-        run: cd src/docs; npm run build -- --base /docs/ --outDir src/docs/dist/
+        run: cd docs; npm run build -- --base /docs/ --outDir docs/dist/
 
       - name: Move assets to root
         run: |
-          mv src/docs/dist/assets/* src/docs/dist
-          rm -r src/docs/dist/assets
+          mv docs/dist/assets/* docs/dist
+          rm -r docs/dist/assets
 
       - name: Upload build result
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: src/docs/dist/
+          path: docs/dist/
           if-no-files-found: error
