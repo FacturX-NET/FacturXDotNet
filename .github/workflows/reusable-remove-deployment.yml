@@ -66,3 +66,11 @@ jobs:
         continue-on-error: true
         run: |
           ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/'
+
+      - name: Delete image from ghcr.io
+        continue-on-error: true
+        uses: chipkent/action-cleanup-package@v1.0.1
+        with:
+          package-name: facturxdotnet-api
+          tag: latest-${{ inputs.prerelease }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
