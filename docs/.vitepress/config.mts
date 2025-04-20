@@ -16,7 +16,8 @@ export default defineConfig({
   cleanUrls: true,
 
   title: "FacturX.NET Documentation",
-  description: "Work with Factur-X documents in .NET",
+  description:
+    "FacturX.NET gives you a unified platform to manage Factur-X documents the way you prefer.",
 
   lastUpdated: true,
   themeConfig: {
