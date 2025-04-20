@@ -1,12 +1,17 @@
 :root {
-    --vp-c-brand-1: #512bd4;
+    --vp-c-brand-1: #4124AE;
     --vp-c-brand-2: #a42bd4;
-    --vp-button-brand-bg: #512bd4;
+    --vp-c-brand-3: #512bd4;
 
     --vp-home-hero-name-color: transparent;
-    --vp-home-hero-name-background: linear-gradient(120deg, var(--vp-c-brand-1) 30%, var(--vp-c-brand-2));
+    --vp-home-hero-name-background: linear-gradient(120deg, #512BD4 30%, #A42BD4);
 }
 
+.dark {
+    --vp-c-brand-1: #CAC0F2;
+    --vp-c-brand-2: #a42bd4;
+    --vp-c-brand-3: #512bd4;
+}
 
 .sidebar-footer {
     font-size: 0.75rem;

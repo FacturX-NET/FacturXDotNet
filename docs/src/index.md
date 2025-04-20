@@ -22,17 +22,29 @@ hero:
 
 features:
   - title: Web Editor
-    icon: { src: 'https://api.iconify.design/bi/globe2.svg?color=%23512bd4', alt: 'WebSite' }
+    icon: { 
+      light: 'https://api.iconify.design/bi/globe2.svg?color=%23512bd4', 
+      dark: 'https://api.iconify.design/bi/globe2.svg?color=%23CAC0F2', 
+      alt: 'WebSite' 
+    }
     details: Create, view, and edit Factur-X documents directly in your browser with our user-friendly editor.
     link: https://{BUILD-NAME}.facturxdotnet.org/editor
     linkText: Try it live
   - title: API
-    icon: { src: 'https://api.iconify.design/simple-icons/amazonapigateway.svg?color=%23512bd4', alt: 'API' }
+    icon: { 
+      light: 'https://api.iconify.design/simple-icons/amazonapigateway.svg?color=%23512bd4', 
+      dark: 'https://api.iconify.design/simple-icons/amazonapigateway.svg?color=%23CAC0F2', 
+      alt: 'API' 
+    }
     details: Programmatically generate, read, and validate Factur-X documents through our powerful API.
     link: https://{BUILD-NAME}.facturxdotnet.org/api
     linkText: Try it live
   - title: .NET library and tool
-    icon: { src: 'https://api.iconify.design/simple-icons/nuget.svg?color=%23512bd4', alt: 'NuGet' }
+    icon: { 
+      light: 'https://api.iconify.design/simple-icons/nuget.svg?color=%23512bd4', 
+      dark: 'https://api.iconify.design/simple-icons/nuget.svg?color=%23CAC0F2', 
+      alt: 'NuGet' 
+    }
     details: Integrate FacturX.NET into your .NET projects or use the CLI to automate workflows directly from the command line.
     link: https://www.nuget.org/profiles/FacturX.NET
     linkText: Download
