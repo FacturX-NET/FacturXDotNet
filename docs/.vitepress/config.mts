@@ -143,7 +143,7 @@ export default withPwa(
         message:
           "The tools are open source and released under the MIT License, feel free to use, modify, and share.",
         copyright:
-          "© 2025 Ismail Bennani, made with <i class='bi bi-heart-fill'></i> and <i class='bi bi-cup-hot-fill'></i>.",
+          "© 2025 Ismail Bennani, made with <i class='bi bi-heart-fill' style='color:red'></i> and <i class='bi bi-cup-hot-fill'></i>.",
       },
 
       socialLinks: [
