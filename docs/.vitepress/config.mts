@@ -1,5 +1,5 @@
-import {defineConfig} from "vitepress"; // https://vitepress.dev/reference/site-config
-import {withPwa} from '@vite-pwa/vitepress'
+import { defineConfig } from "vitepress"; // https://vitepress.dev/reference/site-config
+import { withPwa } from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
 
 // https://vitepress.dev/reference/site-config
 export default withPwa(
@@ -30,11 +30,24 @@ export default withPwa(
         { text: "Home", link: "/" },
         { text: "Guides", link: "/guides/getting-started" },
         {
-          text: "OpenAPI specification",
-          link: "/openapi-specification/getting-started",
+          text: "Try the Editor",
+          link: "https://{BUILD-NAME}.facturxdotnet.org/editor",
         },
-        { text: "CLI", link: "/cli/getting-started" },
-        { text: ".NET API reference", link: "/api-reference/overview" },
+        {
+          text: "Try the API",
+          link: "https://{BUILD-NAME}.facturxdotnet.org/api",
+        },
+        {
+          text: "References",
+          items: [
+            {
+              text: "OpenAPI specification",
+              link: "/openapi-specification/getting-started",
+            },
+            { text: "CLI", link: "/cli/getting-started" },
+            { text: ".NET API reference", link: "/api-reference/overview" },
+          ],
+        },
       ],
 
       sidebar: {
@@ -150,8 +163,6 @@ export default withPwa(
       search: {
         provider: "local",
       },
-
-      pwa: {},
     },
   }),
 );
