@@ -46,7 +46,19 @@ jobs:
         run: dotnet tool install -g DocFxMarkdownGen
 
       - name: Generate .NET API reference
-        run: docs/scripts/generate-api-reference.sh
+        run: |
+          mkdir -p dist/api-reference
+          cp docfx.json dist/api-reference/docfx.json
+          
+          cd dist/api-reference
+          docfx docfx.json
+          dfmg
+          
+          # add frontmatter attributes
+          find . -type f -name "*.md" -exec sed -i 's/---\ntitle:/---\npageClass: pageClass: dotnet-api-reference-page\neditLink: false\ntitle:/g' {} \;
+          
+          rm -rf ../../docs/src/api-reference/*
+          mv md/* ../../docs/src/api-reference/
 
       - name: Build API
         env:
