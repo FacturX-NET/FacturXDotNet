@@ -70,7 +70,9 @@ jobs:
       - name: Log in to Docker registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Remove latest-${{ inputs.prerelease }} docker tag
-        continue-on-error: true
-        run: |
-          docker rmi ghcr.io/facturx-net/facturxdotnet-api:latest-${{ inputs.prerelease }}
+      - name: Delete image from ghcr.io
+        uses: chipkent/action-cleanup-package@v1.0.1
+        with:
+          package-name: facturxdotnet-api
+          tag: latest-${{ inputs.prerelease }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
