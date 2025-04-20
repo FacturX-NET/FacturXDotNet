@@ -27,7 +27,7 @@ server {
     }
     
     location / {
-        return 301 https://{BUILD-NAME}.facturxdotnet.org/editor$uri;
+        return 301 https://{BUILD-NAME}.facturxdotnet.org/docs;
     }
     
     # ssl_stapling on;
