@@ -2,3 +2,10 @@
     --vp-c-brand-1: #512bd4;
     --vp-button-brand-bg: #512bd4;
 }
+
+.sidebar-footer {
+    font-size: 0.75rem;
+    color: var(--vp-c-text-3);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

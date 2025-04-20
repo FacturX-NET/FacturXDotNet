@@ -4,7 +4,7 @@ import { defineConfig } from "vitepress"; // https://vitepress.dev/reference/sit
 export default defineConfig({
   srcDir: "./src",
   head: [
-    ["link", { rel: "icon", href: "/favicon.ico" }],
+    ["link", { rel: "icon", href: "/assets/favicon.ico" }],
     [
       "link",
       {
@@ -22,7 +22,7 @@ export default defineConfig({
   lastUpdated: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: "favicon.png",
+    logo: "/assets/favicon.png",
 
     nav: [
       { text: "Home", link: "/" },
@@ -37,6 +37,10 @@ export default defineConfig({
 
     sidebar: {
       "/guides/": [
+        {
+          text: "What is FacturX.NET?",
+          link: "/guides/what-is-facturxdotnet",
+        },
         {
           text: "Getting started",
           link: "/guides/getting-started",
@@ -83,7 +87,7 @@ export default defineConfig({
           ],
         },
         {
-          text: "v{VERSION}",
+          text: "<span class='sidebar-footer'>v{VERSION}</span>",
         },
       ],
       "/openapi-specification/": [
@@ -96,17 +100,26 @@ export default defineConfig({
             },
           ],
         },
+        {
+          text: "<span class='sidebar-footer'>v{VERSION}</span>",
+        },
       ],
       "/cli/": [
         {
           text: "CLI",
           items: [{ text: "CLI usage", link: "/cli/cli-usage" }],
         },
+        {
+          text: "<span class='sidebar-footer'>v{VERSION}</span>",
+        },
       ],
       "/api-reference/": [
         {
           text: ".NET library",
           items: [{ text: "API reference", link: "/library/api-reference" }],
+        },
+        {
+          text: "<span class='sidebar-footer'>v{VERSION}</span>",
         },
       ],
     },
