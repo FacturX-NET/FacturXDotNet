@@ -61,3 +61,4 @@ TODOs.md
 
 src/api-reference/**
 !src/api-reference/overview.md
+src/assets/facturxdotnet.openapi.json

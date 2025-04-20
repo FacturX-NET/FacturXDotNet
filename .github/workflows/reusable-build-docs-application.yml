@@ -23,6 +23,39 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup .NET 9 (for dotnet-releaser, lib, and apps)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Add System.CommandLine daily builds nuget source
+        run: dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json --name "System.CommandLine - Daily Builds"
+
+      - name: Restore dependencies
+        run: cd src; dotnet restore
+
+      - name: Build library
+        env:
+          MINVERVERSIONOVERRIDE: ${{ inputs.version }}
+        run: cd src; dotnet build FacturXDotNet/FacturXDotNet.csproj --configuration Release --no-restore
+
+      - name: Install docfx
+        run: dotnet tool install -g docfx
+
+      - name: Install dfmg
+        run: dotnet tool install -g DocFxMarkdownGen
+
+      - name: Generate .NET API reference
+        run: docs/scripts/generate-api-reference.sh
+
+      - name: Build API
+        env:
+          MINVERVERSIONOVERRIDE: ${{ inputs.version }}
+        run: cd src; dotnet build FacturXDotNet.API/FacturXDotNet.API.csproj --configuration Release --no-restore
+
+      - name: Copy OpenAPI specification
+        run: cp src/FacturXDotNet.API/FacturXDotNet.API.json docs/src/assets/facturxdotnet.openapi.json
+
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
@@ -32,15 +65,6 @@ jobs:
 
       - name: Install dependencies
         run: cd docs; npm ci
-
-      - name: Install docfx
-        run: dotnet tool -g install docfx
-
-      - name: Install dfmg
-        run: dotnet tool -g install DocFxMarkdownGen
-
-      - name: Generate .NET API reference
-        run: docs/scripts/generate-api-reference.sh
 
       - name: Set version number
         run: |
