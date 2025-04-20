@@ -1,9 +1,9 @@
-import {defineConfigWithTheme} from "vitepress"; // https://vitepress.dev/reference/site-config
-import {withPwa} from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
-import {useSidebar} from "vitepress-openapi";
-import {groupIconVitePlugin} from "vitepress-plugin-group-icons";
-import {getSidebar} from "vitepress-plugin-auto-sidebar";
-import spec from "../src/assets/facturxdotnet.openapi.json" with {type: "json"};
+import { defineConfigWithTheme } from "vitepress"; // https://vitepress.dev/reference/site-config
+import { withPwa } from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
+import { useSidebar } from "vitepress-openapi";
+import { groupIconVitePlugin } from "vitepress-plugin-group-icons";
+import { getSidebar } from "vitepress-plugin-auto-sidebar";
+import spec from "../src/assets/facturxdotnet.openapi.json" with { type: "json" };
 
 const specSidebar = useSidebar({
   spec,
@@ -127,6 +127,9 @@ export default withPwa(
             link: "/openapi-specification/introduction",
           },
           ...specSidebar.generateSidebarGroups(),
+          {
+            text: "<span class='sidebar-footer'>v{VERSION}</span>",
+          },
         ],
         "/cli/": [
           {

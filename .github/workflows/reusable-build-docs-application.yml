@@ -33,6 +33,15 @@ jobs:
       - name: Install dependencies
         run: cd docs; npm ci
 
+      - name: Install docfx
+        run: dotnet tool -g install docfx
+
+      - name: Install dfmg
+        run: dotnet tool -g install DocFxMarkdownGen
+
+      - name: Generate .NET API reference
+        run: docs/scripts/generate-api-reference.sh
+
       - name: Set version number
         run: |
           sed -i -e 's/{VERSION}/${{ inputs.version }}/g' docs/.vitepress/config.mts
