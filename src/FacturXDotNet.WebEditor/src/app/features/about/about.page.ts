@@ -137,7 +137,11 @@ import { IPackageDto } from '../../core/api/api.models';
                   <p>
                     The API server is currently in version <span class="fw-semibold text-truncate">{{ apiVersion() }}</span> and was built on
                     <span class="text-truncate">{{ apiConstants.build.buildDate | date }}</span
-                    >.
+                    >. <br />
+
+                    @if (apiVersionBuildMetadata(); as apiVersionBuildMetadata) {
+                      <span class="small text-body-tertiary"><span class="fw-semibold">Build metadata</span>: {{ apiVersionBuildMetadata }}</span>
+                    }
                   </p>
 
                   <p class="fw-bold">Dependencies</p>
@@ -156,7 +160,11 @@ import { IPackageDto } from '../../core/api/api.models';
               <p>
                 The web editor (this application) is currently in version <span class="fw-semibold text-truncate">{{ webEditorVersion }}</span> and was built on
                 <span class="text-truncate">{{ webEditorBuildDate | date }}</span
-                >.
+                >. <br />
+
+                @if (webEditorBuildMetadata) {
+                  <span class="small text-body-tertiary"><span class="fw-semibold">Build metadata</span>: {{ webEditorBuildMetadata }}</span>
+                }
               </p>
 
               <p>
@@ -183,9 +191,13 @@ export class AboutPage {
     license: l.licenseType,
     link: l.link,
   }));
-  protected apiUrl = inject(API_BASE_URL);
+
   protected webEditorVersion = removeBuildInformation(environment.version);
+  protected webEditorBuildMetadata = extractBuildInformation(environment.version);
   protected webEditorBuildDate = environment.buildDate;
+
+  protected apiUrl = inject(API_BASE_URL);
+
   private apiConstantsService = inject(ApiConstantsService);
   protected apiVersion = computed(() => {
     const apiConstants = this.apiConstantsService.info.value();
@@ -195,7 +207,26 @@ export class AboutPage {
 
     return removeBuildInformation(apiConstants.build.version);
   });
+
+  protected apiVersionBuildMetadata = computed(() => {
+    const apiConstants = this.apiConstantsService.info.value();
+    if (apiConstants === undefined) {
+      return undefined;
+    }
+
+    return extractBuildInformation(apiConstants.build.version);
+  });
+
   protected apiConstants = this.apiConstantsService.info;
+}
+
+function extractBuildInformation(version: string) {
+  const indexOfPlus = version.indexOf('+');
+  if (indexOfPlus === -1) {
+    return undefined;
+  }
+
+  return version.substring(indexOfPlus + 1);
 }
 
 function removeBuildInformation(version: string) {
