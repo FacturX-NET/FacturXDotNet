@@ -21,6 +21,10 @@ on:
       PROD_SSH_USER:
         required: true
 
+concurrency:
+  group: ${{ inputs.prerelease }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
     name: Deploy API and Editor
