@@ -10,7 +10,7 @@ on:
       remove-old-image:
         description: If true, the previous image corresponding to this build will be removed (the one tagged latest-{build-name})
         type: boolean
-        default: false
+        default: true
 
 jobs:
   build-deploy-api-editor:

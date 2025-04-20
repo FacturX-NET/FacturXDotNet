@@ -12,6 +12,7 @@ jobs:
     uses: ./.github/workflows/reusable-build-deploy-api-editor.yml
     with:
       build-name: alpha
+      remove-old-image: true
     secrets:
       PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
       PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
