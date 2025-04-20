@@ -8,7 +8,7 @@ hero:
   name: FacturX.NET
   text: Web, API, CLI, .NET — your workflow, your way
   tagline: FacturX.NET gives you a unified platform to manage Factur-X documents the way you prefer.
-  image: { src: './assets/logo.png', alt: 'FacturX.NET Logo' }
+  image: { src: '/logo.png', alt: 'FacturX.NET Logo' }
   actions:
     - theme: brand
       text: What is FacturX.NET?

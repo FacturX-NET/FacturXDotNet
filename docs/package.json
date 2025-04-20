@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "vitepress dev --port 40850",
     "build": "vitepress build",
-    "preview": "vitepress preview"
+    "preview": "vitepress preview --port 40850"
   },
   "devDependencies": {
     "@vite-pwa/vitepress": "^1.0.0",
