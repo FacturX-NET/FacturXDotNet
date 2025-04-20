@@ -1,11 +1,40 @@
 :root {
     --vp-c-brand-1: #512bd4;
+    --vp-c-brand-2: #a42bd4;
     --vp-button-brand-bg: #512bd4;
+
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: linear-gradient(120deg, var(--vp-c-brand-1) 30%, var(--vp-c-brand-2));
 }
+
 
 .sidebar-footer {
     font-size: 0.75rem;
     color: var(--vp-c-text-3);
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+
+@property --hero-center-color {
+    syntax: '<color>';
+    initial-value: #a42bd4aa;
+    inherits: false;
+}
+
+@property --gradient-ratio {
+    syntax: '<percentage>';
+    initial-value: 60%;
+    inherits: false;
+}
+
+.VPHero .image-container .image-bg {
+    filter: blur(44px);
+    background-image: radial-gradient(var(--hero-center-color), #512bd422 var(--gradient-ratio));
+    transition: --hero-center-color 0.5s, --gradient-ratio 0.5s;
+}
+
+.VPHero .image-container:hover .image-bg {
+    --hero-center-color: #a42bd4bb;
+    --gradient-ratio: 80%;
 }
