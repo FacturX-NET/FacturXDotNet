@@ -122,7 +122,7 @@ import { EditorResponsivenessService } from './editor-responsiveness.service';
         <div class="flex-shrink-0 d-flex justify-content-center gap-2 px-4 small" [class.d-none]="!unsafeEnvironment()">
           <div class="text-truncate">
             <span class="text-danger fw-semibold"><i class="bi bi-exclamation-triangle-fill "></i> Do not share sensitive data </span>
-            This application is hosted in an unsafe cloud environment. Although I do not store your data, or use your it for any purpose other than the application, the hosting
+            This application is hosted in an unsafe cloud environment. Although I do not store your data, or use it for any purpose other than the application, the hosting
             environment is beyond my control.
           </div>
           <div class="text-nowrap">
