@@ -8,18 +8,19 @@ server {
 
     server_name {PRERELEASE}.facturxdotnet.org;
     root /var/www/{PRERELEASE}.facturxdotnet.org/maintenance;
+    index index.html
     error_log /var/log/nginx/{PRERELEASE}.facturxdotnet.org.error.log;
     access_log /var/log/nginx/{PRERELEASE}.facturxdotnet.org.access.log;
     
-    error_page 503 @maintenance;
-    
-    location @maintenance {
-        rewrite ^(.*)$ /maintenance break;
+    error_page 503 /maintenance;
+        
+    location ^~ \.html$ {
+        try_files $uri =404;
     }
-    
+
     location / {
         try_files $uri $uri.html =503;
-    } 
+    }
    
     # ssl_stapling on;
     ssl_stapling on;
