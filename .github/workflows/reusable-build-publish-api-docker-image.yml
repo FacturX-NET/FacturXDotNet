@@ -92,5 +92,5 @@ jobs:
         uses: chipkent/action-cleanup-package@v1.0.1
         with:
           package-name: facturxdotnet-api
-          tag: latest-${{ inputs.tag }}
+          tag: ${{ inputs.tag }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
