@@ -141,7 +141,7 @@ jobs:
           echo "Moving new Editor release..."
           ssh remote 'sudo mv ~/${{ github.run_id }}/editor/* /var/www/${{ inputs.build-name }}.facturxdotnet.org/editor'
 
-      - name: Replace current build of Editor application
+      - name: Replace current build of Docs application
         run: |
           echo "Uploading Docs app..."
           ssh remote 'mkdir -p ~/${{ github.run_id }}/docs'
