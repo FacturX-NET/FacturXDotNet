@@ -85,20 +85,12 @@ jobs:
           echo "Uploading maintenance nginx file..."
           scp -r dist/maintenance.nginx.conf remote:~/${{ github.run_id }}/maintenance.nginx.conf
           
-          echo "DEBUG maintenance files..."
-          ls .github/workflows/pages/maintenance
-          
           echo "Uploading maintenance files..."
           scp -r .github/workflows/pages/maintenance remote:~/${{ github.run_id }}/maintenance
-          
-          echo "DEBUG maintenance files..."
-          ssh remote 'ls ~/${{ github.run_id }}/maintenance'
           
           echo "Deploying maintenance files..."
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance'
           ssh remote 'sudo mv ~/${{ github.run_id }}/maintenance/* /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance/'
-          
-          exit 1
 
       - name: Start maintenance mode
         run: |
