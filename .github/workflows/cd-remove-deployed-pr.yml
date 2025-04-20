@@ -1,0 +1,17 @@
+name: Continuous Deployment - Remove deployed Pull Request
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  build-deploy-api-editor:
+    name: Remove deployment at pr${{ github.event.number }}.facturxdotnet.org
+    uses: ./.github/workflows/reusable-remove-deployment.yml
+    with:
+      prerelease: pr${{ github.event.number }}
+    secrets:
+      PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+      PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+      PROD_SSH_USER: ${{ secrets.PROD_SSH_USER }}
