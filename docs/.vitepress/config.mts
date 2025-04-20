@@ -26,75 +26,90 @@ export default defineConfig({
 
     nav: [
       { text: "Home", link: "/" },
-      { text: "Guides", link: "/getting-started" },
-      { text: "OpenAPI specification", link: "/openapi-specification" },
-      { text: ".NET API reference", link: "/api-reference" },
+      { text: "Guides", link: "/guides/getting-started" },
+      {
+        text: "OpenAPI specification",
+        link: "/openapi-specification/getting-started",
+      },
+      { text: "CLI", link: "/cli/getting-started" },
+      { text: ".NET API reference", link: "/api-reference/overview" },
     ],
 
-    sidebar: [
-      {
-        text: "Getting started",
-        link: "/getting-started",
-      },
-      {
-        text: "Use cases",
-        items: [
-          {
-            text: "Generation",
-            items: [
-              {
-                text: "Generate a Factur-X document",
-                link: "/generation/facturx",
-              },
-              {
-                text: "Generate a standard PDF",
-                link: "/generation/standard-pdf",
-              },
-            ],
-          },
-          {
-            text: "Validation",
-            items: [
-              {
-                text: "Validate a Factur-X document",
-                link: "/validation/facturx",
-              },
-              {
-                text: "Validate Cross-Industry Invoice data",
-                link: "/validation/cii",
-              },
-            ],
-          },
-          {
-            text: "Extraction",
-            items: [
-              {
-                text: "Extract Cross-Industry Invoice data",
-                link: "/extraction/cii",
-              },
-              { text: "Extract XMP metadata", link: "/extraction/cii" },
-            ],
-          },
-        ],
-      },
-      {
-        text: "API",
-        items: [
-          { text: "OpenAPI specification", link: "/api/openapi-specification" },
-        ],
-      },
-      {
-        text: "CLI",
-        items: [{ text: "CLI usage", link: "/cli/cli-usage" }],
-      },
-      {
-        text: ".NET library",
-        items: [{ text: "API reference", link: "/library/api-reference" }],
-      },
-      {
-        text: "v{VERSION}",
-      },
-    ],
+    sidebar: {
+      "/guides/": [
+        {
+          text: "Getting started",
+          link: "/guides/getting-started",
+        },
+        {
+          text: "Use cases",
+          items: [
+            {
+              text: "Generation",
+              items: [
+                {
+                  text: "Generate a Factur-X document",
+                  link: "/guides/generation/facturx",
+                },
+                {
+                  text: "Generate a standard PDF",
+                  link: "/guides/generation/standard-pdf",
+                },
+              ],
+            },
+            {
+              text: "Validation",
+              items: [
+                {
+                  text: "Validate a Factur-X document",
+                  link: "/guides/validation/facturx",
+                },
+                {
+                  text: "Validate Cross-Industry Invoice data",
+                  link: "/guides/validation/cii",
+                },
+              ],
+            },
+            {
+              text: "Extraction",
+              items: [
+                {
+                  text: "Extract Cross-Industry Invoice data",
+                  link: "/guides/extraction/cii",
+                },
+                { text: "Extract XMP metadata", link: "/extraction/cii" },
+              ],
+            },
+          ],
+        },
+        {
+          text: "v{VERSION}",
+        },
+      ],
+      "/openapi-specification/": [
+        {
+          text: "API",
+          items: [
+            {
+              text: "OpenAPI specification",
+              link: "/api/openapi-specification",
+            },
+          ],
+        },
+      ],
+      "/cli/": [
+        {
+          text: "CLI",
+          items: [{ text: "CLI usage", link: "/cli/cli-usage" }],
+        },
+      ],
+      "/api-reference/": [
+        {
+          text: ".NET library",
+          items: [{ text: "API reference", link: "/library/api-reference" }],
+        },
+      ],
+    },
 
     footer: {
       message:
