@@ -40,11 +40,6 @@ jobs:
       - name: Build
         run: cd docs; npm run build -- --base /docs/ --outDir dist/
 
-      - name: Move assets to root
-        run: |
-          mv docs/dist/assets/* docs/dist
-          rm -r docs/dist/assets
-
       - name: Upload build result
         uses: actions/upload-artifact@v4
         with:
