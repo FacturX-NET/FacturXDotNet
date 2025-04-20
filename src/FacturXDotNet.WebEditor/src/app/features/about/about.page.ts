@@ -88,7 +88,7 @@ import { IPackageDto } from '../../core/api/api.models';
 
           <p class="text-center">
             <strong>© 2025 Ismail Bennani</strong>, with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i><br />
-            The tools are open source and under the MIT License, feel free to use, modify, and share.
+            The tools are open source and released under the MIT License, feel free to use, modify, and share.
           </p>
         </div>
       </div>
@@ -169,7 +169,7 @@ import { IPackageDto } from '../../core/api/api.models';
 
               <p>
                 The web editor is a demo application that allows you to create and edit FacturX documents. It is built using Angular and TypeScript. It is also open-source and
-                under the <span class="fw-bold">MIT</span> license, and available
+                released under the <span class="fw-bold">MIT</span> license, and available
                 <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/main/src/Tests.FacturXDotNet.WebEditor">on GitHub</a>.
               </p>
 
