@@ -1,5 +1,12 @@
-import { defineConfig } from "vitepress"; // https://vitepress.dev/reference/site-config
-import { withPwa } from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
+import {defineConfig} from "vitepress"; // https://vitepress.dev/reference/site-config
+import {withPwa} from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
+import {useSidebar} from "vitepress-openapi";
+import spec from "../src/assets/facturxdotnet.openapi.json" with {type: "json"};
+
+const specSidebar = useSidebar({
+  spec,
+  linkPrefix: "/openapi-specification/",
+});
 
 // https://vitepress.dev/reference/site-config
 export default withPwa(
@@ -42,7 +49,7 @@ export default withPwa(
           items: [
             {
               text: "OpenAPI specification",
-              link: "/openapi-specification/getting-started",
+              link: "/openapi-specification/introduction",
             },
             { text: "CLI", link: "/cli/getting-started" },
             { text: ".NET API reference", link: "/api-reference/overview" },
@@ -107,17 +114,12 @@ export default withPwa(
         ],
         "/openapi-specification/": [
           {
-            text: "API",
-            items: [
-              {
-                text: "OpenAPI specification",
-                link: "/api/openapi-specification",
-              },
-            ],
+            text: "Introduction",
+            link: "/openapi-specification/introduction",
           },
-          {
-            text: "<span class='sidebar-footer'>v{VERSION}</span>",
-          },
+          ...specSidebar.generateSidebarGroups({
+            linkPrefix: "/openapi-specification/",
+          }),
         ],
         "/cli/": [
           {

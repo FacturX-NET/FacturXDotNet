@@ -43,3 +43,8 @@
     --hero-center-color: #a42bd4bb;
     --gradient-ratio: 80%;
 }
+
+.openapi-specification-page {
+    --vp-layout-max-width: 1540px; /* default: 1440px */
+    --vp-sidebar-width: 372px; /* default: 272px */
+}
