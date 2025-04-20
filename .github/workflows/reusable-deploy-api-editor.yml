@@ -22,8 +22,7 @@ on:
         required: true
 
 concurrency:
-  group: ${{ inputs.prerelease }}
-  cancel-in-progress: true
+  group: deployment
 
 jobs:
   deploy:
@@ -72,11 +71,32 @@ jobs:
           echo "port=$PORT" >> $GITHUB_OUTPUT
 
       # START maintenance mode
+      - name: Upload maintenance files
+        run: |
+          echo "Building maintenance nginx file..."
+          mkdir -p dist
+          cp .github/workflows/configs/maintenance.nginx.conf.template dist/maintenance.nginx.conf
+          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/maintenance.nginx.conf
+          
+          cat dist/maintenance.nginx.conf
+          echo
+          
+          echo "Uploading maintenance nginx file..."
+          scp -r dist/maintenance.nginx.conf remote:~/${{ github.run_id }}/maintenance.nginx.conf
+          
+          echo "Uploading maintenance files..."
+          ssh remote 'mkdir -p ~/${{ github.run_id }}/maintenance'
+          scp -r .github/workflows/pages/maintenance/* remote:~/${{ github.run_id }}/maintenance
+
       - name: Start maintenance mode
         run: |
-          scp .github/workflows/pages/maintenance.html remote:~/${{ github.run_id }}/maintenance.html
-          ssh remote 'sudo mkdir -p /var/www/${{ inputs.prerelease }}.facturxdotnet.org'
-          ssh remote 'sudo cp ~/${{ github.run_id }}/maintenance.html /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance.html'
+          ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance'
+          ssh remote 'sudo mv ~/${{ github.run_id }}/maintenance /var/www/${{ inputs.prerelease }}.facturxdotnet.org/'
+          ssh remote 'sudo mv ~/${{ github.run_id }}/maintenance.nginx.conf /etc/nginx/conf.d/${{ inputs.prerelease }}.facturxdotnet.org.conf'
+
+      - name: Restart nginx
+        run: |
+          ssh remote 'sudo systemctl restart nginx'
 
       # UPDATE applications
       - name: Pull new API image and restart application
@@ -125,14 +145,10 @@ jobs:
           scp dist/${{ inputs.prerelease }}.facturxdotnet.org.conf remote:~/${{ github.run_id }}/nginx/${{ inputs.prerelease }}.facturxdotnet.org.conf
           ssh remote 'sudo cp ~/${{ github.run_id }}/nginx/${{ inputs.prerelease }}.facturxdotnet.org.conf /etc/nginx/conf.d/${{ inputs.prerelease }}.facturxdotnet.org.conf'
 
+      # EXIT maintenance mode
       - name: Restart nginx
         run: |
           ssh remote 'sudo systemctl restart nginx'
-
-      # EXIT maintenance mode
-      - name: Exit maintenance mode
-        run: |
-          ssh remote 'sudo rm /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance.html'
 
       - name: Remove temporary folder for this build
         if: always()

@@ -17,8 +17,7 @@ on:
         required: true
 
 concurrency:
-  group: ${{ inputs.prerelease }}
-  cancel-in-progress: true
+  group: deployment
 
 jobs:
   remove-deployment:
