@@ -4,6 +4,7 @@ import { defineConfig } from "vitepress"; // https://vitepress.dev/reference/sit
 export default defineConfig({
   srcDir: "./src",
   head: [["link", { rel: "icon", href: "/favicon.ico" }]],
+  cleanUrls: true,
 
   title: "FacturX.NET Documentation",
   description: "Work with Factur-X documents in .NET",
