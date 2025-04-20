@@ -8,8 +8,8 @@ on:
         type: string
         required: true
       
-      prerelease:
-        description: The prerelease identifier, the apps will be deployed to the PRERELEASE.facturxdotnet.org domain.
+      build-name:
+        description: The name of the build, the apps will be deployed to the BUILD-NAME.facturxdotnet.org domain.
         type: string
         required: true
 
@@ -76,7 +76,7 @@ jobs:
           echo "Building maintenance nginx file..."
           mkdir -p dist
           cp .github/workflows/configs/maintenance.nginx.conf.template dist/maintenance.nginx.conf
-          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/maintenance.nginx.conf
+          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{BUILD-NAME}/${{ inputs.build-name }}/g' dist/maintenance.nginx.conf
           
           cat dist/maintenance.nginx.conf
           echo
@@ -90,9 +90,9 @@ jobs:
 
       - name: Start maintenance mode
         run: |
-          ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance'
-          ssh remote 'sudo mv ~/${{ github.run_id }}/maintenance /var/www/${{ inputs.prerelease }}.facturxdotnet.org/'
-          ssh remote 'sudo mv ~/${{ github.run_id }}/maintenance.nginx.conf /etc/nginx/conf.d/${{ inputs.prerelease }}.facturxdotnet.org.conf'
+          ssh remote 'sudo rm -rf /var/www/${{ inputs.build-name }}.facturxdotnet.org/maintenance'
+          ssh remote 'sudo mv ~/${{ github.run_id }}/maintenance /var/www/${{ inputs.build-name }}.facturxdotnet.org/'
+          ssh remote 'sudo mv ~/${{ github.run_id }}/maintenance.nginx.conf /etc/nginx/conf.d/${{ inputs.build-name }}.facturxdotnet.org.conf'
 
       - name: Restart nginx
         run: |
@@ -104,18 +104,18 @@ jobs:
           echo "Building API docker-compose file..."
           mkdir -p dist
           cp .github/workflows/configs/api.docker-compose.yml.template dist/docker-compose.yml
-          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/docker-compose.yml
+          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{BUILD-NAME}/${{ inputs.build-name }}/g' dist/docker-compose.yml
 
           cat dist/docker-compose.yml
           echo
 
           echo "Publishing API docker-compose file..."
-          ssh remote 'mkdir -p ~/facturxdotnet/${{ inputs.prerelease }}/api'
-          scp dist/docker-compose.yml remote:~/facturxdotnet/${{ inputs.prerelease }}/api/docker-compose.yml
+          ssh remote 'mkdir -p ~/facturxdotnet/${{ inputs.build-name }}/api'
+          scp dist/docker-compose.yml remote:~/facturxdotnet/${{ inputs.build-name }}/api/docker-compose.yml
 
           echo "Restarting API app..."
-          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose pull'
-          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose up -d'
+          ssh remote 'cd facturxdotnet/${{ inputs.build-name }}/api; docker compose pull'
+          ssh remote 'cd facturxdotnet/${{ inputs.build-name }}/api; docker compose up -d'
 
       - name: Replace current build of Editor application
         run: |
@@ -124,26 +124,26 @@ jobs:
           scp -r dist/editor/* remote:~/${{ github.run_id }}/editor
 
           echo "Removing old Editor release..."
-          ssh remote 'sudo mkdir -p /var/www/${{ inputs.prerelease }}.facturxdotnet.org/editor'
-          ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/editor/*'
+          ssh remote 'sudo mkdir -p /var/www/${{ inputs.build-name }}.facturxdotnet.org/editor'
+          ssh remote 'sudo rm -rf /var/www/${{ inputs.build-name }}.facturxdotnet.org/editor/*'
 
           echo "Moving new Editor release..."
-          ssh remote 'sudo mv ~/${{ github.run_id }}/editor/* /var/www/${{ inputs.prerelease }}.facturxdotnet.org/editor'
+          ssh remote 'sudo mv ~/${{ github.run_id }}/editor/* /var/www/${{ inputs.build-name }}.facturxdotnet.org/editor'
 
       - name: Replace nginx configurations
         run: |
           echo "Building nginx configuration file..."
           mkdir -p dist/
-          cp .github/workflows/configs/facturxdotnet.nginx.conf.template dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
-          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
+          cp .github/workflows/configs/facturxdotnet.nginx.conf.template dist/${{ inputs.build-name }}.facturxdotnet.org.conf
+          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{BUILD-NAME}/${{ inputs.build-name }}/g' dist/${{ inputs.build-name }}.facturxdotnet.org.conf
 
-          cat dist/${{ inputs.prerelease }}.facturxdotnet.org.conf
+          cat dist/${{ inputs.build-name }}.facturxdotnet.org.conf
           echo
 
           echo "Publishing nginx configuration file..."
           ssh remote 'mkdir -p ~/${{ github.run_id }}/nginx'
-          scp dist/${{ inputs.prerelease }}.facturxdotnet.org.conf remote:~/${{ github.run_id }}/nginx/${{ inputs.prerelease }}.facturxdotnet.org.conf
-          ssh remote 'sudo cp ~/${{ github.run_id }}/nginx/${{ inputs.prerelease }}.facturxdotnet.org.conf /etc/nginx/conf.d/${{ inputs.prerelease }}.facturxdotnet.org.conf'
+          scp dist/${{ inputs.build-name }}.facturxdotnet.org.conf remote:~/${{ github.run_id }}/nginx/${{ inputs.build-name }}.facturxdotnet.org.conf
+          ssh remote 'sudo cp ~/${{ github.run_id }}/nginx/${{ inputs.build-name }}.facturxdotnet.org.conf /etc/nginx/conf.d/${{ inputs.build-name }}.facturxdotnet.org.conf'
 
       # EXIT maintenance mode
       - name: Restart nginx

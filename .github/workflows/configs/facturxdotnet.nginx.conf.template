@@ -6,10 +6,10 @@ server {
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
     keepalive_timeout 70;
 
-    server_name {PRERELEASE}.facturxdotnet.org;
-    root /var/www/{PRERELEASE}.facturxdotnet.org;
-    error_log /var/log/nginx/{PRERELEASE}.facturxdotnet.org.error.log;
-    access_log /var/log/nginx/{PRERELEASE}.facturxdotnet.org.access.log;
+    server_name {BUILD-NAME}.facturxdotnet.org;
+    root /var/www/{BUILD-NAME}.facturxdotnet.org;
+    error_log /var/log/nginx/{BUILD-NAME}.facturxdotnet.org.error.log;
+    access_log /var/log/nginx/{BUILD-NAME}.facturxdotnet.org.access.log;
     
     try_files /maintenance.html $uri;
     
@@ -23,7 +23,7 @@ server {
     }
     
     location / {
-        return 301 https://{PRERELEASE}.facturxdotnet.org/editor$uri;
+        return 301 https://{BUILD-NAME}.facturxdotnet.org/editor$uri;
     }
     
     # ssl_stapling on;

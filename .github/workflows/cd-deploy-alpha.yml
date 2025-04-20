@@ -11,7 +11,7 @@ jobs:
     name: Build & Deploy API & Editor
     uses: ./.github/workflows/reusable-build-deploy-api-editor.yml
     with:
-      prerelease: alpha
+      build-name: alpha
     secrets:
       PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
       PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}

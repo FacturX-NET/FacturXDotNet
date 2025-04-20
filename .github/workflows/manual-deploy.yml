@@ -3,8 +3,8 @@ name: Manual Deployment - Build & Deploy API & Editor
 on:
   workflow_dispatch:
     inputs:
-      prerelease:
-        description: The prerelease identifier, the apps will be deployed to the PRERELEASE.facturxdotnet.org domain.
+      build-name:
+        description: The name of the build, the apps will be deployed to the BUILD-NAME.facturxdotnet.org domain.
         type: string
         required: true
 
@@ -13,7 +13,7 @@ jobs:
     name: Build & Deploy API & Editor
     uses: ./.github/workflows/reusable-build-deploy-api-editor.yml
     with:
-      prerelease: ${{ inputs.prerelease }}
+      build-name: ${{ inputs.build-name }}
     secrets:
       PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
       PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}

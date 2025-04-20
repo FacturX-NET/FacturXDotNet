@@ -2,14 +2,20 @@ name: Reusable - Compute Version
 
 on:
   workflow_call:
+    inputs:
+      build-name:
+        description: The name of the build, defaults to 'build'
+        type: string
+        default: build
+
     outputs:
       version:
         description: The version of the application
         value: ${{ jobs.compute_version.outputs.version }}
 
+
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  MINVERBUILDMETADATA: build.${{ github.run_id }}.${{ github.run_attempt}}
 
 jobs:
   compute_version:
@@ -33,6 +39,8 @@ jobs:
 
       - name: Compute version
         id: compute_version
+        env:
+          MINVERBUILDMETADATA: ${{ inputs.build-name }}.${{ github.run_id }}.${{ github.run_attempt}}
         run: |
           VERSION=$(minver -t v -v d)
           echo "Version is $VERSION"

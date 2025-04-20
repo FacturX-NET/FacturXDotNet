@@ -3,8 +3,8 @@ name: Reusable - Build & Deploy API & Editor
 on:
   workflow_call:
     inputs:
-      prerelease:
-        description: The prerelease identifier, the apps will be deployed to the PRERELEASE.facturxdotnet.org domain.
+      build-name:
+        description: The name of the build, defaults to 'build'
         type: string
         required: true
 
@@ -20,13 +20,15 @@ jobs:
   compute-version:
     name: Compute Version
     uses: ./.github/workflows/reusable-compute-version.yml
+    with:
+      build-name: ${{ inputs.build-name }}
   
   build-api-docker-image:
     name: Build Docker Image
     needs: compute-version
     uses: ./.github/workflows/reusable-build-publish-api-docker-image.yml
     with:
-      tag: latest-${{ inputs.prerelease }}
+      tag: latest-${{ inputs.build-name }}
       version: ${{ needs.compute-version.outputs.version }}
   
   build-editor-application:
@@ -35,7 +37,7 @@ jobs:
     uses: ./.github/workflows/reusable-build-editor-application.yml
     with:
       artifact-name: editor
-      api-url: https://${{ inputs.prerelease }}.facturxdotnet.org/api
+      api-url: https://${{ inputs.build-name }}.facturxdotnet.org/api
       version: ${{ needs.compute-version.outputs.version }}
 
   deploy-api-and-editor:
@@ -46,7 +48,7 @@ jobs:
     uses: ./.github/workflows/reusable-deploy-api-editor.yml
     with:
       editor-artifact-name: editor
-      prerelease: ${{ inputs.prerelease }}
+      build-name: ${{ inputs.build-name }}
     secrets:
       PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
       PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}

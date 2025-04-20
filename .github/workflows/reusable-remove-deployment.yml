@@ -3,8 +3,8 @@ name: Reusable - Remove deployment
 on:
   workflow_call:
     inputs:
-      prerelease:
-        description: The prerelease identifier of the deployment to remove.
+      build-name:
+        description: The name of the deployed build to remove.
         type: string
         required: true
 
@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Check input
         run: |
-          INPUT=${{ inputs.prerelease }}
+          INPUT=${{ inputs.build-name }}
           INPUT_TRIMMED=$(echo $INPUT | xargs echo -n)
           if [ -z "${INPUT_TRIMMED}" ]; then
             echo "Input '$INPUT' is empty."
@@ -49,7 +49,7 @@ jobs:
       - name: Remove nginx configuration
         continue-on-error: true
         run: |
-          ssh remote 'sudo rm /etc/nginx/conf.d/${{ inputs.prerelease }}.facturxdotnet.org.conf'
+          ssh remote 'sudo rm /etc/nginx/conf.d/${{ inputs.build-name }}.facturxdotnet.org.conf'
 
       - name: Restart nginx
         continue-on-error: true
@@ -59,10 +59,10 @@ jobs:
       - name: Remove API application
         continue-on-error: true
         run: |
-          ssh remote 'cd facturxdotnet/${{ inputs.prerelease }}/api; docker compose down'
-          ssh remote 'rm -rf facturxdotnet/${{ inputs.prerelease }}/'
+          ssh remote 'cd facturxdotnet/${{ inputs.build-name }}/api; docker compose down'
+          ssh remote 'rm -rf facturxdotnet/${{ inputs.build-name }}/'
 
       - name: Remove Editor application
         continue-on-error: true
         run: |
-          ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/'
+          ssh remote 'sudo rm -rf /var/www/${{ inputs.build-name }}.facturxdotnet.org/'
