@@ -15,13 +15,15 @@ export default defineConfig({
   ],
   cleanUrls: true,
 
-  title: "FacturX.NET Documentation",
+  title: "FacturX.NET",
   description:
     "FacturX.NET gives you a unified platform to manage Factur-X documents the way you prefer.",
 
   lastUpdated: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: "favicon.png",
+
     nav: [
       { text: "Home", link: "/" },
       { text: "Getting started", link: "/getting-started" },
