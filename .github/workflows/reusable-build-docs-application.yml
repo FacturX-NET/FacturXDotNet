@@ -38,7 +38,7 @@ jobs:
           sed -i -e 's/{VERSION}/${{ inputs.version }}/g' docs/src/index.md
 
       - name: Build
-        run: cd docs; npm run build -- --base /docs/ --outDir docs/dist/
+        run: cd docs; npm run build -- --base /docs/ --outDir dist/
 
       - name: Move assets to root
         run: |
