@@ -73,4 +73,4 @@ jobs:
       - name: Remove latest-${{ inputs.prerelease }} docker tag
         continue-on-error: true
         run: |
-          docker rmi ghcr.io/facturxdotnet-api:latest-${{ inputs.prerelease }}
+          docker rmi ghcr.io/facturx-net/facturxdotnet-api:latest-${{ inputs.prerelease }}
