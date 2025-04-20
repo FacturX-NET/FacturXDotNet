@@ -67,9 +67,12 @@ jobs:
         run: |
           ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/'
 
-      - name: Delete image from ghcr.io
-        uses: chipkent/action-cleanup-package@v1.0.1
+      - name: Log in to Docker registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Delete docker tag
+        uses: xhofe/del-docker-tag@main
         with:
-          package-name: facturxdotnet-api
-          tag: latest-${{ inputs.prerelease }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          tags: facturx-net/facturxdotnet-api:latest-${{ inputs.prerelease }}
