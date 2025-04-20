@@ -80,12 +80,6 @@ jobs:
           echo "image_tag=$VERSION" >> $GITHUB_OUTPUT
           echo "image_id=$IMAGE_NAME:$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Push ${{ inputs.tag }}
-        if: inputs.tag != ''
-        run: |
-          docker tag facturxdotnet-api ${{ steps.push_image.outputs.image_name }}:${{ inputs.tag }} 
-          docker push ${{ steps.push_image.outputs.image_name }}:${{ inputs.tag }}
-
       - name: Delete image from ghcr.io
         if: inputs.tag != '' && inputs.remove-old-tag
         continue-on-error: true
@@ -94,3 +88,9 @@ jobs:
           package-name: facturxdotnet-api
           tag: ${{ inputs.tag }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Push ${{ inputs.tag }}
+        if: inputs.tag != ''
+        run: |
+          docker tag facturxdotnet-api ${{ steps.push_image.outputs.image_name }}:${{ inputs.tag }} 
+          docker push ${{ steps.push_image.outputs.image_name }}:${{ inputs.tag }}
