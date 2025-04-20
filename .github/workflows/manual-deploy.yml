@@ -7,6 +7,10 @@ on:
         description: The name of the build, the apps will be deployed to the BUILD-NAME.facturxdotnet.org domain.
         type: string
         required: true
+      remove-old-image:
+        description: If true, the previous image corresponding to this build will be removed (the one tagged latest-{build-name})
+        type: boolean
+        default: false
 
 jobs:
   build-deploy-api-editor:
@@ -14,6 +18,7 @@ jobs:
     uses: ./.github/workflows/reusable-build-deploy-api-editor.yml
     with:
       build-name: ${{ inputs.build-name }}
+      remove-old-image: ${{ inputs.remove-old-image }}
     secrets:
       PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
       PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}

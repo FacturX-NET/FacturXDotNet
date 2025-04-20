@@ -7,6 +7,10 @@ on:
         description: The name of the build, defaults to 'build'
         type: string
         required: true
+      remove-old-image:
+        description: If true, the previous image corresponding to this build will be removed (the one tagged latest-{build-name})
+        type: boolean
+        default: false
 
     secrets:
       PROD_SSH_KEY:
@@ -30,6 +34,7 @@ jobs:
     with:
       tag: latest-${{ inputs.build-name }}
       version: ${{ needs.compute-version.outputs.version }}
+      remove-old-tag: ${{ inputs.remove-old-image }}
   
   build-editor-application:
     name: Build Editor Application
