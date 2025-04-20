@@ -11,6 +11,7 @@
     "vitepress-plugin-nprogress": "^0.0.4"
   },
   "dependencies": {
-    "vitepress-openapi": "^0.0.3-alpha.76"
+    "vitepress-openapi": "^0.0.3-alpha.76",
+    "vitepress-plugin-group-icons": "^1.5.2"
   }
 }

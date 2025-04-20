@@ -1,16 +1,24 @@
-import {defineConfig} from "vitepress"; // https://vitepress.dev/reference/site-config
+import {defineConfigWithTheme} from "vitepress"; // https://vitepress.dev/reference/site-config
 import {withPwa} from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
 import {useSidebar} from "vitepress-openapi";
+import {groupIconVitePlugin} from "vitepress-plugin-group-icons";
 import spec from "../src/assets/facturxdotnet.openapi.json" with {type: "json"};
 
 const specSidebar = useSidebar({
   spec,
   linkPrefix: "/openapi-specification/",
+  sidebarItemTemplate: (method, path) => {
+    const operation = spec.paths[path]?.[method];
+    return `<div class="OASidebarItem group/oaSidebarItem" style="display: grid; grid-template-columns: 1fr auto;">
+        <span class="text" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${operation ? operation.summary : path}</span>
+        <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
+      </div>`;
+  },
 });
 
 // https://vitepress.dev/reference/site-config
 export default withPwa(
-  defineConfig({
+  defineConfigWithTheme({
     srcDir: "./src",
     head: [
       ["link", { rel: "icon", href: "/favicon.ico" }],
@@ -117,9 +125,7 @@ export default withPwa(
             text: "Introduction",
             link: "/openapi-specification/introduction",
           },
-          ...specSidebar.generateSidebarGroups({
-            linkPrefix: "/openapi-specification/",
-          }),
+          ...specSidebar.generateSidebarGroups(),
         ],
         "/cli/": [
           {
@@ -168,6 +174,24 @@ export default withPwa(
 
       ssr: {
         noExternal: ["vitepress-plugin-nprogress"],
+      },
+
+      vite: {
+        plugins: [
+          groupIconVitePlugin({
+            customIcon: {
+              curl: "simple-icons:curl", // Custom icon for curl.
+            },
+            defaultLabels: [
+              // Preload icons for specific labels.
+              "curl",
+              ".ts",
+              ".js",
+              ".py",
+              ".php",
+            ],
+          }),
+        ],
       },
     },
   }),
