@@ -79,11 +79,14 @@ jobs:
           cp .github/workflows/configs/maintenance.nginx.conf.template dist/maintenance.nginx.conf
           sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/maintenance.nginx.conf
           
+          cat dist/maintenance.nginx.conf
+          echo
+          
           echo "Uploading maintenance nginx file..."
           scp -r dist/maintenance.nginx.conf remote:~/${{ github.run_id }}/maintenance.nginx.conf
           
           echo "Uploading maintenance files..."
-          scp -r .github/workflows/pages/maintenance/ remote:~/${{ github.run_id }}
+          scp -r .github/workflows/pages/maintenance remote:~/${{ github.run_id }}/maintenance
           
           echo "Deploying maintenance files..."
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance'
