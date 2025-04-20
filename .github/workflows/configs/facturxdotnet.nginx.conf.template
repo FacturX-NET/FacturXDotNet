@@ -18,7 +18,7 @@ server {
     }
     
     location /docs {
-        try_files $uri /docs/index.html;
+        try_files $uri $uri.html /docs/index.html;
     }
     
     location /api {
