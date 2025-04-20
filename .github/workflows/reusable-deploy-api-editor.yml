@@ -77,7 +77,7 @@ jobs:
           echo "Building maintenance nginx file..."
           mkdir -p dist
           cp .github/workflows/configs/maintenance.nginx.conf.template dist/maintenance.nginx.conf
-          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/docker-compose.yml
+          sed -i -e 's/{PORT}/${{ steps.find_port.outputs.port }}/g' -e 's/{PRERELEASE}/${{ inputs.prerelease }}/g' dist/maintenance.nginx.conf
           
           echo "Uploading maintenance nginx file..."
           scp -r dist/maintenance.nginx.conf remote:~/${{ github.run_id }}/maintenance.nginx.conf
