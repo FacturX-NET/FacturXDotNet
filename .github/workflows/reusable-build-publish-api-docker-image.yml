@@ -8,11 +8,14 @@ on:
         type: string
         required: false
         default: ''
-      
       version:
         description: The version of the application
         type: string
         required: true
+      remove-old-tag:
+        description: If true, the previous image tagged latest-{TAG} will be removed
+        type: boolean
+        default: false
 
     outputs:
       image_name:
@@ -77,6 +80,15 @@ jobs:
           echo "image_tag=$VERSION" >> $GITHUB_OUTPUT
           echo "image_id=$IMAGE_NAME:$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Delete image from ghcr.io
+        if: inputs.tag != '' && inputs.remove-old-tag
+        continue-on-error: true
+        uses: chipkent/action-cleanup-package@v1.0.1
+        with:
+          package-name: facturxdotnet-api
+          tag: ${{ inputs.tag }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Push ${{ inputs.tag }}
         if: inputs.tag != ''
         run: |
