@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.XMP;
+namespace FacturXDotNet.Models.XMP;
 
 /// <summary>
 ///     <b>Adobe XMP Basic namespace</b> - The XMP basic namespace contains properties that provide basic descriptive information.

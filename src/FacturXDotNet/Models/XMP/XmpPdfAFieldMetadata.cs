@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.XMP;
+namespace FacturXDotNet.Models.XMP;
 
 /// <summary>
 ///     <b>PDF/A Field Value Type</b> - This schema describes a field in a structured type. It is very similar to the PDF/A Property Value Type schema (see chapter 4.4), but defines a

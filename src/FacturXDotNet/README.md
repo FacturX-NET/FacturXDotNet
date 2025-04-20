@@ -1,4 +1,4 @@
-﻿# FacturX.NET
+# FacturX.NET
 
 This library contains a set of tools to work with the Factur-X standard in .NET applications. It provides classes to represent Factur-X data structures, parse Factur-X PDF files, validate Factur-X data against the Factur-X schematron rules, and even generate Factur-X documents from structured data.
 

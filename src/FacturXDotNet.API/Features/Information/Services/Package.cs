@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.API.Features.Information.Services;
+namespace FacturXDotNet.API.Features.Information.Services;
 
 class Package : IEquatable<Package>
 {

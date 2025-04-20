@@ -1,0 +1,76 @@
+name: Reusable - Remove deployment
+
+on:
+  workflow_call:
+    inputs:
+      build-name:
+        description: The name of the deployed build to remove.
+        type: string
+        required: true
+
+    secrets:
+      PROD_SSH_KEY:
+        required: true
+      PROD_SSH_HOST:
+        required: true
+      PROD_SSH_USER:
+        required: true
+
+concurrency:
+  group: deployment
+
+jobs:
+  remove-deployment:
+    name: Remove deployment
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check input
+        run: |
+          INPUT=${{ inputs.build-name }}
+          INPUT_TRIMMED=$(echo $INPUT | xargs echo -n)
+          if [ -z "${INPUT_TRIMMED}" ]; then
+            echo "Input '$INPUT' is empty."
+            exit 1;
+          fi
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.PROD_SSH_KEY }}" > ~/.ssh/remote.key
+          chmod 600 ~/.ssh/remote.key
+
+          echo "Host remote"                               > ~/.ssh/config
+          echo "  HostName ${{ secrets.PROD_SSH_HOST }}"   >> ~/.ssh/config
+          echo "  User ${{ secrets.PROD_SSH_USER }}"       >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/remote.key"          >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no"                >> ~/.ssh/config
+
+      - name: Remove nginx configuration
+        continue-on-error: true
+        run: |
+          ssh remote 'sudo rm /etc/nginx/conf.d/${{ inputs.build-name }}.facturxdotnet.org.conf'
+
+      - name: Restart nginx
+        continue-on-error: true
+        run: |
+          ssh remote 'sudo systemctl restart nginx'
+
+      - name: Remove API application
+        continue-on-error: true
+        run: |
+          ssh remote 'cd facturxdotnet/${{ inputs.build-name }}/api; docker compose down'
+          ssh remote 'rm -rf facturxdotnet/${{ inputs.build-name }}/'
+
+      - name: Remove Editor application
+        continue-on-error: true
+        run: |
+          ssh remote 'sudo rm -rf /var/www/${{ inputs.build-name }}.facturxdotnet.org/'
+
+      - name: Delete image from ghcr.io
+        continue-on-error: true
+        uses: chipkent/action-cleanup-package@v1.0.1
+        with:
+          package-name: facturxdotnet-api
+          tag: latest-${{ inputs.build-name }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}

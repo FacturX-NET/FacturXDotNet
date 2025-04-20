@@ -1,4 +1,4 @@
-﻿namespace Tests.FacturXDotNet.CLI;
+namespace Tests.FacturXDotNet.CLI;
 
 class TestUtils
 {

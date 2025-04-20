@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.CII;
 using FacturXDotNet.Validation;
 
 namespace FacturXDotNet.API.Features.Validate;

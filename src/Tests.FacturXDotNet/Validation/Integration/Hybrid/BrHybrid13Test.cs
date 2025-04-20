@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.HighPerformance;
+using CommunityToolkit.HighPerformance;
 using FacturXDotNet;
 using FacturXDotNet.Generation.FacturX;
 using FacturXDotNet.Validation;

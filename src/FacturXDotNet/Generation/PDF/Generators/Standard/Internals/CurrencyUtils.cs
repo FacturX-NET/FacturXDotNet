@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Generation.PDF.Generators.Standard.Internals;
+namespace FacturXDotNet.Generation.PDF.Generators.Standard.Internals;
 
 static class CurrencyUtils
 {

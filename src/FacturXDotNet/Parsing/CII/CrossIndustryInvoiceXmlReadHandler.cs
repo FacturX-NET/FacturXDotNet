@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using FacturXDotNet.Models.CII;
 using FacturXDotNet.Parsing.CII.Exceptions;
 using Microsoft.Extensions.Logging;

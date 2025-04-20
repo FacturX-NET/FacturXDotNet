@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.API.Features.Information.Models;
+namespace FacturXDotNet.API.Features.Information.Models;
 
 /// <summary>
 ///     A package used by the API project.

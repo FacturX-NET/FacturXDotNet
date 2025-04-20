@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.CII;
+namespace FacturXDotNet.Models.CII;
 
 /// <summary>
 ///     Code list for the Tax Scheme identifiers for VAT.

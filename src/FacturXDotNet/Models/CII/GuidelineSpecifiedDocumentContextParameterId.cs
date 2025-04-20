@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.CII;
+namespace FacturXDotNet.Models.CII;
 
 /// <summary>
 ///     <b>Specification identifier</b> - An identification of the specification containing the total set of rules regarding semantic content, cardinalities and business rules to

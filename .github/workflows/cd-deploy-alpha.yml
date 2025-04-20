@@ -1,0 +1,19 @@
+name: Continuous Deployment - Publish alpha build
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+-alpha'
+  workflow_dispatch:
+
+jobs:
+  build-deploy-api-editor:
+    name: Build & Deploy API & Editor
+    uses: ./.github/workflows/reusable-build-deploy-api-editor.yml
+    with:
+      build-name: alpha
+      remove-old-image: true
+    secrets:
+      PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+      PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+      PROD_SSH_USER: ${{ secrets.PROD_SSH_USER }}

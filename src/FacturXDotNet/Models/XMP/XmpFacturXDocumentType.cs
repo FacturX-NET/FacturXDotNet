@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.XMP;
+namespace FacturXDotNet.Models.XMP;
 
 /// <summary>
 ///     Factur-X document type: INVOICE or ORDER.

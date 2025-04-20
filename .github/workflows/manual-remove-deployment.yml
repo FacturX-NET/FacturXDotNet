@@ -1,0 +1,20 @@
+name: Manual Deployment - Remove deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      build-name:
+        description: The name of the deployed build to remove.
+        type: string
+        required: true
+
+jobs:
+  remove-deployment:
+    name: Remove Deployment
+    uses: ./.github/workflows/reusable-remove-deployment.yml
+    with:
+      build-name: ${{ inputs.build-name }}
+    secrets:
+      PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+      PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+      PROD_SSH_USER: ${{ secrets.PROD_SSH_USER }}

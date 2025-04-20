@@ -1,4 +1,4 @@
-﻿using System.CommandLine;
+using System.CommandLine;
 using System.CommandLine.Help;
 using System.Reflection;
 using FacturXDotNet.CLI.Extract;

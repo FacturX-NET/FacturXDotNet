@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.CII;
 
 namespace FacturXDotNet.Generation.CII.Internals.Providers;
 

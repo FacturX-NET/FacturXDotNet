@@ -1,0 +1,20 @@
+name: Continuous Deployment - Deploy Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  build-deploy-api-editor:
+    name: Build & Deploy to pr${{ github.event.number }}.facturxdotnet.org
+    uses: ./.github/workflows/reusable-build-deploy-api-editor.yml
+    with:
+      build-name: pr${{ github.event.number }}
+      remove-old-image: true
+    secrets:
+      PROD_SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
+      PROD_SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+      PROD_SSH_USER: ${{ secrets.PROD_SSH_USER }}

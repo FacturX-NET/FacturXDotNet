@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Validation.BusinessRules;
+namespace FacturXDotNet.Validation.BusinessRules;
 
 /// <summary>
 ///     Logger that logs the details of business rules.

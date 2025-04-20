@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using FacturXDotNet.API.Features.Generate.Models;
 using FacturXDotNet.API.Features.Generate.Requests;

@@ -1,4 +1,4 @@
-﻿namespace Tests.FacturXDotNet.Validation.Integration.CII.BrCo;
+namespace Tests.FacturXDotNet.Validation.Integration.CII.BrCo;
 
 [TestClass]
 public class BrCo09Test

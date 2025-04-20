@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.HighPerformance;
+using CommunityToolkit.HighPerformance;
 using FacturXDotNet.Extensions;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;

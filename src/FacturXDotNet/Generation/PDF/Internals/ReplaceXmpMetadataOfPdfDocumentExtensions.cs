@@ -1,4 +1,4 @@
-﻿using PdfSharp.Pdf;
+using PdfSharp.Pdf;
 using PdfSharp.Pdf.Advanced;
 
 namespace FacturXDotNet.Generation.PDF.Internals;

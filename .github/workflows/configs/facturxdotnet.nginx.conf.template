@@ -1,0 +1,46 @@
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    ssl_certificate /etc/letsencrypt/live/facturxdotnet.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/facturxdotnet.org/privkey.pem;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+    keepalive_timeout 70;
+
+    server_name {BUILD-NAME}.facturxdotnet.org;
+    root /var/www/{BUILD-NAME}.facturxdotnet.org;
+    error_log /var/log/nginx/{BUILD-NAME}.facturxdotnet.org.error.log;
+    access_log /var/log/nginx/{BUILD-NAME}.facturxdotnet.org.access.log;
+    
+    try_files /maintenance.html $uri;
+    
+    location /editor {
+        try_files $uri /editor/index.html;
+    }
+    
+    location /api {
+        proxy_pass http://127.0.0.1:{PORT};
+        proxy_set_header Host $host;
+    }
+    
+    location / {
+        return 301 https://{BUILD-NAME}.facturxdotnet.org/editor$uri;
+    }
+    
+    # ssl_stapling on;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_trusted_certificate /etc/letsencrypt/live/facturxdotnet.org/fullchain.pem;
+
+    ####    Session Tickets
+    # Session Cache doit avoir la même valeur sur tous les blocs "server".
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    ssl_session_tickets on;
+    ssl_session_ticket_key /etc/nginx/ssl/ticket.key;
+    ssl_dhparam /etc/nginx/ssl/dhparam4.pem;
+
+    ####    ECDH Curve
+    ssl_ecdh_curve secp384r1;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers 'AES128-SHA:AES256-SHA:RC4-SHA:DES-CBC3-SHA:RC4-MD5';
+}

@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Models.CII;
+using FacturXDotNet.Models.CII;
 using PdfSharp.Pdf;
 
 namespace FacturXDotNet.Generation.PDF;

@@ -1,4 +1,4 @@
-﻿using FacturXDotNet.Generation.XMP;
+using FacturXDotNet.Generation.XMP;
 using FacturXDotNet.Models.XMP;
 using PdfSharp.Pdf;
 

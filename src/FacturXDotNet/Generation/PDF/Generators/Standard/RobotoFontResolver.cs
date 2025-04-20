@@ -1,4 +1,4 @@
-﻿using PdfSharp.Drawing;
+using PdfSharp.Drawing;
 using PdfSharp.Fonts;
 
 namespace FacturXDotNet.Generation.PDF.Generators.Standard;

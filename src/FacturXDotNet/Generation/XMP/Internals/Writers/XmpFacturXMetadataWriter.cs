@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using FacturXDotNet.Models.XMP;
 
 namespace FacturXDotNet.Generation.XMP.Internals.Writers;

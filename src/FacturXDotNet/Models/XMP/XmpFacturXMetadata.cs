@@ -1,4 +1,4 @@
-﻿namespace FacturXDotNet.Models.XMP;
+namespace FacturXDotNet.Models.XMP;
 
 /// <summary>
 ///     <b>Factur-X PDFA Extension Schema</b>
