@@ -44,6 +44,7 @@
     --gradient-ratio: 80%;
 }
 
+.dotnet-api-reference-page,
 .openapi-specification-page {
     --vp-layout-max-width: 1540px; /* default: 1440px */
     --vp-sidebar-width: 372px; /* default: 272px */

@@ -1,0 +1,5 @@
+outputPath: md
+yamlPath: metadata
+typesGrouping:
+  enabled: true
+  minCount: 1

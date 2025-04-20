@@ -58,3 +58,6 @@ node_modules
 pnpm-global
 TODOs.md
 *.timestamp-*.mjs
+
+src/api-reference/**
+!src/api-reference/overview.md

@@ -2,6 +2,7 @@ import {defineConfigWithTheme} from "vitepress"; // https://vitepress.dev/refere
 import {withPwa} from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
 import {useSidebar} from "vitepress-openapi";
 import {groupIconVitePlugin} from "vitepress-plugin-group-icons";
+import {getSidebar} from "vitepress-plugin-auto-sidebar";
 import spec from "../src/assets/facturxdotnet.openapi.json" with {type: "json"};
 
 const specSidebar = useSidebar({
@@ -60,7 +61,7 @@ export default withPwa(
               link: "/openapi-specification/introduction",
             },
             { text: "CLI", link: "/cli/getting-started" },
-            { text: ".NET API reference", link: "/api-reference/overview" },
+            { text: ".NET API reference", link: "/api-reference/index" },
           ],
         },
       ],
@@ -137,10 +138,14 @@ export default withPwa(
           },
         ],
         "/api-reference/": [
-          {
-            text: ".NET library",
-            items: [{ text: "API reference", link: "/library/api-reference" }],
-          },
+          { text: "Index", link: "/api-reference/index" },
+          ...(getSidebar({
+            contentRoot: "/src",
+            contentDirs: ["api-reference/"],
+            useFrontmatter: true,
+            collapsed: true,
+            collapsible: true,
+          })[0]?.items ?? []),
           {
             text: "<span class='sidebar-footer'>v{VERSION}</span>",
           },
