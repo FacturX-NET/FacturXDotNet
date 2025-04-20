@@ -91,9 +91,8 @@ jobs:
 
       - name: Start maintenance mode
         run: |
-          ssh remote 'sudo mkdir -p /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance'
-          ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance/*'
-          ssh remote 'sudo mv ~/${{ github.run_id }}/maintenance/* /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance/'
+          ssh remote 'sudo rm -rf /var/www/${{ inputs.prerelease }}.facturxdotnet.org/maintenance'
+          ssh remote 'sudo mv ~/${{ github.run_id }}/maintenance /var/www/${{ inputs.prerelease }}.facturxdotnet.org/'
           ssh remote 'sudo mv ~/${{ github.run_id }}/maintenance.nginx.conf /etc/nginx/conf.d/${{ inputs.prerelease }}.facturxdotnet.org.conf'
 
       - name: Restart nginx
