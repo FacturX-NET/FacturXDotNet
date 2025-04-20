@@ -58,6 +58,7 @@ jobs:
     needs:
       - build-api-docker-image
       - build-editor-application
+      - build-docs-application
     uses: ./.github/workflows/reusable-deploy-api-editor-docs.yml
     with:
       editor-artifact-name: editor
