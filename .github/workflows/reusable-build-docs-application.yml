@@ -35,6 +35,7 @@ jobs:
 
       - name: Set version number
         run: |
+          sed -i -e 's/{VERSION}/${{ inputs.version }}/g' docs/.vitepress/config.mts
           sed -i -e 's/{VERSION}/${{ inputs.version }}/g' docs/src/index.md
 
       - name: Build
