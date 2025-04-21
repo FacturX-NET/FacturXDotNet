@@ -81,6 +81,14 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
 
         await using StreamWriter writer = new(stream);
 
+        await writer.WriteLineAsync("---");
+        await writer.WriteLineAsync("title: CLI");
+        await writer.WriteLineAsync("editLink: false");
+        await writer.WriteLineAsync("prev: false");
+        await writer.WriteLineAsync("next: false");
+        await writer.WriteLineAsync("---");
+        await writer.WriteLineAsync("");
+
         await writer.WriteLineAsync($"# {AssemblyTitle}");
         await writer.WriteLineAsync($"**Version**: {AssemblyVersion}\\");
         await writer.WriteLineAsync($"**Copyright**: {AssemblyCopyright}\\");
@@ -94,6 +102,14 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
         stream.SetLength(0);
 
         await using StreamWriter writer = new(stream);
+
+        await writer.WriteLineAsync("---");
+        await writer.WriteLineAsync($"title: CLI {command.Name}");
+        await writer.WriteLineAsync("editLink: false");
+        await writer.WriteLineAsync("prev: false");
+        await writer.WriteLineAsync("next: false");
+        await writer.WriteLineAsync("---");
+        await writer.WriteLineAsync("");
 
         await writer.WriteLineAsync($"# {command.Name}");
         await writer.WriteLineAsync($"{command.Description}");
