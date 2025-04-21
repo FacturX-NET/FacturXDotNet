@@ -6,13 +6,11 @@
     "preview": "vitepress preview --port 40850"
   },
   "devDependencies": {
-    "@vite-pwa/vitepress": "^1.0.0",
     "vitepress": "^1.6.3",
     "vitepress-plugin-nprogress": "^0.0.4"
   },
   "dependencies": {
     "vitepress-openapi": "^0.0.3-alpha.76",
-    "vitepress-plugin-auto-sidebar": "^1.3.5",
-    "vitepress-plugin-group-icons": "^1.5.2"
+    "vitepress-plugin-auto-sidebar": "^1.3.5"
   }
 }
