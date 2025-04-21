@@ -150,6 +150,9 @@ jobs:
       - name: Install dependencies
         run: cd docs; npm ci
 
+      - name: Install dependencies in editor (for license-report)
+        run: cd src/FacturXDotNet.WebEditor; npm ci
+
       - name: Install license-report
         run: npm i -g license-report
 
