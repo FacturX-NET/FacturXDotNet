@@ -13,9 +13,11 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
 
     static readonly Option<string> OutputPathOption;
 
-    static readonly string AssemblyTitle;
-    static readonly string? AssemblyCopyright;
+    static readonly string AssemblyProduct;
     static readonly string AssemblyVersion;
+    static readonly string? AssemblyDescription;
+    static readonly string? AssemblyCopyright;
+    static readonly string? AssemblyRepositoryUrl;
 
     static MarkdownHelpCommand()
     {
@@ -28,9 +30,11 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
 
         Assembly assembly = typeof(Program).Assembly;
         AssemblyName assemblyName = assembly.GetName();
-        AssemblyTitle = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "FacturX.NET";
-        AssemblyCopyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
+        AssemblyProduct = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "FacturX.NET";
         AssemblyVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? assemblyName.Version?.ToString() ?? "~dev";
+        AssemblyDescription = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
+        AssemblyCopyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
+        AssemblyRepositoryUrl = assembly.GetCustomAttributes<AssemblyMetadataAttribute>().FirstOrDefault(metadata => metadata.Key == "RepositoryUrl")?.Value;
     }
 
     public override Command GetCommand()
@@ -90,9 +94,18 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
         await writer.WriteLineAsync("---");
         await writer.WriteLineAsync("");
 
-        await writer.WriteLineAsync($"# {AssemblyTitle}");
+        await writer.WriteLineAsync($"# {AssemblyProduct}");
+        await writer.WriteLineAsync($"{AssemblyDescription}");
+        await writer.WriteLineAsync();
+
         await writer.WriteLineAsync($"**Version**: {AssemblyVersion}\\");
         await writer.WriteLineAsync($"**Copyright**: {AssemblyCopyright}");
+        await writer.WriteLineAsync();
+
+        if (!string.IsNullOrWhiteSpace(AssemblyRepositoryUrl))
+        {
+            await writer.WriteLineAsync($"**Repository**: [{AssemblyRepositoryUrl}]({AssemblyRepositoryUrl})");
+        }
 
         await WriteCommandHelpAsync(writer, command);
     }
