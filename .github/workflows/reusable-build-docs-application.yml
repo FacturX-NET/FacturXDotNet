@@ -102,7 +102,9 @@ jobs:
         run: cd src; dotnet build FacturXDotNet.API/FacturXDotNet.API.csproj --configuration Release --no-restore
 
       - name: Copy OpenAPI specification
-        run: cp src/FacturXDotNet.API/FacturXDotNet.API.json docs/src/assets/facturxdotnet.openapi.json
+        run: |
+          mkdir -p docs/src/assets/
+          cp src/FacturXDotNet.API/FacturXDotNet.API.json docs/src/assets/facturxdotnet.openapi.json
 
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
