@@ -131,8 +131,12 @@ jobs:
       - name: Replace current build of Editor application
         run: |
           echo "Uploading Editor app..."
+          tar -cf dist/editor.tar dist/editor/*
+          pigz dist/editor.tar
           ssh remote 'mkdir -p ~/${{ github.run_id }}/editor'
-          scp -C -r dist/editor/* remote:~/${{ github.run_id }}/editor
+          scp -C -r dist/editor.tar.gz remote:~/${{ github.run_id }}/editor
+          ssh remote 'pigz -d ~/${{ github.run_id }}/editor/editor.tar.gz'
+          ssh remote 'rm ~/${{ github.run_id }}/editor/editor.tar.gz'
 
           echo "Removing old Editor release..."
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.build-name }}.facturxdotnet.org/editor'
