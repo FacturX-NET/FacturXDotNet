@@ -60,6 +60,9 @@ jobs:
       - name: Install dfmg
         run: dotnet tool install -g DocFxMarkdownGen
 
+      - name: Install dotnet-project-licenses
+        run: dotnet tool install --g dotnet-project-licenses
+
       - name: Generate .NET API reference
         run: |
           mkdir -p dist/api-reference          
@@ -138,6 +141,17 @@ jobs:
           node-version: 22.x
           cache: npm
           cache-dependency-path: docs/package-lock.json
+
+      - name: Install license-report
+        run: npm i -g license-report
+
+      - name: Generate licenses
+        run: |
+          license-report --config docs/license-report-config.json --package src/FacturXDotNet.WebEditor/package.json > docs/src/assets/editor-licenses.json
+          license-report --config docs/license-report-config.json --package docs/package.json > docs/src/assets/docs-licenses.json
+          dotnet-project-licenses -i src/FacturXDotNet/FacturXDotNet.csproj --json --output-directory docs/src/assets --outfile library-licenses.json
+          dotnet-project-licenses -i src/FacturXDotNet.API/FacturXDotNet.API.csproj --json --output-directory docs/src/assets --outfile api-licenses.json
+          dotnet-project-licenses -i src/FacturXDotNet.CLI/FacturXDotNet.CLI.csproj --json --output-directory docs/src/assets --outfile cli-licenses.json
 
       - name: Install dependencies
         run: cd docs; npm ci
