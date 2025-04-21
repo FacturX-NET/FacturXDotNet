@@ -131,10 +131,11 @@ jobs:
       - name: Replace current build of Editor application
         run: |
           echo "Uploading Editor app..."
-          tar -cf dist/editor.tar dist/editor/*
-          pigz dist/editor.tar
+          cd dist/editor
+          tar -cf editor.tar *
+          pigz editor.tar
           ssh remote 'mkdir -p ~/${{ github.run_id }}/editor'
-          scp -C -r dist/editor.tar.gz remote:~/${{ github.run_id }}/editor
+          scp -C -r editor.tar.gz remote:~/${{ github.run_id }}/editor
           ssh remote 'cd ~/${{ github.run_id }}/editor; pigz -d editor.tar.gz; tar -xf editor.tar; rm editor.tar'
 
           echo "Removing old Editor release..."
@@ -147,10 +148,11 @@ jobs:
       - name: Replace current build of Docs application
         run: |
           echo "Uploading Docs app..."
-          tar -cf dist/docs.tar dist/docs/*
-          pigz dist/docs.tar
+          cd dist/docs
+          tar -cf docs.tar *
+          pigz docs.tar
           ssh remote 'mkdir -p ~/${{ github.run_id }}/docs'
-          scp -C -r dist/docs.tar.gz remote:~/${{ github.run_id }}/docs
+          scp -C -r docs.tar.gz remote:~/${{ github.run_id }}/docs
           ssh remote 'cd ~/${{ github.run_id }}/docs; pigz -d docs.tar.gz; tar -xf docs.tar; rm docs.tar'
 
           echo "Removing old Docs release..."
