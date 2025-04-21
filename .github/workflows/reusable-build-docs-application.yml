@@ -47,9 +47,7 @@ jobs:
 
       - name: Generate .NET API reference
         run: |
-          mkdir -p dist/api-reference
-          cp docfx.json dist/api-reference/docfx.json
-          
+          mkdir -p dist/api-reference          
           cd dist/api-reference
           
           echo "Writing docfx.json...
