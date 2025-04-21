@@ -151,9 +151,7 @@ jobs:
           pigz dist/docs.tar
           ssh remote 'mkdir -p ~/${{ github.run_id }}/docs'
           scp -C -r dist/docs.tar.gz remote:~/${{ github.run_id }}/docs
-          ssh remote 'pigz -d ~/${{ github.run_id }}/docs/docs.tar.gz'
-          ssh remote 'tar -xf ~/${{ github.run_id }}/docs/docs.tar'
-          ssh remote 'rm ~/${{ github.run_id }}/docs/docs.tar'
+          ssh remote 'cd ~/${{ github.run_id }}/docs; pigz docs.tar.gz; tar -xf docs.tar; rm docs.tar'
 
           echo "Removing old Docs release..."
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.build-name }}.facturxdotnet.org/docs'
