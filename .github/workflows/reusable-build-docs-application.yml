@@ -92,6 +92,10 @@ jobs:
           find . -type f -name "*.md" -exec sed -i '0,/title:/s//prev: false\ntitle:/' {} \;
           find . -type f -name "*.md" -exec sed -i '0,/title:/s//next: false\ntitle:/' {} \;
           
+          # replace &lt; and &gt; by < and >
+          find . -type f -name "*.md" -exec sed -i 's/&lt;/</g' {} \;
+          find . -type f -name "*.md" -exec sed -i 's/&gt;/>/g' {} \;
+          
           mkdir -p ../../docs/src/api-reference/
           rm -rf ../../docs/src/api-reference/*
           mv md/* ../../docs/src/api-reference/
