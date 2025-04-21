@@ -34,7 +34,7 @@ export default withPwa(
   defineConfigWithTheme({
     srcDir: "./src",
     head: [
-      ["link", { rel: "icon", href: "/favicon.ico" }],
+      ["link", { rel: "icon", href: "/base/favicon.ico" }],
       [
         "link",
         {
