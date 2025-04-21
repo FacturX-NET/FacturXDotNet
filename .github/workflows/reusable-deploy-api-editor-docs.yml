@@ -110,6 +110,20 @@ jobs:
           ssh remote 'sudo systemctl restart nginx'
 
       # UPDATE applications
+      - name: Upload assets
+        run: |
+          echo "Uploading assets..."
+          cd .github/workflows/assets
+          tar -cf assets.tar *
+          pigz assets.tar
+          ssh remote 'mkdir -p ~/${{ github.run_id }}/assets'
+          scp -C -r assets.tar.gz remote:~/${{ github.run_id }}/assets
+          ssh remote 'cd ~/${{ github.run_id }}/assets; pigz -d assets.tar.gz; tar -xf assets.tar; rm assets.tar'
+          
+          echo "Moving new assets..."
+          ssh remote 'sudo rm -f /var/www/${{ inputs.build-name }}.facturxdotnet.org/assets/*'
+          ssh remote 'sudo mv ~/${{ github.run_id }}/assets/* /var/www/${{ inputs.build-name }}.facturxdotnet.org/assets'
+
       - name: Pull new API image and restart application
         run: |
           echo "Building API docker-compose file..."
