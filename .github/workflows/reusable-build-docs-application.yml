@@ -147,6 +147,9 @@ jobs:
           cache: npm
           cache-dependency-path: docs/package-lock.json
 
+      - name: Install dependencies
+        run: cd docs; npm ci
+
       - name: Install license-report
         run: npm i -g license-report
 
@@ -191,9 +194,6 @@ jobs:
           cat docs/src/assets/cli-licenses.json
           echo
           echo
-
-      - name: Install dependencies
-        run: cd docs; npm ci
 
       - name: Set version number
         run: |
