@@ -122,7 +122,7 @@ jobs:
           
           echo "Moving new assets..."
           ssh remote 'sudo rm -f /var/www/${{ inputs.build-name }}.facturxdotnet.org/assets/*'
-          ssh remote 'sudo mv ~/${{ github.run_id }}/assets/* /var/www/${{ inputs.build-name }}.facturxdotnet.org/assets'
+          ssh remote 'sudo mv ~/${{ github.run_id }}/assets/* /var/www/${{ inputs.build-name }}.facturxdotnet.org/assets/'
 
       - name: Pull new API image and restart application
         run: |
