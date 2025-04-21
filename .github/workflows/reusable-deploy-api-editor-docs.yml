@@ -75,7 +75,7 @@ jobs:
       - name: Find available port
         id: find_port
         run: |
-          scp .github/workflows/scripts/get_random_port.sh remote:~/${{ github.run_id }}/get_random_port.sh
+          scp -C .github/workflows/scripts/get_random_port.sh remote:~/${{ github.run_id }}/get_random_port.sh
           ssh remote 'chmod +x ~/${{ github.run_id }}/get_random_port.sh'
           PORT=$(ssh remote '~/${{ github.run_id }}/get_random_port.sh')
           echo "Random port: $PORT"
@@ -93,11 +93,11 @@ jobs:
           echo
           
           echo "Uploading maintenance nginx file..."
-          scp -r dist/maintenance.nginx.conf remote:~/${{ github.run_id }}/maintenance.nginx.conf
+          scp -C -r dist/maintenance.nginx.conf remote:~/${{ github.run_id }}/maintenance.nginx.conf
           
           echo "Uploading maintenance files..."
           ssh remote 'mkdir -p ~/${{ github.run_id }}/maintenance'
-          scp -r .github/workflows/pages/maintenance/* remote:~/${{ github.run_id }}/maintenance
+          scp -C -r .github/workflows/pages/maintenance/* remote:~/${{ github.run_id }}/maintenance
 
       - name: Start maintenance mode
         run: |
@@ -122,7 +122,7 @@ jobs:
 
           echo "Publishing API docker-compose file..."
           ssh remote 'mkdir -p ~/facturxdotnet/${{ inputs.build-name }}/api'
-          scp dist/docker-compose.yml remote:~/facturxdotnet/${{ inputs.build-name }}/api/docker-compose.yml
+          scp -C dist/docker-compose.yml remote:~/facturxdotnet/${{ inputs.build-name }}/api/docker-compose.yml
 
           echo "Restarting API app..."
           ssh remote 'cd facturxdotnet/${{ inputs.build-name }}/api; docker compose pull'
@@ -132,7 +132,7 @@ jobs:
         run: |
           echo "Uploading Editor app..."
           ssh remote 'mkdir -p ~/${{ github.run_id }}/editor'
-          scp -r dist/editor/* remote:~/${{ github.run_id }}/editor
+          scp -C -r dist/editor/* remote:~/${{ github.run_id }}/editor
 
           echo "Removing old Editor release..."
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.build-name }}.facturxdotnet.org/editor'
@@ -145,7 +145,7 @@ jobs:
         run: |
           echo "Uploading Docs app..."
           ssh remote 'mkdir -p ~/${{ github.run_id }}/docs'
-          scp -r dist/docs/* remote:~/${{ github.run_id }}/docs
+          scp -C -r dist/docs/* remote:~/${{ github.run_id }}/docs
 
           echo "Removing old Docs release..."
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.build-name }}.facturxdotnet.org/docs'
@@ -166,7 +166,7 @@ jobs:
 
           echo "Publishing nginx configuration file..."
           ssh remote 'mkdir -p ~/${{ github.run_id }}/nginx'
-          scp dist/${{ inputs.build-name }}.facturxdotnet.org.conf remote:~/${{ github.run_id }}/nginx/${{ inputs.build-name }}.facturxdotnet.org.conf
+          scp -C dist/${{ inputs.build-name }}.facturxdotnet.org.conf remote:~/${{ github.run_id }}/nginx/${{ inputs.build-name }}.facturxdotnet.org.conf
           ssh remote 'sudo cp ~/${{ github.run_id }}/nginx/${{ inputs.build-name }}.facturxdotnet.org.conf /etc/nginx/conf.d/${{ inputs.build-name }}.facturxdotnet.org.conf'
 
       # EXIT maintenance mode
