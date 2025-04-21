@@ -1,6 +1,11 @@
 ---
 title: Introduction
 pageClass: openapi-specification-page
+aside: false
+outline: false
+editLink: false
+prev: false
+next: false
 ---
 
 <script setup lang="ts">
