@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.Parsing;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 using Spectre.Console;
@@ -138,12 +139,11 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
         if (command.Options.Count > 0)
         {
             await writer.WriteLineAsync("## Options");
-            await writer.WriteLineAsync("| Option | Type | Description |");
-            await writer.WriteLineAsync("| :--- | :--- | :--- |");
             foreach (Option option in command.Options.Where(o => !o.Hidden))
             {
                 await WriteOptionHelpAsync(writer, option);
             }
+            await writer.WriteLineAsync();
         }
 
         if (command.Subcommands.Count > 0)
@@ -157,15 +157,18 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
     }
 
     static async Task WriteArgumentHelpAsync(StreamWriter writer, Argument argument) =>
-        await writer.WriteLineAsync($"| {argument.Name} | {TypeToString(argument.ValueType)} | {argument.Description} |");
+        await writer.WriteLineAsync($"| {argument.Name} | {SimpleTypeToString(argument.ValueType)} | {argument.Description} |");
 
     static async Task WriteOptionHelpAsync(StreamWriter writer, Option option)
     {
         StringBuilder nameBuilder = new();
-        nameBuilder.Append(option.Name);
-        nameBuilder.Append(string.Join(string.Empty, option.Aliases.Select(a => $", {a}")));
+        nameBuilder.Append($"`{option.Name}`");
+        nameBuilder.Append(string.Join(string.Empty, option.Aliases.Select(a => $", `{a}`")));
 
-        await writer.WriteLineAsync($"| {nameBuilder} | {TypeToString(option.ValueType)} | {option.Description} |");
+        await writer.WriteLineAsync($"- {nameBuilder}\\");
+        await writer.WriteLineAsync($"{option.Description}\\");
+        await writer.WriteLineAsync($"**Type**: {TypeToString(option.ValueType)}");
+        await writer.WriteLineAsync("");
     }
 
     static async Task WriteSubCommandHelpAsync(StreamWriter writer, Command subcommand)
@@ -180,21 +183,55 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
         }
     }
 
+    static bool IsEnumerableType(Type type, [NotNullWhen(true)] out Type? elementType)
+    {
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+        {
+            elementType = type.GetGenericArguments()[0];
+            return true;
+        }
+
+        Type? enumerableInterface = type.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+        if (enumerableInterface != null)
+        {
+            elementType = enumerableInterface.GetGenericArguments()[0];
+            return true;
+        }
+
+        elementType = null;
+        return false;
+    }
+
     static string TypeToString(Type type)
     {
+        if (IsEnumerableType(type, out Type? elementType))
+        {
+            if (elementType == typeof(char))
+            {
+                return SimpleTypeToString(typeof(string));
+            }
+
+            return $"{TypeToString(elementType)}[]";
+        }
+
         if (type.IsEnum)
         {
             return EnumTypeToString(type);
         }
 
-        if (type == typeof(string))
+        return SimpleTypeToString(type);
+    }
+
+    static string SimpleTypeToString(Type type)
+    {
+        if (type == typeof(string) || type == typeof(FileInfo))
         {
-            return "string";
+            return "`string`";
         }
 
         if (type == typeof(bool))
         {
-            return "\"true\", \"false\"";
+            return "`boolean`";
         }
 
         return type.ToString();
@@ -203,7 +240,7 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
     static string EnumTypeToString(Type type)
     {
         IEnumerable<object> values = Enum.GetValues(type).OfType<object>();
-        return string.Join(", ", values.Select(v => $"\"{v.ToString()?.ToLowerInvariant()}\""));
+        return string.Join(", ", values.Select(v => $"`{v.ToString()?.ToLowerInvariant()}`"));
     }
 
     protected override MarkdownHelpOptions ParseOptions(CommandResult result) =>
