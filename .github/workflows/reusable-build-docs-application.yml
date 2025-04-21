@@ -55,7 +55,7 @@ jobs:
           mkdir -p dist/api-reference          
           cd dist/api-reference
           
-          echo "Writing docfx.json...
+          echo "Writing docfx.json..."
           echo "{"                                                                            > docfx.json
           echo "  "metadata": [{"                                                             >> docfx.json
           echo "    "src": [{"                                                                >> docfx.json
@@ -74,7 +74,7 @@ jobs:
           
           docfx docfx.json
           
-          echo "Writing config.yaml...
+          echo "Writing config.yaml..."
           echo "outputPath: md"       > config.yaml
           echo "yamlPath: metadata"   >> config.yaml
           echo "typesGrouping:"       >> config.yaml
