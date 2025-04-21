@@ -110,6 +110,15 @@ jobs:
           rm -rf ../../docs/src/api-reference/*
           mv md/* ../../docs/src/api-reference/
 
+      - name: Build CLI
+        env:
+          MINVERVERSIONOVERRIDE: ${{ inputs.version }}
+        run: cd src; dotnet build FacturXDotNet.CLI/FacturXDotNet.CLI.csproj --configuration Release --no-restore
+
+      - name: Generate CLI documentation
+        run: |
+          src/FacturXDotNet.CLI/bin/Release/net9.0/facturx help-as-md -o docs/src/cli
+
       - name: Build API
         env:
           MINVERVERSIONOVERRIDE: ${{ inputs.version }}
