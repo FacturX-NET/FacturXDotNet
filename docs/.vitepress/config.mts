@@ -21,7 +21,7 @@ let cliItems =
   getSidebar({
     contentRoot: "/src",
     contentDirs: ["cli/"],
-    useFrontmatter: true,
+    useFrontmatter: false,
     collapsed: false,
     collapsible: false,
   })[0]?.items ?? [];

@@ -92,7 +92,7 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
 
         await writer.WriteLineAsync($"# {AssemblyTitle}");
         await writer.WriteLineAsync($"**Version**: {AssemblyVersion}\\");
-        await writer.WriteLineAsync($"**Copyright**: {AssemblyCopyright}\\");
+        await writer.WriteLineAsync($"**Copyright**: {AssemblyCopyright}");
 
         await WriteCommandHelpAsync(writer, command);
     }
