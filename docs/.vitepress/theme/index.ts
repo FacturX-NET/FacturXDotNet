@@ -6,6 +6,10 @@ import "vitepress-plugin-nprogress/lib/css/index.css";
 import {theme} from "vitepress-openapi/client";
 import "vitepress-openapi/dist/style.css";
 
+import "viewerjs/dist/viewer.min.css";
+import imageViewer from "vitepress-plugin-image-viewer";
+import {useRoute} from "vitepress";
+
 import "./custom.css";
 
 export default {
@@ -14,5 +18,11 @@ export default {
   enhanceApp(ctx) {
     theme.enhanceApp(ctx);
     return vitepressNprogress(ctx);
+  },
+  setup() {
+    // Get route
+    const route = useRoute();
+    // Using
+    imageViewer(route);
   },
 };

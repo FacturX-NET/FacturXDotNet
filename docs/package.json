@@ -6,12 +6,13 @@
     "preview": "vitepress preview --port 40850"
   },
   "devDependencies": {
+    "license-report": "^6.7.2",
     "vitepress": "^1.6.3",
-    "vitepress-plugin-nprogress": "^0.0.4",
-    "license-report": "^6.7.2"
+    "vitepress-plugin-nprogress": "^0.0.4"
   },
   "dependencies": {
     "vitepress-openapi": "^0.0.3-alpha.76",
-    "vitepress-plugin-auto-sidebar": "^1.3.5"
+    "vitepress-plugin-auto-sidebar": "^1.3.5",
+    "vitepress-plugin-image-viewer": "^1.1.6"
   }
 }
