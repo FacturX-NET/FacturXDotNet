@@ -87,7 +87,7 @@ jobs:
           dfmg
           
           # add frontmatter attributes to generated files
-          find . -type f -name "*.md" -exec sed -i '0,/title:/s//pageClass: pageClass: dotnet-api-reference-page\ntitle:/' {} \;
+          find . -type f -name "*.md" -exec sed -i '0,/title:/s//pageClass: dotnet-api-reference-page\ntitle:/' {} \;
           find . -type f -name "*.md" -exec sed -i '0,/title:/s//editLink: false\ntitle:/' {} \;
           find . -type f -name "*.md" -exec sed -i '0,/title:/s//prev: false\ntitle:/' {} \;
           find . -type f -name "*.md" -exec sed -i '0,/title:/s//next: false\ntitle:/' {} \;
