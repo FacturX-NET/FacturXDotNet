@@ -60,5 +60,5 @@ TODOs.md
 *.timestamp-*.mjs
 
 src/api-reference/**
-!src/api-reference/overview.md
+src/cli/**
 src/assets/facturxdotnet.openapi.json

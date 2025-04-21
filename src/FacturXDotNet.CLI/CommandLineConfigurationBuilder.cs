@@ -3,6 +3,7 @@ using System.CommandLine.Help;
 using System.Reflection;
 using FacturXDotNet.CLI.Extract;
 using FacturXDotNet.CLI.Generate;
+using FacturXDotNet.CLI.MarkdownHelp;
 using FacturXDotNet.CLI.Validate;
 
 namespace FacturXDotNet.CLI;
@@ -34,6 +35,7 @@ public static class CommandLineConfigurationBuilder
         rootCommand.Add(new GenerateCommand().GetCommand());
         rootCommand.Add(new ValidateCommand().GetCommand());
         rootCommand.Add(new ExtractCommand().GetCommand());
+        rootCommand.Add(new MarkdownHelpCommand(rootCommand).GetCommand());
 
         return configuration;
     }

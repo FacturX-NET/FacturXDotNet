@@ -17,6 +17,19 @@ const specSidebar = useSidebar({
   },
 });
 
+let cliItems =
+  getSidebar({
+    contentRoot: "/src",
+    contentDirs: ["cli/"],
+    useFrontmatter: true,
+    collapsed: false,
+    collapsible: false,
+  })[0]?.items ?? [];
+cliItems = cliItems.map((item) => ({
+  ...item,
+  text: item.text.toLowerCase() === "subcommands" ? "Sub Commands" : item.text,
+}));
+
 let apiReferenceItems =
   getSidebar({
     contentRoot: "/src",
@@ -71,7 +84,7 @@ export default withPwa(
               text: "OpenAPI specification",
               link: "/openapi-specification/introduction",
             },
-            { text: "CLI", link: "/cli/getting-started" },
+            { text: "CLI", link: "/cli/facturx" },
             { text: ".NET API reference", link: "/api-reference/index" },
           ],
         },
@@ -143,10 +156,7 @@ export default withPwa(
           },
         ],
         "/cli/": [
-          {
-            text: "CLI",
-            items: [{ text: "CLI usage", link: "/cli/cli-usage" }],
-          },
+          ...cliItems,
           {
             text: "<span class='sidebar-footer'>v{VERSION}</span>",
           },
