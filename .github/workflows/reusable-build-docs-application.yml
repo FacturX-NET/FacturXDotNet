@@ -94,7 +94,7 @@ jobs:
           
           # fix bold tags
           find . -type f -name "*.md" -exec sed -i 's/&lt;b&gt;/**/g' {} \;
-          find . -type f -name "*.md" -exec sed -i 's/&lt;\\/b&gt;/**/g' {} \;
+          find . -type f -name "*.md" -exec sed -i 's/&lt;\/b&gt;/**/g' {} \;
           
           mkdir -p ../../docs/src/api-reference/
           rm -rf ../../docs/src/api-reference/*
