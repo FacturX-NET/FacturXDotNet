@@ -38,6 +38,11 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
+      - name: Setup .NET 7 (for dotnet-project-licenses)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
+
       - name: Setup .NET 6 (for dfmg)
         uses: actions/setup-dotnet@v4
         with:
