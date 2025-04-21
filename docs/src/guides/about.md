@@ -46,7 +46,7 @@ Thanks for checking out the project – and happy invoicing! 🚀
 FacturX.NET is built on top of reliable open-source technologies.
 To ensure transparency and maintainability, the dependencies used across the project are grouped by component and sorted by license type, making it easier to review or audit them if needed.
 
-Here’s a breakdown of the main dependencies for each part of the project:
+Here’s a breakdown of the dependencies for each part of the project:
 
 
 ### Documentation website (this website)
