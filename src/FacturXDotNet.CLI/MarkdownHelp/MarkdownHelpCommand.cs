@@ -128,12 +128,11 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
         if (command.Arguments.Count > 0)
         {
             await writer.WriteLineAsync("## Arguments");
-            await writer.WriteLineAsync("| Argument | Type | Description |");
-            await writer.WriteLineAsync("| :--- | :--- | :--- |");
             foreach (Argument argument in command.Arguments.Where(o => !o.Hidden))
             {
                 await WriteArgumentHelpAsync(writer, argument);
             }
+            await writer.WriteLineAsync();
         }
 
         if (command.Options.Count > 0)
@@ -156,21 +155,6 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
         }
     }
 
-    static async Task WriteArgumentHelpAsync(StreamWriter writer, Argument argument) =>
-        await writer.WriteLineAsync($"| {argument.Name} | {SimpleTypeToString(argument.ValueType)} | {argument.Description} |");
-
-    static async Task WriteOptionHelpAsync(StreamWriter writer, Option option)
-    {
-        StringBuilder nameBuilder = new();
-        nameBuilder.Append($"`{option.Name}`");
-        nameBuilder.Append(string.Join(string.Empty, option.Aliases.Select(a => $", `{a}`")));
-
-        await writer.WriteLineAsync($"- {nameBuilder}\\");
-        await writer.WriteLineAsync($"{option.Description}\\");
-        await writer.WriteLineAsync($"**Type**: {TypeToString(option.ValueType)}");
-        await writer.WriteLineAsync("");
-    }
-
     static async Task WriteSubCommandHelpAsync(StreamWriter writer, Command subcommand)
     {
         string subcommandTitle = subcommand.Description ?? subcommand.Name;
@@ -181,6 +165,79 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
         {
             await writer.WriteLineAsync($"Aliases: {string.Join(", ", subcommand.Aliases)}");
         }
+    }
+
+    static async Task WriteArgumentHelpAsync(StreamWriter writer, Argument argument) =>
+        await WriteSymbolHelpAsync(
+            writer,
+            new SymbolHelpArgs
+            {
+                Name = $"<{argument.Name}>",
+                Description = argument.Description,
+                Type = argument.ValueType,
+                DefaultValue = argument.HasDefaultValue ? argument.GetDefaultValue() : null
+            }
+        );
+
+    static async Task WriteOptionHelpAsync(StreamWriter writer, Option option) =>
+        await WriteSymbolHelpAsync(
+            writer,
+            new SymbolHelpArgs
+            {
+                Name = option.Name,
+                HelpName = option.HelpName,
+                Description = option.Description,
+                Required = option.Required,
+                NameAliases = option.Aliases,
+                Type = option.ValueType,
+                DefaultValue = option.HasDefaultValue ? option.GetDefaultValue() : null
+            }
+        );
+
+    static async Task WriteSymbolHelpAsync(StreamWriter writer, SymbolHelpArgs symbolHelpArgs)
+    {
+        StringBuilder nameBuilder = new();
+
+        if (!string.IsNullOrWhiteSpace(symbolHelpArgs.HelpName))
+        {
+            nameBuilder.Append($"`{symbolHelpArgs.Name} <{symbolHelpArgs.HelpName}>`");
+        }
+        else
+        {
+            nameBuilder.Append($"`{symbolHelpArgs.Name}`");
+        }
+
+
+        if (symbolHelpArgs.Required)
+        {
+            await writer.WriteAsync($"- {nameBuilder} **(required)**");
+        }
+        else
+        {
+            await writer.WriteAsync($"- {nameBuilder}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(symbolHelpArgs.Description))
+        {
+            await writer.WriteAsync($"\\\n{symbolHelpArgs.Description}");
+        }
+
+        if (symbolHelpArgs.NameAliases.Count > 0)
+        {
+            await writer.WriteAsync($"\\\n**Aliases**: {string.Join(", ", symbolHelpArgs.NameAliases.Select(a => $"`{a}`"))}");
+        }
+
+        string[] types = TypeToStrings(symbolHelpArgs.Type);
+        await writer.WriteAsync($"\\\n**Type**: `{string.Join(" | ", types)}`");
+
+        if (symbolHelpArgs.DefaultValue != null)
+        {
+            // heuristic: if there are multiple types, this is an enum, and we must lowercase the value
+            string? defaultValueString = types.Length > 0 ? symbolHelpArgs.DefaultValue.ToString()?.ToLowerInvariant() : symbolHelpArgs.DefaultValue.ToString();
+            await writer.WriteAsync($"\\\n**Default**: `{defaultValueString}`");
+        }
+
+        await writer.WriteLineAsync("\n");
     }
 
     static bool IsEnumerableType(Type type, [NotNullWhen(true)] out Type? elementType)
@@ -202,7 +259,7 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
         return false;
     }
 
-    static string TypeToString(Type type)
+    static string[] TypeToStrings(Type type)
     {
         if (IsEnumerableType(type, out Type? elementType))
         {
@@ -211,43 +268,50 @@ class MarkdownHelpCommand(RootCommand rootCommand) : CommandBase<MarkdownHelpOpt
                 return SimpleTypeToString(typeof(string));
             }
 
-            return $"{TypeToString(elementType)}[]";
+            return TypeToStrings(elementType);
         }
 
         if (type.IsEnum)
         {
-            return EnumTypeToString(type);
+            return EnumTypeToString(type).ToArray();
         }
 
         return SimpleTypeToString(type);
     }
 
-    static string SimpleTypeToString(Type type)
+    static string[] SimpleTypeToString(Type type)
     {
         if (type == typeof(string) || type == typeof(FileInfo))
         {
-            return "`string`";
+            return ["string"];
         }
 
         if (type == typeof(bool))
         {
-            return "`boolean`";
+            return ["true", "false"];
         }
 
-        return type.ToString();
+        return [type.ToString()];
     }
 
-    static string EnumTypeToString(Type type)
-    {
-        IEnumerable<object> values = Enum.GetValues(type).OfType<object>();
-        return string.Join(", ", values.Select(v => $"`{v.ToString()?.ToLowerInvariant()}`"));
-    }
+    static IEnumerable<string> EnumTypeToString(Type type) => Enum.GetValues(type).OfType<object>().Select(v => v.ToString()?.ToLowerInvariant() ?? "");
 
     protected override MarkdownHelpOptions ParseOptions(CommandResult result) =>
         new()
         {
             OutputPath = result.GetValue(OutputPathOption)
         };
+
+    class SymbolHelpArgs
+    {
+        public required string Name { get; set; }
+        public required Type Type { get; set; }
+        public string? HelpName { get; set; }
+        public string? Description { get; set; }
+        public bool Required { get; set; }
+        public ICollection<string> NameAliases { get; set; } = [];
+        public object? DefaultValue { get; set; }
+    }
 }
 
 class MarkdownHelpOptions
