@@ -3,11 +3,25 @@ import * as fs from "node:fs";
 export default {
   load(): Dependencies {
     return {
-      docs: groupDependenciesByLicense(
-        loadDependenciesFromLicenseReportOutput(
+      docs: groupDependenciesByLicense([
+        ...loadDependenciesFromLicenseReportOutput(
           "src/assets/docs-licenses.json",
         ),
-      ),
+        {
+          name: "docfx",
+          author: ".NET Foundation and Contributors",
+          version: "2.78.3",
+          license: "MIT",
+          link: "https://github.com/dotnet/docfx",
+        },
+        {
+          name: "DocFxMarkdownGen ",
+          author: "Jan0660 ",
+          version: "0.4.2",
+          license: "MIT",
+          link: "https://github.com/Jan0660/DocFxMarkdownGen",
+        },
+      ]),
       editor: groupDependenciesByLicense(
         loadDependenciesFromLicenseReportOutput(
           "src/assets/editor-licenses.json",
@@ -134,6 +148,7 @@ interface DotNetProjectLicensesOutputElement {
 
 const gitPlusUrlRegExp = new RegExp(/git\+(.*)\.git/);
 const gitSchemeUrlRegExp = new RegExp(/git:\/\/(.*)\.git/);
+
 function getRepositoryUrl(url: string): string {
   if (url === undefined || url === null) {
     return url;

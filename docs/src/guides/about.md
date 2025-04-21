@@ -63,7 +63,7 @@ Here’s a breakdown of the dependencies for each part of the project:
 
 ### CLI
 
-<Licenses :dependencyGroups="data.api" />
+<Licenses :dependencyGroups="data.cli" />
 
 ### Library
 
