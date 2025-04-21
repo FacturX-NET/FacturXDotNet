@@ -1,9 +1,9 @@
-import { defineConfigWithTheme } from "vitepress"; // https://vitepress.dev/reference/site-config
-import { withPwa } from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
-import { useSidebar } from "vitepress-openapi";
-import { groupIconVitePlugin } from "vitepress-plugin-group-icons";
-import { getSidebar } from "vitepress-plugin-auto-sidebar";
-import spec from "../src/assets/facturxdotnet.openapi.json" with { type: "json" };
+import {defineConfigWithTheme} from "vitepress"; // https://vitepress.dev/reference/site-config
+import {withPwa} from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
+import {useSidebar} from "vitepress-openapi";
+import {groupIconVitePlugin} from "vitepress-plugin-group-icons";
+import {getSidebar} from "vitepress-plugin-auto-sidebar";
+import spec from "../src/assets/facturxdotnet.openapi.json" with {type: "json"};
 
 const specSidebar = useSidebar({
   spec,
@@ -25,7 +25,7 @@ let cliItems =
     collapsed: false,
     collapsible: false,
   })[0]?.items ?? [];
-cliItems = cliItems.map((item) => ({
+cliItems = cliItems.map(item => ({
   ...item,
   text: item.text.toLowerCase() === "subcommands" ? "Sub Commands" : item.text,
 }));
@@ -39,7 +39,7 @@ let apiReferenceItems =
     collapsible: true,
   })[0]?.items ?? [];
 apiReferenceItems = apiReferenceItems.filter(
-  (i) => i.items !== undefined && i.items.length > 0,
+  i => i.items !== undefined && i.items.length > 0,
 );
 
 // https://vitepress.dev/reference/site-config
@@ -84,8 +84,8 @@ export default withPwa(
               text: "OpenAPI specification",
               link: "/openapi-specification/introduction",
             },
-            { text: "CLI", link: "/cli/facturx" },
-            { text: ".NET API reference", link: "/api-reference/index" },
+            { text: "CLI API reference", link: "/cli/facturx" },
+            { text: "Library API reference", link: "/api-reference/index" },
           ],
         },
       ],
