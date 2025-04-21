@@ -51,6 +51,7 @@ jobs:
     uses: ./.github/workflows/reusable-build-docs-application.yml
     with:
       artifact-name: docs
+      api-url: https://${{ inputs.build-name }}.facturxdotnet.org/api
       version: ${{ needs.compute-version.outputs.version }}
 
   deploy:

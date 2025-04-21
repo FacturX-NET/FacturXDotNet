@@ -8,6 +8,11 @@ on:
         type: string
         required: true
       
+      api-url:
+        description: The URL at which the FacturX.NET API will be served
+        type: string
+        required: true
+      
       version:
         description: The version of the application
         type: string
@@ -109,6 +114,9 @@ jobs:
         run: |
           mkdir -p docs/src/assets/
           cp src/FacturXDotNet.API/FacturXDotNet.API.json docs/src/assets/facturxdotnet.openapi.json
+          
+          # replace server
+          sed -i -e 's/"url": "http://localhost"/"url": "${{ inputs.api-url }}"/g'
 
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
