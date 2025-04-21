@@ -135,7 +135,7 @@ jobs:
           pigz dist/editor.tar
           ssh remote 'mkdir -p ~/${{ github.run_id }}/editor'
           scp -C -r dist/editor.tar.gz remote:~/${{ github.run_id }}/editor
-          ssh remote 'cd ~/${{ github.run_id }}/editor; pigz editor.tar.gz; tar -xf editor.tar; rm editor.tar'
+          ssh remote 'cd ~/${{ github.run_id }}/editor; pigz -d editor.tar.gz; tar -xf editor.tar; rm editor.tar'
 
           echo "Removing old Editor release..."
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.build-name }}.facturxdotnet.org/editor'
@@ -151,7 +151,7 @@ jobs:
           pigz dist/docs.tar
           ssh remote 'mkdir -p ~/${{ github.run_id }}/docs'
           scp -C -r dist/docs.tar.gz remote:~/${{ github.run_id }}/docs
-          ssh remote 'cd ~/${{ github.run_id }}/docs; pigz docs.tar.gz; tar -xf docs.tar; rm docs.tar'
+          ssh remote 'cd ~/${{ github.run_id }}/docs; pigz -d docs.tar.gz; tar -xf docs.tar; rm docs.tar'
 
           echo "Removing old Docs release..."
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.build-name }}.facturxdotnet.org/docs'
