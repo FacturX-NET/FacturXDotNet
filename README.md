@@ -23,14 +23,10 @@ It comes in multiple flavors:
 - a web app: [app](https://editor.facturxdotnet.org) | [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.WebEditor)
 - a .NET library: [nuget](https://www.nuget.org/packages/FacturXDotNet) | [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet)
 
-All these tools provide the same set of [features](#features).
+All these tools provide the same set of features, check out [the documentation](https://facturxdotnet.org/docs).
 
 If you spot a mistake or believe something could be improved, feel free to **open an issue** or even **contribute a fix**! Your feedback and contributions help keep the project
 accurate and reliable.
-
-# Documentation
-
-To check out docs, visit [facturxdotnet.org/docs](https://facturxdotnet.org/docs).
 
 # License
 
