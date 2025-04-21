@@ -20,6 +20,16 @@
     text-overflow: ellipsis;
 }
 
+@keyframes pulse {
+    from {
+        --hero-center-color: #a42bd4aa;
+        --gradient-ratio: 60%;
+    }
+    to {
+        --hero-center-color: #a42bd4bb;
+        --gradient-ratio: 80%;
+    }
+}
 
 @property --hero-center-color {
     syntax: '<color>';
@@ -36,12 +46,7 @@
 .VPHero .image-container .image-bg {
     filter: blur(44px);
     background-image: radial-gradient(var(--hero-center-color), #512bd422 var(--gradient-ratio));
-    transition: --hero-center-color 0.5s, --gradient-ratio 0.5s;
-}
-
-.VPHero .image-container:hover .image-bg {
-    --hero-center-color: #a42bd4bb;
-    --gradient-ratio: 80%;
+    animation: 5s pulse linear infinite alternate;
 }
 
 .dotnet-api-reference-page,
