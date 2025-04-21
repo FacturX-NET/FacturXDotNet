@@ -1,0 +1,214 @@
+name: Reusable - Build Docs Application
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: The name of the artifact that will contain the build result
+        type: string
+        required: true
+      
+      api-url:
+        description: The URL at which the FacturX.NET API will be served
+        type: string
+        required: true
+      
+      editor-url:
+        description: The URL at which the FacturX.NET Editor will be served
+        type: string
+        required: true
+      
+      version:
+        description: The version of the application
+        type: string
+        required: true
+
+jobs:
+  build-editor-application:
+    name: Build Docs Application
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 9 (for lib and api)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Setup .NET 7 (for dotnet-project-licenses)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Setup .NET 6 (for dfmg)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Add System.CommandLine daily builds nuget source
+        run: dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-libraries/nuget/v3/index.json --name "System.CommandLine - Daily Builds"
+
+      - name: Restore dependencies
+        run: cd src; dotnet restore
+
+      - name: Build library
+        env:
+          MINVERVERSIONOVERRIDE: ${{ inputs.version }}
+        run: cd src; dotnet build FacturXDotNet/FacturXDotNet.csproj --configuration Release --no-restore
+
+      - name: Install docfx
+        run: dotnet tool install -g docfx
+
+      - name: Install dfmg
+        run: dotnet tool install -g DocFxMarkdownGen
+
+      - name: Install dotnet-project-licenses
+        run: dotnet tool install -g dotnet-project-licenses
+
+      - name: Generate .NET API reference
+        run: |
+          mkdir -p dist/api-reference          
+          cd dist/api-reference
+          
+          echo 'Writing docfx.json...'
+          echo '{'                                                                            > docfx.json
+          echo '  "metadata": [{'                                                             >> docfx.json
+          echo '    "src": [{'                                                                >> docfx.json
+          echo '      "files": ["src/FacturXDotNet/bin/Release/net9.0/FacturXDotNet.dll"],'   >> docfx.json
+          echo '      "src": "../../"'                                                        >> docfx.json
+          echo '    }],'                                                                      >> docfx.json
+          echo '    "dest": "metadata",'                                                      >> docfx.json
+          echo '    "properties": {'                                                          >> docfx.json
+          echo '      "TargetFramework": "net9.0"'                                            >> docfx.json
+          echo '    }'                                                                        >> docfx.json
+          echo '  }]'                                                                         >> docfx.json
+          echo '}'                                                                            >> docfx.json
+          
+          cat docfx.json
+          echo
+          
+          docfx docfx.json
+          
+          echo 'Writing config.yaml...'
+          echo 'outputPath: md'       > config.yaml
+          echo 'yamlPath: metadata'   >> config.yaml
+          echo 'typesGrouping:'       >> config.yaml
+          echo '  enabled: true'      >> config.yaml
+          echo '  minCount: 1'        >> config.yaml
+          
+          cat config.yaml
+          echo
+          
+          dfmg
+          
+          # add frontmatter attributes to generated files
+          find . -type f -name "*.md" -exec sed -i '0,/title:/s//pageClass: dotnet-api-reference-page\ntitle:/' {} \;
+          find . -type f -name "*.md" -exec sed -i '0,/title:/s//editLink: false\ntitle:/' {} \;
+          find . -type f -name "*.md" -exec sed -i '0,/title:/s//prev: false\ntitle:/' {} \;
+          find . -type f -name "*.md" -exec sed -i '0,/title:/s//next: false\ntitle:/' {} \;
+          
+          # fix bold tags
+          find . -type f -name "*.md" -exec sed -i 's/&lt;b&gt;/**/g' {} \;
+          find . -type f -name "*.md" -exec sed -i 's/&lt;\/b&gt;/**/g' {} \;
+          
+          mkdir -p ../../docs/src/api-reference/
+          rm -rf ../../docs/src/api-reference/*
+          mv md/* ../../docs/src/api-reference/
+
+      - name: Build CLI
+        env:
+          MINVERVERSIONOVERRIDE: ${{ inputs.version }}
+        run: cd src; dotnet build FacturXDotNet.CLI/FacturXDotNet.CLI.csproj --configuration Release --no-restore
+
+      - name: Generate CLI documentation
+        run: |
+          src/FacturXDotNet.CLI/bin/Release/net9.0/facturx help-as-md -o docs/src/cli
+
+      - name: Build API
+        env:
+          MINVERVERSIONOVERRIDE: ${{ inputs.version }}
+        run: cd src; dotnet build FacturXDotNet.API/FacturXDotNet.API.csproj --configuration Release --no-restore
+
+      - name: Copy OpenAPI specification
+        run: |
+          mkdir -p docs/src/assets
+          cp src/FacturXDotNet.API/FacturXDotNet.API.json docs/src/assets/facturxdotnet.openapi.json
+          
+          # replace server
+          sed -i -e 's|"url": "http://localhost"|"url": "${{ inputs.api-url }}"|g' docs/src/assets/facturxdotnet.openapi.json
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+          cache-dependency-path: docs/package-lock.json
+
+      - name: Install dependencies
+        run: cd docs; npm ci
+
+      - name: Install dependencies in editor (for license-report)
+        run: cd src/FacturXDotNet.WebEditor; npm ci
+
+      - name: Install license-report
+        run: npm i -g license-report
+
+      - name: Generate licenses
+        run: |
+          license-report --config docs/license-report-config.json --package src/FacturXDotNet.WebEditor/package.json > docs/src/assets/editor-licenses.json
+          
+          echo
+          echo docs/src/assets/editor-licenses.json
+          cat docs/src/assets/editor-licenses.json
+          echo
+          echo
+          
+          license-report --config docs/license-report-config.json --package docs/package.json > docs/src/assets/docs-licenses.json
+          
+          echo
+          echo docs/src/assets/docs-licenses.json
+          cat docs/src/assets/docs-licenses.json
+          echo
+          echo
+          
+          dotnet-project-licenses -i src/FacturXDotNet/FacturXDotNet.csproj --json --output-directory docs/src/assets --outfile library-licenses.json
+          
+          echo
+          echo docs/src/assets/library-licenses.json
+          cat docs/src/assets/library-licenses.json
+          echo
+          echo
+          
+          dotnet-project-licenses -i src/FacturXDotNet.API/FacturXDotNet.API.csproj --json --output-directory docs/src/assets --outfile api-licenses.json
+          
+          echo
+          echo docs/src/assets/api-licenses.json
+          cat docs/src/assets/api-licenses.json
+          echo
+          echo
+          
+          dotnet-project-licenses -i src/FacturXDotNet.CLI/FacturXDotNet.CLI.csproj --json --output-directory docs/src/assets --outfile cli-licenses.json
+          
+          echo
+          echo docs/src/assets/cli-licenses.json
+          cat docs/src/assets/cli-licenses.json
+          echo
+          echo
+
+      - name: Set version number
+        run: |
+          sed -i -e 's|{VERSION}|${{ inputs.version }}|g' -e 's|{API-URL}|${{ inputs.api-url }}|g' -e 's|{EDITOR-URL}|${{ inputs.editor-url }}|g' docs/.vitepress/config.mts
+          sed -i -e 's|{VERSION}|${{ inputs.version }}|g' -e 's|{API-URL}|${{ inputs.api-url }}|g' -e 's|{EDITOR-URL}|${{ inputs.editor-url }}|g' docs/src/index.md
+
+      - name: Build
+        run: cd docs; npm run build -- --base /docs/ --outDir dist/
+
+      - name: Upload build result
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: docs/dist/
+          if-no-files-found: error

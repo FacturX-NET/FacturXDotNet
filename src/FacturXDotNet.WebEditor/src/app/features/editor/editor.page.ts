@@ -1,21 +1,21 @@
-import { Component, computed, effect, HostListener, inject, linkedSignal, Resource, signal, Signal } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
-import { EditorSettings, EditorSettingsService, PdfModel } from './editor-settings.service';
-import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
-import { FormsModule } from '@angular/forms';
-import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
-import { EditorSavedState, EditorStateService } from './editor-state.service';
-import { EditorLeftPaneHeaderComponent } from './components/editor-header/editor-left-pane-header.component';
-import { EditorWelcomeComponent } from './editor-welcome.component';
-import { API_BASE_URL } from '../../app.config';
-import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
-import { ApiConstantsService } from '../../core/api/services/api-constants.service';
-import { EditorMenuService } from './components/editor-menu/editor-menu.service';
-import { RouterOutlet } from '@angular/router';
-import { EditorPdfViewerComponent } from './components/editor-pdf-viewer/editor-pdf-viewer.component';
-import { EditorHeaderNameComponent } from './components/editor-header/editor-header-name.component';
-import { EditorRightPaneHeaderComponent } from './components/editor-header/editor-right-pane-header.component';
-import { EditorResponsivenessService } from './editor-responsiveness.service';
+import {Component, computed, effect, HostListener, inject, linkedSignal, Resource, signal, Signal} from '@angular/core';
+import {NgOptimizedImage} from '@angular/common';
+import {EditorSettings, EditorSettingsService, PdfModel} from './editor-settings.service';
+import {EditorMenuComponent} from './components/editor-menu/editor-menu.component';
+import {FormsModule} from '@angular/forms';
+import {TwoColumnsComponent} from '../../core/two-columns/two-columns.component';
+import {EditorSavedState, EditorStateService} from './editor-state.service';
+import {EditorLeftPaneHeaderComponent} from './components/editor-header/editor-left-pane-header.component';
+import {EditorWelcomeComponent} from './editor-welcome.component';
+import {API_BASE_URL} from '../../app.config';
+import {ApiServerStatusComponent} from '../../core/api/components/api-server-status.component';
+import {ApiConstantsService} from '../../core/api/services/api-constants.service';
+import {EditorMenuService} from './components/editor-menu/editor-menu.service';
+import {RouterOutlet} from '@angular/router';
+import {EditorPdfViewerComponent} from './components/editor-pdf-viewer/editor-pdf-viewer.component';
+import {EditorHeaderNameComponent} from './components/editor-header/editor-header-name.component';
+import {EditorRightPaneHeaderComponent} from './components/editor-header/editor-right-pane-header.component';
+import {EditorResponsivenessService} from './editor-responsiveness.service';
 
 @Component({
   selector: 'app-editor',
@@ -131,7 +131,7 @@ import { EditorResponsivenessService } from './editor-responsiveness.service';
         </div>
 
         <div class="flex-shrink-0 text-body-tertiary text-center px-4 text-truncate small">
-          <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and under the MIT
+          <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and released under the MIT
           License, feel free to use, modify, and share.
         </div>
       </div>
@@ -144,27 +144,32 @@ import { EditorResponsivenessService } from './editor-responsiveness.service';
   `,
 })
 export class EditorPage {
+  protected apiUrl = inject(API_BASE_URL);
+  protected pdfTab = computed(() => this.settings().pdfTab);
+  protected disablePointerEvents = signal<boolean>(false);
+  protected totalWidth = signal(window.innerWidth);
   private rightColumnWidthLocalStorageKey = 'editor';
+  protected rightColumnWidth = linkedSignal<number, number>({
+    source: () => this.totalWidth(),
+    computation: (input, previous) => {
+      if (previous !== undefined) {
+        return previous?.value;
+      }
 
+      return this.loadRightColumnWidth(this.rightColumnWidthLocalStorageKey) ?? input / 2;
+    },
+  });
   private apiConstantsService = inject(ApiConstantsService);
+  protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
   private editorStateService = inject(EditorStateService);
+  protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
   private editorMenuService = inject(EditorMenuService);
+  protected isImporting = this.editorMenuService.isImporting;
+  protected isExporting = this.editorMenuService.isExporting;
   private editorSettingsService = inject(EditorSettingsService);
   private editorResponsivenessService = inject(EditorResponsivenessService);
   private settingsService = inject(EditorSettingsService);
-
-  protected apiUrl = inject(API_BASE_URL);
-  protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
   protected settings: Signal<EditorSettings> = this.settingsService.settings;
-  protected pdfTab = computed(() => this.settings().pdfTab);
-
-  protected isImporting = this.editorMenuService.isImporting;
-  protected isExporting = this.editorMenuService.isExporting;
-
-  protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
-  protected disablePointerEvents = signal<boolean>(false);
-
-  protected totalWidth = signal(window.innerWidth);
 
   constructor() {
     effect(() => {
@@ -184,17 +189,6 @@ export class EditorPage {
     const width = target?.innerWidth ?? 0;
     this.totalWidth.set(width);
   }
-
-  protected rightColumnWidth = linkedSignal<number, number>({
-    source: () => this.totalWidth(),
-    computation: (input, previous) => {
-      if (previous !== undefined) {
-        return previous?.value;
-      }
-
-      return this.loadRightColumnWidth(this.rightColumnWidthLocalStorageKey) ?? input / 2;
-    },
-  });
 
   protected changePdfTab(tab: PdfModel) {
     this.editorSettingsService.savePdfTab(tab);

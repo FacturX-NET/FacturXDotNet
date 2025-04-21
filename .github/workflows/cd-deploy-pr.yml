@@ -8,9 +8,9 @@ on:
       - synchronize
 
 jobs:
-  build-deploy-api-editor:
+  build-deploy:
     name: Build & Deploy to pr${{ github.event.number }}.facturxdotnet.org
-    uses: ./.github/workflows/reusable-build-deploy-api-editor.yml
+    uses: ./.github/workflows/reusable-build-deploy-api-editor-docs.yml
     with:
       build-name: pr${{ github.event.number }}
       remove-old-image: true

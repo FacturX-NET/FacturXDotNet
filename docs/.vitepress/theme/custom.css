@@ -1,0 +1,95 @@
+:root {
+    --vp-c-brand-1: #4124AE;
+    --vp-c-brand-2: #a42bd4;
+    --vp-c-brand-3: #512bd4;
+}
+
+.dark {
+    --vp-c-brand-1: #CAC0F2;
+    --vp-c-brand-2: #a42bd4;
+    --vp-c-brand-3: #512bd4;
+}
+
+.sidebar-footer {
+    font-size: 0.75rem;
+    color: var(--vp-c-text-3);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+@keyframes pulse-vp-image-background {
+    from {
+        --hero-center-color: #a42bd4aa;
+        --gradient-ratio: 60%;
+    }
+    to {
+        --hero-center-color: #a42bd4bb;
+        --gradient-ratio: 80%;
+    }
+}
+
+@property --hero-image-bg-color-center {
+    syntax: '<color>';
+    initial-value: #a42bd4aa;
+    inherits: false;
+}
+
+@property --hero-image-gradient-ratio {
+    syntax: '<percentage>';
+    initial-value: 60%;
+    inherits: false;
+}
+
+.VPHero .image-bg {
+    filter: blur(44px);
+    background-image: radial-gradient(var(--hero-image-bg-color-center), #512bd422 var(--hero-image-gradient-ratio));
+    animation: 5s pulse-vp-image-background ease-in-out infinite alternate;
+}
+
+@keyframes pulse-vp-image-background {
+    from {
+        --hero-image-bg-color-center: #a42bd4aa;
+        --hero-image-gradient-ratio: 60%;
+    }
+    to {
+        --hero-image-bg-color-center: #a42bd4bb;
+        --hero-image-gradient-ratio: 80%;
+    }
+}
+
+@property --hero-name-gradient-ratio {
+    syntax: '<percentage>';
+    initial-value: 30%;
+    inherits: false;
+}
+
+.VPHero .heading .name {
+    --vp-home-hero-name-color: transparent;
+    color: transparent;
+    background: linear-gradient(120deg, #512BD4, var(--hero-name-gradient-ratio), #A42BD4);
+    background-clip: text;
+    animation: 5s pulse-vp-name-background ease-in-out infinite alternate;
+}
+
+@keyframes pulse-vp-name-background {
+    from {
+        --hero-name-gradient-ratio: 30%;
+    }
+    to {
+        --hero-name-gradient-ratio: 50%
+    }
+}
+
+.dotnet-api-reference-page,
+.openapi-specification-page {
+    --vp-layout-max-width: 1440px; /* default: 1440px */
+    --vp-sidebar-width: 272px; /* default: 272px */
+}
+
+@media (min-width: 1600px) {
+    .dotnet-api-reference-page,
+    .openapi-specification-page {
+        --vp-layout-max-width: 1640px; /* default: 1440px */
+        --vp-sidebar-width: 472px; /* default: 272px */
+    }
+}

@@ -7,6 +7,11 @@ on:
         description: The name of the artifact that contains the editor build
         type: string
         required: true
+
+      docs-artifact-name:
+        description: The name of the artifact that contains the docs build
+        type: string
+        required: true
       
       build-name:
         description: The name of the build, the apps will be deployed to the BUILD-NAME.facturxdotnet.org domain.
@@ -26,7 +31,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy API and Editor
+    name: Deploy API and Editor and Docs
     runs-on: ubuntu-latest
 
     steps:
@@ -44,6 +49,12 @@ jobs:
         with:
           name: ${{ inputs.editor-artifact-name }}
           path: dist/editor
+
+      - name: Download docs artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.docs-artifact-name }}
+          path: dist/docs
 
       - name: Setup SSH
         run: |
@@ -64,7 +75,7 @@ jobs:
       - name: Find available port
         id: find_port
         run: |
-          scp .github/workflows/scripts/get_random_port.sh remote:~/${{ github.run_id }}/get_random_port.sh
+          scp -C .github/workflows/scripts/get_random_port.sh remote:~/${{ github.run_id }}/get_random_port.sh
           ssh remote 'chmod +x ~/${{ github.run_id }}/get_random_port.sh'
           PORT=$(ssh remote '~/${{ github.run_id }}/get_random_port.sh')
           echo "Random port: $PORT"
@@ -82,11 +93,11 @@ jobs:
           echo
           
           echo "Uploading maintenance nginx file..."
-          scp -r dist/maintenance.nginx.conf remote:~/${{ github.run_id }}/maintenance.nginx.conf
+          scp -C -r dist/maintenance.nginx.conf remote:~/${{ github.run_id }}/maintenance.nginx.conf
           
           echo "Uploading maintenance files..."
           ssh remote 'mkdir -p ~/${{ github.run_id }}/maintenance'
-          scp -r .github/workflows/pages/maintenance/* remote:~/${{ github.run_id }}/maintenance
+          scp -C -r .github/workflows/pages/maintenance/* remote:~/${{ github.run_id }}/maintenance
 
       - name: Start maintenance mode
         run: |
@@ -99,6 +110,23 @@ jobs:
           ssh remote 'sudo systemctl restart nginx'
 
       # UPDATE applications
+      - name: Upload assets
+        run: |
+          echo "Uploading assets..."
+          cd .github/workflows/assets
+          tar -cf assets.tar *
+          pigz assets.tar
+          ssh remote 'mkdir -p ~/${{ github.run_id }}/assets'
+          scp -C -r assets.tar.gz remote:~/${{ github.run_id }}/assets
+          ssh remote 'cd ~/${{ github.run_id }}/assets; pigz -d assets.tar.gz; tar -xf assets.tar; rm assets.tar'
+          
+          echo "Removing old assets..."
+          ssh remote 'sudo mkdir -p /var/www/${{ inputs.build-name }}.facturxdotnet.org/assets'
+          ssh remote 'sudo rm -f /var/www/${{ inputs.build-name }}.facturxdotnet.org/assets/*'
+          
+          echo "Moving new assets..."
+          ssh remote 'sudo mv ~/${{ github.run_id }}/assets/* /var/www/${{ inputs.build-name }}.facturxdotnet.org/assets'
+
       - name: Pull new API image and restart application
         run: |
           echo "Building API docker-compose file..."
@@ -111,7 +139,7 @@ jobs:
 
           echo "Publishing API docker-compose file..."
           ssh remote 'mkdir -p ~/facturxdotnet/${{ inputs.build-name }}/api'
-          scp dist/docker-compose.yml remote:~/facturxdotnet/${{ inputs.build-name }}/api/docker-compose.yml
+          scp -C dist/docker-compose.yml remote:~/facturxdotnet/${{ inputs.build-name }}/api/docker-compose.yml
 
           echo "Restarting API app..."
           ssh remote 'cd facturxdotnet/${{ inputs.build-name }}/api; docker compose pull'
@@ -120,8 +148,12 @@ jobs:
       - name: Replace current build of Editor application
         run: |
           echo "Uploading Editor app..."
+          cd dist/editor
+          tar -cf editor.tar *
+          pigz editor.tar
           ssh remote 'mkdir -p ~/${{ github.run_id }}/editor'
-          scp -r dist/editor/* remote:~/${{ github.run_id }}/editor
+          scp -C -r editor.tar.gz remote:~/${{ github.run_id }}/editor
+          ssh remote 'cd ~/${{ github.run_id }}/editor; pigz -d editor.tar.gz; tar -xf editor.tar; rm editor.tar'
 
           echo "Removing old Editor release..."
           ssh remote 'sudo mkdir -p /var/www/${{ inputs.build-name }}.facturxdotnet.org/editor'
@@ -129,6 +161,23 @@ jobs:
 
           echo "Moving new Editor release..."
           ssh remote 'sudo mv ~/${{ github.run_id }}/editor/* /var/www/${{ inputs.build-name }}.facturxdotnet.org/editor'
+
+      - name: Replace current build of Docs application
+        run: |
+          echo "Uploading Docs app..."
+          cd dist/docs
+          tar -cf docs.tar *
+          pigz docs.tar
+          ssh remote 'mkdir -p ~/${{ github.run_id }}/docs'
+          scp -C -r docs.tar.gz remote:~/${{ github.run_id }}/docs
+          ssh remote 'cd ~/${{ github.run_id }}/docs; pigz -d docs.tar.gz; tar -xf docs.tar; rm docs.tar'
+
+          echo "Removing old Docs release..."
+          ssh remote 'sudo mkdir -p /var/www/${{ inputs.build-name }}.facturxdotnet.org/docs'
+          ssh remote 'sudo rm -rf /var/www/${{ inputs.build-name }}.facturxdotnet.org/docs/*'
+
+          echo "Moving new Docs release..."
+          ssh remote 'sudo mv ~/${{ github.run_id }}/docs/* /var/www/${{ inputs.build-name }}.facturxdotnet.org/docs'
 
       - name: Replace nginx configurations
         run: |
@@ -142,7 +191,7 @@ jobs:
 
           echo "Publishing nginx configuration file..."
           ssh remote 'mkdir -p ~/${{ github.run_id }}/nginx'
-          scp dist/${{ inputs.build-name }}.facturxdotnet.org.conf remote:~/${{ github.run_id }}/nginx/${{ inputs.build-name }}.facturxdotnet.org.conf
+          scp -C dist/${{ inputs.build-name }}.facturxdotnet.org.conf remote:~/${{ github.run_id }}/nginx/${{ inputs.build-name }}.facturxdotnet.org.conf
           ssh remote 'sudo cp ~/${{ github.run_id }}/nginx/${{ inputs.build-name }}.facturxdotnet.org.conf /etc/nginx/conf.d/${{ inputs.build-name }}.facturxdotnet.org.conf'
 
       # EXIT maintenance mode

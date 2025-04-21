@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-deploy-api-editor:
+  build-deploy:
     name: Build & Deploy API & Editor
-    uses: ./.github/workflows/reusable-build-deploy-api-editor.yml
+    uses: ./.github/workflows/reusable-build-deploy-api-editor-docs.yml
     with:
       build-name: alpha
       remove-old-image: true

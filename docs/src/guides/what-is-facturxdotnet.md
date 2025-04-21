@@ -1,14 +1,9 @@
-![FacturX.NET logo](assets/Logo/logo.png)
+---
+title: What is FacturX.NET?
+editLink: true 
+---
 
-[![NuGet - Library](https://img.shields.io/nuget/v/FacturXDotNet
-)](https://www.nuget.org/packages/FacturXDotNet/)
-[![NuGet - CLI](https://img.shields.io/nuget/v/FacturXDotNet.CLI?label=tool
-)](https://www.nuget.org/packages/FacturXDotNet.CLI/)
-
-[![Build & Test](https://github.com/FacturX-NET/FacturXDotNet/actions/workflows/ci-main.yml/badge.svg)](https://github.com/FacturX-NET/FacturXDotNet/actions/workflows/ci-main.yml)
-
-> [!IMPORTANT]
-> **The library is still a work in progress. If you stumbled upon this somehow, you are lost!**
+![FacturX.NET Logo](/logo.png)
 
 The FacturX.NET library is a high-performance .NET library ([benchmarks](https://github.com/FacturX-NET/FacturXDotNet/tree/master/Benchmark)) that provides support for the
 Factur-X data formats, as defined by the [FNFE](https://fnfe-mpe.org/factur-x/) (also known as ZUGFeRD in Germany).
@@ -24,15 +19,3 @@ It comes in multiple flavors:
 - a .NET library: [nuget](https://www.nuget.org/packages/FacturXDotNet) | [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet)
 
 All these tools provide the same set of [features](#features).
-
-If you spot a mistake or believe something could be improved, feel free to **open an issue** or even **contribute a fix**! Your feedback and contributions help keep the project
-accurate and reliable.
-
-# Documentation
-
-To check out docs, visit [facturxdotnet.org/docs](https://facturxdotnet.org/docs).
-
-# License
-
-[MIT](https://github.com/FacturX-NET/FacturXDotNet/blob/main/LICENSE)
-
