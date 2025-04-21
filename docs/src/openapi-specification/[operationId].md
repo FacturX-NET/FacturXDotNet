@@ -1,5 +1,5 @@
 ---
-title: {{ $params.pageTitle }}
+title: OpenAPI specification
 pageClass: openapi-specification-page
 aside: false
 outline: false

@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: OpenAPI specification
 pageClass: openapi-specification-page
 aside: false
 outline: false
