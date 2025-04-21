@@ -155,7 +155,7 @@ jobs:
           license-report --config docs/license-report-config.json --package src/FacturXDotNet.WebEditor/package.json > docs/src/assets/editor-licenses.json
           
           echo
-          echo > docs/src/assets/editor-licenses.json
+          echo docs/src/assets/editor-licenses.json
           cat docs/src/assets/editor-licenses.json
           echo
           echo
@@ -163,7 +163,7 @@ jobs:
           license-report --config docs/license-report-config.json --package docs/package.json > docs/src/assets/docs-licenses.json
           
           echo
-          echo > docs/src/assets/docs-licenses.json
+          echo docs/src/assets/docs-licenses.json
           cat docs/src/assets/docs-licenses.json
           echo
           echo
@@ -171,7 +171,7 @@ jobs:
           dotnet-project-licenses -i src/FacturXDotNet/FacturXDotNet.csproj --json --output-directory docs/src/assets --outfile library-licenses.json
           
           echo
-          echo > docs/src/assets/library-licenses.json
+          echo docs/src/assets/library-licenses.json
           cat docs/src/assets/library-licenses.json
           echo
           echo
@@ -179,7 +179,7 @@ jobs:
           dotnet-project-licenses -i src/FacturXDotNet.API/FacturXDotNet.API.csproj --json --output-directory docs/src/assets --outfile api-licenses.json
           
           echo
-          echo > docs/src/assets/api-licenses.json
+          echo docs/src/assets/api-licenses.json
           cat docs/src/assets/api-licenses.json
           echo
           echo
@@ -187,7 +187,7 @@ jobs:
           dotnet-project-licenses -i src/FacturXDotNet.CLI/FacturXDotNet.CLI.csproj --json --output-directory docs/src/assets --outfile cli-licenses.json
           
           echo
-          echo > docs/src/assets/cli-licenses.json
+          echo docs/src/assets/cli-licenses.json
           cat docs/src/assets/cli-licenses.json
           echo
           echo
