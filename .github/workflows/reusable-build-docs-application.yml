@@ -116,7 +116,7 @@ jobs:
           cp src/FacturXDotNet.API/FacturXDotNet.API.json docs/src/assets/facturxdotnet.openapi.json
           
           # replace server
-          sed -i -e 's/"url": "http://localhost"/"url": "${{ inputs.api-url }}"/g'
+          sed -i -e 's|"url": "http://localhost"|"url": "${{ inputs.api-url }}"|g'
 
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
