@@ -49,4 +49,3 @@ features:
     link: https://www.nuget.org/profiles/FacturX.NET
     linkText: Download
 ---
-

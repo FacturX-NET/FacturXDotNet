@@ -67,12 +67,17 @@ export default defineConfigWithTheme({
       { text: "Home", link: "/" },
       { text: "Guides", link: "/guides/getting-started" },
       {
-        text: "Try the Editor",
-        link: "{EDITOR-URL}",
-      },
-      {
-        text: "Try the API",
-        link: "{API-URL}",
+        text: "Try it live!",
+        items: [
+          {
+            text: "Try the Editor",
+            link: "{EDITOR-URL}",
+          },
+          {
+            text: "Try the API",
+            link: "{API-URL}",
+          },
+        ],
       },
       {
         text: "References",
@@ -84,6 +89,10 @@ export default defineConfigWithTheme({
           { text: "CLI API reference", link: "/cli/facturx" },
           { text: "Library API reference", link: "/api-reference/index" },
         ],
+      },
+      {
+        text: "About",
+        link: "/guides/about",
       },
     ],
 
@@ -137,6 +146,10 @@ export default defineConfigWithTheme({
               ],
             },
           ],
+        },
+        {
+          text: "About",
+          link: "/guides/about",
         },
         {
           text: "<span class='sidebar-footer'>v{VERSION}</span>",
