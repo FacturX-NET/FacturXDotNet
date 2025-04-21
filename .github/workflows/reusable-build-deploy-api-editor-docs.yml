@@ -52,6 +52,7 @@ jobs:
     with:
       artifact-name: docs
       api-url: https://${{ inputs.build-name }}.facturxdotnet.org/api
+      editor-url: https://${{ inputs.build-name }}.facturxdotnet.org/editor
       version: ${{ needs.compute-version.outputs.version }}
 
   deploy:

@@ -1,9 +1,9 @@
-import {defineConfigWithTheme} from "vitepress"; // https://vitepress.dev/reference/site-config
-import {withPwa} from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
-import {useSidebar} from "vitepress-openapi";
-import {groupIconVitePlugin} from "vitepress-plugin-group-icons";
-import {getSidebar} from "vitepress-plugin-auto-sidebar";
-import spec from "../src/assets/facturxdotnet.openapi.json" with {type: "json"};
+import { defineConfigWithTheme } from "vitepress"; // https://vitepress.dev/reference/site-config
+import { withPwa } from "@vite-pwa/vitepress"; // https://vitepress.dev/reference/site-config
+import { useSidebar } from "vitepress-openapi";
+import { groupIconVitePlugin } from "vitepress-plugin-group-icons";
+import { getSidebar } from "vitepress-plugin-auto-sidebar";
+import spec from "../src/assets/facturxdotnet.openapi.json" with { type: "json" };
 
 const specSidebar = useSidebar({
   spec,
@@ -26,7 +26,7 @@ let apiReferenceItems =
     collapsible: true,
   })[0]?.items ?? [];
 apiReferenceItems = apiReferenceItems.filter(
-  i => i.items !== undefined && i.items.length > 0,
+  (i) => i.items !== undefined && i.items.length > 0,
 );
 
 // https://vitepress.dev/reference/site-config
@@ -58,11 +58,11 @@ export default withPwa(
         { text: "Guides", link: "/guides/getting-started" },
         {
           text: "Try the Editor",
-          link: "https://{BUILD-NAME}.facturxdotnet.org/editor",
+          link: "{EDITOR-URL}",
         },
         {
           text: "Try the API",
-          link: "https://{BUILD-NAME}.facturxdotnet.org/api",
+          link: "{API-URL}",
         },
         {
           text: "References",
