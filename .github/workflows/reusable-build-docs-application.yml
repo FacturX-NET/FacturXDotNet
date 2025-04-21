@@ -51,7 +51,36 @@ jobs:
           cp docfx.json dist/api-reference/docfx.json
           
           cd dist/api-reference
+          
+          echo "Writing docfx.json...
+          echo "{"                                                                            > docfx.json
+          echo "  "metadata": [{"                                                             >> docfx.json
+          echo "    "src": [{"                                                                >> docfx.json
+          echo "      "files": ["src/FacturXDotNet/bin/Release/net9.0/FacturXDotNet.dll"],"   >> docfx.json
+          echo "      "src": "../../""                                                        >> docfx.json
+          echo "    }],"                                                                      >> docfx.json
+          echo "    "dest": "metadata","                                                      >> docfx.json
+          echo "    "properties": {"                                                          >> docfx.json
+          echo "      "TargetFramework": "net9.0""                                            >> docfx.json
+          echo "    }"                                                                        >> docfx.json
+          echo "  }]"                                                                         >> docfx.json
+          echo "}"                                                                            >> docfx.json
+          
+          cat docfx.json
+          echo
+          
           docfx docfx.json
+          
+          echo "Writing config.yaml...
+          echo "outputPath: md"       > config.yaml
+          echo "yamlPath: metadata"   >> config.yaml
+          echo "typesGrouping:"       >> config.yaml
+          echo "  enabled: true"      >> config.yaml
+          echo "  minCount: 1"        >> config.yaml
+          
+          cat config.yaml
+          echo
+          
           dfmg
           
           # add frontmatter attributes
