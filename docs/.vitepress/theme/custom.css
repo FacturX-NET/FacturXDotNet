@@ -46,6 +46,6 @@
 
 .dotnet-api-reference-page,
 .openapi-specification-page {
-    --vp-layout-max-width: 1540px; /* default: 1440px */
-    --vp-sidebar-width: 372px; /* default: 272px */
+    --vp-layout-max-width: 1640px; /* default: 1440px */
+    --vp-sidebar-width: 472px; /* default: 272px */
 }

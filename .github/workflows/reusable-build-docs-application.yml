@@ -77,7 +77,7 @@ jobs:
           echo 'Writing config.yaml...'
           echo 'outputPath: md'       > config.yaml
           echo 'yamlPath: metadata'   >> config.yaml
-          echo 'typesGrouping'"       >> config.yaml
+          echo 'typesGrouping:'       >> config.yaml
           echo '  enabled: true'      >> config.yaml
           echo '  minCount: 1'        >> config.yaml
           
@@ -87,7 +87,10 @@ jobs:
           dfmg
           
           # add frontmatter attributes to generated files
-          find . -type f -name "*.md" -exec sed -i 's/---\ntitle:/---\npageClass: pageClass: dotnet-api-reference-page\neditLink: false\ntitle:/g' {} \;
+          find . -type f -name "*.md" -exec sed -i '0,/title:/pageClass: pageClass: dotnet-api-reference-page\ntitle:/' {} \;
+          find . -type f -name "*.md" -exec sed -i '0,/title:/editLink: false\ntitle:/' {} \;
+          find . -type f -name "*.md" -exec sed -i '0,/title:/prev: false\ntitle:/' {} \;
+          find . -type f -name "*.md" -exec sed -i '0,/title:/next: false\ntitle:/' {} \;
           
           rm -rf ../../docs/src/api-reference/*
           mv md/* ../../docs/src/api-reference/

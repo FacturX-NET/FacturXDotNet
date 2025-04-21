@@ -17,6 +17,18 @@ const specSidebar = useSidebar({
   },
 });
 
+let apiReferenceItems =
+  getSidebar({
+    contentRoot: "/src",
+    contentDirs: ["api-reference/"],
+    useFrontmatter: true,
+    collapsed: true,
+    collapsible: true,
+  })[0]?.items ?? [];
+apiReferenceItems = apiReferenceItems.filter(
+  (i) => i.items !== undefined && i.items.length > 0,
+);
+
 // https://vitepress.dev/reference/site-config
 export default withPwa(
   defineConfigWithTheme({
@@ -142,13 +154,7 @@ export default withPwa(
         ],
         "/api-reference/": [
           { text: "Index", link: "/api-reference/index" },
-          ...(getSidebar({
-            contentRoot: "/src",
-            contentDirs: ["api-reference/"],
-            useFrontmatter: true,
-            collapsed: true,
-            collapsible: true,
-          })[0]?.items ?? []),
+          ...apiReferenceItems,
           {
             text: "<span class='sidebar-footer'>v{VERSION}</span>",
           },
