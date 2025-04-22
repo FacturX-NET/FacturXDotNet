@@ -31,6 +31,10 @@ Console.WriteLine($"Validation has succeeded: {validationResult.Success}");
 Console.WriteLine($"Detected document profile: {validationResult.ValidProfiles.GetMaxProfile()}");
 ```
 
+## Documentation
+
+To check out docs, visit [facturxdotnet.org/docs](https://facturxdotnet.org/docs).
+
 ## Design Choices
 
 This project consists of models that implement the Factur-X specification. The design choices ensure that the structure and documentation of the models remain as close as possible to the underlying Factur-X XML format.
