@@ -1,0 +1,65 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+processors:
+  batch:
+
+exporters:
+  otlphttp/parseablelogs:
+    endpoint: http://parseable:8000
+    headers:
+      Authorization: "Basic YWRtaW46YWRtaW4="
+      X-P-Stream: otel-logs
+      X-P-Log-Source: otel-logs
+      Content-Type: application/json
+    encoding: json
+    tls:
+      insecure: true
+  
+  otlphttp/parseabletraces:
+    endpoint: http://parseable:8000
+    headers:
+      Authorization: "Basic YWRtaW46YWRtaW4="
+      X-P-Stream: otel-traces
+      X-P-Log-Source: otel-traces
+      Content-Type: application/json
+    encoding: json
+    tls:
+      insecure: true
+
+  otlphttp/parseablemetrics:
+    endpoint: http://parseable:8000
+    headers:
+      Authorization: "Basic YWRtaW46YWRtaW4="
+      X-P-Stream: otel-metrics
+      X-P-Log-Source: otel-metrics
+      Content-Type: application/json
+    encoding: json
+    tls:
+      insecure: true
+
+extensions:
+  health_check:
+  pprof:
+  zpages:
+
+service:
+  extensions: [ health_check, pprof, zpages ]
+  pipelines:
+    traces:
+      receivers:
+        - otlp
+      exporters:
+        - otlphttp/parseabletraces
+    metrics:
+      receivers:
+        - otlp
+      exporters:
+        - otlphttp/parseablemetrics
+    logs:
+      receivers:
+        - otlp
+      exporters:
+        - otlphttp/parseablelogs

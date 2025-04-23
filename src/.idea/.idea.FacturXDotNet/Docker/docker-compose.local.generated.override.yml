@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  api:
+    build:
+      context: "D:\\source\\repos\\FacturXDotNet\\src\\FacturXDotNet.API"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/FacturXDotNet.API.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "facturxdotnet.api:dev"
+    ports: []
+    volumes:
+    - "D:\\source\\repos\\FacturXDotNet\\src\\FacturXDotNet.API:/app:rw"
+    - "D:\\source\\repos\\FacturXDotNet\\src:/src:rw"
+    - "C:\\Users\\lahki\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"
