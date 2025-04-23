@@ -1,0 +1,36 @@
+services:
+  api:
+    build: ..
+    environment:
+      Observability__OtlpEndpoint: http://otel:4317
+    ports:
+      - 80:8080
+    links:
+      - "otel-collector:otel"
+    depends_on:
+      parseable:
+        condition: service_started
+      otel-collector:
+        condition: service_started
+
+  parseable:
+    container_name: Parseable
+    image: parseable/parseable:latest
+    restart: always
+    command: [ "parseable", "local-store" ]
+    environment:
+      P_ADDR: 0.0.0.0:8000
+      RUST_LOG: debug
+    ports:
+      - 8080:8000
+    expose:
+      - 8000
+  
+  otel-collector:
+    container_name: Otel-Collector
+    image: otel/opentelemetry-collector-contrib:latest
+    restart: always
+    volumes:
+      - ./otel.config.yaml:/etc/otelcol-contrib/config.yaml
+    links:
+      - "parseable:parseable"

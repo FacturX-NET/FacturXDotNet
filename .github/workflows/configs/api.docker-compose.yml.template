@@ -5,8 +5,17 @@ services:
     image: ghcr.io/facturx-net/facturxdotnet-api:latest-{BUILD-NAME}
     environment:
       ASPNETCORE_HTTP_PORTS: {PORT}
+      ServiceName: {BUILD-NAME}
       Hosting__Host: https://{BUILD-NAME}.facturxdotnet.org
       Hosting__BasePath: /api
       Hosting__UnsafeEnvironment: true
+      Observability__OtlpEndpoint: http://otel-collector:4317
     ports:
       - {PORT}:{PORT}
+    external_links:
+        - "otel-collector:otel-collector"
+
+networks:
+  default:
+    name: observability
+    external: true
