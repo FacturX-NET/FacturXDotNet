@@ -1,5 +1,5 @@
 services:
-  facturxdotnet_api:
+  facturxdotnet_{BUILD-NAME}:
     container_name: FacturX.Net-API-{BUILD-NAME}
     restart: always
     image: ghcr.io/facturx-net/facturxdotnet-api:latest-{BUILD-NAME}
@@ -10,11 +10,3 @@ services:
       Hosting__UnsafeEnvironment: true
     ports:
       - {PORT}:{PORT}
-  
-  autoheal:
-      restart: always
-      image: willfarrell/autoheal
-      environment:
-        - AUTOHEAL_CONTAINER_LABEL=all
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
