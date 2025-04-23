@@ -73,7 +73,7 @@ try
     if (otlpEndpoint != null)
     {
         Uri otlpUri = new(otlpEndpoint);
-        Log.Information("Service exports OpenTelemetry data to OTP at {Endpoint}", otlpUri);
+        Log.Information("Service exports OpenTelemetry data through OTP at {Endpoint}", otlpUri);
         builder.AddObservability(serviceName, otlpUri);
     }
 
