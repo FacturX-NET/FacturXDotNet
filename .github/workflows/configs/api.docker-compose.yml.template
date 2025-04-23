@@ -1,5 +1,5 @@
 services:
-  facturxdotnet_api:
+  facturxdotnet_{BUILD-NAME}:
     container_name: FacturX.Net-API-{BUILD-NAME}
     restart: always
     image: ghcr.io/facturx-net/facturxdotnet-api:latest-{BUILD-NAME}
