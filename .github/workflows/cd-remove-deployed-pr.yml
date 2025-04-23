@@ -5,6 +5,9 @@ on:
     types:
       - closed
 
+concurrency:
+  group: pr-deployment
+
 jobs:
   remove-deployment:
     name: Remove deployment at pr${{ github.event.number }}.facturxdotnet.org
