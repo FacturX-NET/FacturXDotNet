@@ -10,17 +10,19 @@ using FacturXDotNet.API.Features.Validate;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
-using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
-Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+using ILoggerFactory bootstrapLoggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+ILogger bootstrapLogger = bootstrapLoggerFactory.CreateLogger("Program");
 
 try
 {
+    bootstrapLogger.LogInformation("Hello World!");
+
     WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-    builder.Services.AddSerilog();
 
     string serviceName = builder.Configuration.GetValue<string>("ServiceName", "default");
-    Log.Information("Service named {ServiceName}", serviceName);
+    bootstrapLogger.LogInformation("Service named {ServiceName}", serviceName);
 
     builder.Services.Configure<AppConfiguration>(builder.Configuration);
     builder.Services.AddCors(
@@ -40,7 +42,7 @@ try
                     ? $"/{basePath}"
                     : $"/{basePath}/")
     );
-    Log.Information("Service hosted at {ServerUrl}", serverUrl);
+    bootstrapLogger.LogInformation("Service hosted at {ServerUrl}", serverUrl);
 
     builder.Services.AddHealthChecks();
     builder.Services.AddOpenApi(
@@ -73,7 +75,7 @@ try
     if (otlpEndpoint != null)
     {
         Uri otlpUri = new(otlpEndpoint);
-        Log.Information("Service exports OpenTelemetry data through OTP at {Endpoint}", otlpUri);
+        bootstrapLogger.LogInformation("Service exports OpenTelemetry data through OTP at {Endpoint}", otlpUri);
         builder.AddObservability(serviceName, otlpUri);
     }
 
@@ -90,16 +92,16 @@ try
     app.UseCors();
 
     app.MapHealthChecks("/health");
-    Log.Information("Service health check at {HealthCheckUrl}", new Uri(serverUrl, "health"));
+    bootstrapLogger.LogInformation("Service health check at {HealthCheckUrl}", new Uri(serverUrl, "health"));
 
     app.MapOpenApi("/openapi/v1.json");
-    Log.Information("Service serves OpenAPI specification at {OpenApiUrl}", new Uri(serverUrl, "openapi/v1.json"));
+    bootstrapLogger.LogInformation("Service serves OpenAPI specification at {OpenApiUrl}", new Uri(serverUrl, "openapi/v1.json"));
 
     Uri scalarUrl = new(serverUrl, "scalar");
     app.MapScalarApiReference();
-    Log.Information("Service serves Scalar UI at {ScalarUrl}", scalarUrl);
+    bootstrapLogger.LogInformation("Service serves Scalar UI at {ScalarUrl}", scalarUrl);
     app.MapGet("/", () => Results.LocalRedirect($"{configuration.Value.Hosting.BasePath}/scalar")).ExcludeFromDescription();
-    Log.Information("Service redirects / to Scalar UI at {ScalarUrl}", scalarUrl);
+    bootstrapLogger.LogInformation("Service redirects {RootUrl} to Scalar UI at {ScalarUrl}", serverUrl, scalarUrl);
 
     app.MapGroup("/info").MapInformationEndpoints().WithTags("Information");
     app.MapGroup("/generate").MapGenerateEndpoints().WithTags("Generate");
@@ -110,9 +112,5 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Application terminated unexpectedly");
-}
-finally
-{
-    Log.CloseAndFlush();
+    bootstrapLogger.LogCritical(ex, "Application terminated unexpectedly");
 }
