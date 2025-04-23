@@ -5,8 +5,10 @@ services:
     image: ghcr.io/facturx-net/facturxdotnet-api:latest-{BUILD-NAME}
     environment:
       ASPNETCORE_HTTP_PORTS: {PORT}
+      ServiceName: {BUILD-NAME}
       Hosting__Host: https://{BUILD-NAME}.facturxdotnet.org
       Hosting__BasePath: /api
       Hosting__UnsafeEnvironment: true
+      Observability__OtlpEndpoint: localhost:6756
     ports:
       - {PORT}:{PORT}
