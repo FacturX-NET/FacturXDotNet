@@ -209,7 +209,7 @@ jobs:
           echo '  "buildName": "${{ inputs.build-name }}",'   >> docs/src/env.json
           echo '  "version": "${{ inputs.version }}",'        >> docs/src/env.json
           echo '  "editor": {'                                >> docs/src/env.json
-          echo '    "url": "${{ inputs.editor-url }}'         >> docs/src/env.json
+          echo '    "url": "${{ inputs.editor-url }}"'         >> docs/src/env.json
           echo '  },'                                         >> docs/src/env.json
           echo '  "api": {'                                   >> docs/src/env.json
           echo '    "url": "${{ inputs.api-url }}"'           >> docs/src/env.json
