@@ -7,7 +7,7 @@ import { EditorSavedState, EditorStateService } from './services/editor-state.se
 @Component({
   selector: 'app-editor-welcome',
   template: `
-    <div class="min-h-100 d-flex flex-column justify-content-center align-items-center py-4">
+    <div class="h-100 d-flex flex-column justify-content-center align-items-center py-4 overflow-auto">
       @if (state.value()) {
         <div class="d-flex flex-column align-items-center gap-1">
           <a class="lead text-primary text-center" role="button" routerLink="/">
