@@ -42,6 +42,7 @@ jobs:
     uses: ./.github/workflows/reusable-build-editor-application.yml
     with:
       artifact-name: editor
+      documentation-url: https://${{ inputs.build-name }}.facturxdotnet.org/docs
       api-url: https://${{ inputs.build-name }}.facturxdotnet.org/api
       version: ${{ needs.compute-version.outputs.version }}
   
