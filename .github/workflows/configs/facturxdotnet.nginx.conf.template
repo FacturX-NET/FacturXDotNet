@@ -11,6 +11,11 @@ server {
     error_log /var/log/nginx/{BUILD-NAME}.facturxdotnet.org.error.log;
     access_log /var/log/nginx/{BUILD-NAME}.facturxdotnet.org.access.log;
     
+    include mime.types;
+    types {
+        application/javascript js mjs;
+    }
+    
     try_files /maintenance.html $uri;
     
     location /editor {
