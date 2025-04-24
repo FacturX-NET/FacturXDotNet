@@ -13,6 +13,11 @@ on:
         type: string
         required: true
       
+      documentation-url:
+        description: The URL at which the FacturX.NET Documentation will be served
+        type: string
+        required: true
+      
       version:
         description: The version of the application
         type: string
@@ -50,6 +55,7 @@ jobs:
           echo "  version: '${{ inputs.version }}',"                                >> src/environments/environment.ts
           echo "  buildDate: new Date('$(date +'%Y-%m-%d')'),"                      >> src/environments/environment.ts
           echo "  apiUrl: '${{ inputs.api-url }}',"                                 >> src/environments/environment.ts
+          echo "  documentationUrl: '${{ inputs.documentation-url }}',"             >> src/environments/environment.ts
           echo "};"                                                                 >> src/environments/environment.ts
           echo "Environment is"
           cat src/environments/environment.ts
