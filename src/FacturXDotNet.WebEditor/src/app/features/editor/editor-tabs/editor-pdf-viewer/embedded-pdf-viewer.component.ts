@@ -15,7 +15,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
     }
   `,
 })
-export class PdfViewerComponent {
+export class EmbeddedPdfViewerComponent {
   pdf = input.required<{ id?: string; content: Blob }>();
   disablePointerEvents = input<boolean>(false);
 

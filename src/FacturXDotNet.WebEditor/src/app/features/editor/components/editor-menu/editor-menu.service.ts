@@ -6,11 +6,11 @@ import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
 import { GenerateApi } from '../../../../core/api/generate.api';
-import { CiiFormService } from '../../tabs/cii/cii-form/cii-form.service';
+import { CiiFormService } from '../../editor-tabs/editor-cii/cii-form/cii-form.service';
 import { EditorStateService } from '../../services/editor-state.service';
 import * as pdf from 'pdfjs-dist';
 import { EditorSettingsService } from '../../services/editor-settings.service';
-import { EditorPdfViewerService } from '../editor-pdf-viewer/editor-pdf-viewer.service';
+import { EditorPdfViewerService } from '../../editor-tabs/editor-pdf-viewer/editor-pdf-viewer.service';
 
 @Injectable({
   providedIn: 'root',

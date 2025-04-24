@@ -1,14 +1,14 @@
 import { Component, computed, inject, input, linkedSignal } from '@angular/core';
-import { PdfViewerComponent } from './pdf-viewer.component';
+import { EmbeddedPdfViewerComponent } from './embedded-pdf-viewer.component';
 import { ToastService } from '../../../../core/toasts/toast.service';
 import { EditorSettingsService, PdfModel } from '../../services/editor-settings.service';
-import { EditorMenuService } from '../editor-menu/editor-menu.service';
+import { EditorMenuService } from '../../components/editor-menu/editor-menu.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EditorPdfViewerService } from './editor-pdf-viewer.service';
 
 @Component({
   selector: 'app-editor-pdf-viewer',
-  imports: [PdfViewerComponent],
+  imports: [EmbeddedPdfViewerComponent],
   template: `
     <div class="h-100 position-relative">
       @if (pdf.error(); as error) {

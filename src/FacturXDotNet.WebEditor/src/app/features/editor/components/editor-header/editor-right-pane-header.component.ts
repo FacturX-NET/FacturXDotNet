@@ -1,7 +1,7 @@
 import { Component, computed, inject, model } from '@angular/core';
 import { NgbNav, NgbNavItem, NgbNavLinkButton } from '@ng-bootstrap/ng-bootstrap';
 import { PdfModel } from '../../services/editor-settings.service';
-import { EditorPdfViewerService } from '../editor-pdf-viewer/editor-pdf-viewer.service';
+import { EditorPdfViewerService } from '../../editor-tabs/editor-pdf-viewer/editor-pdf-viewer.service';
 import { EditorPdfGenerationProfile, EditorPdfGenerationProfilesService } from '../../services/editor-pdf-generation-profiles.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -40,7 +40,7 @@ import { FormsModule } from '@angular/forms';
               </div>
             </div>
           } @else {
-            <button class="btn btn-sm btn-light border text-nowrap" routerLink="/settings/profiles">Customize generation</button>
+            <button class="btn btn-sm btn-light border text-nowrap" routerLink="/settings/profiles">Customize PDF generation</button>
           }
 
           <div class="flex-grow-1"><!--spacer--></div>

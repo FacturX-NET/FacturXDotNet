@@ -2,7 +2,7 @@ import { effect, inject, Injectable } from '@angular/core';
 import { debounceTime, from, Subject, switchMap } from 'rxjs';
 import { EditorSavedState, EditorStateService } from '../../../services/editor-state.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CiiFormService } from '../../cii/cii-form/cii-form.service';
+import { CiiFormService } from '../../editor-cii/cii-form/cii-form.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IXmpMetadata, XmpFacturXConformanceLevel, XmpFacturXDocumentType, XmpPdfAConformanceLevel } from '../../../../../core/api/api.models';
 

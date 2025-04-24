@@ -1,6 +1,6 @@
 import { Component, computed, effect, HostListener, inject, linkedSignal, Resource, Signal, signal } from '@angular/core';
 import { EditorLeftPaneHeaderComponent } from './components/editor-header/editor-left-pane-header.component';
-import { EditorPdfViewerComponent } from './components/editor-pdf-viewer/editor-pdf-viewer.component';
+import { EditorPdfViewerComponent } from './editor-tabs/editor-pdf-viewer/editor-pdf-viewer.component';
 import { EditorRightPaneHeaderComponent } from './components/editor-header/editor-right-pane-header.component';
 import { EditorWelcomePage } from './editor-welcome.page';
 import { Router, RouterOutlet } from '@angular/router';
