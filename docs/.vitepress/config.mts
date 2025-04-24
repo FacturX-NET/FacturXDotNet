@@ -1,8 +1,9 @@
-import {defineConfigWithTheme} from "vitepress"; // https://vitepress.dev/reference/site-config
-import {useSidebar} from "vitepress-openapi";
-import {getSidebar} from "vitepress-plugin-auto-sidebar";
-import env from "../src/env.json" with {type: "json"};
-import spec from "../src/assets/facturxdotnet.openapi.json" with {type: "json"};
+import { defineConfigWithTheme } from "vitepress"; // https://vitepress.dev/reference/site-config
+import { useSidebar } from "vitepress-openapi";
+import { getSidebar } from "vitepress-plugin-auto-sidebar";
+import semver from "semver";
+import env from "../src/env.json" with { type: "json" };
+import spec from "../src/assets/facturxdotnet.openapi.json" with { type: "json" };
 
 const specSidebar = useSidebar({
   spec,
@@ -24,7 +25,7 @@ let cliItems =
     collapsed: false,
     collapsible: false,
   })[0]?.items ?? [];
-cliItems = cliItems.map(item => ({
+cliItems = cliItems.map((item) => ({
   ...item,
   text: item.text.toLowerCase() === "subcommands" ? "Sub Commands" : item.text,
 }));
@@ -38,8 +39,25 @@ let apiReferenceItems =
     collapsible: true,
   })[0]?.items ?? [];
 apiReferenceItems = apiReferenceItems.filter(
-  i => i.items !== undefined && i.items.length > 0,
+  (i) => i.items !== undefined && i.items.length > 0,
 );
+
+const semVersion = semver.valid(env.version)
+  ? semver.parse(env.version)
+  : { version: env.version, build: [] };
+
+const footerText = [`${env.buildName} · v${semVersion.version}`];
+if (semVersion.build.length) {
+  footerText.push(`ID: ${semVersion.build.join(".")}`);
+}
+
+const sidebarFooter = [
+  {
+    text: `<span class='sidebar-footer'>
+                 ${footerText.join("<br/>")}
+               </span>`,
+  },
+];
 
 // https://vitepress.dev/reference/site-config
 export default defineConfigWithTheme({
@@ -111,7 +129,7 @@ export default defineConfigWithTheme({
           text: "Use cases",
           items: [
             {
-              text: "Generation",
+              text: `<strong>Generation</strong>`,
               items: [
                 {
                   text: "Generate a Factur-X document",
@@ -124,7 +142,7 @@ export default defineConfigWithTheme({
               ],
             },
             {
-              text: "Validation",
+              text: `<strong>Validation</strong>`,
               items: [
                 {
                   text: "Validate a Factur-X document",
@@ -137,7 +155,7 @@ export default defineConfigWithTheme({
               ],
             },
             {
-              text: "Extraction",
+              text: `<strong>Extraction</strong>`,
               items: [
                 {
                   text: "Extract Cross-Industry Invoice data",
@@ -152,12 +170,7 @@ export default defineConfigWithTheme({
           text: "About",
           link: "/guides/about",
         },
-        {
-          text: `<span class='sidebar-footer sidebar-footer-first'>${env.buildName}</span>`,
-        },
-        {
-          text: `<span class='sidebar-footer'>${env.version}</span>`,
-        },
+        ...sidebarFooter,
       ],
       "/openapi-specification/": [
         {
@@ -165,31 +178,13 @@ export default defineConfigWithTheme({
           link: "/openapi-specification/introduction",
         },
         ...specSidebar.generateSidebarGroups(),
-        {
-          text: `<span class='sidebar-footer sidebar-footer-first'>${env.buildName}</span>`,
-        },
-        {
-          text: `<span class='sidebar-footer'>${env.version}</span>`,
-        },
+        ...sidebarFooter,
       ],
-      "/cli/": [
-        ...cliItems,
-        {
-          text: `<span class='sidebar-footer sidebar-footer-first'>${env.buildName}</span>`,
-        },
-        {
-          text: `<span class='sidebar-footer'>${env.version}</span>`,
-        },
-      ],
+      "/cli/": [...cliItems, ...sidebarFooter],
       "/api-reference/": [
         { text: "Index", link: "/api-reference/index" },
         ...apiReferenceItems,
-        {
-          text: `<span class='sidebar-footer sidebar-footer-first'>${env.buildName}</span>`,
-        },
-        {
-          text: `<span class='sidebar-footer'>${env.version}</span>`,
-        },
+        ...sidebarFooter,
       ],
     },
 
@@ -223,7 +218,7 @@ export default defineConfigWithTheme({
     },
   },
 
-  transformPageData: pageData => {
+  transformPageData: (pageData) => {
     const result = { ...pageData };
     result.frontmatter = expandEnvInRecord(pageData.frontmatter);
     return result;
