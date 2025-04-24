@@ -13,9 +13,9 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
 import { EditorMenuService } from './components/editor-menu/editor-menu.service';
 import { RouterOutlet } from '@angular/router';
 import { EditorPdfViewerComponent } from './components/editor-pdf-viewer/editor-pdf-viewer.component';
-import { EditorHeaderNameComponent } from './components/editor-header/editor-header-name.component';
 import { EditorRightPaneHeaderComponent } from './components/editor-header/editor-right-pane-header.component';
 import { EditorResponsivenessService } from './services/editor-responsiveness.service';
+import { GlobalOverlayService } from '../../core/global-overlay/global-overlay.service';
 
 @Component({
   selector: 'app-editor',
@@ -55,26 +55,6 @@ import { EditorResponsivenessService } from './services/editor-responsiveness.se
           </div>
         </div>
       </header>
-
-      @if (isImporting() || isExporting()) {
-        <div class="position-absolute top-0 bottom-0 start-0 end-0 d-flex flex-column justify-content-center align-items-center backdrop" style="z-index: 9999">
-          <div class="card">
-            <div class="card-body">
-              @if (isImporting()) {
-                <div class="spinner-border" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-                Importing...
-              } @else if (isExporting()) {
-                <div class="spinner-border" role="status">
-                  <span class="visually-hidden">Loading...</span>
-                </div>
-                Exporting...
-              }
-            </div>
-          </div>
-        </div>
-      }
 
       @if (state.value(); as value) {
         <div class="flex-grow-1 overflow-hidden position-relative">
@@ -145,17 +125,14 @@ import { EditorResponsivenessService } from './services/editor-responsiveness.se
       </div>
     </div>
   `,
-  styles: `
-    .backdrop {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-  `,
+  styles: ``,
 })
 export class EditorPage {
   protected apiUrl = inject(API_BASE_URL);
   protected pdfTab = computed(() => this.settings().pdfTab);
   protected disablePointerEvents = signal<boolean>(false);
   protected totalWidth = signal(window.innerWidth);
+
   private rightColumnWidthLocalStorageKey = 'editor';
   protected rightColumnWidth = linkedSignal<number, number>({
     source: () => this.totalWidth(),
@@ -167,13 +144,17 @@ export class EditorPage {
       return this.loadRightColumnWidth(this.rightColumnWidthLocalStorageKey) ?? input / 2;
     },
   });
+
   private apiConstantsService = inject(ApiConstantsService);
   protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
   private editorStateService = inject(EditorStateService);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
+
+  private globalOverlayService = inject(GlobalOverlayService);
   private editorMenuService = inject(EditorMenuService);
   protected isImporting = this.editorMenuService.isImporting;
   protected isExporting = this.editorMenuService.isExporting;
+
   private editorSettingsService = inject(EditorSettingsService);
   private editorResponsivenessService = inject(EditorResponsivenessService);
   private settingsService = inject(EditorSettingsService);
@@ -188,6 +169,19 @@ export class EditorPage {
     effect(() => {
       const editorLeftColumnWidth = this.totalWidth() - this.rightColumnWidth() - 16;
       this.editorResponsivenessService.setLeftColumnWidth(editorLeftColumnWidth);
+    });
+
+    effect(() => {
+      const importing = this.isImporting();
+      const exporting = this.isExporting();
+
+      if (importing) {
+        this.globalOverlayService.enable('Importing...');
+      } else if (exporting) {
+        this.globalOverlayService.enable('Importing...');
+      } else {
+        this.globalOverlayService.disable();
+      }
     });
   }
 
