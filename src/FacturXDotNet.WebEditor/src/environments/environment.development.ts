@@ -4,4 +4,5 @@ export const environment: Environment = {
   version: '~dev',
   buildDate: new Date(),
   apiUrl: 'http://localhost:5295',
+  documentationUrl: 'https://docs.facturxdotnet.org',
 };
