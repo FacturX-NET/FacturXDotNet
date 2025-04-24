@@ -14,8 +14,8 @@ hero:
       text: What is FacturX.NET?
       link: /guides/what-is-facturxdotnet
     - theme: alt
-      text: Getting started
-      link: /guides/getting-started
+      text: Self-hosting
+      link: /guides/self-hosting
     - theme: alt
       text: GitHub
       link: https://github.com/FacturX-NET/FacturXDotNet
