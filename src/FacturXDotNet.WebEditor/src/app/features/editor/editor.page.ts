@@ -57,25 +57,23 @@ import { EditorResponsivenessService } from './services/editor-responsiveness.se
       </header>
 
       @if (isImporting() || isExporting()) {
-        <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
-          <div class="position-absolute top-0 bottom-0 start-0 end-0 d-flex flex-column justify-content-center align-items-center backdrop" style="z-index: 9999">
-            <div class="card">
-              <div class="card-body">
-                @if (isImporting()) {
-                  <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                  Importing...
-                } @else if (isExporting()) {
-                  <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                  Exporting...
-                }
-              </div>
+        <div class="position-absolute top-0 bottom-0 start-0 end-0 d-flex flex-column justify-content-center align-items-center backdrop" style="z-index: 9999">
+          <div class="card">
+            <div class="card-body">
+              @if (isImporting()) {
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                Importing...
+              } @else if (isExporting()) {
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                Exporting...
+              }
             </div>
           </div>
-        </main>
+        </div>
       }
 
       @if (state.value(); as value) {
