@@ -40,10 +40,6 @@ export class EditorMenuService {
 
   private isExportingInternal = signal(false);
 
-  constructor() {
-    pdf.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
-  }
-
   async backToWelcomePage(): Promise<void> {
     this.isImportingInternal.set(true);
     try {
