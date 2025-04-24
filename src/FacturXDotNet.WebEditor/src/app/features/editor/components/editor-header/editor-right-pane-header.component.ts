@@ -23,7 +23,7 @@ import { FormsModule } from '@angular/forms';
         </ul>
       </div>
 
-      <div class="d-flex align-items-center">
+      <div class="d-flex gap-2 align-items-center">
         @if (tab() === 'generated') {
           @if (profiles().length > 0) {
             <div class="flex-grow-1 editor__control row">
@@ -45,7 +45,7 @@ import { FormsModule } from '@angular/forms';
 
           <div class="flex-grow-1"><!--spacer--></div>
 
-          <div class="px-2">
+          <div>
             @if (pdf.isLoading()) {
               <div class="spinner-border spinner-border-sm" role="status">
                 <span class="visually-hidden">Loading...</span>
