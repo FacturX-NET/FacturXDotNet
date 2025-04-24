@@ -1,6 +1,7 @@
 import {defineConfigWithTheme} from "vitepress"; // https://vitepress.dev/reference/site-config
 import {useSidebar} from "vitepress-openapi";
 import {getSidebar} from "vitepress-plugin-auto-sidebar";
+import env from "../src/env.json" with {type: "json"};
 import spec from "../src/assets/facturxdotnet.openapi.json" with {type: "json"};
 
 const specSidebar = useSidebar({
@@ -71,11 +72,11 @@ export default defineConfigWithTheme({
         items: [
           {
             text: "Try the Editor",
-            link: "{EDITOR-URL}",
+            link: env.editor.url,
           },
           {
             text: "Try the API",
-            link: "{API-URL}",
+            link: env.api.url,
           },
         ],
       },
@@ -152,7 +153,10 @@ export default defineConfigWithTheme({
           link: "/guides/about",
         },
         {
-          text: "<span class='sidebar-footer'>v{VERSION}</span>",
+          text: `<span class='sidebar-footer sidebar-footer-first'>${env.buildName}</span>`,
+        },
+        {
+          text: `<span class='sidebar-footer'>${env.version}</span>`,
         },
       ],
       "/openapi-specification/": [
@@ -162,20 +166,29 @@ export default defineConfigWithTheme({
         },
         ...specSidebar.generateSidebarGroups(),
         {
-          text: "<span class='sidebar-footer'>v{VERSION}</span>",
+          text: `<span class='sidebar-footer sidebar-footer-first'>${env.buildName}</span>`,
+        },
+        {
+          text: `<span class='sidebar-footer'>${env.version}</span>`,
         },
       ],
       "/cli/": [
         ...cliItems,
         {
-          text: "<span class='sidebar-footer'>v{VERSION}</span>",
+          text: `<span class='sidebar-footer sidebar-footer-first'>${env.buildName}</span>`,
+        },
+        {
+          text: `<span class='sidebar-footer'>${env.version}</span>`,
         },
       ],
       "/api-reference/": [
         { text: "Index", link: "/api-reference/index" },
         ...apiReferenceItems,
         {
-          text: "<span class='sidebar-footer'>v{VERSION}</span>",
+          text: `<span class='sidebar-footer sidebar-footer-first'>${env.buildName}</span>`,
+        },
+        {
+          text: `<span class='sidebar-footer'>${env.version}</span>`,
         },
       ],
     },
@@ -209,4 +222,55 @@ export default defineConfigWithTheme({
       noExternal: ["vitepress-plugin-nprogress"],
     },
   },
+
+  transformPageData: pageData => {
+    const result = { ...pageData };
+    result.frontmatter = expandEnvInRecord(pageData.frontmatter);
+    return result;
+  },
 });
+
+function expandEnv(value: unknown): unknown {
+  if (typeof value === "string" || value instanceof String) {
+    return expandEnvInString(value);
+  } else if (value.constructor.name == "Array") {
+    return expandEnvInArray(value);
+  } else {
+    return expandEnvInRecord(value);
+  }
+}
+
+function expandEnvInArray(array: unknown[]): unknown[] {
+  return array.map(expandEnv);
+}
+
+function expandEnvInRecord(
+  record: Record<unknown, unknown>,
+): Record<unknown, unknown> {
+  const result = {};
+
+  for (const key of Object.keys(record)) {
+    result[key] = expandEnv(record[key]);
+  }
+
+  return result;
+}
+
+function expandEnvInString(value: string): string {
+  return value.replace(/\$env\.([^ ]*)/g, (_, varName) => getEnvValue(varName));
+}
+
+function getEnvValue(varName: string): string {
+  const fragments = varName.split(".");
+  let result = env;
+
+  for (const fragment of fragments) {
+    if (!Object.keys(result).includes(fragment)) {
+      return "";
+    }
+
+    result = result[fragment];
+  }
+
+  return result;
+}

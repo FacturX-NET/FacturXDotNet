@@ -10,6 +10,15 @@
     --vp-c-brand-3: #512bd4;
 }
 
+p:has(.sidebar-footer) {
+    padding: 0 !important;
+    line-height: unset !important;
+}
+
+p:has(.sidebar-footer-first) {
+    margin-top: 24px;
+}
+
 .sidebar-footer {
     font-size: 0.75rem;
     color: var(--vp-c-text-3);

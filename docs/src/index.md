@@ -28,7 +28,7 @@ features:
       alt: 'WebSite' 
     }
     details: Create, view, and edit Factur-X documents directly in your browser with our user-friendly editor.
-    link: {EDITOR-URL}
+    link: $env.editor.url
     linkText: Try it live
   - title: API
     icon: { 
@@ -37,7 +37,7 @@ features:
       alt: 'API' 
     }
     details: Programmatically generate, read, and validate Factur-X documents through our powerful API.
-    link: {API-URL}
+    link: $env.api.url
     linkText: Try it live
   - title: .NET library and tool
     icon: { 
