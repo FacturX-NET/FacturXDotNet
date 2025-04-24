@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, inject, Resource } from '@angular/core';
-import { EditorSavedState, EditorStateAttachment, EditorStateService } from '../../editor-state.service';
+import { EditorSavedState, EditorStateAttachment, EditorStateService } from '../../services/editor-state.service';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { ImportFileService } from '../../../../core/import-file/import-file.service';
 import { filter, from, map, switchMap } from 'rxjs';

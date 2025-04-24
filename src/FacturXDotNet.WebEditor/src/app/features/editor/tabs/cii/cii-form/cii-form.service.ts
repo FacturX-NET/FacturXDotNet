@@ -8,7 +8,7 @@ import {
   VatOnlyTaxSchemeIdentifier,
 } from '../../../../../core/api/api.models';
 import { debounceTime, firstValueFrom, from, Subject, switchMap, tap } from 'rxjs';
-import { EditorSavedState, EditorStateService } from '../../../editor-state.service';
+import { EditorSavedState, EditorStateService } from '../../../services/editor-state.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ValidateApi } from '../../../../../core/api/validate.api';
 import { BusinessRuleIdentifier, getBusinessRuleIdentifiers, isBusinessRuleIdentifier, requireBusinessRule } from '../constants/cii-rules';

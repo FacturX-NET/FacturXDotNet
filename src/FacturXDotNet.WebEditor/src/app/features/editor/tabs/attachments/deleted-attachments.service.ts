@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { EditorStateAttachment } from '../../editor-state.service';
+import { EditorStateAttachment } from '../../services/editor-state.service';
 
 @Injectable({
   providedIn: 'root',

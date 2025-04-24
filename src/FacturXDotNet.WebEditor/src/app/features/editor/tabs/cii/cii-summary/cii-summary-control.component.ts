@@ -1,6 +1,6 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { CiiFormNode, CiiFormService } from '../cii-form/cii-form.service';
-import { EditorSettings } from '../../../editor-settings.service';
+import { EditorSettings } from '../../../services/editor-settings.service';
 import { ScrollToDirective } from '../../../../../core/scroll-to/scroll-to.directive';
 import { CiiFormHighlightChorusProRemarkService } from '../cii-form-highlight-chorus-pro-remark.service';
 import { CiiFormHighlightTermService } from '../cii-form-highlight-term.service';

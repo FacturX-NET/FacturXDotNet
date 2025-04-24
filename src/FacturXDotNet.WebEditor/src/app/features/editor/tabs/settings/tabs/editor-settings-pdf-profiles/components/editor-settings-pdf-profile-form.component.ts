@@ -4,7 +4,7 @@ import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-int
 import { GenerateApi } from '../../../../../../../core/api/generate.api';
 import { delay, distinctUntilChanged, map, startWith } from 'rxjs';
 import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/api/api.models';
-import { EditorPdfGenerationProfileData } from '../../../../../editor-pdf-generation-profiles.service';
+import { EditorPdfGenerationProfileData } from '../../../../../services/editor-pdf-generation-profiles.service';
 import { EditorSettingsLanguagePackDocumentTypesFormComponent } from './editor-settings-language-pack-document-types-form.component';
 import { EditorSettingsLanguagePackFormComponent } from './editor-settings-language-pack-form.component';
 import { EditorSettingsGeneralFormComponent } from './editor-settings-general-form.component';

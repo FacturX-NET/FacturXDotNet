@@ -2,7 +2,7 @@ import { Component, computed, inject, input, Signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CiiFormRemarkComponent } from './cii-form-remark.component';
 import { CiiFormBusinessRulesComponent } from './cii-form-business-rules.component';
-import { EditorSettings } from '../../../../editor-settings.service';
+import { EditorSettings } from '../../../../services/editor-settings.service';
 import { CiiFormHighlightTermService } from '../../cii-form-highlight-term.service';
 import { CiiFormHighlightRemarkService } from '../../cii-form-highlight-remark.service';
 import { CiiFormHighlightChorusProRemarkService } from '../../cii-form-highlight-chorus-pro-remark.service';

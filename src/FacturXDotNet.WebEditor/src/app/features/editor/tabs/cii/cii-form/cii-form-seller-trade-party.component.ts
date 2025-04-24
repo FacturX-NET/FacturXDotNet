@@ -3,7 +3,7 @@ import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { CiiFormSellerTradePartySpecifiedLegalOrganizationComponent } from './cii-form-seller-trade-party-specified-legal-organization.component';
 import { CiiFormSellerTradePartyPostalTradeAddress } from './cii-form-seller-trade-party-postal-trade-address';
 import { CiiFormSellerTradePartySpecifiedTaxRegistration } from './cii-form-seller-trade-party-specified-tax-registration';
-import { EditorSettings } from '../../../editor-settings.service';
+import { EditorSettings } from '../../../services/editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
 import { requireTerm } from '../constants/cii-terms';

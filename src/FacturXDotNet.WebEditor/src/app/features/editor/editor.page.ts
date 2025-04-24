@@ -1,21 +1,21 @@
-import {Component, computed, effect, HostListener, inject, linkedSignal, Resource, signal, Signal} from '@angular/core';
-import {NgOptimizedImage} from '@angular/common';
-import {EditorSettings, EditorSettingsService, PdfModel} from './editor-settings.service';
-import {EditorMenuComponent} from './components/editor-menu/editor-menu.component';
-import {FormsModule} from '@angular/forms';
-import {TwoColumnsComponent} from '../../core/two-columns/two-columns.component';
-import {EditorSavedState, EditorStateService} from './editor-state.service';
-import {EditorLeftPaneHeaderComponent} from './components/editor-header/editor-left-pane-header.component';
-import {EditorWelcomeComponent} from './editor-welcome.component';
-import {API_BASE_URL} from '../../app.config';
-import {ApiServerStatusComponent} from '../../core/api/components/api-server-status.component';
-import {ApiConstantsService} from '../../core/api/services/api-constants.service';
-import {EditorMenuService} from './components/editor-menu/editor-menu.service';
-import {RouterOutlet} from '@angular/router';
-import {EditorPdfViewerComponent} from './components/editor-pdf-viewer/editor-pdf-viewer.component';
-import {EditorHeaderNameComponent} from './components/editor-header/editor-header-name.component';
-import {EditorRightPaneHeaderComponent} from './components/editor-header/editor-right-pane-header.component';
-import {EditorResponsivenessService} from './editor-responsiveness.service';
+import { Component, computed, effect, HostListener, inject, linkedSignal, Resource, signal, Signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
+import { EditorSettings, EditorSettingsService, PdfModel } from './services/editor-settings.service';
+import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
+import { FormsModule } from '@angular/forms';
+import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
+import { EditorSavedState, EditorStateService } from './services/editor-state.service';
+import { EditorLeftPaneHeaderComponent } from './components/editor-header/editor-left-pane-header.component';
+import { EditorWelcomeComponent } from './editor-welcome.component';
+import { API_BASE_URL } from '../../app.config';
+import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
+import { ApiConstantsService } from '../../core/api/services/api-constants.service';
+import { EditorMenuService } from './components/editor-menu/editor-menu.service';
+import { RouterOutlet } from '@angular/router';
+import { EditorPdfViewerComponent } from './components/editor-pdf-viewer/editor-pdf-viewer.component';
+import { EditorHeaderNameComponent } from './components/editor-header/editor-header-name.component';
+import { EditorRightPaneHeaderComponent } from './components/editor-header/editor-right-pane-header.component';
+import { EditorResponsivenessService } from './services/editor-responsiveness.service';
 
 @Component({
   selector: 'app-editor',
@@ -29,11 +29,10 @@ import {EditorResponsivenessService} from './editor-responsiveness.service';
     ApiServerStatusComponent,
     RouterOutlet,
     EditorPdfViewerComponent,
-    EditorHeaderNameComponent,
     EditorRightPaneHeaderComponent,
   ],
   template: `
-    <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column">
+    <div class="editor w-100 h-100 bg-body-tertiary d-flex flex-column overflow-hidden">
       <header class="flex-shrink-0 text-bg-secondary d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <div class="my-2 my-lg-0">
           <img ngSrc="logo.png" width="185" height="46" alt="Logo" class="logo" />
@@ -57,8 +56,8 @@ import {EditorResponsivenessService} from './editor-responsiveness.service';
         </div>
       </header>
 
-      <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
-        @if (isImporting() || isExporting()) {
+      @if (isImporting() || isExporting()) {
+        <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
           <div class="position-absolute top-0 bottom-0 start-0 end-0 d-flex flex-column justify-content-center align-items-center backdrop" style="z-index: 9999">
             <div class="card">
               <div class="card-body">
@@ -76,47 +75,58 @@ import {EditorResponsivenessService} from './editor-responsiveness.service';
               </div>
             </div>
           </div>
-        }
+        </main>
+      }
 
-        @if (state.value(); as value) {
-          <header>
-            <div class="px-3 pt-3 pb-2">
-              <app-editor-header-name [name]="value.name" />
-            </div>
-            <div>
-              <app-two-columns [rightColumnWidth]="rightColumnWidth()" resizeHandleWidth="16">
-                <div class="h-100" left>
-                  <app-editor-left-pane-header [state]="value" [settings]="settings()"></app-editor-left-pane-header>
+      @if (state.value(); as value) {
+        <div class="flex-grow-1 overflow-hidden position-relative">
+          <app-two-columns
+            [(rightColumnWidth)]="rightColumnWidth"
+            leftColumnMinWidth="500"
+            rightColumnMinWidth="350"
+            resizeHandleWidth="16"
+            (dragging)="disablePointerEvents.set($event)"
+            draggable
+          >
+            <div class="h-100 d-flex flex-column ps-2 ps-lg-3 pt-2 pt-lg-3 pb-1 position-relative" left>
+              <div class="h-100 bg-body border rounded-3 d-flex flex-column">
+                <header>
+                  <div class="pt-3 pb-2">
+                    <app-editor-left-pane-header [state]="value" [settings]="settings()"></app-editor-left-pane-header>
+                  </div>
+                </header>
+                <div class="flex-grow-1 overflow-hidden">
+                  <router-outlet></router-outlet>
                 </div>
-                <div class="h-100" right>
+              </div>
+            </div>
+            <div class="h-100 pe-2 pe-lg-3 pt-2 pt-lg-3 pb-1 overflow-hidden position-relative" right>
+              <div class="h-100 d-flex flex-column bg-body border rounded-3 overflow-hidden">
+                <div class="px-3 pt-3 pb-2">
                   <app-editor-right-pane-header [tab]="pdfTab()" (tabChange)="changePdfTab($event)"></app-editor-right-pane-header>
                 </div>
-              </app-two-columns>
+                <div class="flex-grow-1">
+                  <app-editor-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
+                </div>
+              </div>
             </div>
-          </header>
-
-          <div class="flex-grow-1 overflow-hidden">
-            <app-two-columns [(rightColumnWidth)]="rightColumnWidth" resizeHandleWidth="16" (dragging)="disablePointerEvents.set($event)" draggable>
-              <div class="h-100 overflow-hidden" left>
-                <router-outlet></router-outlet>
-              </div>
-              <div class="h-100" right>
-                <app-editor-pdf-viewer [disablePointerEvents]="disablePointerEvents()" />
-              </div>
-            </app-two-columns>
-          </div>
-        } @else if (state.isLoading()) {
+          </app-two-columns>
+        </div>
+      } @else if (state.isLoading()) {
+        <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
           <div class="w-100 h-100 d-flex justify-content-center align-items-center">
             <div class="spinner-border" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
           </div>
-        } @else {
+        </main>
+      } @else {
+        <main class="flex-grow-1 d-flex d-flex flex-column bg-body border rounded-3 mx-2 mx-lg-3 mt-2 mt-lg-3 mb-1 overflow-auto position-relative">
           <div class="w-100 h-100">
             <app-editor-welcome></app-editor-welcome>
           </div>
-        }
-      </main>
+        </main>
+      }
 
       <div class="py-lg-1">
         <div class="flex-shrink-0 d-flex justify-content-center gap-2 px-4 small" [class.d-none]="!unsafeEnvironment()">
@@ -131,8 +141,8 @@ import {EditorResponsivenessService} from './editor-responsiveness.service';
         </div>
 
         <div class="flex-shrink-0 text-body-tertiary text-center px-4 text-truncate small">
-          <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and released under the MIT
-          License, feel free to use, modify, and share.
+          <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and released under the
+          MIT License, feel free to use, modify, and share.
         </div>
       </div>
     </div>

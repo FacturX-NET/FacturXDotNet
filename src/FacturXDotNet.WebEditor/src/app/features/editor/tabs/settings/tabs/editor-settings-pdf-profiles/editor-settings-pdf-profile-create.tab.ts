@@ -1,7 +1,7 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { EditorSettingsPdfProfileFormComponent } from './components/editor-settings-pdf-profile-form.component';
-import { EditorPdfGenerationProfileData, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
+import { EditorPdfGenerationProfileData, EditorPdfGenerationProfilesService } from '../../../../services/editor-pdf-generation-profiles.service';
 import { ToastService } from '../../../../../../core/toasts/toast.service';
 import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer/editor-pdf-viewer.service';
 

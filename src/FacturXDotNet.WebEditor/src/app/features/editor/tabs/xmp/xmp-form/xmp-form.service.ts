@@ -1,6 +1,6 @@
 import { effect, inject, Injectable } from '@angular/core';
 import { debounceTime, from, Subject, switchMap } from 'rxjs';
-import { EditorSavedState, EditorStateService } from '../../../editor-state.service';
+import { EditorSavedState, EditorStateService } from '../../../services/editor-state.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CiiFormService } from '../../cii/cii-form/cii-form.service';
 import { FormControl, FormGroup } from '@angular/forms';

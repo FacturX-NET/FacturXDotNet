@@ -1,9 +1,9 @@
 import { Component, computed, inject, Resource, Signal } from '@angular/core';
-import { EditorSettings, EditorSettingsService } from '../../editor-settings.service';
+import { EditorSettings, EditorSettingsService } from '../../services/editor-settings.service';
 import { XmpFormComponent } from './xmp-form/xmp-form.component';
 import { XmpSummaryComponent } from './xmp-summary.component';
-import { EditorSavedState, EditorStateService } from '../../editor-state.service';
-import { EditorResponsivenessService } from '../../editor-responsiveness.service';
+import { EditorSavedState, EditorStateService } from '../../services/editor-state.service';
+import { EditorResponsivenessService } from '../../services/editor-responsiveness.service';
 
 @Component({
   selector: 'app-xmp',

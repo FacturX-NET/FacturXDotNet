@@ -1,6 +1,6 @@
 import { Component, inject, input, model } from '@angular/core';
 import { IXmpMetadata } from '../../../../../core/api/api.models';
-import { EditorSettings } from '../../../editor-settings.service';
+import { EditorSettings } from '../../../services/editor-settings.service';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { XmpFormService } from './xmp-form.service';
 import { XmpFormFacturxComponent } from './xmp-form-facturx.component';

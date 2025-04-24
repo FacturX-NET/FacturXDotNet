@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, linkedSignal } from '@angular/core';
 import { PdfViewerComponent } from './pdf-viewer.component';
 import { ToastService } from '../../../../core/toasts/toast.service';
-import { EditorSettingsService, PdfModel } from '../../editor-settings.service';
+import { EditorSettingsService, PdfModel } from '../../services/editor-settings.service';
 import { EditorMenuService } from '../editor-menu/editor-menu.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EditorPdfViewerService } from './editor-pdf-viewer.service';

@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { EditorSettingsService } from '../../../../editor-settings.service';
+import { EditorSettingsService } from '../../../../services/editor-settings.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({

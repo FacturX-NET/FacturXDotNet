@@ -1,5 +1,5 @@
 import { Component, inject, input } from '@angular/core';
-import { EditorSettings, EditorSettingsService } from '../../../editor-settings.service';
+import { EditorSettings, EditorSettingsService } from '../../../services/editor-settings.service';
 import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

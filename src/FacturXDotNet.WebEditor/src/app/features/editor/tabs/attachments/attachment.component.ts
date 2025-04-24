@@ -1,6 +1,6 @@
 import { booleanAttribute, Component, effect, input, model, signal } from '@angular/core';
 import { NgxFilesizeModule } from 'ngx-filesize';
-import { EditorStateAttachment } from '../../editor-state.service';
+import { EditorStateAttachment } from '../../services/editor-state.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({

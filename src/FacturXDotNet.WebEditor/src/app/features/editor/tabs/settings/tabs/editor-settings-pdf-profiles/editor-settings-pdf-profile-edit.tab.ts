@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, input, viewChild } from '@angular/core';
 import { EditorSettingsPdfProfileFormComponent } from './components/editor-settings-pdf-profile-form.component';
 import { Router, RouterLink } from '@angular/router';
-import { EditorPdfGenerationProfile, EditorPdfGenerationProfileData, EditorPdfGenerationProfilesService } from '../../../../editor-pdf-generation-profiles.service';
+import { EditorPdfGenerationProfile, EditorPdfGenerationProfileData, EditorPdfGenerationProfilesService } from '../../../../services/editor-pdf-generation-profiles.service';
 import { ToastService } from '../../../../../../core/toasts/toast.service';
 import { EditorPdfViewerService } from '../../../../components/editor-pdf-viewer/editor-pdf-viewer.service';
 import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';

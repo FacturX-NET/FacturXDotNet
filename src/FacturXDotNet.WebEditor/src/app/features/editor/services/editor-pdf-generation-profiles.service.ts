@@ -1,5 +1,5 @@
 import { computed, Injectable, signal, WritableSignal } from '@angular/core';
-import { IStandardPdfGeneratorLanguagePackDto } from '../../core/api/api.models';
+import { IStandardPdfGeneratorLanguagePackDto } from '../../../core/api/api.models';
 
 @Injectable({
   providedIn: 'root',

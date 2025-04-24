@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { CiiMenuDetailsDropdownComponent } from './cii-menu-details-dropdown.component';
-import { EditorSettings, EditorSettingsService } from '../../../editor-settings.service';
+import { EditorSettings, EditorSettingsService } from '../../../services/editor-settings.service';
 import { CiiFormService } from '../cii-form/cii-form.service';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { ToastService } from '../../../../../core/toasts/toast.service';

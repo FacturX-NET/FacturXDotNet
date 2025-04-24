@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { EditorResponsivenessService } from '../../editor-responsiveness.service';
+import { EditorResponsivenessService } from '../../services/editor-responsiveness.service';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NgbNav, NgbNavItem, NgbNavLinkButton } from '@ng-bootstrap/ng-bootstrap';
 

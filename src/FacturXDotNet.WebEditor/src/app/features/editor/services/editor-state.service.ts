@@ -1,6 +1,6 @@
 import { Injectable, resource, Resource } from '@angular/core';
 import { IDBPDatabase, openDB } from 'idb';
-import { ICrossIndustryInvoice, IXmpMetadata } from '../../core/api/api.models';
+import { ICrossIndustryInvoice, IXmpMetadata } from '../../../core/api/api.models';
 
 @Injectable({
   providedIn: 'root',

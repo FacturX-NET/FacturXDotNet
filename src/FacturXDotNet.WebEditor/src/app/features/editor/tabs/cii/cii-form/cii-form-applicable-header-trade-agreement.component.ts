@@ -3,7 +3,7 @@ import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { CiiFormSellerTradePartyComponent } from './cii-form-seller-trade-party.component';
 import { CiiFormBuyerTradePartyComponent } from './cii-form-buyer-trade-party.component';
 import { CiiFormBuyerOrderReferencedDocumentComponent } from './cii-form-buyer-order-referenced-document.component';
-import { EditorSettings } from '../../../editor-settings.service';
+import { EditorSettings } from '../../../services/editor-settings.service';
 import { CiiFormParentContainerComponent } from './base/cii-form-parent-container.component';
 import { CiiFormControlComponent } from './base/cii-form-control.component';
 import { requireTerm } from '../constants/cii-terms';
