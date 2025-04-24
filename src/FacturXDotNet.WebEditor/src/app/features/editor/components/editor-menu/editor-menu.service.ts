@@ -11,12 +11,14 @@ import { EditorStateService } from '../../services/editor-state.service';
 import * as pdf from 'pdfjs-dist';
 import { EditorSettingsService } from '../../services/editor-settings.service';
 import { EditorPdfViewerService } from '../../editor-tabs/editor-pdf-viewer/editor-pdf-viewer.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EditorMenuService {
   private editorStateService = inject(EditorStateService);
+  private router = inject(Router);
   private editorSettingsService = inject(EditorSettingsService);
   private editorPdfViewerService = inject(EditorPdfViewerService);
   private ciiFormService = inject(CiiFormService);
@@ -43,7 +45,7 @@ export class EditorMenuService {
   async backToWelcomePage(): Promise<void> {
     this.isImportingInternal.set(true);
     try {
-      await this.editorStateService.clear();
+      await this.router.navigate(['/', 'welcome']);
     } finally {
       this.isImportingInternal.set(false);
     }
