@@ -8,6 +8,11 @@ on:
         type: string
         required: true
       
+      build-name:
+        description: The name of the build, defaults to 'build'
+        type: string
+        required: true
+      
       api-url:
         description: The URL at which the FacturX.NET API will be served
         type: string
@@ -198,10 +203,20 @@ jobs:
           echo
           echo
 
-      - name: Set version number
+      - name: Write env.json
         run: |
-          sed -i -e 's|{VERSION}|${{ inputs.version }}|g' -e 's|{API-URL}|${{ inputs.api-url }}|g' -e 's|{EDITOR-URL}|${{ inputs.editor-url }}|g' docs/.vitepress/config.mts
-          sed -i -e 's|{VERSION}|${{ inputs.version }}|g' -e 's|{API-URL}|${{ inputs.api-url }}|g' -e 's|{EDITOR-URL}|${{ inputs.editor-url }}|g' docs/src/index.md
+          echo '{'                                            > docs/src/env.json
+          echo '  "buildName": "${{ inputs.build-name }}",'   >> docs/src/env.json
+          echo '  "version": "${{ inputs.version }}",'        >> docs/src/env.json
+          echo '  "editor": {'                                >> docs/src/env.json
+          echo '    "url": "${{ inputs.editor-url }}"'         >> docs/src/env.json
+          echo '  },'                                         >> docs/src/env.json
+          echo '  "api": {'                                   >> docs/src/env.json
+          echo '    "url": "${{ inputs.api-url }}"'           >> docs/src/env.json
+          echo '  }'                                          >> docs/src/env.json
+          echo '}'                                            >> docs/src/env.json
+          
+          cat docs/src/env.json
 
       - name: Build
         run: cd docs; npm run build -- --base /docs/ --outDir dist/
