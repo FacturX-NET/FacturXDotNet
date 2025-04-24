@@ -22,7 +22,6 @@ export class EditorExportMenuComponent {
 
   private editorMenuService = inject(EditorMenuService);
   private toastService = inject(ToastService);
-  private destroyRef = inject(DestroyRef);
 
   async exportFacturX() {
     this.exporting.emit(true);

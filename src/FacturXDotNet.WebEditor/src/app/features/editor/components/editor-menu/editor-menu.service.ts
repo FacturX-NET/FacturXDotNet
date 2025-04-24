@@ -6,17 +6,19 @@ import { ICrossIndustryInvoice } from '../../../../core/api/api.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { downloadBlob, downloadFile } from '../../../../core/utils/download-blob';
 import { GenerateApi } from '../../../../core/api/generate.api';
-import { CiiFormService } from '../../tabs/cii/cii-form/cii-form.service';
-import { EditorStateService } from '../../editor-state.service';
+import { CiiFormService } from '../../editor-tabs/editor-cii/cii-form/cii-form.service';
+import { EditorStateService } from '../../services/editor-state.service';
 import * as pdf from 'pdfjs-dist';
-import { EditorSettingsService } from '../../editor-settings.service';
-import { EditorPdfViewerService } from '../editor-pdf-viewer/editor-pdf-viewer.service';
+import { EditorSettingsService } from '../../services/editor-settings.service';
+import { EditorPdfViewerService } from '../../editor-tabs/editor-pdf-viewer/editor-pdf-viewer.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EditorMenuService {
   private editorStateService = inject(EditorStateService);
+  private router = inject(Router);
   private editorSettingsService = inject(EditorSettingsService);
   private editorPdfViewerService = inject(EditorPdfViewerService);
   private ciiFormService = inject(CiiFormService);
@@ -43,7 +45,7 @@ export class EditorMenuService {
   async backToWelcomePage(): Promise<void> {
     this.isImportingInternal.set(true);
     try {
-      await this.editorStateService.clear();
+      await this.router.navigate(['/', 'welcome']);
     } finally {
       this.isImportingInternal.set(false);
     }

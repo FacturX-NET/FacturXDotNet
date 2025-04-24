@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../../app.config';
 import { CrossIndustryInvoice, ICrossIndustryInvoice, IXmpMetadata, StandardPdfGeneratorLanguagePackDto } from './api.models';
-import { EditorStateAttachment } from '../../features/editor/editor-state.service';
+import { EditorStateAttachment } from '../../features/editor/services/editor-state.service';
 
 @Injectable({
   providedIn: 'root',

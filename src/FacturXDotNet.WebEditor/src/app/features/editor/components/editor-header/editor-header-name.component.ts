@@ -1,5 +1,5 @@
 import { Component, inject, input, signal } from '@angular/core';
-import { EditorStateService } from '../../editor-state.service';
+import { EditorStateService } from '../../services/editor-state.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgStyle } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
