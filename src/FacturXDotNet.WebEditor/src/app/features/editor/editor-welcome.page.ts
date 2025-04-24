@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { EditorMenuService } from './components/editor-menu/editor-menu.service';
 import { ToastService } from '../../core/toasts/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-editor-welcome',
@@ -44,13 +45,15 @@ import { ToastService } from '../../core/toasts/toast.service';
     </div>
   `,
 })
-export class EditorWelcomeComponent {
+export class EditorWelcomePage {
   private editorMenuService = inject(EditorMenuService);
   private toastService = inject(ToastService);
+  private router = inject(Router);
 
   async createNewDocument() {
     try {
       await this.editorMenuService.createNewDocument();
+      await this.router.navigate(['/']);
     } catch (error) {
       this.toastService.showError(error, (message) => `Could not create blank document: ${message}.`);
     }
@@ -59,6 +62,7 @@ export class EditorWelcomeComponent {
   async createNewDocumentFromFacturX() {
     try {
       await this.editorMenuService.createNewDocumentFromFacturX();
+      await this.router.navigate(['/']);
     } catch (error) {
       this.toastService.showError(error, (message) => `Could not import FacturX file: ${message}.`);
     }
@@ -67,6 +71,7 @@ export class EditorWelcomeComponent {
   async createNewDocumentFromCrossIndustryInvoice() {
     try {
       await this.editorMenuService.createNewDocumentFromCrossIndustryInvoice();
+      await this.router.navigate(['/']);
     } catch (error) {
       this.toastService.showError(error, (message) => `Could not import Cross-Industry Invoice file: ${message}.`);
     }
@@ -75,6 +80,7 @@ export class EditorWelcomeComponent {
   async createNewDocumentFromPdf() {
     try {
       await this.editorMenuService.createNewDocumentFromPdf();
+      await this.router.navigate(['/']);
     } catch (error) {
       this.toastService.showError(error, (message) => `Could not import PDF file: ${message}.`);
     }

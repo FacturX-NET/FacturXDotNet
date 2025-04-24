@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { EditorPage } from './editor.page';
+import { EditorLayout } from './editor.layout';
 import { XmpTab } from './tabs/xmp/xmp.tab';
 import { CiiTab } from './tabs/cii/cii.tab';
 import { AttachmentsTab } from './tabs/attachments/attachments.tab';
@@ -9,50 +9,67 @@ import { EditorSettingsPdfProfilesTab } from './tabs/settings/tabs/editor-settin
 import { EditorSettingsPdfProfileCreateTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profile-create.tab';
 import { EditorSettingsPdfProfileEditTab } from './tabs/settings/tabs/editor-settings-pdf-profiles/editor-settings-pdf-profile-edit.tab';
 import { resetPdfProfileOverride } from './guards/reset-pdf-profile-override';
+import { EditorWelcomePage } from './editor-welcome.page';
+import { EditorPage } from './editor.page';
 
 export const routes: Routes = [
   {
     path: '',
-    component: EditorPage,
+    component: EditorLayout,
     children: [
       {
-        path: 'xmp',
-        component: XmpTab,
+        path: 'welcome',
+        component: EditorWelcomePage,
       },
       {
-        path: 'cii',
-        component: CiiTab,
-      },
-      {
-        path: 'attachments',
-        component: AttachmentsTab,
-      },
-      {
-        path: 'settings',
-        component: EditorSettingsTab,
+        path: '',
+        component: EditorPage,
         children: [
           {
             path: '',
             pathMatch: 'full',
-            component: EditorSettingsGeneralTab,
+            redirectTo: 'cii',
           },
           {
-            path: 'profiles/create',
-            component: EditorSettingsPdfProfileCreateTab,
-            canDeactivate: [resetPdfProfileOverride],
+            path: 'xmp',
+            component: XmpTab,
           },
           {
-            path: 'profiles/edit/:profileId',
-            component: EditorSettingsPdfProfileEditTab,
-            canDeactivate: [resetPdfProfileOverride],
+            path: 'cii',
+            component: CiiTab,
           },
           {
-            path: 'profiles',
-            component: EditorSettingsPdfProfilesTab,
+            path: 'attachments',
+            component: AttachmentsTab,
           },
           {
-            path: '**',
-            redirectTo: '',
+            path: 'settings',
+            component: EditorSettingsTab,
+            children: [
+              {
+                path: '',
+                pathMatch: 'full',
+                component: EditorSettingsGeneralTab,
+              },
+              {
+                path: 'profiles/create',
+                component: EditorSettingsPdfProfileCreateTab,
+                canDeactivate: [resetPdfProfileOverride],
+              },
+              {
+                path: 'profiles/edit/:profileId',
+                component: EditorSettingsPdfProfileEditTab,
+                canDeactivate: [resetPdfProfileOverride],
+              },
+              {
+                path: 'profiles',
+                component: EditorSettingsPdfProfilesTab,
+              },
+              {
+                path: '**',
+                redirectTo: '',
+              },
+            ],
           },
         ],
       },
