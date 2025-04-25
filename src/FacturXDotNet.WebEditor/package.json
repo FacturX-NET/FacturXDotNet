@@ -26,6 +26,7 @@
     "bootstrap-icons": "^1.11.3",
     "idb": "^8.0.2",
     "marked": "^15.0.8",
+    "minisearch": "^7.1.2",
     "ngx-filesize": "^3.0.5",
     "ngx-markdown": "^19.1.1",
     "pdfjs-dist": "^5.1.91",

@@ -1,11 +1,16 @@
-import { Component, computed, input, linkedSignal, signal, Signal, WritableSignal } from '@angular/core';
+import { Component, computed, input, linkedSignal, signal, Signal, untracked, WritableSignal } from '@angular/core';
 import semver from 'semver/preload';
 import { NgTemplateOutlet } from '@angular/common';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import MiniSearch from 'minisearch';
+import { HighlightTextPipe } from '../../core/highlight-text/highlight-text.pipe';
+
+const UnknownLicenseName = 'N/A';
 
 @Component({
   selector: 'app-about-licenses',
-  imports: [NgTemplateOutlet, NgbTooltip],
+  imports: [NgTemplateOutlet, NgbTooltip, FormsModule, HighlightTextPipe],
   template: `
     <div class="d-flex align-items-center justify-content-between gap-4">
       <ul class="nav nav-underline">
@@ -30,15 +35,23 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
       </div>
     </div>
 
-    <div [class.d-none]="activeTab() !== 'direct'">
-      <ng-container [ngTemplateOutlet]="dependenciesTpl" [ngTemplateOutletContext]="{ $implicit: directDependenciesRecord() }"></ng-container>
-    </div>
-    <div [class.d-none]="activeTab() !== 'all'">
-      <ng-container [ngTemplateOutlet]="dependenciesTpl" [ngTemplateOutletContext]="{ $implicit: allDependenciesRecord() }"></ng-container>
+    <div class="d-flex gap-2 pt-3">
+      <div>
+        <label class="col-form-label col-form-label-sm">
+          <i class="bi bi-search"></i>
+        </label>
+      </div>
+      <div class="flex-grow-1">
+        <input class="form-control form-control-sm" placeholder="Search..." [ngModel]="searchTerm()" (ngModelChange)="search($event)" />
+      </div>
     </div>
 
+    <div class="text-body-tertiary small text-end">{{ searchResult().packagesCount }} result(s)</div>
+
+    <ng-container [ngTemplateOutlet]="dependenciesTpl" [ngTemplateOutletContext]="{ $implicit: searchResult() }"></ng-container>
+
     <ng-template #dependenciesTpl let-record>
-      <div class="list-group list-group-flush pt-2">
+      <div class="list-group list-group-flush">
         @for (license of record.licenses; track license.license) {
           <div class="list-group-item">
             <a role="button" (click)="hideLicense()[license.license].set(!hideLicense()[license.license]())">
@@ -52,20 +65,19 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
             <ul [class.d-none]="hideLicense()[license.license]()">
               @for (package_ of license.packages; track package_.name) {
                 <li>
-                  <a [href]="package_.latest.link">{{ package_.latest.name }}</a>
+                  <a class="pe-1" [href]="package_.latest.link" [innerHtml]="package_.latest.name | highlightText: package_.latest.terms"></a>
 
                   @switch (package_.versions.length) {
                     @case (0) {}
                     @case (1) {
-                      <span class="fw-semibold"> v{{ package_.versions[0] }} </span>
+                      <span class="fw-semibold" [innerHtml]="'v' + package_.versions[0] | highlightText: package_.latest.terms"></span>
                     }
                     @default {
                       @for (version of package_.versions; track version) {
                         @if ($last) {
-                          <span class="fw-semibold"> v{{ version }} </span>
+                          <span class="fw-semibold" [innerHtml]="'v' + version | highlightText: package_.latest.terms"></span>
                         } @else {
-                          <span class="fw-semibold"> v{{ version }}</span
-                          >,
+                          <span class="fw-semibold" [innerHtml]="'v' + version | highlightText: package_.latest.terms"></span>,
                         }
                       }
                     }
@@ -73,15 +85,11 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
                   @if (package_.latest.author) {
                     -
-                    <span class="text-body-secondary fw-semibold">
-                      {{ package_.latest.author }}
-                    </span>
+                    <span class="text-body-secondary fw-semibold" [innerHtml]="package_.latest.author | highlightText: package_.latest.terms"> </span>
                   }
 
                   @if (package_.latest.description) {
-                    <div class="text-body-secondary">
-                      {{ package_.latest.description }}
-                    </div>
+                    <div class="text-body-secondary" [innerHtml]="package_.latest.description | highlightText: package_.latest.terms"></div>
                   }
                 </li>
               }
@@ -105,14 +113,47 @@ export class AboutLicensesComponent {
 
   protected activeTab = signal<'direct' | 'all'>('direct');
   protected hideLicense: Signal<Record<string, WritableSignal<boolean>>> = linkedSignal({
-    source: this.allDependenciesRecord,
+    source: this.packages,
     computation: (source, previous) => {
+      const licenses = new Set(source.map((p) => p.license ?? UnknownLicenseName));
+
       const newValue = previous !== undefined ? { ...previous.value } : {};
-      for (const license of source.licenses) {
-        newValue[license.license] = newValue[license.license] ?? signal(false);
+      for (const license of licenses) {
+        newValue[license] = newValue[license] ?? signal(false);
       }
       return newValue;
     },
+  });
+
+  private miniSearch = computed(() => {
+    const packages = this.packages().map((p, i) => ({ ...p, index: i }));
+    const result = new MiniSearch({
+      idField: 'index',
+      fields: ['name', 'description', 'author', 'version', 'license', 'link'],
+      searchOptions: { prefix: true, fuzzy: true },
+    });
+    result.addAll(packages);
+    return result;
+  });
+  protected searchTerm = signal<string | undefined>(undefined);
+  protected searchResult = computed(() => {
+    const miniSearch = this.miniSearch();
+    const allPackages = untracked(() => this.packages());
+
+    let packages: (Package & { terms: string[] })[];
+    const searchTerm = this.searchTerm();
+    if (searchTerm === undefined) {
+      packages = allPackages.map((p) => ({ ...p, terms: [] }));
+    } else {
+      packages = miniSearch.search(searchTerm).map((r) => ({ ...allPackages[r.id], terms: r.terms }));
+    }
+
+    const activeTab = this.activeTab();
+    if (activeTab === 'direct') {
+      packages = packages.filter((p) => p.direct);
+    }
+
+    return groupPackages(packages);
   });
 
   protected collapseAll() {
@@ -128,6 +169,15 @@ export class AboutLicensesComponent {
       value.set(false);
     }
   }
+
+  protected search(term: string | undefined) {
+    if (term === undefined || term === '') {
+      this.searchTerm.set(undefined);
+      return;
+    }
+
+    this.searchTerm.set(term);
+  }
 }
 
 export interface Package {
@@ -140,24 +190,24 @@ export interface Package {
   direct: boolean;
 }
 
-interface GroupedPackages {
+interface GroupedPackages<TPackage extends Package = Package> {
   packagesCount: number;
   licenses: {
     license: string;
     packages: {
       name: string;
       versions: string[];
-      latest: Package;
-      packages: Package[];
+      latest: TPackage;
+      packages: TPackage[];
     }[];
   }[];
 }
 
-function groupPackages(packages: Package[], keepLatestOnly: boolean = false): GroupedPackages {
-  const licenses: Record<string, Record<string, Package[]>> = {};
+function groupPackages<TPackage extends Package>(packages: TPackage[], keepLatestOnly: boolean = false): GroupedPackages<TPackage> {
+  const licenses: Record<string, Record<string, TPackage[]>> = {};
 
   for (const p of packages) {
-    const license = p.license ?? 'N/A';
+    const license = p.license ?? UnknownLicenseName;
 
     if (!licenses[license]) {
       licenses[license] = {};
@@ -177,9 +227,12 @@ function groupPackages(packages: Package[], keepLatestOnly: boolean = false): Gr
   }
 
   return {
-    packagesCount: Object.values(licenses)
-      .map((l) => Object.keys(l).length)
-      .reduce((a, b) => a + b),
+    packagesCount:
+      Object.values(licenses).length === 0
+        ? 0
+        : Object.values(licenses)
+            .map((l) => Object.keys(l).length)
+            .reduce((a, b) => a + b),
     licenses: Object.entries(licenses).map(([license, packages]) => ({
       license,
       packages: Object.entries(packages)
