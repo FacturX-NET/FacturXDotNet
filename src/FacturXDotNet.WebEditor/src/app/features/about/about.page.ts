@@ -1,13 +1,14 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AboutLicensesComponent } from './about-licenses.component';
+import { AboutLicensesComponent, Package } from './about-licenses.component';
 import { environment } from '../../../environments/environment';
 import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { API_BASE_URL } from '../../app.config';
-import licenses from '../../../licenses/licenses.json';
+import dependencies from '../../../dependencies/dependencies.json';
+import directDependencies from '../../../dependencies/direct-dependencies.json';
 import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
 import { ApiConstantsService } from '../../core/api/services/api-constants.service';
-import { IPackageDto } from '../../core/api/api.models';
+import semver from 'semver/preload';
 
 @Component({
   selector: 'app-about',
@@ -144,8 +145,9 @@ import { IPackageDto } from '../../core/api/api.models';
                     }
                   </p>
 
-                  <p class="fw-bold">Dependencies</p>
-                  <app-about-licenses [packages]="apiConstants.dependencies"></app-about-licenses>
+                  <hr />
+
+                  <app-about-licenses [packages]="dependencies()"></app-about-licenses>
                 }
               }
             </div>
@@ -173,7 +175,8 @@ import { IPackageDto } from '../../core/api/api.models';
                 <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/main/src/Tests.FacturXDotNet.WebEditor">on GitHub</a>.
               </p>
 
-              <p class="fw-bold">Dependencies</p>
+              <hr />
+
               <app-about-licenses [packages]="webEditorPackages"></app-about-licenses>
             </div>
           </div>
@@ -184,13 +187,17 @@ import { IPackageDto } from '../../core/api/api.models';
   imports: [RouterLink, AboutLicensesComponent, DatePipe, ApiServerStatusComponent, NgOptimizedImage],
 })
 export class AboutPage {
-  protected webEditorPackages: IPackageDto[] = licenses.map((l) => ({
-    name: l.name,
-    author: l.author,
-    version: l.installedVersion,
-    license: l.licenseType,
-    link: l.link,
-  }));
+  protected webEditorPackages: Package[] = dependencies.components.map((l) => {
+    return {
+      name: l.name,
+      description: l.description,
+      author: l.author,
+      version: l.version,
+      license: getLicense(l.licenses?.[0]),
+      link: l.externalReferences.find((r) => r.type === 'website')?.url,
+      direct: directDependencies.some((d) => l.name === d.name && semver.satisfies(l.version, d.version)),
+    };
+  });
 
   protected webEditorVersion = removeBuildInformation(environment.version);
   protected webEditorBuildMetadata = extractBuildInformation(environment.version);
@@ -217,6 +224,15 @@ export class AboutPage {
     return extractBuildInformation(apiConstants.build.version);
   });
 
+  protected dependencies = computed(() => {
+    const info = this.apiConstantsService.info.value();
+    if (info === undefined) {
+      return [];
+    }
+
+    return info.dependencies.map((d) => ({ ...d, direct: true }));
+  });
+
   protected apiConstants = this.apiConstantsService.info;
 }
 
@@ -236,4 +252,20 @@ function removeBuildInformation(version: string) {
   }
 
   return version.substring(0, indexOfPlus);
+}
+
+function getLicense(license: { license: { id: string } } | { expression: string } | undefined): string | undefined {
+  if (license === undefined) {
+    return undefined;
+  }
+
+  if (isExpressionLicense(license)) {
+    return license.expression;
+  }
+
+  return license.license.id;
+}
+
+function isExpressionLicense(license: { license: { id: string } } | { expression: string }): license is { expression: string } {
+  return Object.keys(license).includes('expression');
 }

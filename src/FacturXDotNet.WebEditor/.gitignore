@@ -40,3 +40,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+src/dependencies/dependencies.json
+src/dependencies/direct-dependencies.json

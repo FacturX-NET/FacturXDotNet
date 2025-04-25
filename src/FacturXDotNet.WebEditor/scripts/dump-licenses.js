@@ -2,16 +2,20 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-const configFilePath = path.join(__dirname, "..", "license-report-config.json");
-const outputFilePath = path.join(__dirname, "..", "src", "licenses", "licenses.json");
+const dependenciesFileDirectory = path.join(__dirname, "..", "src", "dependencies");
+fs.mkdirSync(dependenciesFileDirectory, { recursive: true });
 
-execSync("npm i -g license-report", { stdio: "inherit" });
-console.log();
+const dependenciesFilePath = path.join(dependenciesFileDirectory, "dependencies.json");
+const dependenciesFile = fs.openSync(dependenciesFilePath, "w+");
+execSync("npm sbom --sbom-format cyclonedx", { stdio: ["inherit", dependenciesFile, "inherit"] });
+fs.closeSync(dependenciesFile);
+console.log(`Dependencies have been written at ${dependenciesFilePath}`);
 
-console.log(`Using configuration at at ${configFilePath}`);
-
-const outputFile = fs.openSync(outputFilePath, "w+");
-execSync(`license-report --config ${configFilePath}`, { stdio: ["inherit", outputFile, "inherit"] });
-fs.closeSync(outputFile);
-
-console.log(`Licenses have been written at ${outputFilePath}`);
+const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
+const directDependenciesNames = [
+  ...Object.entries(packageJson.dependencies).map(([name, version]) => ({ name, version })),
+  ...Object.entries(packageJson.devDependencies).map(([name, version]) => ({ name, version })),
+];
+const directDependenciesFilePath = path.join(dependenciesFileDirectory, "direct-dependencies.json");
+fs.writeFileSync(directDependenciesFilePath, JSON.stringify(directDependenciesNames));
+console.log(`Direct dependencies have been written at ${dependenciesFilePath}`);
