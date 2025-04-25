@@ -1,12 +1,13 @@
-import { Component, computed, input, signal, Signal } from '@angular/core';
+import { Component, computed, input, linkedSignal, signal, Signal, WritableSignal } from '@angular/core';
 import semver from 'semver/preload';
 import { NgTemplateOutlet } from '@angular/common';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-about-licenses',
-  imports: [NgTemplateOutlet],
+  imports: [NgTemplateOutlet, NgbTooltip],
   template: `
-    <div class="d-flex align-items-center gap-4">
+    <div class="d-flex align-items-center justify-content-between gap-4">
       <ul class="nav nav-underline">
         <li class="nav-item">
           <button class="nav-link text-truncate" [class.active]="activeTab() === 'direct'" (click)="activeTab.set('direct')">
@@ -19,6 +20,14 @@ import { NgTemplateOutlet } from '@angular/common';
           </button>
         </li>
       </ul>
+      <div>
+        <button class="btn" (click)="collapseAll()">
+          <i class="bi bi-chevron-contract" ngbTooltip="Collapse all"></i>
+        </button>
+        <button class="btn" (click)="expandAll()">
+          <i class="bi bi-chevron-expand" ngbTooltip="Expand all"></i>
+        </button>
+      </div>
     </div>
 
     <div [class.d-none]="activeTab() !== 'direct'">
@@ -32,8 +41,15 @@ import { NgTemplateOutlet } from '@angular/common';
       <div class="list-group list-group-flush pt-2">
         @for (license of record.licenses; track license.license) {
           <div class="list-group-item">
-            <span class="fw-bold"> {{ license.license }} </span> ({{ license.packages.length }})
-            <ul>
+            <a role="button" (click)="hideLicense()[license.license].set(!hideLicense()[license.license]())">
+              @if (hideLicense()[license.license]()) {
+                <i class="bi bi-chevron-right"></i>
+              } @else {
+                <i class="bi bi-chevron-down"></i>
+              }
+              <span class="fw-bold"> {{ license.license }} </span> ({{ license.packages.length }})
+            </a>
+            <ul [class.d-none]="hideLicense()[license.license]()">
               @for (package_ of license.packages; track package_.name) {
                 <li>
                   <a [href]="package_.latest.link">{{ package_.latest.name }}</a>
@@ -55,17 +71,17 @@ import { NgTemplateOutlet } from '@angular/common';
                     }
                   }
 
-                  @if (package_.latest.description) {
-                    -
-                    <span class="text-body-secondary">
-                      {{ package_.latest.description }}
-                    </span>
-                  }
                   @if (package_.latest.author) {
                     -
                     <span class="text-body-secondary fw-semibold">
                       {{ package_.latest.author }}
                     </span>
+                  }
+
+                  @if (package_.latest.description) {
+                    <div class="text-body-secondary">
+                      {{ package_.latest.description }}
+                    </div>
                   }
                 </li>
               }
@@ -88,6 +104,30 @@ export class AboutLicensesComponent {
   protected allDependenciesRecord: Signal<GroupedPackages> = computed(() => groupPackages(this.packages()));
 
   protected activeTab = signal<'direct' | 'all'>('direct');
+  protected hideLicense: Signal<Record<string, WritableSignal<boolean>>> = linkedSignal({
+    source: this.allDependenciesRecord,
+    computation: (source, previous) => {
+      const newValue = previous !== undefined ? { ...previous.value } : {};
+      for (const license of source.licenses) {
+        newValue[license.license] = newValue[license.license] ?? signal(false);
+      }
+      return newValue;
+    },
+  });
+
+  protected collapseAll() {
+    const hideLicense = this.hideLicense();
+    for (const value of Object.values(hideLicense)) {
+      value.set(true);
+    }
+  }
+
+  protected expandAll() {
+    const hideLicense = this.hideLicense();
+    for (const value of Object.values(hideLicense)) {
+      value.set(false);
+    }
+  }
 }
 
 export interface Package {
