@@ -48,6 +48,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup .NET 9 (for CycloneDX)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
       - name: Install CycloneDX
         run: dotnet tool install --global CycloneDX --framework net8.0
 
