@@ -62,8 +62,8 @@ TODOs.md
 src/api-reference/**
 src/cli/**
 src/assets/facturxdotnet.openapi.json
-src/assets/docs.bom.json
-src/assets/editor.bom.json
-src/assets/api.bom.json
-src/assets/cli.bom.json
-src/assets/library.bom.json
+src/public/docs.bom.json
+src/public/editor.bom.json
+src/public/api.bom.json
+src/public/cli.bom.json
+src/public/library.bom.json

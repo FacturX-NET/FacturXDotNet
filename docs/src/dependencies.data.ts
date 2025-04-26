@@ -9,15 +9,15 @@ export default {
     "src/assets/library.bom.json",
   ],
   load(): Dependencies {
-    const docsSbom = loadSbom("src/assets/docs.bom.json");
-    const editorSbom = loadSbom("src/assets/editor.bom.json");
-    const apiSbom = loadSbom("src/assets/api.bom.json");
-    const cliSbom = loadSbom("src/assets/cli.bom.json");
-    const librarySbom = loadSbom("src/assets/library.bom.json");
+    const docsSbom = loadSbom("src/public/docs.bom.json");
+    const editorSbom = loadSbom("src/public/editor.bom.json");
+    const apiSbom = loadSbom("src/public/api.bom.json");
+    const cliSbom = loadSbom("src/public/cli.bom.json");
+    const librarySbom = loadSbom("src/public/library.bom.json");
 
     const result: Dependencies = {
       docs: {
-        sbom: docsSbom,
+        sbomLink: "/docs.bom.json",
         licenses: groupDependenciesByLicense([
           ...loadDependenciesFromSbom(docsSbom),
           {
@@ -37,21 +37,21 @@ export default {
         ]),
       },
       editor: {
-        sbom: editorSbom,
+        sbomLink: "/editor.bom.json",
         licenses: groupDependenciesByLicense(
           loadDependenciesFromSbom(editorSbom),
         ),
       },
       api: {
-        sbom: apiSbom,
+        sbomLink: "/api.bom.json",
         licenses: groupDependenciesByLicense(loadDependenciesFromSbom(apiSbom)),
       },
       cli: {
-        sbom: cliSbom,
+        sbomLink: "/cli.bom.json",
         licenses: groupDependenciesByLicense(loadDependenciesFromSbom(cliSbom)),
       },
       library: {
-        sbom: librarySbom,
+        sbomLink: "/library.bom.json",
         licenses: groupDependenciesByLicense(
           loadDependenciesFromSbom(librarySbom),
         ),
@@ -65,11 +65,11 @@ export default {
 };
 
 interface Dependencies {
-  docs: { sbom: Sbom; licenses: LicenseGroup[] };
-  editor: { sbom: Sbom; licenses: LicenseGroup[] };
-  api: { sbom: Sbom; licenses: LicenseGroup[] };
-  cli: { sbom: Sbom; licenses: LicenseGroup[] };
-  library: { sbom: Sbom; licenses: LicenseGroup[] };
+  docs: { sbomLink: string; licenses: LicenseGroup[] };
+  editor: { sbomLink: string; licenses: LicenseGroup[] };
+  api: { sbomLink: string; licenses: LicenseGroup[] };
+  cli: { sbomLink: string; licenses: LicenseGroup[] };
+  library: { sbomLink: string; licenses: LicenseGroup[] };
 }
 
 interface LicenseGroup {
@@ -118,7 +118,7 @@ function loadDependenciesFromSbom(sbom: Sbom): Dependency[] {
     return [];
   }
 
-  const dependencies = sbom.components.filter(c =>
+  const dependencies = sbom.components.filter((c) =>
     thisComponentDependencies.includes(c["bom-ref"]),
   );
 
@@ -138,7 +138,7 @@ function getLicense(licenses: SbomLicense[] | undefined): string | undefined {
     return undefined;
   }
 
-  const licenseNames = licenses.map(license => {
+  const licenseNames = licenses.map((license) => {
     if (isSbomLicenseExpression(license)) {
       if (
         license.expression.startsWith("(") &&
@@ -163,12 +163,12 @@ function getLink(
     return undefined;
   }
 
-  const vcsLink = externalReferences.find(r => r.type === "vcs")?.url;
+  const vcsLink = externalReferences.find((r) => r.type === "vcs")?.url;
   if (vcsLink !== undefined) {
     return getRepositoryUrl(vcsLink);
   }
 
-  return externalReferences.find(r => r.type === "website")?.url;
+  return externalReferences.find((r) => r.type === "website")?.url;
 }
 
 const gitPlusUrlRegExp = new RegExp(/git\+(.*)\.git/g);

@@ -25,7 +25,7 @@ let cliItems =
     collapsed: false,
     collapsible: false,
   })[0]?.items ?? [];
-cliItems = cliItems.map((item) => ({
+cliItems = cliItems.map(item => ({
   ...item,
   text: item.text.toLowerCase() === "subcommands" ? "Sub Commands" : item.text,
 }));
@@ -39,7 +39,7 @@ let apiReferenceItems =
     collapsible: true,
   })[0]?.items ?? [];
 apiReferenceItems = apiReferenceItems.filter(
-  (i) => i.items !== undefined && i.items.length > 0,
+  i => i.items !== undefined && i.items.length > 0,
 );
 
 const semVersion = semver.valid(env.version)
@@ -218,7 +218,7 @@ export default defineConfigWithTheme({
     },
   },
 
-  transformPageData: (pageData) => {
+  transformPageData: pageData => {
     const result = { ...pageData };
     result.frontmatter = expandEnvInRecord(pageData.frontmatter);
     return result;

@@ -48,7 +48,6 @@ To ensure transparency and maintainability, the dependencies used across the pro
 
 Here’s a breakdown of the dependencies for each part of the project:
 
-
 ### Documentation website (this website)
 
 <Licenses :dependencyGroups="data.docs" />
