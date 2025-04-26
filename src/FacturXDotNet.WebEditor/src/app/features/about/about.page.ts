@@ -93,7 +93,7 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
       </div>
 
       <div class="row gy-4">
-        <div class="col">
+        <div class="col-6">
           <div class="card">
             <div class="card-body">
               <h2 class="card-title">API</h2>
@@ -145,14 +145,14 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
 
                   <hr />
 
-                  <app-about-licenses [sbom]="apiConstants.sbom"></app-about-licenses>
+                  <app-about-licenses [sbom]="apiConstants.sbom" sbomName="FacturXDotNet-API.bom.json"></app-about-licenses>
                 }
               }
             </div>
           </div>
         </div>
 
-        <div class="col">
+        <div class="col-6">
           <div class="card">
             <div class="card-body">
               <h2 class="card-title">Web Editor</h2>
@@ -175,7 +175,7 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
 
               <hr />
 
-              <app-about-licenses [sbom]="webEditorSbom"></app-about-licenses>
+              <app-about-licenses [sbom]="webEditorSbom" sbomName="FacturXDotNet-WebEditor.bom.json"></app-about-licenses>
             </div>
           </div>
         </div>

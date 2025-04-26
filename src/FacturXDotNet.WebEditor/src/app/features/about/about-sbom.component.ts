@@ -7,6 +7,7 @@ import MiniSearch from 'minisearch';
 import { HighlightTextPipe } from '../../core/highlight-text/highlight-text.pipe';
 import { Sbom } from '../../core/sbom';
 import { Dependency, extractDependenciesFromSbom } from './dependency';
+import { downloadBlob, downloadFile } from '../../core/utils/download-blob';
 
 @Component({
   selector: 'app-about-licenses',
@@ -29,6 +30,9 @@ import { Dependency, extractDependenciesFromSbom } from './dependency';
         </button>
         <button class="btn" (click)="expandAll()">
           <i class="bi bi-chevron-expand" ngbTooltip="Expand all"></i>
+        </button>
+        <button class="btn" (click)="downloadSbom()">
+          <i class="bi bi-download" ngbTooltip="Download SBOM"></i>
         </button>
       </div>
     </div>
@@ -106,6 +110,7 @@ import { Dependency, extractDependenciesFromSbom } from './dependency';
 })
 export class AboutSbomComponent {
   sbom = input.required<Sbom>();
+  sbomName = input<string>();
 
   protected dependencies = computed(() => extractDependenciesFromSbom(this.sbom()));
 
@@ -181,6 +186,14 @@ export class AboutSbomComponent {
     for (const value of Object.values(collapsedBlocks)) {
       value.set(false);
     }
+  }
+
+  protected downloadSbom() {
+    const sbom = this.sbom();
+    const name = this.sbomName();
+    const serialized = JSON.stringify(sbom);
+    const file = new File([serialized], name ?? 'sbom.json', { type: 'application/json' });
+    downloadFile(file);
   }
 
   protected search(term: string | undefined) {
