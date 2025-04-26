@@ -18,4 +18,26 @@ It comes in multiple flavors:
 - a web app: [app](https://editor.facturxdotnet.org) | [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet.WebEditor)
 - a .NET library: [nuget](https://www.nuget.org/packages/FacturXDotNet) | [source](https://github.com/FacturX-NET/FacturXDotNet/tree/master/FacturXDotNet)
 
-All these tools provide the same set of [features](#features).
+## Features
+
+All these tools provide the same set of features.
+
+### Generation
+#### [Generate a Factur-X document](/guides/generation/facturx)
+#### [Generate a standard PDF](/guides/generation/standard-pdf)
+
+### Validation
+#### [Validate a Factur-X document](/guides/validation/facturx)
+#### [Validate Cross-Industry Invoice data](/guides/validation/cii)
+
+### Extraction
+#### [Extract Cross-Industry Invoice data](/guides/extraction/cii)
+#### [Extract XMP metadata](/guides/extraction/xmp)
+
+## Self-hosting
+
+The demo versions of the editor and API are intended for demonstration purposes only. They run on low-cost, limited, and insecure public cloud infrastructure.
+
+If you plan to use these tools in a production environment, we strongly recommend self-hosting them for better performance, security, and control.
+
+[Learn more aboute self-hosting >](/guides/self-hosting)

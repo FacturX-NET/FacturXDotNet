@@ -5,16 +5,18 @@ import { ImportFileComponent } from './core/import-file/import-file.component';
 import { NgbTooltipConfigComponent } from './core/ng-bootstrap/ngb-tooltip-config.component';
 import * as pdf from 'pdfjs-dist';
 import { PlatformLocation } from '@angular/common';
+import { GlobalOverlayComponent } from './core/global-overlay/global-overlay.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToasterComponent, ImportFileComponent, NgbTooltipConfigComponent],
+  imports: [RouterOutlet, ToasterComponent, ImportFileComponent, NgbTooltipConfigComponent, GlobalOverlayComponent],
   template: `
     <router-outlet />
-    <app-toaster></app-toaster>
-    <app-import-file></app-import-file>
+    <app-toaster />
+    <app-import-file />
+    <app-global-overlay />
 
-    <app-ngb-tooltip-config></app-ngb-tooltip-config>
+    <app-ngb-tooltip-config />
   `,
   styles: [],
 })

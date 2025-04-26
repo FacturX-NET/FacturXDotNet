@@ -1,53 +1,59 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { EditorSavedState } from '../../editor-state.service';
-import { EditorSettings } from '../../editor-settings.service';
+import { EditorSavedState } from '../../services/editor-state.service';
+import { EditorSettings } from '../../services/editor-settings.service';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { NgbNav, NgbNavItem, NgbNavLink, NgbNavLinkBase } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-import { EditorResponsivenessService } from '../../editor-responsiveness.service';
+import { EditorResponsivenessService } from '../../services/editor-responsiveness.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { distinct, distinctUntilChanged, filter, map } from 'rxjs';
+import { EditorHeaderNameComponent } from './editor-header-name.component';
 
 @Component({
   selector: 'app-editor-left-pane-header',
-  imports: [NgbNav, NgbNavItem, NgbNavLink, RouterLink, FormsModule, NgbNavLinkBase],
+  imports: [NgbNav, NgbNavItem, NgbNavLink, RouterLink, FormsModule, NgbNavLinkBase, EditorHeaderNameComponent],
   template: `
-    <ul ngbNav [activeId]="tab()" class="nav-tabs px-4">
-      <li ngbNavItem="xmp">
-        <a ngbNavLink role="button" routerLink="/xmp">
-          <i class="bi bi-info-lg pe-1"></i>
-          @if (!folded()) {
-            <span [class.small]="small()">XMP Metadata</span>
-          }
-        </a>
-      </li>
-      <li ngbNavItem="cii">
-        <a ngbNavLink role="button" routerLink="/cii">
-          <i class="bi bi-code pe-1"></i>
-          @if (!folded()) {
-            <span [class.small]="small()">Cross-Industry Invoice</span>
-          }
-        </a>
-      </li>
-      <li ngbNavItem="attachments">
-        <a ngbNavLink role="button" routerLink="/attachments">
-          <i class="bi bi-paperclip pe-1"></i>
-          @if (!folded()) {
-            <span [class.small]="small()">Attachments</span>
-          }
-          ({{ state().attachments.length }})
-        </a>
-      </li>
-      <div class="flex-grow-1"><!--spacer--></div>
-      <li ngbNavItem="settings">
-        <a ngbNavLink role="button" routerLink="/settings">
-          <i class="bi bi-gear pe-1"></i>
-          @if (!folded()) {
-            <span [class.small]="small()">Settings</span>
-          }
-        </a>
-      </li>
-    </ul>
+    <div class="d-flex flex-column">
+      <div class="px-3">
+        <app-editor-header-name [name]="state().name" />
+      </div>
+      <ul ngbNav [activeId]="tab()" class="nav-tabs px-4">
+        <li ngbNavItem="xmp">
+          <a ngbNavLink role="button" routerLink="/xmp">
+            <i class="bi bi-info-lg pe-1"></i>
+            @if (!folded()) {
+              <span [class.small]="small()">XMP Metadata</span>
+            }
+          </a>
+        </li>
+        <li ngbNavItem="cii">
+          <a ngbNavLink role="button" routerLink="/cii">
+            <i class="bi bi-code pe-1"></i>
+            @if (!folded()) {
+              <span [class.small]="small()">Cross-Industry Invoice</span>
+            }
+          </a>
+        </li>
+        <li ngbNavItem="attachments">
+          <a ngbNavLink role="button" routerLink="/attachments">
+            <i class="bi bi-paperclip pe-1"></i>
+            @if (!folded()) {
+              <span [class.small]="small()">Attachments</span>
+            }
+            ({{ state().attachments.length }})
+          </a>
+        </li>
+        <div class="flex-grow-1"><!--spacer--></div>
+        <li ngbNavItem="settings">
+          <a ngbNavLink role="button" routerLink="/settings">
+            <i class="bi bi-gear pe-1"></i>
+            @if (!folded()) {
+              <span [class.small]="small()">Settings</span>
+            }
+          </a>
+        </li>
+      </ul>
+    </div>
   `,
 })
 export class EditorLeftPaneHeaderComponent {

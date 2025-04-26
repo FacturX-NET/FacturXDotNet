@@ -1,9 +1,9 @@
-import { defineConfigWithTheme } from "vitepress"; // https://vitepress.dev/reference/site-config
-import { useSidebar } from "vitepress-openapi";
-import { getSidebar } from "vitepress-plugin-auto-sidebar";
+import {defineConfigWithTheme} from "vitepress"; // https://vitepress.dev/reference/site-config
+import {useSidebar} from "vitepress-openapi";
+import {getSidebar} from "vitepress-plugin-auto-sidebar";
 import semver from "semver";
-import env from "../src/env.json" with { type: "json" };
-import spec from "../src/assets/facturxdotnet.openapi.json" with { type: "json" };
+import env from "../src/env.json" with {type: "json"};
+import spec from "../src/assets/facturxdotnet.openapi.json" with {type: "json"};
 
 const specSidebar = useSidebar({
   spec,
@@ -84,7 +84,7 @@ export default defineConfigWithTheme({
 
     nav: [
       { text: "Home", link: "/" },
-      { text: "Guides", link: "/guides/getting-started" },
+      { text: "Guides", link: "/guides/what-is-facturxdotnet" },
       {
         text: "Try it live!",
         items: [
@@ -120,10 +120,6 @@ export default defineConfigWithTheme({
         {
           text: "What is FacturX.NET?",
           link: "/guides/what-is-facturxdotnet",
-        },
-        {
-          text: "Getting started",
-          link: "/guides/getting-started",
         },
         {
           text: "Use cases",
@@ -163,6 +159,10 @@ export default defineConfigWithTheme({
                 },
                 { text: "Extract XMP metadata", link: "/extraction/cii" },
               ],
+            },
+            {
+              text: "Self-hosting",
+              link: "/guides/self-hosting",
             },
           ],
         },

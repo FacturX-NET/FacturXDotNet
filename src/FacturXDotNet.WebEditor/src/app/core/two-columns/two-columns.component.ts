@@ -6,7 +6,7 @@ import { NgStyle } from '@angular/common';
   imports: [NgStyle],
   template: `
     <div class="h-100 d-flex overflow-hidden">
-      <div class="h-100" [ngStyle]="{ 'width.px': leftColumnWidth() }">
+      <div class="h-100 overflow-hidden" [ngStyle]="{ 'width.px': leftColumnWidth() }">
         <ng-content select="[left]" />
       </div>
       <div
@@ -20,7 +20,7 @@ import { NgStyle } from '@angular/common';
           <i class="bi bi-grip-vertical text-body-secondary"></i>
         }
       </div>
-      <div class="h-100" [ngStyle]="{ 'width.px': rightColumnWidth() }">
+      <div class="h-100 overflow-hidden" [ngStyle]="{ 'width.px': rightColumnWidth() }">
         <ng-content select="[right]" />
       </div>
     </div>
@@ -33,6 +33,8 @@ import { NgStyle } from '@angular/common';
 })
 export class TwoColumnsComponent {
   rightColumnWidth = model.required<number>();
+  leftColumnMinWidth = input(undefined, { transform: numberAttribute });
+  rightColumnMinWidth = input(undefined, { transform: numberAttribute });
   resizeHandleWidth = input(16, { transform: numberAttribute });
   draggable = input(false, { transform: booleanAttribute });
   dragging = output<boolean>();
@@ -100,10 +102,10 @@ export class TwoColumnsComponent {
     }
 
     if (this.resizing) {
-      const width = this.totalWidth();
+      const totalWidth = this.totalWidth();
       const x = event.type === 'mousemove' ? (event as MouseEvent).clientX : (event as TouchEvent).touches[0].clientX;
-      const newWidth = width - x - this.resizeHandleWidth() / 2;
-      this.rightColumnWidth.set(newWidth);
+      const newWidth = totalWidth - x - this.resizeHandleWidth() / 2;
+      this.setRightColumnWidth(newWidth);
     }
   }
 
@@ -111,5 +113,25 @@ export class TwoColumnsComponent {
     event?.preventDefault();
     this.resizing = false;
     this.dragging.emit(false);
+  }
+
+  private setRightColumnWidth(width: number) {
+    let finalWidth = width;
+
+    const rightColumnMinWidth = this.rightColumnMinWidth();
+    if (rightColumnMinWidth !== undefined && finalWidth < rightColumnMinWidth) {
+      finalWidth = rightColumnMinWidth;
+    }
+
+    const leftColumnMinWidth = this.leftColumnMinWidth();
+    if (leftColumnMinWidth !== undefined) {
+      const totalWidth = this.totalWidth();
+      const leftColumnWidth = totalWidth - finalWidth - this.resizeHandleWidth();
+      if (leftColumnWidth < leftColumnMinWidth) {
+        finalWidth = totalWidth - leftColumnMinWidth - this.resizeHandleWidth();
+      }
+    }
+
+    this.rightColumnWidth.set(finalWidth);
   }
 }
