@@ -70,8 +70,8 @@ jobs:
       - name: Install dfmg
         run: dotnet tool install -g DocFxMarkdownGen
 
-      - name: Install dotnet-project-licenses
-        run: dotnet tool install -g dotnet-project-licenses
+      - name: Install CycloneDX
+        run: dotnet tool install --global CycloneDX --framework net8.0
 
       - name: Generate .NET API reference
         run: |
@@ -155,53 +155,20 @@ jobs:
       - name: Install dependencies
         run: cd docs; npm ci
 
-      - name: Install dependencies in editor (for license-report)
-        run: cd src/FacturXDotNet.WebEditor; npm ci
+      - name: Generate Editor SBOM
+        run: cd src/FacturXDotNet.WebEditor; npm sbom --sbom-format cyclonedx > ../../docs/src/assets/editor.sbom.json
 
-      - name: Install license-report
-        run: npm i -g license-report
+      - name: Generate Docs SBOM
+        run: cd docs; npm sbom --sbom-format cyclonedx > src/assets/docs.sbom.json
 
-      - name: Generate licenses
-        run: |
-          license-report --config docs/license-report-config.json --package src/FacturXDotNet.WebEditor/package.json > docs/src/assets/editor-licenses.json
-          
-          echo
-          echo docs/src/assets/editor-licenses.json
-          cat docs/src/assets/editor-licenses.json
-          echo
-          echo
-          
-          license-report --config docs/license-report-config.json --package docs/package.json > docs/src/assets/docs-licenses.json
-          
-          echo
-          echo docs/src/assets/docs-licenses.json
-          cat docs/src/assets/docs-licenses.json
-          echo
-          echo
-          
-          dotnet-project-licenses -i src/FacturXDotNet/FacturXDotNet.csproj --json --output-directory docs/src/assets --outfile library-licenses.json
-          
-          echo
-          echo docs/src/assets/library-licenses.json
-          cat docs/src/assets/library-licenses.json
-          echo
-          echo
-          
-          dotnet-project-licenses -i src/FacturXDotNet.API/FacturXDotNet.API.csproj --json --output-directory docs/src/assets --outfile api-licenses.json
-          
-          echo
-          echo docs/src/assets/api-licenses.json
-          cat docs/src/assets/api-licenses.json
-          echo
-          echo
-          
-          dotnet-project-licenses -i src/FacturXDotNet.CLI/FacturXDotNet.CLI.csproj --json --output-directory docs/src/assets --outfile cli-licenses.json
-          
-          echo
-          echo docs/src/assets/cli-licenses.json
-          cat docs/src/assets/cli-licenses.json
-          echo
-          echo
+      - name: Generate API SBOM
+        run: cd src/FacturXDotNet.API dotnet-CycloneDX FacturXDotNet.API.csproj -o ../../docs/src/assets --json -fn api.bom.json
+
+      - name: Generate CLI SBOM
+        run: cd src/FacturXDotNet.CLI dotnet-CycloneDX FacturXDotNet.API.csproj -o ../../docs/src/assets --json -fn cli.bom.json
+
+      - name: Generate Library SBOM
+        run: cd src/FacturXDotNet dotnet-CycloneDX FacturXDotNet.API.csproj -o ../../docs/src/assets --json -fn library.bom.json
 
       - name: Write env.json
         run: |
