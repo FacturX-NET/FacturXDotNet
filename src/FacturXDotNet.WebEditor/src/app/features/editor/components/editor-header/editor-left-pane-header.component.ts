@@ -6,7 +6,7 @@ import { NgbNav, NgbNavItem, NgbNavLink, NgbNavLinkBase } from '@ng-bootstrap/ng
 import { FormsModule } from '@angular/forms';
 import { EditorResponsivenessService } from '../../services/editor-responsiveness.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { distinct, distinctUntilChanged, filter, map } from 'rxjs';
+import { distinctUntilChanged, filter, map } from 'rxjs';
 import { EditorHeaderNameComponent } from './editor-header-name.component';
 
 @Component({

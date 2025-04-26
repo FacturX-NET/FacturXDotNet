@@ -1,8 +1,8 @@
-import { Component, computed, DestroyRef, inject, input, linkedSignal, Signal, TemplateRef, WritableSignal } from '@angular/core';
+import { Component, computed, inject, input, Signal, TemplateRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { rxResource, takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { GenerateApi } from '../../../../../../../core/api/generate.api';
-import { delay, distinctUntilChanged, map, startWith } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs';
 import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/api/api.models';
 import { EditorPdfGenerationProfileData } from '../../../../../services/editor-pdf-generation-profiles.service';
 import { EditorSettingsLanguagePackDocumentTypesFormComponent } from './editor-settings-language-pack-document-types-form.component';

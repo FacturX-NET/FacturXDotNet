@@ -1,5 +1,5 @@
 import { Component, inject, input } from '@angular/core';
-import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ControlContainer, ReactiveFormsModule } from '@angular/forms';
 import { IStandardPdfGeneratorLanguagePackDto } from '../../../../../../../core/api/api.models';
 
 @Component({

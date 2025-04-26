@@ -1,5 +1,5 @@
 import { Component, inject, input } from '@angular/core';
-import { ControlContainer, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ControlContainer, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImportFileService } from '../../../../../../../core/import-file/import-file.service';
 
 @Component({

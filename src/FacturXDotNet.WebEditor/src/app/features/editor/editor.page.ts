@@ -2,7 +2,6 @@ import { Component, computed, effect, HostListener, inject, linkedSignal, Resour
 import { EditorLeftPaneHeaderComponent } from './components/editor-header/editor-left-pane-header.component';
 import { EditorPdfViewerComponent } from './editor-tabs/editor-pdf-viewer/editor-pdf-viewer.component';
 import { EditorRightPaneHeaderComponent } from './components/editor-header/editor-right-pane-header.component';
-import { EditorWelcomePage } from './editor-welcome.page';
 import { Router, RouterOutlet } from '@angular/router';
 import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
 import { EditorSavedState, EditorStateService } from './services/editor-state.service';
