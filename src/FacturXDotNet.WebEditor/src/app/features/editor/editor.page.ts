@@ -1,21 +1,21 @@
-import {Component, computed, effect, HostListener, inject, linkedSignal, Resource, signal, Signal} from '@angular/core';
-import {NgOptimizedImage} from '@angular/common';
-import {EditorSettings, EditorSettingsService, PdfModel} from './editor-settings.service';
-import {EditorMenuComponent} from './components/editor-menu/editor-menu.component';
-import {FormsModule} from '@angular/forms';
-import {TwoColumnsComponent} from '../../core/two-columns/two-columns.component';
-import {EditorSavedState, EditorStateService} from './editor-state.service';
-import {EditorLeftPaneHeaderComponent} from './components/editor-header/editor-left-pane-header.component';
-import {EditorWelcomeComponent} from './editor-welcome.component';
-import {API_BASE_URL} from '../../app.config';
-import {ApiServerStatusComponent} from '../../core/api/components/api-server-status.component';
-import {ApiConstantsService} from '../../core/api/services/api-constants.service';
-import {EditorMenuService} from './components/editor-menu/editor-menu.service';
-import {RouterOutlet} from '@angular/router';
-import {EditorPdfViewerComponent} from './components/editor-pdf-viewer/editor-pdf-viewer.component';
-import {EditorHeaderNameComponent} from './components/editor-header/editor-header-name.component';
-import {EditorRightPaneHeaderComponent} from './components/editor-header/editor-right-pane-header.component';
-import {EditorResponsivenessService} from './editor-responsiveness.service';
+import { Component, computed, effect, HostListener, inject, linkedSignal, Resource, signal, Signal } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
+import { EditorSettings, EditorSettingsService, PdfModel } from './editor-settings.service';
+import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
+import { FormsModule } from '@angular/forms';
+import { TwoColumnsComponent } from '../../core/two-columns/two-columns.component';
+import { EditorSavedState, EditorStateService } from './editor-state.service';
+import { EditorLeftPaneHeaderComponent } from './components/editor-header/editor-left-pane-header.component';
+import { EditorWelcomeComponent } from './editor-welcome.component';
+import { API_BASE_URL } from '../../app.config';
+import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
+import { ApiConstantsService } from '../../core/api/services/api-constants.service';
+import { EditorMenuService } from './components/editor-menu/editor-menu.service';
+import { RouterOutlet } from '@angular/router';
+import { EditorPdfViewerComponent } from './components/editor-pdf-viewer/editor-pdf-viewer.component';
+import { EditorHeaderNameComponent } from './components/editor-header/editor-header-name.component';
+import { EditorRightPaneHeaderComponent } from './components/editor-header/editor-right-pane-header.component';
+import { EditorResponsivenessService } from './editor-responsiveness.service';
 
 @Component({
   selector: 'app-editor',
@@ -131,8 +131,8 @@ import {EditorResponsivenessService} from './editor-responsiveness.service';
         </div>
 
         <div class="flex-shrink-0 text-body-tertiary text-center px-4 text-truncate small">
-          <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and released under the MIT
-          License, feel free to use, modify, and share.
+          <strong>© 2025 Ismail Bennani</strong>, made with <i class="bi-heart-fill"></i> and <i class="bi bi-cup-hot-fill"></i>. The tools are open source and released under the
+          MIT License, feel free to use, modify, and share.
         </div>
       </div>
     </div>
@@ -160,7 +160,7 @@ export class EditorPage {
     },
   });
   private apiConstantsService = inject(ApiConstantsService);
-  protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
+  protected unsafeEnvironment = computed(() => this.apiConstantsService.hostingInfo.value()?.unsafeEnvironment ?? false);
   private editorStateService = inject(EditorStateService);
   protected state: Resource<EditorSavedState | null> = this.editorStateService.savedState;
   private editorMenuService = inject(EditorMenuService);

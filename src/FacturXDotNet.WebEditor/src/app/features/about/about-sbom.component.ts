@@ -7,7 +7,7 @@ import MiniSearch from 'minisearch';
 import { HighlightTextPipe } from '../../core/highlight-text/highlight-text.pipe';
 import { Sbom } from '../../core/sbom';
 import { Dependency, extractDependenciesFromSbom } from './dependency';
-import { downloadBlob, downloadFile } from '../../core/utils/download-blob';
+import { downloadFile } from '../../core/utils/download-blob';
 import { MarkdownComponent } from 'ngx-markdown';
 import { EscapeHtmlPipe } from '../../core/escape-html/escape-html.pipe';
 
@@ -15,7 +15,7 @@ import { EscapeHtmlPipe } from '../../core/escape-html/escape-html.pipe';
   selector: 'app-about-licenses',
   imports: [NgTemplateOutlet, NgbTooltip, FormsModule, HighlightTextPipe, MarkdownComponent, EscapeHtmlPipe],
   template: `
-    <h6>Dependencies</h6>
+    <h6 class="fw-bold">Dependencies</h6>
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-4">
       <ul class="nav nav-underline">
         <li class="nav-item">

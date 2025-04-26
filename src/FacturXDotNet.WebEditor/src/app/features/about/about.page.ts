@@ -7,6 +7,7 @@ import { API_BASE_URL } from '../../app.config';
 import sbom from '../../../dependencies/sbom.json';
 import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
 import { ApiConstantsService } from '../../core/api/services/api-constants.service';
+import { getApiErrorMessage } from '../../core/api/api-errors';
 
 @Component({
   selector: 'app-about',
@@ -105,7 +106,7 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
                 <app-api-server-status #status />
               </p>
 
-              @if (apiConstants.isLoading()) {
+              @if (buildInfo.isLoading()) {
                 <div class="placeholder-glow">
                   <p>
                     <span class="placeholder col-6"></span>
@@ -132,18 +133,33 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
                   </div>
                 </div>
               } @else {
-                @if (apiConstants.value(); as apiConstants) {
+                @if (buildInfo.value(); as buildInfo) {
                   <p>
                     The API server is currently in version <span class="fw-semibold text-truncate">{{ apiVersion() }}</span> and was built on
-                    <span class="text-truncate">{{ apiConstants.build.buildDate | date }}</span
+                    <span class="text-truncate">{{ buildInfo.buildDate | date }}</span
                     >. <br />
 
                     @if (apiVersionBuildMetadata(); as apiVersionBuildMetadata) {
                       <span class="small text-body-tertiary"><span class="fw-semibold">Build metadata</span>: {{ apiVersionBuildMetadata }}</span>
                     }
                   </p>
+                }
 
-                  <app-about-licenses [sbom]="apiConstants.sbom" sbomName="FacturXDotNet-API.bom.json"></app-about-licenses>
+                @if (sbom.isLoading()) {
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                } @else if (sbom.error()) {
+                  <div class="alert alert-danger mb-0">
+                    <span class="fw-semibold"> <i class="bi bi-x-circle-fill text-danger"></i> Failed to load dependencies: </span>
+                    <div>
+                      {{ getApiErrorMessage(sbom.error()) }}
+                    </div>
+                  </div>
+                } @else {
+                  @if (sbom.value(); as sbom) {
+                    <app-about-licenses [sbom]="sbom" sbomName="FacturXDotNet-API.bom.json"></app-about-licenses>
+                  }
                 }
               }
             </div>
@@ -190,25 +206,32 @@ export class AboutPage {
   protected apiUrl = inject(API_BASE_URL);
 
   private apiConstantsService = inject(ApiConstantsService);
+
+  protected buildInfo = this.apiConstantsService.buildInfo;
+
   protected apiVersion = computed(() => {
-    const apiConstants = this.apiConstantsService.info.value();
-    if (apiConstants === undefined) {
+    const buildInfo = this.buildInfo.value();
+    if (buildInfo === undefined) {
       return undefined;
     }
 
-    return removeBuildInformation(apiConstants.build.version);
+    return removeBuildInformation(buildInfo.version);
   });
 
   protected apiVersionBuildMetadata = computed(() => {
-    const apiConstants = this.apiConstantsService.info.value();
-    if (apiConstants === undefined) {
+    const buildInfo = this.buildInfo.value();
+    if (buildInfo === undefined) {
       return undefined;
     }
 
-    return extractBuildInformation(apiConstants.build.version);
+    return extractBuildInformation(buildInfo.version);
   });
 
-  protected apiConstants = this.apiConstantsService.info;
+  protected sbom = this.apiConstantsService.sbom;
+
+  protected getApiErrorMessage(error: unknown) {
+    return getApiErrorMessage(error);
+  }
 }
 
 function extractBuildInformation(version: string) {
