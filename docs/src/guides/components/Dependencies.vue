@@ -1,4 +1,5 @@
 <script setup>
+import { withBase } from "vitepress";
 import markdownit from "markdown-it";
 
 defineProps(["dependencies"]);
@@ -13,7 +14,7 @@ const md = markdownit({
   <div class="dependencies">
     <span>
       <b> Dependencies </b> ({{ dependencies.dependenciesCount }})
-      <a :href="dependencies.sbomLink" download>sbom</a>
+      <a :href="withBase(dependencies.sbomLink)" download>sbom</a>
     </span>
 
     <ul>
