@@ -150,6 +150,9 @@ jobs:
       - name: Install dependencies
         run: cd docs; npm ci
 
+      - name: Install dependencies in editor (for sbom generation)
+        run: cd src/FacturXDotNet.WebEditor; npm ci
+
       - name: Generate Editor SBOM
         run: cd src/FacturXDotNet.WebEditor; npm sbom --sbom-format cyclonedx > ../../docs/src/assets/editor.sbom.json
 
