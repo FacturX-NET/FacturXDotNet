@@ -1,6 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
+import { getApiErrorMessage } from '../api/api-errors';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +24,14 @@ export class ToastService {
   }
 }
 
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return getApiErrorMessage(error);
+}
+
 export type Toast = SuccessToast | InfoToast | ErrorToast;
 
 export type ToastInstance = Toast & {
@@ -45,20 +53,4 @@ export interface InfoToast extends BaseToast {
 
 export interface ErrorToast extends BaseToast {
   readonly type: 'error';
-}
-
-function getErrorMessage(err: unknown): string {
-  if (err instanceof Error) {
-    return err.message;
-  }
-
-  if (err instanceof HttpErrorResponse) {
-    if (err.status === 0) {
-      return "Can't connect to server. Please check your internet connection.";
-    }
-
-    return `${err.status} ${err.statusText} - ${err.message}`;
-  }
-
-  return 'Unknown error';
 }

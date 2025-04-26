@@ -46,9 +46,9 @@
 
     <Target Name="GenerateLicenseFile" BeforeTargets="Build">
         <Message Importance="high" Text="Generating license file..."/>
-        <Exec Command="dotnet tool install --global dotnet-project-licenses --framework net6.0" ContinueOnError="WarnAndContinue" />
-        <Exec Command="dotnet-project-licenses -i dotnet-project-licenses-input.json --json --output-directory Resources" ContinueOnError="WarnAndContinue" />
-        <Warning Text="The licenses file has not been generated, the API will not be able to report its dependencies." Condition="!Exists('Resources/licenses.json')" />
+        <Exec Command="dotnet tool install --global CycloneDX" ContinueOnError="WarnAndContinue" />
+        <Exec Command="dotnet-CycloneDX FacturXDotNet.API.csproj -o Resources --json -fn api.bom.json" ContinueOnError="WarnAndContinue" />
+        <Warning Text="The licenses file has not been generated, the API will not be able to report its dependencies." Condition="!Exists('Resources/api.bom.json')" />
     </Target>
 
 </Project>

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { GlobalOverlayService } from './global-overlay.service';
 
 @Component({

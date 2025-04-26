@@ -19,7 +19,7 @@ env:
 
 jobs:
   compute_version:
-    name: Build Docker Image
+    name: Compute version
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.compute_version.outputs.version }}

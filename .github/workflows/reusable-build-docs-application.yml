@@ -38,15 +38,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup .NET 9 (for lib and api)
+      - name: Setup .NET 9 (for CycloneDX, lib and api)
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-
-      - name: Setup .NET 7 (for dotnet-project-licenses)
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 7.0.x
 
       - name: Setup .NET 6 (for dfmg)
         uses: actions/setup-dotnet@v4
@@ -70,8 +65,8 @@ jobs:
       - name: Install dfmg
         run: dotnet tool install -g DocFxMarkdownGen
 
-      - name: Install dotnet-project-licenses
-        run: dotnet tool install -g dotnet-project-licenses
+      - name: Install CycloneDX
+        run: dotnet tool install --global CycloneDX
 
       - name: Generate .NET API reference
         run: |
@@ -155,53 +150,23 @@ jobs:
       - name: Install dependencies
         run: cd docs; npm ci
 
-      - name: Install dependencies in editor (for license-report)
+      - name: Install dependencies in editor (for sbom generation)
         run: cd src/FacturXDotNet.WebEditor; npm ci
 
-      - name: Install license-report
-        run: npm i -g license-report
+      - name: Generate Editor SBOM
+        run: cd src/FacturXDotNet.WebEditor; npm sbom --sbom-format cyclonedx > ../../docs/src/public/editor.bom.json
 
-      - name: Generate licenses
-        run: |
-          license-report --config docs/license-report-config.json --package src/FacturXDotNet.WebEditor/package.json > docs/src/assets/editor-licenses.json
-          
-          echo
-          echo docs/src/assets/editor-licenses.json
-          cat docs/src/assets/editor-licenses.json
-          echo
-          echo
-          
-          license-report --config docs/license-report-config.json --package docs/package.json > docs/src/assets/docs-licenses.json
-          
-          echo
-          echo docs/src/assets/docs-licenses.json
-          cat docs/src/assets/docs-licenses.json
-          echo
-          echo
-          
-          dotnet-project-licenses -i src/FacturXDotNet/FacturXDotNet.csproj --json --output-directory docs/src/assets --outfile library-licenses.json
-          
-          echo
-          echo docs/src/assets/library-licenses.json
-          cat docs/src/assets/library-licenses.json
-          echo
-          echo
-          
-          dotnet-project-licenses -i src/FacturXDotNet.API/FacturXDotNet.API.csproj --json --output-directory docs/src/assets --outfile api-licenses.json
-          
-          echo
-          echo docs/src/assets/api-licenses.json
-          cat docs/src/assets/api-licenses.json
-          echo
-          echo
-          
-          dotnet-project-licenses -i src/FacturXDotNet.CLI/FacturXDotNet.CLI.csproj --json --output-directory docs/src/assets --outfile cli-licenses.json
-          
-          echo
-          echo docs/src/assets/cli-licenses.json
-          cat docs/src/assets/cli-licenses.json
-          echo
-          echo
+      - name: Generate Docs SBOM
+        run: cd docs; npm sbom --sbom-format cyclonedx > src/public/docs.bom.json
+
+      - name: Generate API SBOM
+        run: cd src/FacturXDotNet.API; dotnet-CycloneDX FacturXDotNet.API.csproj -o ../../docs/src/public --json -fn api.bom.json
+
+      - name: Generate CLI SBOM
+        run: cd src/FacturXDotNet.CLI; dotnet-CycloneDX FacturXDotNet.CLI.csproj -o ../../docs/src/public --json -fn cli.bom.json
+
+      - name: Generate Library SBOM
+        run: cd src/FacturXDotNet; dotnet-CycloneDX FacturXDotNet.csproj -o ../../docs/src/public --json -fn library.bom.json
 
       - name: Write env.json
         run: |
@@ -209,7 +174,7 @@ jobs:
           echo '  "buildName": "${{ inputs.build-name }}",'   >> docs/src/env.json
           echo '  "version": "${{ inputs.version }}",'        >> docs/src/env.json
           echo '  "editor": {'                                >> docs/src/env.json
-          echo '    "url": "${{ inputs.editor-url }}"'         >> docs/src/env.json
+          echo '    "url": "${{ inputs.editor-url }}"'        >> docs/src/env.json
           echo '  },'                                         >> docs/src/env.json
           echo '  "api": {'                                   >> docs/src/env.json
           echo '    "url": "${{ inputs.api-url }}"'           >> docs/src/env.json
@@ -217,6 +182,9 @@ jobs:
           echo '}'                                            >> docs/src/env.json
           
           cat docs/src/env.json
+
+      - name: Set version in package json
+        run: cd docs; npm version ${{ inputs.version }}
 
       - name: Build
         run: cd docs; npm run build -- --base /docs/ --outDir dist/

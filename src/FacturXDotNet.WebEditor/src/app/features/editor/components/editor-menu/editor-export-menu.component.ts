@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, output } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { ToastService } from '../../../../core/toasts/toast.service';
 import { EditorMenuService } from './editor-menu.service';
 import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';

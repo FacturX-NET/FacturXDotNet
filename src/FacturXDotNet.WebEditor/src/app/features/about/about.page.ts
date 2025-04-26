@@ -1,13 +1,13 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AboutLicensesComponent } from './about-licenses.component';
+import { AboutSbomComponent } from './about-sbom.component';
 import { environment } from '../../../environments/environment';
 import { DatePipe, NgOptimizedImage } from '@angular/common';
 import { API_BASE_URL } from '../../app.config';
-import licenses from '../../../licenses/licenses.json';
+import sbom from '../../../dependencies/sbom.json';
 import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
 import { ApiConstantsService } from '../../core/api/services/api-constants.service';
-import { IPackageDto } from '../../core/api/api.models';
+import { getApiErrorMessage } from '../../core/api/api-errors';
 
 @Component({
   selector: 'app-about',
@@ -94,7 +94,7 @@ import { IPackageDto } from '../../core/api/api.models';
       </div>
 
       <div class="row gy-4">
-        <div class="col">
+        <div class="col-12 col-lg-6">
           <div class="card">
             <div class="card-body">
               <h2 class="card-title">API</h2>
@@ -106,7 +106,7 @@ import { IPackageDto } from '../../core/api/api.models';
                 <app-api-server-status #status />
               </p>
 
-              @if (apiConstants.isLoading()) {
+              @if (buildInfo.isLoading()) {
                 <div class="placeholder-glow">
                   <p>
                     <span class="placeholder col-6"></span>
@@ -133,26 +133,40 @@ import { IPackageDto } from '../../core/api/api.models';
                   </div>
                 </div>
               } @else {
-                @if (apiConstants.value(); as apiConstants) {
+                @if (buildInfo.value(); as buildInfo) {
                   <p>
                     The API server is currently in version <span class="fw-semibold text-truncate">{{ apiVersion() }}</span> and was built on
-                    <span class="text-truncate">{{ apiConstants.build.buildDate | date }}</span
+                    <span class="text-truncate">{{ buildInfo.buildDate | date }}</span
                     >. <br />
 
                     @if (apiVersionBuildMetadata(); as apiVersionBuildMetadata) {
                       <span class="small text-body-tertiary"><span class="fw-semibold">Build metadata</span>: {{ apiVersionBuildMetadata }}</span>
                     }
                   </p>
+                }
 
-                  <p class="fw-bold">Dependencies</p>
-                  <app-about-licenses [packages]="apiConstants.dependencies"></app-about-licenses>
+                @if (sbom.isLoading()) {
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                } @else if (sbom.error()) {
+                  <div class="alert alert-danger mb-0">
+                    <span class="fw-semibold"> <i class="bi bi-x-circle-fill text-danger"></i> Failed to load dependencies: </span>
+                    <div>
+                      {{ getApiErrorMessage(sbom.error()) }}
+                    </div>
+                  </div>
+                } @else {
+                  @if (sbom.value(); as sbom) {
+                    <app-about-licenses [sbom]="sbom" sbomName="FacturXDotNet-API.bom.json"></app-about-licenses>
+                  }
                 }
               }
             </div>
           </div>
         </div>
 
-        <div class="col">
+        <div class="col-12 col-lg-6">
           <div class="card">
             <div class="card-body">
               <h2 class="card-title">Web Editor</h2>
@@ -173,24 +187,17 @@ import { IPackageDto } from '../../core/api/api.models';
                 <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/main/src/Tests.FacturXDotNet.WebEditor">on GitHub</a>.
               </p>
 
-              <p class="fw-bold">Dependencies</p>
-              <app-about-licenses [packages]="webEditorPackages"></app-about-licenses>
+              <app-about-licenses [sbom]="webEditorSbom" sbomName="FacturXDotNet-WebEditor.bom.json"></app-about-licenses>
             </div>
           </div>
         </div>
       </div>
     </div>
   `,
-  imports: [RouterLink, AboutLicensesComponent, DatePipe, ApiServerStatusComponent, NgOptimizedImage],
+  imports: [RouterLink, AboutSbomComponent, DatePipe, ApiServerStatusComponent, NgOptimizedImage],
 })
 export class AboutPage {
-  protected webEditorPackages: IPackageDto[] = licenses.map((l) => ({
-    name: l.name,
-    author: l.author,
-    version: l.installedVersion,
-    license: l.licenseType,
-    link: l.link,
-  }));
+  protected webEditorSbom = sbom;
 
   protected webEditorVersion = removeBuildInformation(environment.version);
   protected webEditorBuildMetadata = extractBuildInformation(environment.version);
@@ -199,25 +206,32 @@ export class AboutPage {
   protected apiUrl = inject(API_BASE_URL);
 
   private apiConstantsService = inject(ApiConstantsService);
+
+  protected buildInfo = this.apiConstantsService.buildInfo;
+
   protected apiVersion = computed(() => {
-    const apiConstants = this.apiConstantsService.info.value();
-    if (apiConstants === undefined) {
+    const buildInfo = this.buildInfo.value();
+    if (buildInfo === undefined) {
       return undefined;
     }
 
-    return removeBuildInformation(apiConstants.build.version);
+    return removeBuildInformation(buildInfo.version);
   });
 
   protected apiVersionBuildMetadata = computed(() => {
-    const apiConstants = this.apiConstantsService.info.value();
-    if (apiConstants === undefined) {
+    const buildInfo = this.buildInfo.value();
+    if (buildInfo === undefined) {
       return undefined;
     }
 
-    return extractBuildInformation(apiConstants.build.version);
+    return extractBuildInformation(buildInfo.version);
   });
 
-  protected apiConstants = this.apiConstantsService.info;
+  protected sbom = this.apiConstantsService.sbom;
+
+  protected getApiErrorMessage(error: unknown) {
+    return getApiErrorMessage(error);
+  }
 }
 
 function extractBuildInformation(version: string) {

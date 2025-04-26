@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { InfoApi } from '../info.api';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { forkJoin } from 'rxjs';
+import { map, switchMap } from 'rxjs';
+import { Sbom } from '../../sbom';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,13 @@ import { forkJoin } from 'rxjs';
 export class ApiConstantsService {
   private infoApi = inject(InfoApi);
 
-  info = rxResource({
-    loader: () => forkJoin({ build: this.infoApi.getBuildInformation(), hosting: this.infoApi.getHostingInformation(), dependencies: this.infoApi.getDependencies() }),
+  buildInfo = rxResource({ loader: () => this.infoApi.getBuildInformation() });
+  hostingInfo = rxResource({ loader: () => this.infoApi.getHostingInformation() });
+  sbom = rxResource({
+    loader: () =>
+      this.infoApi.getSbom().pipe(
+        switchMap((sbomFile) => sbomFile.text()),
+        map((sbomContent) => JSON.parse(sbomContent) as Sbom),
+      ),
   });
 }

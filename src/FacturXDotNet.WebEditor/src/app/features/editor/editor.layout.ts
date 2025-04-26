@@ -1,9 +1,7 @@
-import { Component, computed, effect, HostListener, inject, linkedSignal, Resource, signal, Signal } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { EditorSettings, EditorSettingsService, PdfModel } from './services/editor-settings.service';
 import { EditorMenuComponent } from './components/editor-menu/editor-menu.component';
 import { FormsModule } from '@angular/forms';
-import { EditorSavedState, EditorStateService } from './services/editor-state.service';
 import { API_BASE_URL } from '../../app.config';
 import { ApiServerStatusComponent } from '../../core/api/components/api-server-status.component';
 import { ApiConstantsService } from '../../core/api/services/api-constants.service';
@@ -68,7 +66,7 @@ export class EditorLayout {
   protected apiUrl = inject(API_BASE_URL);
 
   private apiConstantsService = inject(ApiConstantsService);
-  protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
+  protected unsafeEnvironment = computed(() => this.apiConstantsService.hostingInfo.value()?.unsafeEnvironment ?? false);
 
   private globalOverlayService = inject(GlobalOverlayService);
   private editorMenuService = inject(EditorMenuService);

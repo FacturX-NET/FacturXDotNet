@@ -48,16 +48,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup .NET 6 (for dotnet-project-licenses)
+      - name: Setup .NET 9 (for CycloneDX)
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 9.0.x
 
-      - name: Install dotnet-project-licenses
-        run: dotnet tool install -g dotnet-project-licenses --framework net6.0
+      - name: Install CycloneDX
+        run: dotnet tool install --global CycloneDX
 
       - name: Generate licenses file
-        run: cd src/FacturXDotNet.API; dotnet-project-licenses -i dotnet-project-licenses-input.json --json --output-directory Resources
+        run: cd src/FacturXDotNet.API; dotnet-CycloneDX FacturXDotNet.API.csproj -o Resources --json -fn api.bom.json
 
       - name: Build the Docker image
         run: cd src; docker build . --file FacturXDotNet.API/Dockerfile --tag facturxdotnet-api --label "runnumber=${GITHUB_RUN_ID}" --build-arg VERSION=${{ inputs.version }}
@@ -88,7 +88,7 @@ jobs:
           package-name: facturxdotnet-api
           tag: ${{ inputs.tag }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Push ${{ inputs.tag }}
         if: inputs.tag != ''
         run: |

@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../../app.config';
-import { IBuildInformationDto, IHostingInformationDto, IPackageDto } from './api.models';
+import { IBuildInformationDto, IHostingInformationDto } from './api.models';
 
 @Injectable({
   providedIn: 'root',
@@ -21,8 +21,18 @@ export class InfoApi {
     return this.httpClient.get<IHostingInformationDto>(url);
   }
 
-  getDependencies(): Observable<IPackageDto[]> {
-    const url = `${this.baseUrl}/info/dependencies`;
-    return this.httpClient.get<IPackageDto[]>(url);
+  getSbom(): Observable<File> {
+    const url = `${this.baseUrl}/info/sbom`;
+    return this.httpClient.get(url, { observe: 'response', responseType: 'blob' }).pipe(
+      map((response) => {
+        if (response.body === null) {
+          throw new Error('No response body');
+        }
+
+        const contentDisposition = response.headers.get('content-disposition');
+        const filename = contentDisposition?.split(';')[1].split('filename')[1].split('=')[1].trim();
+        return new File([response.body], filename ?? 'FacturXDotNet-API.sbom.json', { type: 'application/json' });
+      }),
+    );
   }
 }

@@ -1,6 +1,5 @@
 using FacturXDotNet.API.Configuration;
 using FacturXDotNet.API.Features.Information.Models;
-using FacturXDotNet.API.Features.Information.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -40,41 +39,21 @@ static class InformationController
             .DisableAntiforgery();
 
         routes.MapGet(
-                "/dependencies",
-                async ([FromServices] PackagesService packagesService, CancellationToken cancellationToken = default) =>
+                "/sbom",
+                () =>
                 {
-                    IReadOnlyCollection<Package> packages = await packagesService.ReadPackagesAsync(cancellationToken);
+                    string path = Path.GetFullPath(Path.Join("Resources", "api.bom.json"));
+                    if (!File.Exists(path))
+                    {
+                        return Results.InternalServerError("Could not find SBOM file.");
+                    }
 
-                    List<PackageDto> result = packages.Select(
-                            p => new PackageDto
-                            {
-                                Name = p.PackageName,
-                                Author = string.Join(", ", p.Authors),
-                                Version = p.PackageVersion,
-                                License = p.LicenseType,
-                                Link = p.Repository.Url
-                            }
-                        )
-                        .ToList();
-
-                    // add the dotnet-project-licenses, which is the tool that is used to extract the licenses file used above
-                    result.Add(
-                        new PackageDto
-                        {
-                            Name = "dotnet-project-licenses",
-                            Author = "Tom Chavakis,  Lexy2,  senslen",
-                            Version = "2.7.1",
-                            License = "Apache-2.0",
-                            Link = "https://github.com/tomchavakis/nuget-license"
-                        }
-                    );
-
-                    return result;
+                    return Results.File(path, "application/json", "FacturXDotNet-API.sbom.json", enableRangeProcessing: true);
                 }
             )
-            .WithSummary("Dependencies")
-            .WithDescription("Get information about the dependencies of the API application, especially about their licenses.")
-            .Produces<IReadOnlyCollection<PackageDto>>()
+            .WithSummary("SBOM")
+            .WithDescription("Get the JSON BOM of the API in the CycloneDX format.")
+            .Produces<IFormFile>(StatusCodes.Status200OK, "application/json")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError)
             .DisableAntiforgery();
