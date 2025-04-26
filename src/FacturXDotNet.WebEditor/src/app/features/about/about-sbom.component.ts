@@ -8,10 +8,12 @@ import { HighlightTextPipe } from '../../core/highlight-text/highlight-text.pipe
 import { Sbom } from '../../core/sbom';
 import { Dependency, extractDependenciesFromSbom } from './dependency';
 import { downloadBlob, downloadFile } from '../../core/utils/download-blob';
+import { MarkdownComponent } from 'ngx-markdown';
+import { EscapeHtmlPipe } from '../../core/escape-html/escape-html.pipe';
 
 @Component({
   selector: 'app-about-licenses',
-  imports: [NgTemplateOutlet, NgbTooltip, FormsModule, HighlightTextPipe],
+  imports: [NgTemplateOutlet, NgbTooltip, FormsModule, HighlightTextPipe, MarkdownComponent, EscapeHtmlPipe],
   template: `
     <h6>Dependencies</h6>
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-4">
@@ -72,19 +74,19 @@ import { downloadBlob, downloadFile } from '../../core/utils/download-blob';
             <ul [class.d-none]="collapsedBlocks()[license.license]()">
               @for (package_ of license.packages; track package_.name) {
                 <li>
-                  <a class="pe-1" [href]="package_.latest.link" [innerHtml]="package_.latest.name | highlightText: package_.latest.terms"></a>
+                  <a class="pe-1" [href]="package_.latest.link" [innerHtml]="package_.latest.name | escapeHtml | highlightText: package_.latest.terms"></a>
 
                   @switch (package_.versions.length) {
                     @case (0) {}
                     @case (1) {
-                      <span class="fw-semibold" [innerHtml]="'v' + package_.versions[0] | highlightText: package_.latest.terms"></span>
+                      <span class="fw-semibold" [innerHtml]="'v' + package_.versions[0] | escapeHtml | highlightText: package_.latest.terms"></span>
                     }
                     @default {
                       @for (version of package_.versions; track version) {
                         @if ($last) {
-                          <span class="fw-semibold" [innerHtml]="'v' + version | highlightText: package_.latest.terms"></span>
+                          <span class="fw-semibold" [innerHtml]="'v' + version | escapeHtml | highlightText: package_.latest.terms"></span>
                         } @else {
-                          <span class="fw-semibold" [innerHtml]="'v' + version | highlightText: package_.latest.terms"></span>,
+                          <span class="fw-semibold" [innerHtml]="'v' + version | escapeHtml | highlightText: package_.latest.terms"></span>,
                         }
                       }
                     }
@@ -92,11 +94,15 @@ import { downloadBlob, downloadFile } from '../../core/utils/download-blob';
 
                   @if (package_.latest.author) {
                     -
-                    <span class="text-body-secondary fw-semibold" [innerHtml]="package_.latest.author | highlightText: package_.latest.terms"> </span>
+                    <span class="text-body-secondary fw-semibold" [innerHtml]="package_.latest.author | escapeHtml | highlightText: package_.latest.terms"> </span>
                   }
 
                   @if (package_.latest.description) {
-                    <div class="text-body-secondary" [innerHtml]="package_.latest.description | highlightText: package_.latest.terms"></div>
+                    <p class="text-body-secondary">
+                      <markdown ngPreserveWhitespaces>
+                        {{ package_.latest.description | escapeHtml | highlightText: package_.latest.terms }}
+                      </markdown>
+                    </p>
                   }
                 </li>
               }
