@@ -154,19 +154,19 @@ jobs:
         run: cd src/FacturXDotNet.WebEditor; npm ci
 
       - name: Generate Editor SBOM
-        run: cd src/FacturXDotNet.WebEditor; npm sbom --sbom-format cyclonedx > ../../docs/src/assets/editor.bom.json
+        run: cd src/FacturXDotNet.WebEditor; npm sbom --sbom-format cyclonedx > ../../docs/src/public/editor.bom.json
 
       - name: Generate Docs SBOM
-        run: cd docs; npm sbom --sbom-format cyclonedx > src/assets/docs.bom.json
+        run: cd docs; npm sbom --sbom-format cyclonedx > src/public/docs.bom.json
 
       - name: Generate API SBOM
-        run: cd src/FacturXDotNet.API; dotnet-CycloneDX FacturXDotNet.API.csproj -o ../../docs/src/assets --json -fn api.bom.json
+        run: cd src/FacturXDotNet.API; dotnet-CycloneDX FacturXDotNet.API.csproj -o ../../docs/src/public --json -fn api.bom.json
 
       - name: Generate CLI SBOM
-        run: cd src/FacturXDotNet.CLI; dotnet-CycloneDX FacturXDotNet.CLI.csproj -o ../../docs/src/assets --json -fn cli.bom.json
+        run: cd src/FacturXDotNet.CLI; dotnet-CycloneDX FacturXDotNet.CLI.csproj -o ../../docs/src/public --json -fn cli.bom.json
 
       - name: Generate Library SBOM
-        run: cd src/FacturXDotNet; dotnet-CycloneDX FacturXDotNet.csproj -o ../../docs/src/assets --json -fn library.bom.json
+        run: cd src/FacturXDotNet; dotnet-CycloneDX FacturXDotNet.csproj -o ../../docs/src/public --json -fn library.bom.json
 
       - name: Write env.json
         run: |
