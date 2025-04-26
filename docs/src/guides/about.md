@@ -1,10 +1,12 @@
 ---
 title: About
+outline: deep
 ---
 
 <script setup>
-import { data } from '../dependencies.data.ts'
-import Licenses from '../components/Licenses.vue'
+import { data as dependenciesData } from '../dependencies.data.ts'
+import { data as envData } from '../env.data.ts'
+import Dependencies from './components/Dependencies.vue'
 import { VPTeamMembers } from 'vitepress/theme'
 
 const members = [
@@ -43,27 +45,25 @@ Thanks for checking out the project – and happy invoicing! 🚀
 
 ## Dependencies
 
-FacturX.NET is built on top of reliable open-source technologies.
-To ensure transparency and maintainability, the dependencies used across the project are grouped by component and sorted by license type, making it easier to review or audit them if needed.
+The list below shows the **direct** dependencies for version {{ envData.version }}, grouped by project and sorted by license type.
+For a complete view of all dependencies, including transitive ones, you can download the full Software Bill of Materials (SBOM) in JSON format, following the CycloneDX specification, for each project.
 
-Here’s a breakdown of the dependencies for each part of the project:
+### This documentation website
 
-### Documentation website (this website)
-
-<Licenses :dependencyGroups="data.docs" />
+<Dependencies :dependencies="dependenciesData.docs" />
 
 ### Web editor app
 
-<Licenses :dependencyGroups="data.editor" />
+<Dependencies :dependencies="dependenciesData.editor" />
 
 ### API
 
-<Licenses :dependencyGroups="data.api" />
+<Dependencies :dependencies="dependenciesData.api" />
 
 ### CLI
 
-<Licenses :dependencyGroups="data.cli" />
+<Dependencies :dependencies="dependenciesData.cli" />
 
 ### Library
 
-<Licenses :dependencyGroups="data.library" />
+<Dependencies :dependencies="dependenciesData.library" />

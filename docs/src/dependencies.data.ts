@@ -15,61 +15,86 @@ export default {
     const cliSbom = loadSbom("src/public/cli.bom.json");
     const librarySbom = loadSbom("src/public/library.bom.json");
 
-    const result: Dependencies = {
+    const docsDependencies = [
+      ...loadDependenciesFromSbom(docsSbom),
+      {
+        name: "docfx",
+        version: "2.78.3",
+        author: ".NET Foundation and Contributors",
+        description: "The docfx command line tool published as .NET tool",
+        license: "MIT",
+        link: "https://github.com/dotnet/docfx",
+      },
+      {
+        name: "DocFxMarkdownGen ",
+        version: "0.4.2",
+        author: "Jan0660 ",
+        description: "Docusaurus Markdown generator using DocFX.",
+        license: "MIT",
+        link: "https://github.com/Jan0660/DocFxMarkdownGen",
+      },
+    ];
+    const editorDependencies = loadDependenciesFromSbom(editorSbom);
+    const apiDependencies = loadDependenciesFromSbom(apiSbom);
+    const cliDependencies = loadDependenciesFromSbom(cliSbom);
+    const libraryDependencies = loadDependenciesFromSbom(librarySbom);
+
+    return {
       docs: {
         sbomLink: "/docs.bom.json",
-        licenses: groupDependenciesByLicense([
-          ...loadDependenciesFromSbom(docsSbom),
-          {
-            name: "docfx",
-            author: ".NET Foundation and Contributors",
-            version: "2.78.3",
-            license: "MIT",
-            link: "https://github.com/dotnet/docfx",
-          },
-          {
-            name: "DocFxMarkdownGen ",
-            author: "Jan0660 ",
-            version: "0.4.2",
-            license: "MIT",
-            link: "https://github.com/Jan0660/DocFxMarkdownGen",
-          },
-        ]),
+        dependenciesCount: docsDependencies.length,
+        licenses: groupDependenciesByLicense(docsDependencies),
       },
       editor: {
         sbomLink: "/editor.bom.json",
-        licenses: groupDependenciesByLicense(
-          loadDependenciesFromSbom(editorSbom),
-        ),
+        dependenciesCount: editorDependencies.length,
+        licenses: groupDependenciesByLicense(editorDependencies),
       },
       api: {
         sbomLink: "/api.bom.json",
-        licenses: groupDependenciesByLicense(loadDependenciesFromSbom(apiSbom)),
+        dependenciesCount: apiDependencies.length,
+        licenses: groupDependenciesByLicense(apiDependencies),
       },
       cli: {
         sbomLink: "/cli.bom.json",
-        licenses: groupDependenciesByLicense(loadDependenciesFromSbom(cliSbom)),
+        dependenciesCount: cliDependencies.length,
+        licenses: groupDependenciesByLicense(cliDependencies),
       },
       library: {
         sbomLink: "/library.bom.json",
-        licenses: groupDependenciesByLicense(
-          loadDependenciesFromSbom(librarySbom),
-        ),
+        dependenciesCount: libraryDependencies.length,
+        licenses: groupDependenciesByLicense(libraryDependencies),
       },
     };
-
-    console.log(result);
-
-    return result;
   },
 };
 
 interface Dependencies {
-  docs: { sbomLink: string; licenses: LicenseGroup[] };
-  editor: { sbomLink: string; licenses: LicenseGroup[] };
-  api: { sbomLink: string; licenses: LicenseGroup[] };
-  cli: { sbomLink: string; licenses: LicenseGroup[] };
-  library: { sbomLink: string; licenses: LicenseGroup[] };
+  docs: {
+    sbomLink: string;
+    dependenciesCount: number;
+    licenses: LicenseGroup[];
+  };
+  editor: {
+    sbomLink: string;
+    dependenciesCount: number;
+    licenses: LicenseGroup[];
+  };
+  api: {
+    sbomLink: string;
+    dependenciesCount: number;
+    licenses: LicenseGroup[];
+  };
+  cli: {
+    sbomLink: string;
+    dependenciesCount: number;
+    licenses: LicenseGroup[];
+  };
+  library: {
+    sbomLink: string;
+    dependenciesCount: number;
+    licenses: LicenseGroup[];
+  };
 }
 
 interface LicenseGroup {
@@ -79,10 +104,11 @@ interface LicenseGroup {
 
 interface Dependency {
   readonly name: string;
-  readonly author: string;
   readonly version: string;
-  readonly license: string;
-  readonly link: string;
+  readonly author?: string;
+  readonly description?: string;
+  readonly license?: string;
+  readonly link?: string;
 }
 
 function groupDependenciesByLicense(
@@ -102,7 +128,13 @@ function groupDependenciesByLicense(
   }
 
   return Object.values(result).sort((a, b) =>
-    a.license.localeCompare(b.license),
+    a.license === "" && b.license === ""
+      ? 0
+      : a.license === ""
+        ? 1
+        : b.license === ""
+          ? -1
+          : a.license.localeCompare(b.license),
   );
 }
 
@@ -113,20 +145,24 @@ function loadSbom(path: string) {
 
 function loadDependenciesFromSbom(sbom: Sbom): Dependency[] {
   const thisComponentName = sbom.metadata.component["bom-ref"];
-  const thisComponentDependencies = sbom.dependencies[thisComponentName];
+  const thisComponentDependencies = sbom.dependencies.find(
+    d => d.ref === thisComponentName,
+  )?.dependsOn;
+
   if (thisComponentDependencies === undefined) {
     return [];
   }
 
-  const dependencies = sbom.components.filter((c) =>
+  const dependencies = sbom.components.filter(c =>
     thisComponentDependencies.includes(c["bom-ref"]),
   );
 
   return dependencies.map(
     (component: SbomComponent): Dependency => ({
       name: component.name,
-      author: component.author,
       version: component.version,
+      author: component.author,
+      description: component.description,
       license: getLicense(component.licenses),
       link: getLink(component.externalReferences),
     }),
@@ -138,7 +174,7 @@ function getLicense(licenses: SbomLicense[] | undefined): string | undefined {
     return undefined;
   }
 
-  const licenseNames = licenses.map((license) => {
+  const licenseNames = licenses.map(license => {
     if (isSbomLicenseExpression(license)) {
       if (
         license.expression.startsWith("(") &&
@@ -163,12 +199,12 @@ function getLink(
     return undefined;
   }
 
-  const vcsLink = externalReferences.find((r) => r.type === "vcs")?.url;
+  const vcsLink = externalReferences.find(r => r.type === "vcs")?.url;
   if (vcsLink !== undefined) {
     return getRepositoryUrl(vcsLink);
   }
 
-  return externalReferences.find((r) => r.type === "website")?.url;
+  return externalReferences.find(r => r.type === "website")?.url;
 }
 
 const gitPlusUrlRegExp = new RegExp(/git\+(.*)\.git/g);
