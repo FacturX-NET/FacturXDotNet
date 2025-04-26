@@ -1,57 +1,75 @@
 import * as fs from "node:fs";
 
 export default {
+  watch: [
+    "src/assets/docs.bom.json",
+    "src/assets/editor.bom.json",
+    "src/assets/api.bom.json",
+    "src/assets/cli.bom.json",
+    "src/assets/library.bom.json",
+  ],
   load(): Dependencies {
-    return {
-      docs: groupDependenciesByLicense([
-        ...loadDependenciesFromLicenseReportOutput(
-          "src/assets/docs-licenses.json",
+    const docsSbom = loadSbom("src/assets/docs.bom.json");
+    const editorSbom = loadSbom("src/assets/editor.bom.json");
+    const apiSbom = loadSbom("src/assets/api.bom.json");
+    const cliSbom = loadSbom("src/assets/cli.bom.json");
+    const librarySbom = loadSbom("src/assets/library.bom.json");
+
+    const result: Dependencies = {
+      docs: {
+        sbom: docsSbom,
+        licenses: groupDependenciesByLicense([
+          ...loadDependenciesFromSbom(docsSbom),
+          {
+            name: "docfx",
+            author: ".NET Foundation and Contributors",
+            version: "2.78.3",
+            license: "MIT",
+            link: "https://github.com/dotnet/docfx",
+          },
+          {
+            name: "DocFxMarkdownGen ",
+            author: "Jan0660 ",
+            version: "0.4.2",
+            license: "MIT",
+            link: "https://github.com/Jan0660/DocFxMarkdownGen",
+          },
+        ]),
+      },
+      editor: {
+        sbom: editorSbom,
+        licenses: groupDependenciesByLicense(
+          loadDependenciesFromSbom(editorSbom),
         ),
-        {
-          name: "docfx",
-          author: ".NET Foundation and Contributors",
-          version: "2.78.3",
-          license: "MIT",
-          link: "https://github.com/dotnet/docfx",
-        },
-        {
-          name: "DocFxMarkdownGen ",
-          author: "Jan0660 ",
-          version: "0.4.2",
-          license: "MIT",
-          link: "https://github.com/Jan0660/DocFxMarkdownGen",
-        },
-      ]),
-      editor: groupDependenciesByLicense(
-        loadDependenciesFromLicenseReportOutput(
-          "src/assets/editor-licenses.json",
+      },
+      api: {
+        sbom: apiSbom,
+        licenses: groupDependenciesByLicense(loadDependenciesFromSbom(apiSbom)),
+      },
+      cli: {
+        sbom: cliSbom,
+        licenses: groupDependenciesByLicense(loadDependenciesFromSbom(cliSbom)),
+      },
+      library: {
+        sbom: librarySbom,
+        licenses: groupDependenciesByLicense(
+          loadDependenciesFromSbom(librarySbom),
         ),
-      ),
-      api: groupDependenciesByLicense(
-        loadDependenciesFromDotNetProjectLicensesOutput(
-          "src/assets/api-licenses.json",
-        ),
-      ),
-      cli: groupDependenciesByLicense(
-        loadDependenciesFromDotNetProjectLicensesOutput(
-          "src/assets/cli-licenses.json",
-        ),
-      ),
-      library: groupDependenciesByLicense(
-        loadDependenciesFromDotNetProjectLicensesOutput(
-          "src/assets/library-licenses.json",
-        ),
-      ),
+      },
     };
+
+    console.log(result);
+
+    return result;
   },
 };
 
 interface Dependencies {
-  docs: LicenseGroup[];
-  editor: LicenseGroup[];
-  api: LicenseGroup[];
-  cli: LicenseGroup[];
-  library: LicenseGroup[];
+  docs: { sbom: Sbom; licenses: LicenseGroup[] };
+  editor: { sbom: Sbom; licenses: LicenseGroup[] };
+  api: { sbom: Sbom; licenses: LicenseGroup[] };
+  cli: { sbom: Sbom; licenses: LicenseGroup[] };
+  library: { sbom: Sbom; licenses: LicenseGroup[] };
 }
 
 interface LicenseGroup {
@@ -88,66 +106,73 @@ function groupDependenciesByLicense(
   );
 }
 
-function loadDependenciesFromLicenseReportOutput(path: string): Dependency[] {
+function loadSbom(path: string) {
   const fileContent = fs.readFileSync(path, "utf8");
-  const parsed = JSON.parse(fileContent) as LicenseReportOutput;
-  return parsed.map(
-    (d: LicenseReportOutputElement): Dependency => ({
-      name: d.name,
-      author: d.author,
-      version: d.installedVersion,
-      license: d.licenseType,
-      link: getRepositoryUrl(d.link),
+  return JSON.parse(fileContent) as Sbom;
+}
+
+function loadDependenciesFromSbom(sbom: Sbom): Dependency[] {
+  const thisComponentName = sbom.metadata.component["bom-ref"];
+  const thisComponentDependencies = sbom.dependencies[thisComponentName];
+  if (thisComponentDependencies === undefined) {
+    return [];
+  }
+
+  const dependencies = sbom.components.filter(c =>
+    thisComponentDependencies.includes(c["bom-ref"]),
+  );
+
+  return dependencies.map(
+    (component: SbomComponent): Dependency => ({
+      name: component.name,
+      author: component.author,
+      version: component.version,
+      license: getLicense(component.licenses),
+      link: getLink(component.externalReferences),
     }),
   );
 }
 
-type LicenseReportOutput = LicenseReportOutputElement[];
+function getLicense(licenses: SbomLicense[] | undefined): string | undefined {
+  if (licenses === undefined) {
+    return undefined;
+  }
 
-interface LicenseReportOutputElement {
-  readonly name: string;
-  readonly author: string;
-  readonly installedVersion: string;
-  readonly licenseType: string;
-  readonly link: string;
+  const licenseNames = licenses.map(license => {
+    if (isSbomLicenseExpression(license)) {
+      if (
+        license.expression.startsWith("(") &&
+        license.expression.endsWith(")")
+      ) {
+        return license.expression.substring(1, license.expression.length - 2);
+      }
+
+      return license.expression;
+    }
+
+    return license.license.id;
+  });
+
+  return licenseNames.join(" OR ");
 }
 
-function loadDependenciesFromDotNetProjectLicensesOutput(
-  path: string,
-): Dependency[] {
-  const fileContent = fs.readFileSync(path, "utf8");
-  const parsed = JSON.parse(fileContent) as DotNetProjectLicensesOutput;
-  return parsed.map(
-    (d: DotNetProjectLicensesOutputElement): Dependency => ({
-      name: d.PackageName,
-      author: d.Authors.join(", "),
-      version: d.PackageVersion,
-      license: d.LicenseType,
-      link: getRepositoryUrl(d.Repository?.Url),
-    }),
-  );
+function getLink(
+  externalReferences: SbomExternalReference[] | undefined,
+): string | undefined {
+  if (externalReferences === undefined) {
+    return undefined;
+  }
+
+  const vcsLink = externalReferences.find(r => r.type === "vcs")?.url;
+  if (vcsLink !== undefined) {
+    return getRepositoryUrl(vcsLink);
+  }
+
+  return externalReferences.find(r => r.type === "website")?.url;
 }
 
-type DotNetProjectLicensesOutput = DotNetProjectLicensesOutputElement[];
-
-interface DotNetProjectLicensesOutputElement {
-  readonly PackageName: string;
-  readonly PackageVersion: string;
-  readonly PackageUrl: string;
-  readonly Copyright: string;
-  readonly Authors: string[];
-  readonly Description: string;
-  readonly LicenseUrl: string;
-  readonly LicenseType: string;
-  readonly Repository: {
-    readonly Type: string;
-    readonly Url: string;
-    readonly Commit: string;
-  };
-}
-
-const gitPlusUrlRegExp = new RegExp(/git\+(.*)\.git/);
-const gitSchemeUrlRegExp = new RegExp(/git:\/\/(.*)\.git/);
+const gitPlusUrlRegExp = new RegExp(/git\+(.*)\.git/g);
+const gitSchemeUrlRegExp = new RegExp(/git:\/\/(.*)\.git/g);
 
 function getRepositoryUrl(url: string): string {
   if (url === undefined || url === null) {
@@ -165,4 +190,47 @@ function getRepositoryUrl(url: string): string {
   }
 
   return url;
+}
+
+export interface Sbom {
+  readonly version: number;
+  readonly metadata: {
+    readonly component: SbomComponent;
+  };
+  readonly components: SbomComponent[];
+  readonly dependencies: {
+    readonly ref: string;
+    readonly dependsOn: string[];
+  }[];
+}
+
+export interface SbomComponent {
+  readonly "bom-ref": string;
+  readonly name: string;
+  readonly version: string;
+  readonly author?: string;
+  readonly description?: string;
+  readonly licenses?: SbomLicense[];
+  readonly externalReferences: SbomExternalReference[];
+}
+
+export type SbomLicense = SbomLicenseId | SbomLicenseExpression;
+
+export interface SbomLicenseId {
+  readonly license: { readonly id: string };
+}
+
+export interface SbomLicenseExpression {
+  readonly expression: string;
+}
+
+export function isSbomLicenseExpression(
+  license: SbomLicense,
+): license is SbomLicenseExpression {
+  return Object.keys(license).includes("expression");
+}
+
+export interface SbomExternalReference {
+  readonly type: string;
+  readonly url: string;
 }
