@@ -5,6 +5,9 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import MiniSearch from 'minisearch';
 import { HighlightTextPipe } from '../../core/highlight-text/highlight-text.pipe';
+import sbom from '../../../dependencies/sbom.json';
+import { Sbom, SbomComponent } from '../../core/sbom';
+import { Dependency, extractDependenciesFromSbom } from './dependency';
 
 const UnknownLicenseName = 'N/A';
 
@@ -16,13 +19,11 @@ const UnknownLicenseName = 'N/A';
       <ul class="nav nav-underline">
         <li class="nav-item">
           <button class="nav-link text-truncate" [class.active]="activeTab() === 'direct'" (click)="activeTab.set('direct')">
-            Direct dependencies ({{ directDependenciesRecord().packagesCount }})
+            Direct dependencies ({{ directDependenciesCount() }})
           </button>
         </li>
         <li class="nav-item">
-          <button class="nav-link text-truncate" [class.active]="activeTab() === 'all'" (click)="activeTab.set('all')">
-            All dependencies ({{ allDependenciesRecord().packagesCount }})
-          </button>
+          <button class="nav-link text-truncate" [class.active]="activeTab() === 'all'" (click)="activeTab.set('all')">All dependencies ({{ allDependenciesCount() }})</button>
         </li>
       </ul>
       <div>
@@ -54,15 +55,15 @@ const UnknownLicenseName = 'N/A';
       <div class="list-group list-group-flush">
         @for (license of record.licenses; track license.license) {
           <div class="list-group-item">
-            <a role="button" (click)="hideLicense()[license.license].set(!hideLicense()[license.license]())">
-              @if (hideLicense()[license.license]()) {
+            <a role="button" (click)="collapsedBlocks()[license.license].set(!collapsedBlocks()[license.license]())">
+              @if (collapsedBlocks()[license.license]()) {
                 <i class="bi bi-chevron-right"></i>
               } @else {
                 <i class="bi bi-chevron-down"></i>
               }
               <span class="fw-bold"> {{ license.license }} </span> ({{ license.packages.length }})
             </a>
-            <ul [class.d-none]="hideLicense()[license.license]()">
+            <ul [class.d-none]="collapsedBlocks()[license.license]()">
               @for (package_ of license.packages; track package_.name) {
                 <li>
                   <a class="pe-1" [href]="package_.latest.link" [innerHtml]="package_.latest.name | highlightText: package_.latest.terms"></a>
@@ -100,33 +101,29 @@ const UnknownLicenseName = 'N/A';
     </ng-template>
   `,
 })
-export class AboutLicensesComponent {
-  packages = input.required<Package[]>();
+export class AboutSbomComponent {
+  sbom = input.required<Sbom>();
 
-  protected directDependenciesRecord: Signal<GroupedPackages> = computed(() =>
-    groupPackages(
-      this.packages().filter((p) => p.direct),
-      true,
-    ),
-  );
-  protected allDependenciesRecord: Signal<GroupedPackages> = computed(() => groupPackages(this.packages()));
+  protected dependencies = computed(() => extractDependenciesFromSbom(this.sbom()));
 
-  protected activeTab = signal<'direct' | 'all'>('direct');
-  protected hideLicense: Signal<Record<string, WritableSignal<boolean>>> = linkedSignal({
-    source: this.packages,
-    computation: (source, previous) => {
-      const licenses = new Set(source.map((p) => p.license ?? UnknownLicenseName));
-
-      const newValue = previous !== undefined ? { ...previous.value } : {};
-      for (const license of licenses) {
-        newValue[license] = newValue[license] ?? signal(false);
-      }
-      return newValue;
-    },
+  protected directDependenciesCount = computed(() => {
+    const names = new Set(
+      this.dependencies()
+        .filter((d) => d.direct)
+        .map((d) => d.name),
+    );
+    return names.size;
   });
 
+  protected allDependenciesCount = computed(() => {
+    const names = new Set(this.dependencies().map((d) => d.name));
+    return names.size;
+  });
+
+  protected activeTab = signal<'direct' | 'all'>('direct');
+
   private miniSearch = computed(() => {
-    const packages = this.packages().map((p, i) => ({ ...p, index: i }));
+    const packages = this.dependencies().map((p, i) => ({ ...p, index: i }));
     const result = new MiniSearch({
       idField: 'index',
       fields: ['name', 'description', 'author', 'version', 'license', 'link'],
@@ -138,9 +135,9 @@ export class AboutLicensesComponent {
   protected searchTerm = signal<string | undefined>(undefined);
   protected searchResult = computed(() => {
     const miniSearch = this.miniSearch();
-    const allPackages = untracked(() => this.packages());
+    const allPackages = untracked(() => this.dependencies());
 
-    let packages: (Package & { terms: string[] })[];
+    let packages: (Dependency & { terms: string[] })[];
     const searchTerm = this.searchTerm();
     if (searchTerm === undefined) {
       packages = allPackages.map((p) => ({ ...p, terms: [] }));
@@ -156,16 +153,29 @@ export class AboutLicensesComponent {
     return groupPackages(packages);
   });
 
+  protected collapsedBlocks: Signal<Record<string, WritableSignal<boolean>>> = linkedSignal({
+    source: this.dependencies,
+    computation: (source, previous) => {
+      const licenses = new Set(source.map((p) => p.license ?? UnknownLicenseName));
+
+      const newValue = previous !== undefined ? { ...previous.value } : {};
+      for (const license of licenses) {
+        newValue[license] = newValue[license] ?? signal(false);
+      }
+      return newValue;
+    },
+  });
+
   protected collapseAll() {
-    const hideLicense = this.hideLicense();
-    for (const value of Object.values(hideLicense)) {
+    const collapsedBlocks = this.collapsedBlocks();
+    for (const value of Object.values(collapsedBlocks)) {
       value.set(true);
     }
   }
 
   protected expandAll() {
-    const hideLicense = this.hideLicense();
-    for (const value of Object.values(hideLicense)) {
+    const collapsedBlocks = this.collapsedBlocks();
+    for (const value of Object.values(collapsedBlocks)) {
       value.set(false);
     }
   }
@@ -180,17 +190,7 @@ export class AboutLicensesComponent {
   }
 }
 
-export interface Package {
-  name: string;
-  description?: string;
-  author?: string;
-  version: string;
-  license?: string;
-  link?: string;
-  direct: boolean;
-}
-
-interface GroupedPackages<TPackage extends Package = Package> {
+interface DependenciesGroupedByLicensesThenName<TPackage extends Dependency = Dependency> {
   packagesCount: number;
   licenses: {
     license: string;
@@ -203,7 +203,7 @@ interface GroupedPackages<TPackage extends Package = Package> {
   }[];
 }
 
-function groupPackages<TPackage extends Package>(packages: TPackage[], keepLatestOnly: boolean = false): GroupedPackages<TPackage> {
+function groupPackages<TPackage extends Dependency>(packages: TPackage[], keepLatestOnly: boolean = false): DependenciesGroupedByLicensesThenName<TPackage> {
   const licenses: Record<string, Record<string, TPackage[]>> = {};
 
   for (const p of packages) {
