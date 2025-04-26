@@ -66,7 +66,7 @@ export class EditorLayout {
   protected apiUrl = inject(API_BASE_URL);
 
   private apiConstantsService = inject(ApiConstantsService);
-  protected unsafeEnvironment = computed(() => this.apiConstantsService.info.value()?.hosting.unsafeEnvironment ?? false);
+  protected unsafeEnvironment = computed(() => this.apiConstantsService.hostingInfo.value()?.unsafeEnvironment ?? false);
 
   private globalOverlayService = inject(GlobalOverlayService);
   private editorMenuService = inject(EditorMenuService);
