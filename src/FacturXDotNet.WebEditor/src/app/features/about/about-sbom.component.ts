@@ -5,11 +5,8 @@ import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import MiniSearch from 'minisearch';
 import { HighlightTextPipe } from '../../core/highlight-text/highlight-text.pipe';
-import sbom from '../../../dependencies/sbom.json';
-import { Sbom, SbomComponent } from '../../core/sbom';
+import { Sbom } from '../../core/sbom';
 import { Dependency, extractDependenciesFromSbom } from './dependency';
-
-const UnknownLicenseName = 'N/A';
 
 @Component({
   selector: 'app-about-licenses',
@@ -61,7 +58,13 @@ const UnknownLicenseName = 'N/A';
               } @else {
                 <i class="bi bi-chevron-down"></i>
               }
-              <span class="fw-bold"> {{ license.license }} </span> ({{ license.packages.length }})
+
+              @if (license.license === '') {
+                Unknown
+              } @else {
+                <span class="fw-bold"> {{ license.license }} </span>
+              }
+              ({{ license.packages.length }})
             </a>
             <ul [class.d-none]="collapsedBlocks()[license.license]()">
               @for (package_ of license.packages; track package_.name) {
@@ -156,7 +159,7 @@ export class AboutSbomComponent {
   protected collapsedBlocks: Signal<Record<string, WritableSignal<boolean>>> = linkedSignal({
     source: this.dependencies,
     computation: (source, previous) => {
-      const licenses = new Set(source.map((p) => p.license ?? UnknownLicenseName));
+      const licenses = new Set(source.map((p) => licenseNameOrDefault(p.license)));
 
       const newValue = previous !== undefined ? { ...previous.value } : {};
       for (const license of licenses) {
@@ -207,7 +210,7 @@ function groupPackages<TPackage extends Dependency>(packages: TPackage[], keepLa
   const licenses: Record<string, Record<string, TPackage[]>> = {};
 
   for (const p of packages) {
-    const license = p.license ?? UnknownLicenseName;
+    const license = licenseNameOrDefault(p.license);
 
     if (!licenses[license]) {
       licenses[license] = {};
@@ -233,16 +236,22 @@ function groupPackages<TPackage extends Dependency>(packages: TPackage[], keepLa
         : Object.values(licenses)
             .map((l) => Object.keys(l).length)
             .reduce((a, b) => a + b),
-    licenses: Object.entries(licenses).map(([license, packages]) => ({
-      license,
-      packages: Object.entries(packages)
-        .map(([name, packages]) => ({
-          name,
-          versions: [...new Set(packages.map((p) => p.version).filter((v) => v !== undefined && v !== null && v != ''))].sort((a, b) => -semver.compare(a, b)),
-          latest: packages.sort((a, b) => -semver.compare(a.version, b.version))[0],
-          packages,
-        }))
-        .sort((a, b) => a.name.localeCompare(b.name)),
-    })),
+    licenses: Object.entries(licenses)
+      .map(([license, packages]) => ({
+        license,
+        packages: Object.entries(packages)
+          .map(([name, packages]) => ({
+            name,
+            versions: [...new Set(packages.map((p) => p.version).filter((v) => v !== undefined && v !== null && v != ''))].sort((a, b) => -semver.compare(a, b)),
+            latest: packages.sort((a, b) => -semver.compare(a.version, b.version))[0],
+            packages,
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name)),
+      }))
+      .sort((a, b) => (a.license === '' && b.license === '' ? 0 : a.license === '' ? 1 : b.license === '' ? -1 : a.license.localeCompare(b.license))),
   };
+}
+
+function licenseNameOrDefault(name: string | undefined): string {
+  return name === undefined || name === '' ? '' : name;
 }
