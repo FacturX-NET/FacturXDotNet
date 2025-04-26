@@ -54,7 +54,7 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Install CycloneDX
-        run: dotnet tool install --global CycloneDX --framework net8.0
+        run: dotnet tool install --global CycloneDX
 
       - name: Generate licenses file
         run: cd src/FacturXDotNet.API; dotnet-CycloneDX FacturXDotNet.API.csproj -o Resources --json -fn api.bom.json
