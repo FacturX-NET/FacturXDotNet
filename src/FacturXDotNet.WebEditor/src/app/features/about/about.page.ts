@@ -93,7 +93,7 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
       </div>
 
       <div class="row gy-4">
-        <div class="col-6">
+        <div class="col-12 col-lg-6">
           <div class="card">
             <div class="card-body">
               <h2 class="card-title">API</h2>
@@ -143,8 +143,6 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
                     }
                   </p>
 
-                  <hr />
-
                   <app-about-licenses [sbom]="apiConstants.sbom" sbomName="FacturXDotNet-API.bom.json"></app-about-licenses>
                 }
               }
@@ -152,7 +150,7 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
           </div>
         </div>
 
-        <div class="col-6">
+        <div class="col-12 col-lg-6">
           <div class="card">
             <div class="card-body">
               <h2 class="card-title">Web Editor</h2>
@@ -172,8 +170,6 @@ import { ApiConstantsService } from '../../core/api/services/api-constants.servi
                 released under the <span class="fw-bold">MIT</span> license, and available
                 <a href="https://github.com/FacturX-NET/FacturXDotNet/tree/main/src/Tests.FacturXDotNet.WebEditor">on GitHub</a>.
               </p>
-
-              <hr />
 
               <app-about-licenses [sbom]="webEditorSbom" sbomName="FacturXDotNet-WebEditor.bom.json"></app-about-licenses>
             </div>

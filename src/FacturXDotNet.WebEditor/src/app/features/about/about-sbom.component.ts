@@ -13,18 +13,17 @@ import { downloadBlob, downloadFile } from '../../core/utils/download-blob';
   selector: 'app-about-licenses',
   imports: [NgTemplateOutlet, NgbTooltip, FormsModule, HighlightTextPipe],
   template: `
-    <div class="d-flex align-items-center justify-content-between gap-4">
+    <h6>Dependencies</h6>
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-4">
       <ul class="nav nav-underline">
         <li class="nav-item">
-          <button class="nav-link text-truncate" [class.active]="activeTab() === 'direct'" (click)="activeTab.set('direct')">
-            Direct dependencies ({{ directDependenciesCount() }})
-          </button>
+          <button class="nav-link text-truncate" [class.active]="activeTab() === 'direct'" (click)="activeTab.set('direct')">Direct ({{ directDependenciesCount() }})</button>
         </li>
         <li class="nav-item">
-          <button class="nav-link text-truncate" [class.active]="activeTab() === 'all'" (click)="activeTab.set('all')">All dependencies ({{ allDependenciesCount() }})</button>
+          <button class="nav-link text-truncate" [class.active]="activeTab() === 'all'" (click)="activeTab.set('all')">All ({{ allDependenciesCount() }})</button>
         </li>
       </ul>
-      <div>
+      <div class="d-flex flex-nowrap">
         <button class="btn" (click)="collapseAll()">
           <i class="bi bi-chevron-contract" ngbTooltip="Collapse all"></i>
         </button>
@@ -37,7 +36,7 @@ import { downloadBlob, downloadFile } from '../../core/utils/download-blob';
       </div>
     </div>
 
-    <div class="d-flex gap-2 pt-3">
+    <div class="d-flex gap-2 pt-3 ps-3">
       <div>
         <label class="col-form-label col-form-label-sm">
           <i class="bi bi-search"></i>
