@@ -183,6 +183,9 @@ jobs:
           
           cat docs/src/env.json
 
+      - name: Set version in package json
+        run: cd docs; npm run version ${{ inputs.version }}
+
       - name: Build
         run: cd docs; npm run build -- --base /docs/ --outDir dist/
 
